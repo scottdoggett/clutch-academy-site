@@ -5,10 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GearIndicator from './GearIndicator'
 import './GearSection.css'
 
-/**
- * Alignment positions mapped to gear numbers.
- * Each gear's content anchors to its H-pattern position.
- */
 const POSITION_MAP = {
   1: 'top-left',
   2: 'bottom-left',
@@ -19,42 +15,110 @@ const POSITION_MAP = {
   R: 'center',
 }
 
-const SHIFT_DISTANCE = '+=100%'
+// Gears whose exit traverses the neutral gate (H-crossing: 2→3, 4→5).
+const H_CROSSING_EXITS = new Set([2, 4])
+
+// Scroll distance the section is pinned for. H-crossing is ~1.5x longer
+// to give the three-segment motion enough scroll room to read clearly.
+const SHIFT_DISTANCE_SAME_COLUMN = '+=100%'
+const SHIFT_DISTANCE_H_CROSSING = '+=150%'
+
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export default function GearSection({ gear, id, isLast = false, children }) {
   const sectionRef = useRef()
   const contentRef = useRef()
   const indicatorRef = useRef()
   const position = POSITION_MAP[gear] || 'center'
+  const isHCrossing = H_CROSSING_EXITS.has(gear)
 
   useGSAP(
     () => {
-      const prefersReduced = window
-        .matchMedia('(prefers-reduced-motion: reduce)')
-        .matches
+      if (prefersReducedMotion()) return
+      if (isLast) return
 
-      if (prefersReduced) return
+      const scrollTrigger = {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: isHCrossing ? SHIFT_DISTANCE_H_CROSSING : SHIFT_DISTANCE_SAME_COLUMN,
+        scrub: true,
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+      }
 
-      if (isLast) {
-        // Reverse section doesn't slide its content out — it releases to the footer.
+      if (isHCrossing) {
+        // H-crossing (Type B): three-segment motion down → left → down.
+        // Outgoing slides down, then left, then continues left-and-down off-frame.
+        // Incoming (next section's content) mirrors: up, right, up into place.
+        const nextContent = document.querySelector(
+          `[data-gear-content="${gear + 1}"]`
+        )
+        const nextIndicator = document.querySelector(
+          `[data-gear-indicator="${gear + 1}"]`
+        )
+
+        if (nextContent) {
+          gsap.set(nextContent, { yPercent: 100, xPercent: -100 })
+        }
+        if (nextIndicator) {
+          gsap.set(nextIndicator, { yPercent: 100, xPercent: -100, opacity: 0 })
+        }
+
+        const tl = gsap.timeline({ scrollTrigger })
+
+        // Segment 1 (0–0.33): outgoing down, incoming up (both along y).
+        tl.to(contentRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0)
+          .to(indicatorRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0)
+
+        if (nextContent) {
+          tl.to(nextContent, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0)
+        }
+        if (nextIndicator) {
+          tl.to(nextIndicator, { yPercent: 50, opacity: 1, ease: 'power2.out', duration: 0.33 }, 0)
+        }
+
+        // Tiny dwell at the neutral seam.
+        tl.to({}, { duration: 0.02 })
+
+        // Segment 2 (0.35–0.67): lateral glide across the neutral gate.
+        tl.to(contentRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.35)
+          .to(indicatorRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.35)
+
+        if (nextContent) {
+          tl.to(nextContent, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.35)
+        }
+        if (nextIndicator) {
+          tl.to(nextIndicator, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.35)
+        }
+
+        tl.to({}, { duration: 0.02 })
+
+        // Segment 3 (0.70–1.0): click into the new gear — outgoing continues down,
+        // incoming settles up into place.
+        tl.to(contentRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
+          .to(indicatorRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
+
+        if (nextContent) {
+          tl.to(nextContent, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
+        }
+        if (nextIndicator) {
+          tl.to(nextIndicator, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
+        }
+
         return
       }
 
-      // Same-column shift (Type A) — default for all gears until steps 8/9
-      // override 2→3, 4→5, and 6→R with specialized timelines.
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: SHIFT_DISTANCE,
-          scrub: true,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
-        },
-      })
+      // Type A — same-column shift: straight vertical slide.
+      gsap
+        .timeline({ scrollTrigger })
         .to(contentRef.current, { yPercent: -100, ease: 'power2.inOut' }, 0)
-        .to(indicatorRef.current, { yPercent: -100, opacity: 0, ease: 'power2.inOut' }, 0)
+        .to(
+          indicatorRef.current,
+          { yPercent: -100, opacity: 0, ease: 'power2.inOut' },
+          0
+        )
     },
     { scope: sectionRef, dependencies: [gear, isLast] }
   )
@@ -66,10 +130,18 @@ export default function GearSection({ gear, id, isLast = false, children }) {
       className={`gear-section gear-section--${position}`}
       data-gear={gear}
     >
-      <div ref={indicatorRef} className="gear-section__indicator-wrap">
+      <div
+        ref={indicatorRef}
+        className="gear-section__indicator-wrap"
+        data-gear-indicator={gear}
+      >
         <GearIndicator gear={gear} position={position} />
       </div>
-      <div ref={contentRef} className="gear-section__content">
+      <div
+        ref={contentRef}
+        className="gear-section__content"
+        data-gear-content={gear}
+      >
         {children}
       </div>
     </section>
