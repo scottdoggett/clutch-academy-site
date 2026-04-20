@@ -1,29 +1,54 @@
-import GearSection from './components/GearSection'
+import { useState } from 'react'
+import Nav from './components/Nav'
+import Home from './components/sections/Home'
+import About from './components/sections/About'
+import HowItWorks from './components/sections/HowItWorks'
+import Packages from './components/sections/Packages'
+import Reviews from './components/sections/Reviews'
+import Faq from './components/sections/Faq'
+import Reverse from './components/sections/Reverse'
+
+const GEAR_TO_ID = {
+  1: 'home',
+  2: 'about',
+  3: 'how-it-works',
+  4: 'packages',
+  5: 'reviews',
+  6: 'faq',
+  R: 'book',
+}
 
 export default function App() {
+  const [currentGear, setCurrentGear] = useState(1)
+
+  // TODO (step 7+): replace with useShiftTransition-driven navigation.
+  const handleNavigate = (gear) => {
+    setCurrentGear(gear)
+    const el = document.getElementById(GEAR_TO_ID[gear])
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  // TODO (step 14): play Reverse shift animation, then open Calendly popup.
+  const handleBookNow = () => handleNavigate('R')
+
+  const handleSeePackages = () => handleNavigate(4)
+
   return (
-    <main>
-      <GearSection gear={1} id="home">
-        <h1>1st Gear — Home</h1>
-      </GearSection>
-      <GearSection gear={2} id="about">
-        <h1>2nd Gear — About</h1>
-      </GearSection>
-      <GearSection gear={3} id="how-it-works">
-        <h1>3rd Gear — How It Works</h1>
-      </GearSection>
-      <GearSection gear={4} id="packages">
-        <h1>4th Gear — Packages</h1>
-      </GearSection>
-      <GearSection gear={5} id="reviews">
-        <h1>5th Gear — Reviews</h1>
-      </GearSection>
-      <GearSection gear={6} id="faq">
-        <h1>6th Gear — FAQ</h1>
-      </GearSection>
-      <GearSection gear="R" id="book">
-        <h1>Reverse — Book Now</h1>
-      </GearSection>
-    </main>
+    <>
+      <Nav
+        currentGear={currentGear}
+        onNavigate={handleNavigate}
+        onBookNow={handleBookNow}
+      />
+      <main>
+        <Home onBookNow={handleBookNow} onSeePackages={handleSeePackages} />
+        <About onBookNow={handleBookNow} />
+        <HowItWorks />
+        <Packages onBookNow={handleBookNow} />
+        <Reviews />
+        <Faq />
+        <Reverse onBookNow={handleBookNow} />
+      </main>
+    </>
   )
 }
