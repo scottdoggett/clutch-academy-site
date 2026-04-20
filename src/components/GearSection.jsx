@@ -18,10 +18,11 @@ const POSITION_MAP = {
 // Gears whose exit traverses the neutral gate (H-crossing: 2→3, 4→5).
 const H_CROSSING_EXITS = new Set([2, 4])
 
-// Scroll distance the section is pinned for. H-crossing is ~1.5x longer
-// to give the three-segment motion enough scroll room to read clearly.
+// Scroll distance the section is pinned for. H-crossing and Reverse are longer
+// than same-column to give their multi-beat motion room to read clearly.
 const SHIFT_DISTANCE_SAME_COLUMN = '+=100%'
 const SHIFT_DISTANCE_H_CROSSING = '+=150%'
+const SHIFT_DISTANCE_REVERSE = '+=175%'
 
 const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -32,16 +33,23 @@ export default function GearSection({ gear, id, isLast = false, children }) {
   const indicatorRef = useRef()
   const position = POSITION_MAP[gear] || 'center'
   const isHCrossing = H_CROSSING_EXITS.has(gear)
+  const isReverseShift = gear === 6
 
   useGSAP(
     () => {
       if (prefersReducedMotion()) return
       if (isLast) return
 
+      const endDistance = isReverseShift
+        ? SHIFT_DISTANCE_REVERSE
+        : isHCrossing
+          ? SHIFT_DISTANCE_H_CROSSING
+          : SHIFT_DISTANCE_SAME_COLUMN
+
       const scrollTrigger = {
         trigger: sectionRef.current,
         start: 'top top',
-        end: isHCrossing ? SHIFT_DISTANCE_H_CROSSING : SHIFT_DISTANCE_SAME_COLUMN,
+        end: endDistance,
         scrub: true,
         pin: true,
         pinSpacing: true,
@@ -105,6 +113,67 @@ export default function GearSection({ gear, id, isLast = false, children }) {
         }
         if (nextIndicator) {
           tl.to(nextIndicator, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
+        }
+
+        return
+      }
+
+      if (isReverseShift) {
+        // Type C — signature Reverse shift (6→R). Two beats: "push in", then
+        // "right-and-down into place." Distinctly weightier than the upshifts.
+        const nextContent = document.querySelector('[data-gear-content="R"]')
+        const nextIndicator = document.querySelector('[data-gear-indicator="R"]')
+
+        // Incoming (R) pre-positioned top-left and hidden so it can translate
+        // right-and-down into its final center position during Beat 2.
+        if (nextContent) {
+          gsap.set(nextContent, { xPercent: -60, yPercent: -60, opacity: 0 })
+        }
+        if (nextIndicator) {
+          gsap.set(nextIndicator, { xPercent: -60, yPercent: -60, opacity: 0 })
+        }
+
+        const tl = gsap.timeline({ scrollTrigger })
+
+        // Beat 1 (0 – 0.43): outgoing section 6 pushes "into the screen" —
+        // scale up and fade, as if the camera lurches forward to unlock reverse.
+        tl.to(
+          contentRef.current,
+          { scale: 1.3, opacity: 0, ease: 'expo.in', duration: 0.43 },
+          0
+        ).to(
+          indicatorRef.current,
+          { scale: 1.3, opacity: 0, ease: 'expo.in', duration: 0.43 },
+          0
+        )
+
+        // Beat 2 (0.43 – 1.0): Reverse section sweeps in from up-left, landing
+        // center-screen. From the viewer's POV this reads as right-and-down.
+        if (nextContent) {
+          tl.to(
+            nextContent,
+            {
+              xPercent: 0,
+              yPercent: 0,
+              opacity: 1,
+              ease: 'power3.out',
+              duration: 0.57,
+            },
+            0.43
+          )
+        }
+        if (nextIndicator) {
+          tl.to(
+            nextIndicator,
+            {
+              xPercent: 0,
+              yPercent: 0,
+              opacity: 1,
+              ease: 'power3.out',
+              duration: 0.57,
+            },
+            0.43
+          )
         }
 
         return
