@@ -1,7 +1,7 @@
 import GearSection from '../GearSection'
 import './Packages.css'
 
-export default function Packages({ onBookNow }) {
+export default function Packages({ onBookSingle, onBookPack }) {
   return (
     <GearSection gear={4} id="packages">
       <h2>Packages & Pricing</h2>
@@ -18,7 +18,7 @@ export default function Packages({ onBookNow }) {
             <li>First-gear starts and stops</li>
             <li>Personalized feedback</li>
           </ul>
-          <button type="button" className="btn btn--primary" onClick={onBookNow}>
+          <button type="button" className="btn btn--primary" onClick={onBookSingle}>
             Book This Lesson
           </button>
         </article>
@@ -38,7 +38,7 @@ export default function Packages({ onBookNow }) {
             <li>Hill starts and real-road practice</li>
             <li>Smooth shifting at speed</li>
           </ul>
-          <button type="button" className="btn btn--primary" onClick={onBookNow}>
+          <button type="button" className="btn btn--primary" onClick={onBookPack}>
             Book This Package
           </button>
         </article>
