@@ -1,4 +1,5 @@
 import GearSection from '../GearSection'
+import './Packages.css'
 
 export default function Packages({ onBookNow }) {
   return (

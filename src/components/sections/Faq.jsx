@@ -1,4 +1,5 @@
 import GearSection from '../GearSection'
+import './Faq.css'
 
 const FAQS = [
   {

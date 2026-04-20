@@ -1,0 +1,50 @@
+.btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-body);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.875rem 1.5rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-reduced) ease,
+    color var(--transition-reduced) ease,
+    border-color var(--transition-reduced) ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.btn--primary {
+  background-color: var(--white);
+  color: var(--red-primary);
+}
+
+.btn--primary:hover {
+  background-color: var(--cream);
+}
+
+.btn--secondary {
+  background-color: transparent;
+  color: var(--white);
+  border-color: var(--white);
+}
+
+.btn--secondary:hover {
+  background-color: var(--white);
+  color: var(--red-primary);
+}
+
+.btn--xl {
+  font-size: var(--text-body-lg);
+  padding: 1.125rem 2.25rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

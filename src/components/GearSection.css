@@ -63,6 +63,13 @@
   will-change: transform;
 }
 
+/* Packages and Reviews sections need more horizontal room for their grids. */
+.gear-section[data-gear="4"] .gear-section__content,
+.gear-section[data-gear="5"] .gear-section__content,
+.gear-section[data-gear="6"] .gear-section__content {
+  max-width: 1100px;
+}
+
 /* Reverse section gets full width treatment */
 .gear-section[data-gear="R"] .gear-section__content {
   max-width: 100%;

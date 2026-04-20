@@ -1,0 +1,114 @@
+.packages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0 1.5rem;
+}
+
+.package-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 2rem;
+  background-color: var(--red-deep);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.package-card--featured {
+  border-color: var(--white);
+  background-color: var(--red-deep);
+  box-shadow: 0 0 0 1px var(--white) inset;
+}
+
+.package-card__badge {
+  position: absolute;
+  top: 0;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  background-color: var(--white);
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  padding: 0.375rem 0.875rem;
+}
+
+.package-card h3 {
+  font-size: var(--text-display-lg);
+  margin: 0;
+}
+
+.package-card__price {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-display-xl);
+  line-height: 1;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+}
+
+.package-card__duration {
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.package-card__desc {
+  margin: 0;
+  color: var(--cream);
+}
+
+.package-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.package-card__list li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: var(--text-body);
+  color: var(--cream);
+}
+
+.package-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 0.5rem;
+  height: 2px;
+  background-color: var(--chrome);
+}
+
+.package-card .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.packages__savings {
+  margin: 0;
+  font-size: var(--text-body-lg);
+  text-align: center;
+}
+
+.packages__payment {
+  margin: 0.5rem 0 0;
+  font-size: var(--text-small);
+  opacity: 0.85;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .packages {
+    grid-template-columns: 1fr;
+  }
+}
