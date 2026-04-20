@@ -1,0 +1,70 @@
+.gear-indicator {
+  position: absolute;
+  width: var(--gear-indicator-size);
+  height: var(--gear-indicator-size);
+  border: var(--gear-indicator-stroke) solid var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.gear-indicator__numeral {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: calc(var(--gear-indicator-size) * 0.5);
+  letter-spacing: var(--letter-tight);
+  color: var(--white);
+  line-height: 1;
+}
+
+/* Position the indicator at its corresponding viewport corner/edge */
+.gear-indicator--top-left {
+  top: var(--gear-indicator-padding);
+  left: var(--gear-indicator-padding);
+}
+
+.gear-indicator--bottom-left {
+  bottom: var(--gear-indicator-padding);
+  left: var(--gear-indicator-padding);
+}
+
+.gear-indicator--top-center {
+  top: var(--gear-indicator-padding);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gear-indicator--bottom-center {
+  bottom: var(--gear-indicator-padding);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gear-indicator--top-right {
+  top: var(--gear-indicator-padding);
+  right: var(--gear-indicator-padding);
+}
+
+.gear-indicator--bottom-right {
+  bottom: var(--gear-indicator-padding);
+  right: var(--gear-indicator-padding);
+}
+
+.gear-indicator--center {
+  top: var(--gear-indicator-padding);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Mobile: always top-center */
+@media (max-width: 767px) {
+  .gear-indicator {
+    top: var(--gear-indicator-padding) !important;
+    bottom: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+}

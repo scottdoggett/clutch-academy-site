@@ -75,17 +75,17 @@ The nav focuses on high-intent destinations (pricing, reviews, booking). How It 
 
 Each gear section's content is anchored to its corresponding corner/edge of the viewport. The surrounding space is intentionally empty red field.
 
-| Gear | Content anchor | Rough area used |
+| Gear | Content anchor | Alignment |
 |---|---|---|
-| 1 | Top-left quadrant | ~25% of viewport |
-| 2 | Bottom-left quadrant | ~25% |
-| 3 | Top-center band | ~25% (horizontally centered) |
-| 4 | Bottom-center band | ~25% (horizontally centered) |
-| 5 | Top-right quadrant | ~25% |
-| 6 | Bottom-right quadrant | ~25% |
-| R | Full-width center | ~70–80% — this is the dramatic finale |
+| 1 | Top-left | Content anchored to top-left corner |
+| 2 | Bottom-left | Content anchored to bottom-left corner |
+| 3 | Top-center | Content anchored to top, horizontally centered |
+| 4 | Bottom-center | Content anchored to bottom, horizontally centered |
+| 5 | Top-right | Content anchored to top-right corner |
+| 6 | Bottom-right | Content anchored to bottom-right corner |
+| R | Center, full-width | Centered, visually dominant |
 
-Gears 1–6 share a principle: **restrained, spacious, one-quadrant-dominant.** Reverse breaks the pattern intentionally — it's where the user is meant to take action, so it commands the full viewport.
+Gears 1–6 share a principle: **content fills most of the viewport but is aligned to its gear-position corner/edge.** The alignment tells the user where they are in the H-pattern; the content itself is generous in size, not confined to a small quadrant. Reverse breaks the pattern intentionally — it's where the user is meant to take action, so it commands the full viewport with centered alignment.
 
 ---
 

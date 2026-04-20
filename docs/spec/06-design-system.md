@@ -48,8 +48,8 @@ The screen acts as a virtual gearbox. Each section's content is anchored to the 
 
 ### Content Sizing Rules
 
-- Gears 1–6: content occupies roughly one quadrant of the viewport. The remaining ~75% is empty red field. This feels intentional and spacious, not empty.
-- Reverse: content expands to dominate the viewport. This is the climactic final section — largest visual weight, most prominent CTAs.
+- Gears 1–6: content fills most of the viewport but is aligned to its gear-position corner/edge. The alignment communicates location in the H-pattern while giving content generous room to breathe.
+- Reverse: content expands to dominate the viewport with centered alignment. This is the climactic final section — largest visual weight, most prominent CTAs.
 
 ---
 

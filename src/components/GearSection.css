@@ -1,0 +1,69 @@
+.gear-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--red-primary);
+  color: var(--white);
+  overflow: hidden;
+}
+
+/* Alignment variants — content fills most of viewport, anchored to its corner */
+.gear-section--top-left {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.gear-section--bottom-left {
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.gear-section--top-center {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.gear-section--bottom-center {
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.gear-section--top-right {
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.gear-section--bottom-right {
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.gear-section--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.gear-section__content {
+  padding: var(--gear-indicator-padding);
+  max-width: 80ch;
+  width: 100%;
+}
+
+/* Reverse section gets full width treatment */
+.gear-section[data-gear="R"] .gear-section__content {
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Mobile: all sections stack linearly, center-aligned */
+@media (max-width: 767px) {
+  .gear-section {
+    align-items: flex-start !important;
+    justify-content: center !important;
+  }
+
+  .gear-section__content {
+    padding: calc(var(--gear-indicator-size) + var(--gear-indicator-padding) * 2) var(--gear-indicator-padding) var(--gear-indicator-padding);
+  }
+}
