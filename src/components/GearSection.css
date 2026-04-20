@@ -63,7 +63,8 @@
   will-change: transform;
 }
 
-/* Packages and Reviews sections need more horizontal room for their grids. */
+/* How It Works, Packages, Reviews, FAQ need more horizontal room for grids. */
+.gear-section[data-gear="3"] .gear-section__content,
 .gear-section[data-gear="4"] .gear-section__content,
 .gear-section[data-gear="5"] .gear-section__content,
 .gear-section[data-gear="6"] .gear-section__content {
