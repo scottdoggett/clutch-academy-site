@@ -19,23 +19,45 @@ const POSITION_MAP = {
   R: 'center',
 }
 
-export default function GearSection({ gear, id, children }) {
+const SHIFT_DISTANCE = '+=100%'
+
+export default function GearSection({ gear, id, isLast = false, children }) {
   const sectionRef = useRef()
+  const contentRef = useRef()
+  const indicatorRef = useRef()
   const position = POSITION_MAP[gear] || 'center'
 
-  useGSAP(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  useGSAP(
+    () => {
+      const prefersReduced = window
+        .matchMedia('(prefers-reduced-motion: reduce)')
+        .matches
 
-    if (prefersReduced) return
+      if (prefersReduced) return
 
-    ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top top',
-      end: 'bottom top',
-      pin: true,
-      pinSpacing: true,
-    })
-  }, { scope: sectionRef })
+      if (isLast) {
+        // Reverse section doesn't slide its content out — it releases to the footer.
+        return
+      }
+
+      // Same-column shift (Type A) — default for all gears until steps 8/9
+      // override 2→3, 4→5, and 6→R with specialized timelines.
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: SHIFT_DISTANCE,
+          scrub: true,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+        },
+      })
+        .to(contentRef.current, { yPercent: -100, ease: 'power2.inOut' }, 0)
+        .to(indicatorRef.current, { yPercent: -100, opacity: 0, ease: 'power2.inOut' }, 0)
+    },
+    { scope: sectionRef, dependencies: [gear, isLast] }
+  )
 
   return (
     <section
@@ -44,8 +66,10 @@ export default function GearSection({ gear, id, children }) {
       className={`gear-section gear-section--${position}`}
       data-gear={gear}
     >
-      <GearIndicator gear={gear} position={position} />
-      <div className="gear-section__content">
+      <div ref={indicatorRef} className="gear-section__indicator-wrap">
+        <GearIndicator gear={gear} position={position} />
+      </div>
+      <div ref={contentRef} className="gear-section__content">
         {children}
       </div>
     </section>

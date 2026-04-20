@@ -6,7 +6,7 @@ const encode = (data) =>
     .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(data[k])}`)
     .join('&')
 
-export default function Reverse({ onBookNow }) {
+export default function Reverse({ onBookNow, isLast = false }) {
   const [status, setStatus] = useState('idle')
   const [form, setForm] = useState({ name: '', email: '', message: '' })
 
@@ -28,7 +28,7 @@ export default function Reverse({ onBookNow }) {
   }
 
   return (
-    <GearSection gear="R" id="book">
+    <GearSection gear="R" id="book" isLast={isLast}>
       <h2>Ready to shift into gear?</h2>
 
       <button type="button" className="btn btn--primary btn--xl" onClick={onBookNow}>

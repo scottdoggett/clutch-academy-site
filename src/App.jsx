@@ -47,7 +47,7 @@ export default function App() {
         <Packages onBookNow={handleBookNow} />
         <Reviews />
         <Faq />
-        <Reverse onBookNow={handleBookNow} />
+        <Reverse onBookNow={handleBookNow} isLast />
       </main>
     </>
   )

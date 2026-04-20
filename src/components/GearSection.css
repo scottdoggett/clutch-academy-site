@@ -44,10 +44,22 @@
   justify-content: center;
 }
 
+.gear-section__indicator-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.gear-section__indicator-wrap > * {
+  pointer-events: auto;
+}
+
 .gear-section__content {
   padding: var(--gear-indicator-padding);
   max-width: 80ch;
   width: 100%;
+  will-change: transform;
 }
 
 /* Reverse section gets full width treatment */
