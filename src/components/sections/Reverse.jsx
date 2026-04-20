@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import GearSection from '../GearSection'
+import './Reverse.css'
 
 const encode = (data) =>
   Object.keys(data)
