@@ -35,7 +35,40 @@ img {
   display: block;
 }
 
-/* Reduced motion: disable scroll pinning and replace animations with crossfade */
+/* Skip link: hidden off-screen until focused via keyboard. Jumps past the nav
+   so keyboard + screen-reader users don't have to tab through it every visit. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--white);
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-120%);
+  transition: transform var(--transition-reduced) ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
+/* Focus ring for headings temporarily made focusable by scrollToGear. */
+:is(h1, h2, h3)[tabindex='-1']:focus {
+  outline: 2px solid var(--white);
+  outline-offset: 4px;
+}
+
+/* Reduced motion: no scroll-scrubbed transitions are created (see
+   gsap.matchMedia guards in GearSection); these rules also neutralize any
+   incidental CSS transitions/animations so the site is fully static. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

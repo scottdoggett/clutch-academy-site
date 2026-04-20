@@ -29,6 +29,32 @@ const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+// After nav-driven navigation, send focus to the landing section's heading
+// (or a more specific element for the Reverse booking destination). Critical
+// for keyboard + screen-reader users — without this, focus stays on the nav.
+const focusSectionLanding = (gear) => {
+  const section = document.getElementById(GEAR_TO_ID[gear])
+  if (!section) return
+
+  // For the Reverse gear, prefer focusing the dominant Book CTA so the
+  // keyboard user lands on the primary action, per spec.
+  const target =
+    gear === 'R'
+      ? section.querySelector('.btn--xl, h2')
+      : section.querySelector('h1, h2')
+
+  if (!target) return
+
+  const hadTabindex = target.hasAttribute('tabindex')
+  if (!hadTabindex) target.setAttribute('tabindex', '-1')
+  target.focus({ preventScroll: true })
+  if (!hadTabindex) {
+    target.addEventListener('blur', () => target.removeAttribute('tabindex'), {
+      once: true,
+    })
+  }
+}
+
 export default function App() {
   const [currentGear, setCurrentGear] = useState(1)
 
@@ -40,9 +66,14 @@ export default function App() {
       return
     }
 
+    const afterScroll = () => {
+      focusSectionLanding(gear)
+      onComplete?.()
+    }
+
     if (prefersReducedMotion()) {
       el.scrollIntoView({ behavior: 'auto' })
-      onComplete?.()
+      afterScroll()
       return
     }
 
@@ -50,7 +81,7 @@ export default function App() {
       duration: SCROLL_DURATION,
       scrollTo: { y: el, autoKill: true },
       ease: 'power2.inOut',
-      onComplete,
+      onComplete: afterScroll,
     })
   }
 
@@ -66,12 +97,15 @@ export default function App() {
 
   return (
     <>
+      <a href="#home" className="skip-link">
+        Skip to content
+      </a>
       <Nav
         currentGear={currentGear}
         onNavigate={handleNavigate}
         onBookNow={handleNavBookNow}
       />
-      <main>
+      <main id="main">
         <Home
           onBookNow={makeBookHandler('hero')}
           onSeePackages={() => scrollToGear(4)}
