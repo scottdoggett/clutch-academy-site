@@ -29,6 +29,7 @@
   --gear-indicator-size: clamp(80px, 10vw, 160px);
   --gear-indicator-padding: clamp(24px, 3vw, 40px);
   --gear-indicator-stroke: 3px;
+  --nav-height: 64px;
 
   /* Transitions */
   --transition-same-column: 0.8s;

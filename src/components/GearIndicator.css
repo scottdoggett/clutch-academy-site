@@ -19,9 +19,10 @@
   line-height: 1;
 }
 
-/* Position the indicator at its corresponding viewport corner/edge */
+/* Position the indicator at its corresponding viewport corner/edge.
+   Top positions are offset by --nav-height so they clear the fixed header. */
 .gear-indicator--top-left {
-  top: var(--gear-indicator-padding);
+  top: calc(var(--nav-height) + var(--gear-indicator-padding));
   left: var(--gear-indicator-padding);
 }
 
@@ -31,7 +32,7 @@
 }
 
 .gear-indicator--top-center {
-  top: var(--gear-indicator-padding);
+  top: calc(var(--nav-height) + var(--gear-indicator-padding));
   left: 50%;
   transform: translateX(-50%);
 }
@@ -43,7 +44,7 @@
 }
 
 .gear-indicator--top-right {
-  top: var(--gear-indicator-padding);
+  top: calc(var(--nav-height) + var(--gear-indicator-padding));
   right: var(--gear-indicator-padding);
 }
 
@@ -53,15 +54,15 @@
 }
 
 .gear-indicator--center {
-  top: var(--gear-indicator-padding);
+  top: calc(var(--nav-height) + var(--gear-indicator-padding));
   left: 50%;
   transform: translateX(-50%);
 }
 
-/* Mobile: always top-center */
+/* Mobile: always top-center, below the fixed nav */
 @media (max-width: 767px) {
   .gear-indicator {
-    top: var(--gear-indicator-padding) !important;
+    top: calc(var(--nav-height) + var(--gear-indicator-padding)) !important;
     bottom: auto !important;
     left: 50% !important;
     right: auto !important;
