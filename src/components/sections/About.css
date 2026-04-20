@@ -1,0 +1,51 @@
+.about {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+
+.about__photo {
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(
+    135deg,
+    var(--red-deep) 0%,
+    var(--red-dark) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+}
+
+.about__photo-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  opacity: 0.75;
+}
+
+.about__bio {
+  color: var(--cream);
+  margin: 0;
+}
+
+.about .btn {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .about {
+    grid-template-columns: 1fr;
+  }
+
+  .about__photo {
+    max-width: 240px;
+  }
+}

@@ -1,4 +1,5 @@
 import GearSection from '../GearSection'
+import './Reviews.css'
 
 export default function Reviews() {
   return (
