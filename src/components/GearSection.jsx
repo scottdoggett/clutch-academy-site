@@ -122,11 +122,12 @@ export default function GearSection({ gear, id, isLast = false, children }) {
           return
         }
 
-        // Type A — same-column shift: straight vertical slide.
-        gsap
-          .timeline({ scrollTrigger })
-          .to(contentRef.current, { yPercent: -100, ease: 'power2.inOut' }, 0)
-          .to(indicatorRef.current, { yPercent: -100, opacity: 0, ease: 'power2.inOut' }, 0)
+        // Type A — same-column shift. The pin reserves scroll budget for the
+        // "shift moment" but no element animates independently: content and
+        // indicator both sit still during the pin, then scroll out as one
+        // unit when the pin releases. This keeps the gear indicator locked
+        // to the rest of the section so nothing drifts ahead of the group.
+        gsap.timeline({ scrollTrigger })
       })
 
       // --- Mobile (<768px): simplified shift mode ---
