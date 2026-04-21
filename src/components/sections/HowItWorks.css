@@ -1,3 +1,8 @@
+/* Extra breathing room between the top-center "3" indicator and the header. */
+.gear-section[data-gear="3"] .section-header {
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+}
+
 .steps {
   list-style: none;
   padding: 0;
