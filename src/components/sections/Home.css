@@ -10,12 +10,10 @@
 .home__copy {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1rem;
   min-height: 0;
-  /* Stretch the column to full grid height so margin-top:auto on the scroll
-     hint pins it to the bottom of the safe zone — never below the viewport. */
   height: 100%;
-  padding-bottom: 0.25rem;
 }
 
 .home__eyebrow {
@@ -50,7 +48,6 @@
 }
 
 .home__scroll-hint {
-  margin-top: auto;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-small);
@@ -59,6 +56,7 @@
   color: var(--chrome);
   opacity: 0.75;
   flex-shrink: 0;
+  margin: 0;
 }
 
 .home__visual {
