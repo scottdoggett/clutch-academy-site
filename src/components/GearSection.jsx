@@ -20,7 +20,7 @@ const H_CROSSING_EXITS = new Set([2, 4])
 
 // Desktop pin distances. H-crossing and Reverse are longer than same-column
 // so their multi-beat motion has room to read clearly.
-const SHIFT_DISTANCE_SAME_COLUMN = '+=100%'
+const SHIFT_DISTANCE_SAME_COLUMN = '+=40%'
 const SHIFT_DISTANCE_H_CROSSING = '+=150%'
 const SHIFT_DISTANCE_REVERSE = '+=175%'
 
