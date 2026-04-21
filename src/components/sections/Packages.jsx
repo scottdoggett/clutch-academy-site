@@ -14,12 +14,12 @@ export default function Packages({ onBookSingle, onBookPack }) {
 
       <div className="packages">
         <article className="package-card">
-          <header className="package-card__header">
+          <div className="package-card__header">
             <h3>Single Lesson</h3>
             <p className="package-card__desc">
               Best for first-timers or refreshers.
             </p>
-          </header>
+          </div>
           <div className="package-card__pricing">
             <p className="package-card__price">
               <span className="package-card__currency">$</span>90
@@ -40,19 +40,17 @@ export default function Packages({ onBookSingle, onBookPack }) {
 
         <article className="package-card package-card--featured">
           <span className="package-card__badge">Most Popular</span>
-          <header className="package-card__header">
+          <div className="package-card__header">
             <h3>3-Lesson Package</h3>
             <p className="package-card__desc">
               Full progression from basics to road-confident.
             </p>
-          </header>
+          </div>
           <div className="package-card__pricing">
             <p className="package-card__price">
               <span className="package-card__currency">$</span>240
             </p>
-            <p className="package-card__unit">
-              3 × 1-hour sessions · $80/hr · save $30
-            </p>
+            <p className="package-card__unit">3 × 1-hour · $80/hr · save $30</p>
           </div>
           {/* PENDING: 3-LESSON INCLUSIONS (3–5 bullets from client) */}
           <ul className="package-card__list">
@@ -60,7 +58,6 @@ export default function Packages({ onBookSingle, onBookPack }) {
             <li>Progression across three sessions</li>
             <li>Hill starts and real-road practice</li>
             <li>Smooth shifting at speed</li>
-            <li>Confidence in Toronto traffic</li>
           </ul>
           <button type="button" className="btn btn--primary" onClick={onBookPack}>
             Book This Package

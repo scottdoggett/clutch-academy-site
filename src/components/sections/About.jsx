@@ -17,21 +17,13 @@ export default function About({ onBookNow }) {
           <p className="about__role">Founder · Lead Instructor</p>
 
           {/* PENDING: INSTRUCTOR BIO (200–300 words) */}
-          <div className="about__bio">
-            <p>
-              [Sample bio paragraph one — the client will provide 200–300 words
-              covering years of manual driving experience, teaching background,
-              and why Clutch Academy was started. This placeholder is here to
-              show layout rhythm; the final copy will feel warmer and more
-              personal.]
-            </p>
-            <p>
-              [Sample bio paragraph two — teaching philosophy and one personal
-              detail that humanizes the instructor. Expect two or three short
-              paragraphs total, each around 60–100 words, with plenty of line
-              height so white text on red stays comfortable to read.]
-            </p>
-          </div>
+          <p className="about__bio">
+            [Sample bio — the client will provide 200–300 words covering years
+            of manual driving experience, teaching background, why Clutch
+            Academy was started, teaching philosophy, and one personal detail.
+            This placeholder is here to show layout rhythm; the final copy
+            will feel warmer and more personal.]
+          </p>
 
           <dl className="about__stats">
             <div className="about__stat">
@@ -40,13 +32,12 @@ export default function About({ onBookNow }) {
               <dd>[XX]</dd>
             </div>
             <div className="about__stat">
-              <dt>Students taught</dt>
-              {/* PENDING: STUDENTS TAUGHT COUNT — optional, remove if unknown */}
-              <dd>[XXX+]</dd>
+              <dt>Lesson style</dt>
+              <dd>1-on-1</dd>
             </div>
             <div className="about__stat">
-              <dt>Lesson style</dt>
-              <dd>1-on-1, real roads</dd>
+              <dt>Territory</dt>
+              <dd>GTA</dd>
             </div>
           </dl>
 

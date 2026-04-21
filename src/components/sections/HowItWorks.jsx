@@ -14,12 +14,12 @@ const STEPS = [
   },
   {
     n: 3,
-    title: 'Meet at the lesson location',
+    title: 'Meet at the lesson',
     desc: "Show up ready to drive — we'll handle the rest.",
   },
   {
     n: 4,
-    title: 'Drive, learn, leave confident',
+    title: 'Drive with confidence',
     desc: 'One-on-one coaching tailored to your pace.',
   },
 ]
@@ -31,8 +31,7 @@ export default function HowItWorks() {
         <p className="section-header__eyebrow">The Process</p>
         <h2>How It Works</h2>
         <p className="section-header__lead">
-          From picking a package to leaving with confidence — here&apos;s the
-          full drive.
+          From picking a package to leaving with confidence.
         </p>
       </header>
 
@@ -55,24 +54,16 @@ export default function HowItWorks() {
 
       <section className="first-lesson">
         <div className="first-lesson__heading">
-          <p className="section-header__eyebrow">First lesson</p>
+          <p className="section-header__eyebrow">Your first lesson</p>
           <h3>What to Expect</h3>
         </div>
         {/* PENDING: FIRST LESSON EXPECTATIONS */}
-        <div className="first-lesson__body">
-          <p>
-            [Sample placeholder — the client will provide content describing
-            what happens in the opening minutes of lesson one, how a typical
-            multi-lesson arc progresses, and which skills are covered. Expect
-            roughly three short paragraphs of warm, jargon-free copy.]
-          </p>
-          <ul className="first-lesson__checklist">
-            <li>Clutch control and smooth engagement</li>
-            <li>Starting and stopping on hills</li>
-            <li>Shifting under real-road conditions</li>
-            <li>Confidence in busy Toronto traffic</li>
-          </ul>
-        </div>
+        <p className="first-lesson__body">
+          [Sample placeholder — the client will provide warm, jargon-free copy
+          describing what happens in lesson one, how the arc progresses, and
+          which skills are covered: clutch control, hill starts, shifting
+          under real-road conditions.]
+        </p>
       </section>
     </GearSection>
   )

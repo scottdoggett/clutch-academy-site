@@ -1,18 +1,21 @@
 .reverse {
   display: flex;
   flex-direction: column;
-  gap: clamp(2.5rem, 5vw, 4rem);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
   max-width: 960px;
   width: 100%;
   margin: 0 auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .reverse__hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 0.75rem;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .reverse__eyebrow {
@@ -26,7 +29,7 @@
 }
 
 .reverse__headline {
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2rem, 5vw, 4rem);
   line-height: 0.95;
   letter-spacing: var(--letter-tight);
   margin: 0;
@@ -44,24 +47,27 @@
 .reverse__contact {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: clamp(2rem, 4vw, 3rem);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
   background-color: var(--red-deep);
   border: 1px solid rgba(255, 255, 255, 0.15);
   text-align: left;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .reverse__contact-header {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .reverse__contact-header h3 {
-  font-size: var(--text-display-lg);
+  font-size: clamp(1.25rem, 2.25vw, 1.75rem);
   margin: 0;
   line-height: 1;
 }
@@ -69,19 +75,20 @@
 .reverse__contact form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  min-height: 0;
 }
 
 .reverse__form-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .reverse__contact label {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.25rem;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-small);
@@ -100,9 +107,13 @@
   color: var(--white);
   background-color: var(--red-dark);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.75rem 0.875rem;
+  padding: 0.625rem 0.75rem;
   width: 100%;
   resize: vertical;
+}
+
+.reverse__contact textarea {
+  min-height: 80px;
 }
 
 .reverse__contact input:focus,
@@ -119,7 +130,7 @@
 .reverse__success {
   grid-column: 1 / -1;
   margin: 0;
-  padding: 1rem 0;
+  padding: 0.75rem 0;
   font-size: var(--text-body-lg);
   color: var(--cream);
 }
@@ -133,15 +144,15 @@
 .reverse__direct {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  padding-left: clamp(0rem, 3vw, 2rem);
+  gap: 1rem;
+  padding-left: clamp(0rem, 2.5vw, 1.5rem);
   border-left: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .reverse__direct-item {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem;
 }
 
 .reverse__direct-label {
@@ -157,12 +168,13 @@
 .reverse__direct-item > span:last-child {
   color: var(--white);
   text-decoration: none;
-  font-size: var(--text-body-lg);
+  font-size: var(--text-body);
 }
 
 .reverse__direct-item a {
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   padding-bottom: 0.125rem;
+  align-self: flex-start;
 }
 
 .reverse__direct-item a:hover {
@@ -172,17 +184,24 @@
 @media (max-width: 767px) {
   .reverse__contact {
     grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
   }
 
   .reverse__form-row {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 
   .reverse__direct {
     padding-left: 0;
-    padding-top: 1.25rem;
+    padding-top: 1rem;
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
   .reverse__contact form .btn {
