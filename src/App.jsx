@@ -8,6 +8,7 @@ import Packages from './components/sections/Packages'
 import Reviews from './components/sections/Reviews'
 import Faq from './components/sections/Faq'
 import Reverse from './components/sections/Reverse'
+import Footer from './components/Footer'
 import { openCalendly } from './hooks/useCalendly'
 
 const GEAR_TO_ID = {
@@ -120,6 +121,7 @@ export default function App() {
         <Faq />
         <Reverse onBookNow={makeBookHandler('reverse')} isLast />
       </main>
+      <Footer onNavigate={handleNavigate} />
     </>
   )
 }
