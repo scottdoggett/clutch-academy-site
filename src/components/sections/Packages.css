@@ -1,18 +1,21 @@
 .packages {
+  /* Two cards side-by-side, each one internally split into info+details. */
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
-  max-width: 880px;
+  max-width: 1100px;
   width: 100%;
-  /* Center the card row vertically between the header and payment note. */
   margin: auto;
 }
 
 /* ---------- Card ----------------------------------------------------- */
 .package-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  /* Internal 2-col layout: info on the left, bullets + CTA on the right.
+     This keeps each card wide and short so the grid doesn't grow tall enough
+     to bump into the bottom-center gear indicator. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
   padding: clamp(1.5rem, 2.5vw, 2rem);
   background-color: var(--red-deep);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -23,10 +26,13 @@
   border-color: var(--white);
 }
 
-.package-card__top {
+/* ---------- Left column: tag + title + desc + price ------------------ */
+.package-card__info {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.5rem;
+  padding-right: clamp(0.75rem, 1.5vw, 1.25rem);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .package-card__tag {
@@ -44,30 +50,27 @@
 }
 
 .package-card h3 {
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-size: clamp(1.375rem, 2.25vw, 1.875rem);
   line-height: 1;
   margin: 0;
 }
 
 .package-card__desc {
-  margin: 0;
+  margin: 0 0 0.25rem;
   color: var(--cream);
   font-size: var(--text-body);
 }
 
-/* ---------- Price --------------------------------------------------- */
 .package-card__price {
-  margin: 0;
+  margin: auto 0 0;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
   line-height: 1;
   letter-spacing: var(--letter-tight);
   display: flex;
   align-items: baseline;
-  gap: 0.375rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  gap: 0.25rem;
 }
 
 .package-card__currency {
@@ -86,7 +89,13 @@
   margin-left: 0.25rem;
 }
 
-/* ---------- Inclusions --------------------------------------------- */
+/* ---------- Right column: bullets + CTA ------------------------------ */
+.package-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .package-card__list {
   list-style: none;
   padding: 0;
@@ -113,13 +122,15 @@
   background-color: var(--chrome);
 }
 
-/* ---------- CTA ---------------------------------------------------- */
 .package-card .btn {
   align-self: stretch;
   text-align: center;
+  /* Pin the CTA to the bottom of the right column so both cards' buttons
+     line up even if bullet counts differ. */
+  margin-top: auto;
 }
 
-/* ---------- Payment note ------------------------------------------- */
+/* ---------- Payment note --------------------------------------------- */
 .packages__payment {
   margin: 0;
   font-size: var(--text-small);
@@ -130,7 +141,25 @@
   flex-shrink: 0;
 }
 
-/* ---------- Mobile ------------------------------------------------- */
+/* ---------- Mobile --------------------------------------------------- */
+@media (max-width: 1023px) {
+  .package-card {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .package-card__info {
+    padding-right: 0;
+    border-right: none;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .package-card__price {
+    margin-top: 0.25rem;
+  }
+}
+
 @media (max-width: 767px) {
   .packages {
     grid-template-columns: 1fr;
@@ -139,11 +168,6 @@
 
   .package-card {
     padding: 1rem;
-    gap: 0.875rem;
-  }
-
-  .package-card__list {
-    gap: 0.375rem;
   }
 
   .package-card__list li {
