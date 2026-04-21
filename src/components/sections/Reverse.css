@@ -1,34 +1,80 @@
-.gear-section[data-gear="R"] h2 {
-  font-size: var(--text-display-xl);
-  margin: 0 0 1.5rem;
+.reverse {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.reverse__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
   text-align: center;
 }
 
-.reverse__payment-note {
-  margin: 1rem 0 2.5rem;
+.reverse__eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: var(--text-small);
   letter-spacing: var(--letter-caps);
   text-transform: uppercase;
-  opacity: 0.8;
-  text-align: center;
-}
-
-.reverse__contact {
-  margin: 2rem auto 0;
-  max-width: 720px;
-  display: grid;
-  gap: 2rem;
-  text-align: left;
-}
-
-.reverse__contact h3 {
-  text-align: center;
-  font-size: var(--text-display-lg);
+  color: var(--chrome);
   margin: 0;
 }
 
-.reverse__contact form {
+.reverse__headline {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+}
+
+.reverse__payment-note {
+  margin: 0;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  opacity: 0.85;
+}
+
+.reverse__contact {
   display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background-color: var(--red-deep);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: left;
+}
+
+.reverse__contact-header {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.reverse__contact-header h3 {
+  font-size: var(--text-display-lg);
+  margin: 0;
+  line-height: 1;
+}
+
+.reverse__contact form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reverse__form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -52,7 +98,7 @@
   letter-spacing: normal;
   text-transform: none;
   color: var(--white);
-  background-color: var(--red-deep);
+  background-color: var(--red-dark);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.75rem 0.875rem;
   width: 100%;
@@ -67,41 +113,80 @@
 }
 
 .reverse__contact form .btn {
-  justify-self: start;
+  align-self: flex-start;
 }
 
-.reverse__contact [role="alert"] {
+.reverse__success {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1rem 0;
+  font-size: var(--text-body-lg);
+  color: var(--cream);
+}
+
+.reverse__contact [role='alert'] {
   margin: 0;
   color: var(--cream);
   font-size: var(--text-small);
 }
 
 .reverse__direct {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-left: clamp(0rem, 3vw, 2rem);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.reverse__direct-item {
+  display: flex;
+  flex-direction: column;
   gap: 0.25rem;
-  text-align: center;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--cream);
 }
 
-.reverse__direct p {
-  margin: 0;
+.reverse__direct-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
 }
 
-.reverse__direct a {
+.reverse__direct-item a,
+.reverse__direct-item > span:last-child {
   color: var(--white);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration: none;
+  font-size: var(--text-body-lg);
 }
 
-.reverse__direct a:hover {
-  color: var(--cream);
+.reverse__direct-item a {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 0.125rem;
+}
+
+.reverse__direct-item a:hover {
+  border-color: var(--white);
 }
 
 @media (max-width: 767px) {
+  .reverse__contact {
+    grid-template-columns: 1fr;
+  }
+
+  .reverse__form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .reverse__direct {
+    padding-left: 0;
+    padding-top: 1.25rem;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
   .reverse__contact form .btn {
-    justify-self: stretch;
+    align-self: stretch;
     text-align: center;
   }
 }

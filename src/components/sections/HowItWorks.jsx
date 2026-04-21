@@ -27,28 +27,53 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <GearSection gear={3} id="how-it-works">
-      <h2>How It Works</h2>
+      <header className="section-header section-header--center">
+        <p className="section-header__eyebrow">The Process</p>
+        <h2>How It Works</h2>
+        <p className="section-header__lead">
+          From picking a package to leaving with confidence — here&apos;s the
+          full drive.
+        </p>
+      </header>
+
       <ol className="steps">
-        {STEPS.map((s) => (
+        {STEPS.map((s, i) => (
           <li key={s.n} className="steps__item">
-            <span className="steps__num" aria-hidden="true">
-              {String(s.n).padStart(2, '0')}
-            </span>
+            <div className="steps__header">
+              <span className="steps__num" aria-hidden="true">
+                {String(s.n).padStart(2, '0')}
+              </span>
+              {i < STEPS.length - 1 && (
+                <span className="steps__rule" aria-hidden="true" />
+              )}
+            </div>
             <h3 className="steps__title">{s.title}</h3>
             <p className="steps__desc">{s.desc}</p>
           </li>
         ))}
       </ol>
 
-      <div className="first-lesson">
-        <h3>What to Expect in Your First Lesson</h3>
-        {/* PENDING: FIRST LESSON EXPECTATIONS (client to provide — what happens at start of lesson 1, typical progression across lessons, skills covered) */}
-        <p>
-          [First-lesson expectations placeholder — client to provide content covering
-          what happens at the start of lesson 1, typical multi-lesson progression, and
-          the skills covered.]
-        </p>
-      </div>
+      <section className="first-lesson">
+        <div className="first-lesson__heading">
+          <p className="section-header__eyebrow">First lesson</p>
+          <h3>What to Expect</h3>
+        </div>
+        {/* PENDING: FIRST LESSON EXPECTATIONS */}
+        <div className="first-lesson__body">
+          <p>
+            [Sample placeholder — the client will provide content describing
+            what happens in the opening minutes of lesson one, how a typical
+            multi-lesson arc progresses, and which skills are covered. Expect
+            roughly three short paragraphs of warm, jargon-free copy.]
+          </p>
+          <ul className="first-lesson__checklist">
+            <li>Clutch control and smooth engagement</li>
+            <li>Starting and stopping on hills</li>
+            <li>Shifting under real-road conditions</li>
+            <li>Confidence in busy Toronto traffic</li>
+          </ul>
+        </div>
+      </section>
     </GearSection>
   )
 }

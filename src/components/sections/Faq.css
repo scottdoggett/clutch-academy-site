@@ -1,18 +1,25 @@
+.faq-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  /* Pull the list slightly left so the bottom-right indicator has clean air. */
+  padding-right: clamp(0rem, 8vw, 6rem);
+}
+
 .faq {
-  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .faq__item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .faq__question {
   list-style: none;
   cursor: pointer;
-  padding: 1rem 0;
+  padding: 1.25rem 0;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-body-lg);
@@ -21,6 +28,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  line-height: 1.2;
 }
 
 .faq__question::-webkit-details-marker {
@@ -31,14 +39,16 @@
   content: '+';
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   line-height: 1;
   transition: transform var(--transition-reduced) ease;
   flex-shrink: 0;
+  color: var(--chrome);
 }
 
 .faq__item[open] .faq__question::after {
   transform: rotate(45deg);
+  color: var(--white);
 }
 
 .faq__question:focus-visible {
@@ -47,7 +57,21 @@
 }
 
 .faq__answer {
-  padding: 0 0 1rem;
+  padding: 0 0 1.25rem;
   color: var(--cream);
   margin: 0;
+  max-width: 50ch;
+}
+
+@media (max-width: 767px) {
+  .faq-columns {
+    grid-template-columns: 1fr;
+    padding-right: 0;
+    gap: 0;
+  }
+
+  /* Remove duplicate top border where columns stack. */
+  .faq-columns .faq + .faq {
+    border-top: none;
+  }
 }

@@ -1,41 +1,82 @@
 .reviews__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 1.5rem 0 2rem;
+  gap: 1.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  /* Push the grid away from the top-right indicator. */
+  max-width: 1000px;
 }
 
 .review-card {
-  padding: 1.5rem;
+  padding: 2rem;
   background-color: var(--red-deep);
   border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1rem;
-  min-height: 180px;
+  gap: 1.5rem;
+  min-height: 220px;
 }
 
 .review-card__quote {
   margin: 0;
-  font-style: italic;
+  font-size: var(--text-body-lg);
+  line-height: 1.5;
   color: var(--cream);
+  font-style: italic;
   position: relative;
 }
 
 .review-card__quote::before {
   content: '\201C';
   font-family: var(--font-display);
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   line-height: 0.8;
   color: var(--chrome);
   opacity: 0.4;
-  margin-right: 0.25rem;
-  vertical-align: -0.25em;
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
-.review-card__attribution {
-  margin: 0;
+.review-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+}
+
+.review-card__name {
+  color: var(--white);
+}
+
+.review-card__package {
+  color: var(--chrome);
+  opacity: 0.8;
+}
+
+.reviews__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.reviews__badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--cream);
+}
+
+.reviews__badge-label {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-small);
@@ -44,8 +85,27 @@
   color: var(--chrome);
 }
 
+.reviews__badge-stars {
+  font-size: var(--text-body-lg);
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+
+.reviews__badge-count {
+  font-size: var(--text-small);
+  opacity: 0.75;
+}
+
 @media (max-width: 767px) {
   .reviews__grid {
     grid-template-columns: 1fr;
+  }
+
+  .review-card {
+    min-height: auto;
+  }
+
+  .reviews__footer {
+    justify-content: flex-start;
   }
 }

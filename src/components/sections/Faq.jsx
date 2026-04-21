@@ -8,7 +8,7 @@ const FAQS = [
   },
   {
     q: "I've never touched a stick shift — is that okay?",
-    a: 'Absolutely. Lessons are tailored to your starting skill level, whether you\'re a complete beginner or looking to refresh.',
+    a: "Absolutely. Lessons are tailored to your starting skill level, whether you're a complete beginner or looking to refresh.",
   },
   {
     q: 'Where do lessons happen?',
@@ -39,21 +39,38 @@ const FAQS = [
   },
   {
     q: 'Can I buy a lesson as a gift?',
-    // PENDING: GIFT-LESSON ANSWER CONFIRMATION (suggested default below — confirm with client)
+    // PENDING: GIFT-LESSON ANSWER CONFIRMATION
     a: "We don't currently offer gift certificates, but a friend or family member is welcome to pay for your lesson on your behalf.",
   },
 ]
 
 export default function Faq() {
+  // Split into two columns for a more editorial, less scroll-heavy feel.
+  const midpoint = Math.ceil(FAQS.length / 2)
+  const left = FAQS.slice(0, midpoint)
+  const right = FAQS.slice(midpoint)
+
   return (
     <GearSection gear={6} id="faq">
-      <h2>Frequently Asked Questions</h2>
-      <div className="faq">
-        {FAQS.map((item, i) => (
-          <details key={i} className="faq__item">
-            <summary className="faq__question">{item.q}</summary>
-            <p className="faq__answer">{item.a}</p>
-          </details>
+      <header className="section-header">
+        <p className="section-header__eyebrow">Questions & Answers</p>
+        <h2>Frequently Asked Questions</h2>
+        <p className="section-header__lead">
+          Everything you need to know before your first lesson. Still unsure?
+          Drop a message below and we&apos;ll get back within 24 hours.
+        </p>
+      </header>
+
+      <div className="faq-columns">
+        {[left, right].map((col, ci) => (
+          <div key={ci} className="faq">
+            {col.map((item, i) => (
+              <details key={i} className="faq__item">
+                <summary className="faq__question">{item.q}</summary>
+                <p className="faq__answer">{item.a}</p>
+              </details>
+            ))}
+          </div>
         ))}
       </div>
     </GearSection>
