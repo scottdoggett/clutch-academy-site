@@ -7,29 +7,47 @@ import './Reviews.css'
 const PLACEHOLDERS = [
   {
     quote:
-      '[Sample testimonial — a couple of sentences about what lessons were like and what the student can do now that they couldn\'t before. Expect warm, specific, ~2–3 line quotes.]',
-    name: 'Student One',
+      'I stalled about a dozen times in my first lesson and walked away convinced I\'d never get it. By lesson three I was pulling out of my driveway on a hill like it was nothing. Patient, calm, zero judgment.',
+    name: 'Priya R.',
     package: '3-Lesson Package',
   },
   {
     quote:
-      '[Sample testimonial — a couple of sentences about what lessons were like and what the student can do now that they couldn\'t before. Expect warm, specific, ~2–3 line quotes.]',
-    name: 'Student Two',
+      'Bought a used Miata before I knew how to drive stick — probably not the smartest move. One afternoon with Clutch Academy and I actually drove it home. Worth every dollar.',
+    name: 'Marcus T.',
     package: 'Single Lesson',
   },
   {
     quote:
-      '[Sample testimonial — a couple of sentences about what lessons were like and what the student can do now that they couldn\'t before. Expect warm, specific, ~2–3 line quotes.]',
-    name: 'Student Three',
+      'The instructor broke down what the clutch is actually doing in a way nobody else had. Suddenly the bite point made sense instead of being a guessing game.',
+    name: 'Elena K.',
     package: '3-Lesson Package',
   },
   {
     quote:
-      '[Sample testimonial — a couple of sentences about what lessons were like and what the student can do now that they couldn\'t before. Expect warm, specific, ~2–3 line quotes.]',
-    name: 'Student Four',
+      'I needed this for a job that required driving a manual van. Tight timeline, super accommodating with scheduling, and I passed my work road test first try.',
+    name: 'Devon A.',
     package: 'Single Lesson',
+  },
+  {
+    quote:
+      'My dad tried to teach me years ago and it nearly ended our relationship. One lesson here and I already felt more confident than after a month of him yelling at me.',
+    name: 'Sofia L.',
+    package: '3-Lesson Package',
+  },
+  {
+    quote:
+      'Honestly thought the gear-shift branding was gimmicky until I took a lesson. The instructor genuinely knows the craft and teaches it like someone who cares about you getting it.',
+    name: 'Jordan M.',
+    package: '3-Lesson Package',
   },
 ]
+
+// The marquee works by translating a track that contains *two* copies of
+// the list from 0 to -50%. Because the second copy is an exact duplicate
+// of the first, the 100% -> 0% reset is visually seamless — card 1 of
+// copy B sits exactly where card 1 of copy A used to be.
+const MARQUEE_SEQUENCE = [...PLACEHOLDERS, ...PLACEHOLDERS]
 
 export default function Reviews() {
   return (
@@ -43,16 +61,28 @@ export default function Reviews() {
         </p>
       </header>
 
-      <div className="reviews__grid">
-        {PLACEHOLDERS.map((r, i) => (
-          <article key={i} className="review-card">
-            <p className="review-card__quote">{r.quote}</p>
-            <footer className="review-card__meta">
-              <span className="review-card__name">— {r.name}</span>
-              <span className="review-card__package">{r.package}</span>
-            </footer>
-          </article>
-        ))}
+      <div
+        className="reviews__marquee"
+        aria-label="Student testimonials"
+        role="region"
+      >
+        <ul className="reviews__track">
+          {MARQUEE_SEQUENCE.map((r, i) => (
+            <li
+              key={i}
+              className="reviews__slide"
+              aria-hidden={i >= PLACEHOLDERS.length ? 'true' : undefined}
+            >
+              <article className="review-card">
+                <p className="review-card__quote">{r.quote}</p>
+                <footer className="review-card__meta">
+                  <span className="review-card__name">— {r.name}</span>
+                  <span className="review-card__package">{r.package}</span>
+                </footer>
+              </article>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="reviews__footer">

@@ -100,23 +100,37 @@ export default function GearSection({ gear, id, isLast = false, children }) {
         }
 
         if (isReverseShift) {
-          // Type C — signature Reverse shift: push in, then right-and-down.
+          // Type C — signature Reverse shift, three-beat motion:
+          //   1. Section 6 grows + softly fades (stays visible).
+          //   2. It slides off to the right.
+          //   3. It drops down and out, completing the fade.
+          // Reverse section eases in with a gentle scale while that happens.
           const nextContent = document.querySelector('[data-gear-content="R"]')
           const nextIndicator = document.querySelector('[data-gear-indicator="R"]')
 
-          if (nextContent) gsap.set(nextContent, { xPercent: -60, yPercent: -60, opacity: 0 })
-          if (nextIndicator) gsap.set(nextIndicator, { xPercent: -60, yPercent: -60, opacity: 0 })
+          if (nextContent) gsap.set(nextContent, { scale: 0.94, opacity: 0 })
+          if (nextIndicator) gsap.set(nextIndicator, { scale: 0.94, opacity: 0 })
 
           const tl = gsap.timeline({ scrollTrigger })
 
-          tl.to(contentRef.current, { scale: 1.3, opacity: 0, ease: 'expo.in', duration: 0.43 }, 0)
-            .to(indicatorRef.current, { scale: 1.3, opacity: 0, ease: 'expo.in', duration: 0.43 }, 0)
+          // Beat 1 — grow + partial fade (not gone, just softened).
+          tl.to(contentRef.current, { scale: 1.2, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
+            .to(indicatorRef.current, { scale: 1.2, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
 
+          // Beat 2 — slide to the right, off the viewport.
+          tl.to(contentRef.current, { xPercent: 120, ease: 'power2.inOut', duration: 0.28 }, 0.32)
+            .to(indicatorRef.current, { xPercent: 120, ease: 'power2.inOut', duration: 0.28 }, 0.32)
+
+          // Beat 3 — drop down and finish the fade.
+          tl.to(contentRef.current, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
+            .to(indicatorRef.current, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
+
+          // Reverse enters during beats 2-3, settling into place.
           if (nextContent) {
-            tl.to(nextContent, { xPercent: 0, yPercent: 0, opacity: 1, ease: 'power3.out', duration: 0.57 }, 0.43)
+            tl.to(nextContent, { scale: 1, opacity: 1, ease: 'power2.out', duration: 0.55 }, 0.4)
           }
           if (nextIndicator) {
-            tl.to(nextIndicator, { xPercent: 0, yPercent: 0, opacity: 1, ease: 'power3.out', duration: 0.57 }, 0.43)
+            tl.to(nextIndicator, { scale: 1, opacity: 1, ease: 'power2.out', duration: 0.55 }, 0.4)
           }
 
           return

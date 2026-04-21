@@ -39,9 +39,8 @@ export default function Footer({ onNavigate }) {
             <li>
               <a href="tel:">[pending phone]</a>
             </li>
-            {/* PENDING: EMAIL ADDRESS */}
             <li>
-              <a href="mailto:">[pending email]</a>
+              <a href="mailto:">samanthony@live.ca</a>
             </li>
             <li>Serving Toronto and the GTA</li>
           </ul>

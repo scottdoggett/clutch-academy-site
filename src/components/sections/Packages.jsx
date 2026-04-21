@@ -8,7 +8,7 @@ export default function Packages({ onBookSingle, onBookPack }) {
         <p className="section-header__eyebrow">Packages & Pricing</p>
         <h2>Simple, straightforward pricing.</h2>
         <p className="section-header__lead">
-          Two options. No upsells. Pay in person when you arrive.
+          Two options. Pay in person when you arrive.
         </p>
       </header>
 
@@ -18,7 +18,7 @@ export default function Packages({ onBookSingle, onBookPack }) {
             <p className="package-card__tag">Single</p>
             <h3>Single Lesson</h3>
             <p className="package-card__desc">
-              Best for first-timers or refreshers.
+              Best for refreshers.
             </p>
             <p className="package-card__price">
               <span className="package-card__currency">$</span>90

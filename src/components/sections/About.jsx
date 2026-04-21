@@ -5,15 +5,15 @@ export default function About({ onBookNow }) {
   return (
     <GearSection gear={2} id="about">
       <div className="about">
-        {/* PENDING: INSTRUCTOR PHOTO — headshot or action shot with training car */}
-        <div className="about__photo" aria-hidden="true">
-          <span className="about__photo-label">Instructor photo</span>
-        </div>
+        <img
+          className="about__photo"
+          src="/headshot.jpeg"
+          alt="Sam Anthony, founder and lead instructor"
+        />
 
         <div className="about__text">
           <p className="about__eyebrow">Meet Your Instructor</p>
-          {/* PENDING: INSTRUCTOR NAME */}
-          <h2 className="about__name">[Instructor Name]</h2>
+          <h2 className="about__name">Samuel Anthony</h2>
           <p className="about__role">Founder · Lead Instructor</p>
 
           {/* PENDING: INSTRUCTOR BIO (200–300 words) */}
@@ -27,17 +27,16 @@ export default function About({ onBookNow }) {
 
           <dl className="about__stats">
             <div className="about__stat">
-              <dt>Years on stick</dt>
-              {/* PENDING: YEARS OF EXPERIENCE */}
-              <dd>[XX]</dd>
-            </div>
-            <div className="about__stat">
               <dt>Lesson style</dt>
               <dd>1-on-1</dd>
             </div>
             <div className="about__stat">
               <dt>Territory</dt>
-              <dd>GTA</dd>
+              <dd>Toronto</dd>
+            </div>
+            <div className="about__stat">
+              <dt>Response time</dt>
+              <dd>&lt; 24 hr</dd>
             </div>
           </dl>
 

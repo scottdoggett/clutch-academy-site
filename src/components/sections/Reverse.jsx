@@ -32,12 +32,11 @@ export default function Reverse({ onBookNow, isLast = false }) {
   return (
     <GearSection gear="R" id="book" isLast={isLast}>
       <div className="reverse">
+        {/* LEFT: hero pitch + primary book CTA */}
         <header className="reverse__hero">
           <p className="reverse__eyebrow">Shift into gear</p>
           <h2 className="reverse__headline">
-            Ready to drive
-            <br />
-            stick with confidence?
+            Ready to drive stick with confidence?
           </h2>
           <button
             type="button"
@@ -49,8 +48,26 @@ export default function Reverse({ onBookNow, isLast = false }) {
           <p className="reverse__payment-note">
             Payment collected in person — cash, e-transfer, or PayPal.
           </p>
+
+          <ul className="reverse__direct">
+            {/* PENDING: PHONE NUMBER */}
+            <li className="reverse__direct-item">
+              <span className="reverse__direct-label">Call</span>
+              <a href="tel:">+1 (902) 318-3193</a>
+            </li>
+            {/* PENDING: EMAIL ADDRESS */}
+            <li className="reverse__direct-item">
+              <span className="reverse__direct-label">Email</span>
+              <a href="mailto:">samanthony@live.ca</a>
+            </li>
+            <li className="reverse__direct-item">
+              <span className="reverse__direct-label">Service area</span>
+              <span>Toronto</span>
+            </li>
+          </ul>
         </header>
 
+        {/* RIGHT: contact form */}
         <div className="reverse__contact">
           <div className="reverse__contact-header">
             <p className="section-header__eyebrow">Or send a message</p>
@@ -94,7 +111,7 @@ export default function Reverse({ onBookNow, isLast = false }) {
                 <textarea
                   name="message"
                   required
-                  rows="5"
+                  rows="4"
                   value={form.message}
                   onChange={handleChange}
                 />
@@ -111,23 +128,6 @@ export default function Reverse({ onBookNow, isLast = false }) {
               )}
             </form>
           )}
-
-          <div className="reverse__direct">
-            {/* PENDING: PHONE NUMBER */}
-            <div className="reverse__direct-item">
-              <span className="reverse__direct-label">Call</span>
-              <a href="tel:">[pending]</a>
-            </div>
-            {/* PENDING: EMAIL ADDRESS */}
-            <div className="reverse__direct-item">
-              <span className="reverse__direct-label">Email</span>
-              <a href="mailto:">[pending]</a>
-            </div>
-            <div className="reverse__direct-item">
-              <span className="reverse__direct-label">Service area</span>
-              <span>Toronto and the surrounding GTA</span>
-            </div>
-          </div>
         </div>
       </div>
     </GearSection>

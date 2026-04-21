@@ -44,7 +44,7 @@ export default function Home({ onBookNow, onSeePackages }) {
           </div>
           <div className="home__caption">
             Sample caption — e.g. &ldquo;Real roads, real confidence. Lessons
-            across the GTA.&rdquo;
+            across Toronto.&rdquo;
           </div>
         </div>
       </div>

@@ -8,29 +8,21 @@
   padding-left: clamp(0rem, 4vw, 4rem);
 }
 
+/* The headshot is a JPEG with a white studio background. Tinting it to
+   match the red section uses multiply blending over a red fill, so the
+   white background becomes red while the subject retains depth. A
+   slight grayscale + contrast lift keeps the face readable after the
+   color shift. */
 .about__photo {
   aspect-ratio: 4 / 5;
   max-height: 100%;
-  background: linear-gradient(
-    135deg,
-    var(--red-deep) 0%,
-    var(--red-dark) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-}
-
-.about__photo-label {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-small);
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
-  color: var(--chrome);
-  opacity: 0.6;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: block;
+  background-color: var(--red-primary);
+  mix-blend-mode: multiply;
+  filter: grayscale(0.15) contrast(1.05);
 }
 
 .about__text {
