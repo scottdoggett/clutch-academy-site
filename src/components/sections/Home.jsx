@@ -37,14 +37,14 @@ export default function Home({ onBookNow, onSeePackages }) {
           </p>
         </div>
 
-        {/* PENDING: HERO PHOTO — instructor or training car */}
-        <div className="home__visual" aria-hidden="true">
-          <div className="home__photo">
-            <span className="home__photo-label">Hero photo</span>
-          </div>
+        <div className="home__visual">
+          <img
+            className="home__photo"
+            src="/hero-section.jpeg"
+            alt="Clutch Academy instructor with the training car"
+          />
           <div className="home__caption">
-            Sample caption — e.g. &ldquo;Real roads, real confidence. Lessons
-            across Toronto.&rdquo;
+            Real roads, real confidence. Lessons across Toronto.
           </div>
         </div>
       </div>

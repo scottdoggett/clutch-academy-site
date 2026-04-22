@@ -19,6 +19,7 @@
   width: 100%;
   object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
   display: block;
   background-color: var(--red-primary);
   mix-blend-mode: multiply;

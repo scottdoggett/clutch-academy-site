@@ -75,25 +75,10 @@
      it needs to keep its 4:5 aspect and stay reasonable. */
   max-height: 100%;
   aspect-ratio: 4 / 5;
-  background: linear-gradient(
-    135deg,
-    var(--red-deep) 0%,
-    var(--red-dark) 100%
-  );
+  object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.home__photo-label {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-small);
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
-  color: var(--chrome);
-  opacity: 0.6;
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+  display: block;
 }
 
 .home__caption {
