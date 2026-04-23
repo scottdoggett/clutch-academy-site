@@ -2,11 +2,11 @@
 .gear-section {
   position: relative;
   width: 100%;
-  /* Each section is exactly one viewport tall. Content that doesn't fit is
-     clipped — so every section component is designed to fit inside its
-     padded safe zone without overflow. */
+  /* Each section is exactly one viewport tall. overflow must stay visible so
+     the H-crossing animation can translate an incoming section's content up
+     and out of its own (below-fold) container to overlap the outgoing
+     section's pinned viewport. */
   height: 100vh;
-  overflow: hidden;
   background-color: var(--red-primary);
   color: var(--white);
 

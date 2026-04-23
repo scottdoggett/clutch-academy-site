@@ -65,6 +65,9 @@ export default function GearSection({ gear, id, isLast = false, children }) {
 
         if (isHCrossing) {
           // H-crossing (Type B): three-segment motion down → left → down.
+          // Incoming section enters from top-right and mirrors each beat so
+          // both sections move together, with the incoming one settling into
+          // its natural position as the outgoing one leaves.
           const nextContent = document.querySelector(
             `[data-gear-content="${gear + 1}"]`
           )
@@ -72,29 +75,40 @@ export default function GearSection({ gear, id, isLast = false, children }) {
             `[data-gear-indicator="${gear + 1}"]`
           )
 
-          if (nextContent) gsap.set(nextContent, { yPercent: 100, xPercent: -100 })
-          if (nextIndicator) gsap.set(nextIndicator, { yPercent: 100, xPercent: -100, opacity: 0 })
+          // Start the incoming section offset up-and-right so it sits at the
+          // top-right of the viewport during the outgoing section's pin. Every
+          // next-section yPercent is shifted up by an additional 300 to clear
+          // the large document-flow gap below section 2.
+          if (nextContent) gsap.set(nextContent, { yPercent: -450, xPercent: 100 })
+          if (nextIndicator) gsap.set(nextIndicator, { yPercent: -450, xPercent: 100 })
 
           const tl = gsap.timeline({ scrollTrigger })
 
-          tl.to(contentRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0)
-            .to(indicatorRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0)
-          if (nextContent) tl.to(nextContent, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0)
-          if (nextIndicator) tl.to(nextIndicator, { yPercent: 50, opacity: 1, ease: 'power2.out', duration: 0.33 }, 0)
+          // Small hold: section sits pinned in place briefly on arrival before
+          // the exit choreography begins.
+          tl.to({}, { duration: 0.2 })
+
+          // Beat 1 — down. Incoming mirrors the drop.
+          tl.to(contentRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
+            .to(indicatorRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
+          if (nextContent) tl.to(nextContent, { yPercent: -400, ease: 'power2.out', duration: 0.33 }, 0.2)
+          if (nextIndicator) tl.to(nextIndicator, { yPercent: -400, ease: 'power2.out', duration: 0.33 }, 0.2)
 
           tl.to({}, { duration: 0.02 })
 
-          tl.to(contentRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.35)
-            .to(indicatorRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.35)
-          if (nextContent) tl.to(nextContent, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.35)
-          if (nextIndicator) tl.to(nextIndicator, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.35)
+          // Beat 2 — across. Outgoing slides off-left; incoming slides in from right.
+          tl.to(contentRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.55)
+            .to(indicatorRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.55)
+          if (nextContent) tl.to(nextContent, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
+          if (nextIndicator) tl.to(nextIndicator, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
 
           tl.to({}, { duration: 0.02 })
 
-          tl.to(contentRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
-            .to(indicatorRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
-          if (nextContent) tl.to(nextContent, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
-          if (nextIndicator) tl.to(nextIndicator, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.7)
+          // Beat 3 — outgoing drops and fades; incoming settles toward final position.
+          tl.to(contentRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
+            .to(indicatorRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
+          if (nextContent) tl.to(nextContent, { yPercent: -300, ease: 'power2.out', duration: 0.3 }, 0.9)
+          if (nextIndicator) tl.to(nextIndicator, { yPercent: -300, ease: 'power2.out', duration: 0.3 }, 0.9)
 
           return
         }
