@@ -34,7 +34,6 @@ const MOBILE_QUERY = '(max-width: 767px) and (prefers-reduced-motion: no-prefere
 export default function GearSection({ gear, id, isLast = false, children }) {
   const sectionRef = useRef()
   const contentRef = useRef()
-  const indicatorRef = useRef()
   const position = POSITION_MAP[gear] || 'center'
   const isHCrossing = H_CROSSING_EXITS.has(gear)
   const isReverseShift = gear === 6
@@ -65,22 +64,16 @@ export default function GearSection({ gear, id, isLast = false, children }) {
 
         if (isHCrossing) {
           // H-crossing (Type B): three-segment motion down → left → down.
-          // Incoming section enters from top-right and mirrors each beat so
-          // both sections move together, with the incoming one settling into
-          // its natural position as the outgoing one leaves.
+          // Indicator + content live in the same wrapper, so each beat moves
+          // the whole section as one unit. Incoming section mirrors each beat
+          // and settles into its natural position as the outgoing one leaves.
           const nextContent = document.querySelector(
             `[data-gear-content="${gear + 1}"]`
           )
-          const nextIndicator = document.querySelector(
-            `[data-gear-indicator="${gear + 1}"]`
-          )
 
           // Start the incoming section offset up-and-right so it sits at the
-          // top-right of the viewport during the outgoing section's pin. Every
-          // next-section yPercent is shifted up by an additional 300 to clear
-          // the large document-flow gap below section 2.
-          if (nextContent) gsap.set(nextContent, { yPercent: -450, xPercent: 100 })
-          if (nextIndicator) gsap.set(nextIndicator, { yPercent: -450, xPercent: 100 })
+          // top-right of the viewport during the outgoing section's pin.
+          if (nextContent) gsap.set(nextContent, { yPercent: -380, xPercent: 50 })
 
           const tl = gsap.timeline({ scrollTrigger })
 
@@ -90,25 +83,19 @@ export default function GearSection({ gear, id, isLast = false, children }) {
 
           // Beat 1 — down. Incoming mirrors the drop.
           tl.to(contentRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
-            .to(indicatorRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
-          if (nextContent) tl.to(nextContent, { yPercent: -400, ease: 'power2.out', duration: 0.33 }, 0.2)
-          if (nextIndicator) tl.to(nextIndicator, { yPercent: -400, ease: 'power2.out', duration: 0.33 }, 0.2)
+          if (nextContent) tl.to(nextContent, { yPercent: -430, ease: 'power2.out', duration: 0.33 }, 0.2)
 
           tl.to({}, { duration: 0.02 })
 
           // Beat 2 — across. Outgoing slides off-left; incoming slides in from right.
           tl.to(contentRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.55)
-            .to(indicatorRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.55)
           if (nextContent) tl.to(nextContent, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
-          if (nextIndicator) tl.to(nextIndicator, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
 
           tl.to({}, { duration: 0.02 })
 
           // Beat 3 — outgoing drops and fades; incoming settles toward final position.
           tl.to(contentRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
-            .to(indicatorRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
-          if (nextContent) tl.to(nextContent, { yPercent: -300, ease: 'power2.out', duration: 0.3 }, 0.9)
-          if (nextIndicator) tl.to(nextIndicator, { yPercent: -300, ease: 'power2.out', duration: 0.3 }, 0.9)
+          if (nextContent) tl.to(nextContent, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
 
           return
         }
@@ -120,41 +107,31 @@ export default function GearSection({ gear, id, isLast = false, children }) {
           //   3. It drops down and out, completing the fade.
           // Reverse section eases in with a gentle scale while that happens.
           const nextContent = document.querySelector('[data-gear-content="R"]')
-          const nextIndicator = document.querySelector('[data-gear-indicator="R"]')
 
           if (nextContent) gsap.set(nextContent, { scale: 0.94, opacity: 0 })
-          if (nextIndicator) gsap.set(nextIndicator, { scale: 0.94, opacity: 0 })
 
           const tl = gsap.timeline({ scrollTrigger })
 
           // Beat 1 — grow + partial fade (not gone, just softened).
           tl.to(contentRef.current, { scale: 1.2, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
-            .to(indicatorRef.current, { scale: 1.2, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
 
           // Beat 2 — slide to the right, off the viewport.
           tl.to(contentRef.current, { xPercent: 120, ease: 'power2.inOut', duration: 0.28 }, 0.32)
-            .to(indicatorRef.current, { xPercent: 120, ease: 'power2.inOut', duration: 0.28 }, 0.32)
 
           // Beat 3 — drop down and finish the fade.
           tl.to(contentRef.current, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
-            .to(indicatorRef.current, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
 
           // Reverse enters during beats 2-3, settling into place.
           if (nextContent) {
             tl.to(nextContent, { scale: 1, opacity: 1, ease: 'power2.out', duration: 0.55 }, 0.4)
-          }
-          if (nextIndicator) {
-            tl.to(nextIndicator, { scale: 1, opacity: 1, ease: 'power2.out', duration: 0.55 }, 0.4)
           }
 
           return
         }
 
         // Type A — same-column shift. The pin reserves scroll budget for the
-        // "shift moment" but no element animates independently: content and
-        // indicator both sit still during the pin, then scroll out as one
-        // unit when the pin releases. This keeps the gear indicator locked
-        // to the rest of the section so nothing drifts ahead of the group.
+        // "shift moment" but the section sits still during the pin, then
+        // scrolls out as one unit when the pin releases.
         gsap.timeline({ scrollTrigger })
       })
 
@@ -175,18 +152,14 @@ export default function GearSection({ gear, id, isLast = false, children }) {
 
         if (isReverseShift) {
           const nextContent = document.querySelector('[data-gear-content="R"]')
-          const nextIndicator = document.querySelector('[data-gear-indicator="R"]')
 
           if (nextContent) gsap.set(nextContent, { opacity: 0 })
-          if (nextIndicator) gsap.set(nextIndicator, { opacity: 0 })
 
           const tl = gsap.timeline({ scrollTrigger })
 
           tl.to(contentRef.current, { scale: 1.2, opacity: 0, ease: 'expo.in', duration: 0.5 }, 0)
-            .to(indicatorRef.current, { scale: 1.2, opacity: 0, ease: 'expo.in', duration: 0.5 }, 0)
 
           if (nextContent) tl.to(nextContent, { opacity: 1, ease: 'power2.out', duration: 0.5 }, 0.5)
-          if (nextIndicator) tl.to(nextIndicator, { opacity: 1, ease: 'power2.out', duration: 0.5 }, 0.5)
 
           return
         }
@@ -195,7 +168,6 @@ export default function GearSection({ gear, id, isLast = false, children }) {
         gsap
           .timeline({ scrollTrigger })
           .to(contentRef.current, { yPercent: -100, ease: 'power2.inOut' }, 0)
-          .to(indicatorRef.current, { yPercent: -100, opacity: 0, ease: 'power2.inOut' }, 0)
       })
     },
     { scope: sectionRef, dependencies: [gear, isLast] }
@@ -209,18 +181,12 @@ export default function GearSection({ gear, id, isLast = false, children }) {
       data-gear={gear}
     >
       <div
-        ref={indicatorRef}
-        className="gear-section__indicator-wrap"
-        data-gear-indicator={gear}
-      >
-        <GearIndicator gear={gear} position={position} />
-      </div>
-      <div
         ref={contentRef}
         className="gear-section__content"
         data-gear-content={gear}
       >
-        {children}
+        <GearIndicator gear={gear} position={position} />
+        <div className="gear-section__inner">{children}</div>
       </div>
     </section>
   )

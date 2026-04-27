@@ -19,52 +19,55 @@
   --edge-pad: clamp(1rem, 2.5vw, 2rem);
 }
 
+/* ---------- Animated wrapper: indicator + inner content move together --- */
+.gear-section__content {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* ---------- Inner content: max-width centering + padding for clearance -- */
+.gear-section__inner {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 /* Top-positioned indicators (3, 5, R): content clears nav + indicator vertically. */
-.gear-section--top-center,
-.gear-section--top-right,
-.gear-section--center {
+.gear-section--top-center .gear-section__inner,
+.gear-section--top-right .gear-section__inner,
+.gear-section--center .gear-section__inner {
   padding: calc(var(--nav-height) + var(--indicator-zone)) var(--side-pad)
     var(--edge-pad);
 }
 
 /* Section 1 (top-left): content sits beside the indicator (to its right),
    not below it. Horizontal clearance only. */
-.gear-section--top-left {
-  padding: calc(var(--nav-height) + var(--edge-pad))
-    var(--side-pad)
+.gear-section--top-left .gear-section__inner {
+  padding: calc(var(--nav-height) + var(--edge-pad)) var(--side-pad)
     var(--edge-pad)
-    calc(var(--gear-indicator-size) + var(--gear-indicator-padding) * 2 + var(--edge-pad));
+    calc(
+      var(--gear-indicator-size) + var(--gear-indicator-padding) * 2 +
+        var(--edge-pad)
+    );
 }
 
 /* Bottom-positioned indicators (2, 4, 6): content clears the bottom zone. */
-.gear-section--bottom-left,
-.gear-section--bottom-center,
-.gear-section--bottom-right {
+.gear-section--bottom-left .gear-section__inner,
+.gear-section--bottom-center .gear-section__inner,
+.gear-section--bottom-right .gear-section__inner {
   padding: calc(var(--nav-height) + var(--edge-pad)) var(--side-pad)
     var(--indicator-zone);
 }
 
-/* ---------- Content wrapper ------------------------------------------- */
-.gear-section__content {
-  width: 100%;
-  max-width: 1280px;
-  height: 100%;
-  margin: 0 auto;
-  will-change: transform;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.gear-section__indicator-wrap {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.gear-section__indicator-wrap > * {
-  pointer-events: auto;
+/* Section 2 (bottom-left): the indicator sits at the bottom-left below the
+   content, so it doesn't reserve any horizontal space. Add explicit left
+   padding so the content doesn't hug the viewport edge. */
+.gear-section--bottom-left .gear-section__inner {
+  padding-left: clamp(2rem, 10vw, 10rem);
 }
 
 /* ---------- Section headers (shared treatment) ------------------------ */
@@ -113,13 +116,13 @@
     --edge-pad: 1rem;
   }
 
-  .gear-section--top-left,
-  .gear-section--top-center,
-  .gear-section--top-right,
-  .gear-section--bottom-left,
-  .gear-section--bottom-center,
-  .gear-section--bottom-right,
-  .gear-section--center {
+  .gear-section--top-left .gear-section__inner,
+  .gear-section--top-center .gear-section__inner,
+  .gear-section--top-right .gear-section__inner,
+  .gear-section--bottom-left .gear-section__inner,
+  .gear-section--bottom-center .gear-section__inner,
+  .gear-section--bottom-right .gear-section__inner,
+  .gear-section--center .gear-section__inner {
     padding-top: calc(var(--nav-height) + var(--indicator-zone));
     padding-bottom: var(--edge-pad);
     padding-left: var(--side-pad);
