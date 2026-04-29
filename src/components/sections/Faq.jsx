@@ -12,7 +12,6 @@ const FAQS = [
   },
   {
     q: 'Where do lessons happen?',
-    // PENDING: LESSON MEETUP LOCATION
     a: '[Pending — specific meetup location in Toronto.]',
   },
   {
@@ -29,17 +28,14 @@ const FAQS = [
   },
   {
     q: "What's the cancellation / reschedule policy?",
-    // PENDING: CANCELLATION POLICY WORDING
     a: '[Pending — exact cancellation/reschedule policy wording from client.]',
   },
   {
     q: 'What car will I learn on?',
-    // PENDING: TRAINING CAR MAKE/MODEL
     a: '[Pending — training car make/model and relevant details from client.]',
   },
   {
     q: 'Can I buy a lesson as a gift?',
-    // PENDING: GIFT-LESSON ANSWER CONFIRMATION
     a: "We don't currently offer gift certificates, but a friend or family member is welcome to pay for your lesson on your behalf.",
   },
 ]
