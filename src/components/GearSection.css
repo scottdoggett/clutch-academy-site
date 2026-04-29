@@ -26,6 +26,14 @@
   will-change: transform;
 }
 
+/* During H-crossing transitions, the incoming section's content is pinned to
+   the viewport (the outgoing section's pin already covers the viewport, but
+   the incoming section sits far below in document flow). Flipping to fixed
+   with inset:0 from above makes transform percentages viewport-relative. */
+.gear-section__content--pinned {
+  position: fixed;
+}
+
 /* ---------- Inner content: max-width centering + padding for clearance -- */
 .gear-section__inner {
   width: 100%;
@@ -68,6 +76,12 @@
    padding so the content doesn't hug the viewport edge. */
 .gear-section--bottom-left .gear-section__inner {
   padding-left: clamp(2rem, 10vw, 10rem);
+}
+
+/* Section 4 (bottom-center): extra breathing room between the content above
+   and the centered indicator below. */
+.gear-section--bottom-center .gear-section__inner {
+  padding-bottom: calc(var(--indicator-zone) + clamp(1rem, 3vw, 2.5rem));
 }
 
 /* ---------- Section headers (shared treatment) ------------------------ */

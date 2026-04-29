@@ -64,36 +64,43 @@ export default function GearSection({ gear, id, isLast = false, children }) {
 
         if (isHCrossing) {
           // H-crossing (Type B): three-segment motion down → left → down.
-          // Indicator + content live in the same wrapper, so each beat moves
-          // the whole section as one unit. Incoming section mirrors each beat
-          // and settles into its natural position as the outgoing one leaves.
+          // Outgoing exits 0→50→150 yPercent and 0→-100 xPercent.
+          // Incoming mirrors the camera path from (xPercent:100, yPercent:-150)
+          // back to (0, 0).
+          //
+          // The incoming section's <section> sits far down the document, so
+          // its `position: absolute` content can't be animated in viewport
+          // coordinates by default. We mirror the outgoing's pin by adding
+          // a CSS class to the incoming content for the scroll range — that
+          // class flips it to `position: fixed` so transforms read against
+          // the viewport, just like the outgoing section's own pin.
           const nextContent = document.querySelector(
             `[data-gear-content="${gear + 1}"]`
           )
 
-          // Start the incoming section offset up-and-right so it sits at the
-          // top-right of the viewport during the outgoing section's pin.
-          if (nextContent) gsap.set(nextContent, { yPercent: -380, xPercent: 50 })
+          if (nextContent) gsap.set(nextContent, { xPercent: 100, yPercent: -150 })
 
-          const tl = gsap.timeline({ scrollTrigger })
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              ...scrollTrigger,
+              toggleClass: nextContent
+                ? {
+                    targets: nextContent,
+                    className: 'gear-section__content--pinned',
+                  }
+                : undefined,
+            },
+          })
 
-          // Small hold: section sits pinned in place briefly on arrival before
-          // the exit choreography begins.
-          tl.to({}, { duration: 0.2 })
-
-          // Beat 1 — down. Incoming mirrors the drop.
+          // Beat 1 — down. Outgoing drops 50%; incoming drops from -150 to -100.
           tl.to(contentRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
-          if (nextContent) tl.to(nextContent, { yPercent: -430, ease: 'power2.out', duration: 0.33 }, 0.2)
+          if (nextContent) tl.to(nextContent, { yPercent: -150, ease: 'power2.out', duration: 0.33 }, 0.2)
 
-          tl.to({}, { duration: 0.02 })
-
-          // Beat 2 — across. Outgoing slides off-left; incoming slides in from right.
+          // Beat 2 — across. Outgoing slides off-left; incoming slides from right to center.
           tl.to(contentRef.current, { xPercent: -100, ease: 'power2.out', duration: 0.33 }, 0.55)
           if (nextContent) tl.to(nextContent, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
 
-          tl.to({}, { duration: 0.02 })
-
-          // Beat 3 — outgoing drops and fades; incoming settles toward final position.
+          // Beat 3 — outgoing drops and fades; incoming drops from -100 to 0.
           tl.to(contentRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
           if (nextContent) tl.to(nextContent, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
 
@@ -113,10 +120,10 @@ export default function GearSection({ gear, id, isLast = false, children }) {
           const tl = gsap.timeline({ scrollTrigger })
 
           // Beat 1 — grow + partial fade (not gone, just softened).
-          tl.to(contentRef.current, { scale: 1.2, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
+          tl.to(contentRef.current, { scale: 0.9, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
 
           // Beat 2 — slide to the right, off the viewport.
-          tl.to(contentRef.current, { xPercent: 120, ease: 'power2.inOut', duration: 0.28 }, 0.32)
+          tl.to(contentRef.current, { xPercent: 50, ease: 'power2.inOut', duration: 0.28 }, 0.32)
 
           // Beat 3 — drop down and finish the fade.
           tl.to(contentRef.current, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
