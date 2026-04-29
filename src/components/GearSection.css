@@ -151,3 +151,14 @@
     font-size: var(--text-small);
   }
 }
+
+
+/* THIS IS FOR DEVELOPMENT: per-section tint so section boundaries are visible while
+   building. Remove (or wrap in a debug class) before launch. */
+.gear-section[data-gear="1"] { background-color: #b91c1c; } /* brand red */
+.gear-section[data-gear="2"] { background-color: #7a1d2a; } /* maroon */
+.gear-section[data-gear="3"] { background-color: #9a4a1f; } /* burnt orange */
+.gear-section[data-gear="4"] { background-color: #1f3a8a; } /* deep blue */
+.gear-section[data-gear="5"] { background-color: #1f5d3a; } /* forest green */
+.gear-section[data-gear="6"] { background-color: #4a1f6e; } /* deep purple */
+.gear-section[data-gear="R"] { background-color: #1a1a1a; } /* near-black */

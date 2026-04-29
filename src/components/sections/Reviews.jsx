@@ -1,45 +1,26 @@
 import GearSection from '../GearSection'
 import './Reviews.css'
 
-// Placeholder testimonials so the section reads as finished. Client will
-// replace these with real quotes + first name + last initial.
-// PENDING: TESTIMONIALS
 const PLACEHOLDERS = [
   {
     quote:
-      'I stalled about a dozen times in my first lesson and walked away convinced I\'d never get it. By lesson three I was pulling out of my driveway on a hill like it was nothing. Patient, calm, zero judgment.',
-    name: 'Priya R.',
-    package: '3-Lesson Package',
+      'I went from never touching manual to driving confidently in 3 lessons. Super patient and explains everything clearly.',
+    name: 'Ethan B.',
   },
   {
     quote:
-      'Bought a used Miata before I knew how to drive stick — probably not the smartest move. One afternoon with Clutch Academy and I actually drove it home. Worth every dollar.',
-    name: 'Marcus T.',
-    package: 'Single Lesson',
+      'Tried learning from a friend before and it was a disaster. This was way easier and actually enjoyable.',
+    name: 'Obiora E.',
   },
   {
     quote:
-      'The instructor broke down what the clutch is actually doing in a way nobody else had. Suddenly the bite point made sense instead of being a guessing game.',
-    name: 'Elena K.',
-    package: '3-Lesson Package',
+      'Best decision I made before my Europe trip. I felt completely comfortable renting a manual car.',
+    name: 'Scott D.',
   },
+  // PENDING: JAMIE'S REVIEW QUOTE
   {
-    quote:
-      'I needed this for a job that required driving a manual van. Tight timeline, super accommodating with scheduling, and I passed my work road test first try.',
-    name: 'Devon A.',
-    package: 'Single Lesson',
-  },
-  {
-    quote:
-      'My dad tried to teach me years ago and it nearly ended our relationship. One lesson here and I already felt more confident than after a month of him yelling at me.',
-    name: 'Sofia L.',
-    package: '3-Lesson Package',
-  },
-  {
-    quote:
-      'Honestly thought the gear-shift branding was gimmicky until I took a lesson. The instructor genuinely knows the craft and teaches it like someone who cares about you getting it.',
-    name: 'Jordan M.',
-    package: '3-Lesson Package',
+    quote: 'XYZ',
+    name: 'Jamie S.',
   },
 ]
 
@@ -77,7 +58,9 @@ export default function Reviews() {
                 <p className="review-card__quote">{r.quote}</p>
                 <footer className="review-card__meta">
                   <span className="review-card__name">— {r.name}</span>
-                  <span className="review-card__package">{r.package}</span>
+                  {r.package && (
+                    <span className="review-card__package">{r.package}</span>
+                  )}
                 </footer>
               </article>
             </li>

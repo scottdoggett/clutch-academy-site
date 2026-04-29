@@ -6,6 +6,7 @@
   flex: 1;
   min-height: 0;
   padding-left: clamp(0rem, 4vw, 4rem);
+  margin-top: clamp(1.5rem, 6vh, 3rem);
 }
 
 /* The headshot is a JPEG with a white studio background. Tinting it to
@@ -29,7 +30,7 @@
 .about__text {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
   min-height: 0;
 }
 
@@ -51,16 +52,25 @@
 }
 
 .about__role {
-  font-size: var(--text-body);
-  color: var(--cream);
-  opacity: 0.85;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  opacity: 0.9;
   margin: 0;
 }
 
 .about__bio {
   color: var(--cream);
   margin: 0;
-  font-size: var(--text-body);
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  line-height: 1.45;
+}
+
+.about__bio + .about__bio {
+  margin-top: 0.5rem;
 }
 
 .about__stats {

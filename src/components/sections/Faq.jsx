@@ -4,39 +4,39 @@ import './Faq.css'
 const FAQS = [
   {
     q: "Do I need a driver's license to take lessons?",
-    a: 'Yes, a valid G2 or G license is required for all lessons.',
+    a: 'Yes — a valid G2 or G license is required for all lessons.',
   },
   {
-    q: "I've never touched a stick shift — is that okay?",
-    a: "Absolutely. Lessons are tailored to your starting skill level, whether you're a complete beginner or looking to refresh.",
+    q: "I've never driven manual before — is that okay?",
+    a: "Absolutely. Most students start as complete beginners. Lessons are tailored to your level, so you'll learn step by step without feeling overwhelmed.",
   },
   {
-    q: 'Where do lessons happen?',
-    a: '[Pending — specific meetup location in Toronto.]',
+    q: 'Where do lessons take place?',
+    a: 'Lessons take place in Toronto. We typically start in a quieter area to build confidence, then transition to real-road driving. Exact meetup details are provided after booking.',
   },
   {
     q: 'How many lessons will I need?',
-    a: 'Most students feel confident after 3 lessons. Complete beginners may want the 3-lesson package; drivers with some prior experience often need only 1–2.',
+    a: 'Most beginners feel confident after 3 lessons. If you have some prior experience, 1–2 lessons is often enough to get comfortable.',
   },
   {
     q: 'What should I wear?',
-    a: 'Thin-soled shoes are best — you need good pedal feel to control the clutch smoothly.',
+    a: 'Wear comfortable clothing and thin-soled shoes — this helps you feel the clutch and pedals more precisely. No sandals or open-toe shoes.',
   },
   {
     q: 'How do I pay?',
-    a: 'We accept cash, e-transfer, and PayPal. Payment is collected in person at the start of your lesson.',
+    a: 'Payment is securely collected at the time of your booking using Stripe. Arrangements can be made to also accept e-transfer, and PayPal.',
   },
   {
-    q: "What's the cancellation / reschedule policy?",
-    a: '[Pending — exact cancellation/reschedule policy wording from client.]',
+    q: 'What is your cancellation policy?',
+    a: "We require at least 24 hours' notice to cancel or reschedule a lesson. Late cancellations may be charged in full.",
   },
   {
-    q: 'What car will I learn on?',
-    a: '[Pending — training car make/model and relevant details from client.]',
+    q: 'What car will I be learning on?',
+    a: "You'll learn in a 2015 Volkswagen Golf with a manual transmission — a great car for learning thanks to its smooth clutch and forgiving feel.",
   },
   {
     q: 'Can I buy a lesson as a gift?',
-    a: "We don't currently offer gift certificates, but a friend or family member is welcome to pay for your lesson on your behalf.",
+    a: 'Yes — lessons can be purchased for someone else. Just include their name when booking or reach out after purchase.',
   },
 ]
 

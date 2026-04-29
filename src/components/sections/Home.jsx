@@ -7,13 +7,8 @@ export default function Home({ onBookNow, onSeePackages }) {
       <div className="home">
         <div className="home__copy">
           <p className="home__eyebrow">Toronto · Manual Transmission Lessons</p>
-          {/* PENDING: FINAL HEADLINE CHOICE — defaulting to personality-led */}
           <h1 className="home__headline">
-            Learn manual
-            <br />
-            from a patient,
-            <br />
-            pro instructor.
+            Finally learn manual, without the stress.
           </h1>
           <p className="home__subhead">
             One-on-one lessons on real roads. Book your first hour in under a
