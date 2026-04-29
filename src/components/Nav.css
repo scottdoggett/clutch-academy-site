@@ -16,13 +16,16 @@
 }
 
 .nav__brand {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
-  color: var(--white);
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
+  line-height: 0;
+}
+
+.nav__logo {
+  display: block;
+  height: clamp(1.5rem, 2.25vw, 2rem);
+  width: auto;
 }
 
 .nav__menu {

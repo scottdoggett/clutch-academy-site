@@ -42,8 +42,9 @@ export default function Packages({ onBookSingle, onBookPack }) {
         </article>
 
         <article className="package-card package-card--featured">
+          <span className="package-card__badge">Most Popular</span>
           <div className="package-card__info">
-            <p className="package-card__tag">Most Popular · Save $30</p>
+            <p className="package-card__tag">Save $30</p>
             <h3>3-Lesson Package</h3>
             <p className="package-card__desc">
               Full progression from basics to road-confident.
@@ -57,7 +58,6 @@ export default function Packages({ onBookSingle, onBookPack }) {
           <div className="package-card__details">
             {/* PENDING: 3-LESSON INCLUSIONS (3–5 bullets from client) */}
             <ul className="package-card__list">
-              <li>Everything in Single Lesson</li>
               <li>Progression across three sessions</li>
               <li>Hill starts and real-road practice</li>
               <li>Smooth shifting at speed</li>
@@ -69,10 +69,6 @@ export default function Packages({ onBookSingle, onBookPack }) {
           </div>
         </article>
       </div>
-
-      <p className="packages__payment">
-        Payment accepted in person · cash, e-transfer, or PayPal
-      </p>
     </GearSection>
   )
 }

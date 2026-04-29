@@ -29,7 +29,7 @@ const SHIFT_DISTANCE_MOBILE = '+=50%'
 const SHIFT_DISTANCE_MOBILE_REVERSE = '+=75%'
 
 // THIS IS FOR DEVELOPMENT THIS IS THE LINE TO CHANGE IF THERE IS ANIMATION OR NOT, CHANGE THIS >> TO no-preference
-const DESKTOP_QUERY = '(min-width: 768px) and (prefers-reduced-motion: reduce)'
+const DESKTOP_QUERY = '(min-width: 768px) and (prefers-reduced-motion: no-preference)'
 const MOBILE_QUERY = '(max-width: 767px) and (prefers-reduced-motion: no-preference)'
 
 export default function GearSection({ gear, id, isLast = false, children }) {

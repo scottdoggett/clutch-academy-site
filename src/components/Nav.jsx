@@ -27,9 +27,13 @@ export default function Nav({ currentGear = 1, onNavigate, onBookNow }) {
 
   return (
     <nav className="nav" aria-label="Primary">
-      <a href="#home" className="nav__brand" onClick={(e) => handleClick(e, 1)}>
-        {/* PENDING: LOGO FILE */}
-        Clutch Academy
+      <a
+        href="#home"
+        className="nav__brand"
+        aria-label="Clutch Academy — home"
+        onClick={(e) => handleClick(e, 1)}
+      >
+        <img src="/logo.svg" alt="Clutch Academy" className="nav__logo" />
       </a>
 
       <button
