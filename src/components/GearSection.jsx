@@ -15,31 +15,167 @@ const POSITION_MAP = {
   R: 'center',
 }
 
-// Gears whose exit traverses the neutral gate (H-crossing: 2→3, 4→5).
-const H_CROSSING_EXITS = new Set([2, 4])
-
-// Desktop pin distances. H-crossing outgoing and incoming share the same
-// trigger (the outgoing section's top top), so their ranges must match —
-// the incoming class-toggle pin needs to release exactly when the outgoing
-// native pin releases, otherwise the incoming content jumps.
-const SHIFT_DISTANCE_SAME_COLUMN = '+=40%'
-const SHIFT_DISTANCE_H_CROSSING = '+=100%'
-const SHIFT_DISTANCE_REVERSE = '+=175%'
-
-// Mobile keeps every transition short and snappy — per spec, "fast upward slide."
-const SHIFT_DISTANCE_MOBILE = '+=50%'
-const SHIFT_DISTANCE_MOBILE_REVERSE = '+=75%'
+// Each gear declares its animation roles. A gear can have multiple roles
+// (gear 3 is both an H-crossing entry receiver AND a same-column exit on
+// its way to gear 4). Each role gets its own self-contained ScrollTrigger
+// in the setup functions below — no more branching `if` ladders inside a
+// single ScrollTrigger.
+const ANIMATION_ROLES = {
+  1: ['sameColumnExit'],
+  2: ['hCrossingExit'],
+  3: ['hCrossingEntry', 'sameColumnExit'],
+  4: ['hCrossingExit'],
+  5: ['hCrossingEntry', 'sameColumnExit'],
+  6: ['reverseExit'],
+  R: [],
+}
 
 // THIS IS FOR DEVELOPMENT THIS IS THE LINE TO CHANGE IF THERE IS ANIMATION OR NOT, CHANGE THIS >> TO no-preference
 const DESKTOP_QUERY = '(min-width: 768px) and (prefers-reduced-motion: no-preference)'
 const MOBILE_QUERY = '(max-width: 767px) and (prefers-reduced-motion: no-preference)'
 
+// Shared pin options. Every desktop transition uses native GSAP pinning so
+// the section is held in place during its animation and during pauses.
+const PINNED_OPTS = {
+  scrub: true,
+  pin: true,
+  pinSpacing: true,
+  anticipatePin: 1,
+}
+
+// ---------- Desktop setup functions --------------------------------------
+
+// Type A — same-column shift (1→2, 3→4, 5→6). Pin reserves a beat of
+// scroll so the section sits still through the "shift moment", then
+// scrolls out as one unit when the pin releases. No content motion.
+function setupSameColumnExit(section) {
+  gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: '+=40%',
+      ...PINNED_OPTS,
+    },
+  })
+}
+
+// Type B exit — H-crossing exit (gear 2, gear 4). Pinned at top top of
+// THIS section. Content animates out: drop → slide off-left → drop & fade.
+function setupHCrossingExit(section, content) {
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: '+=100%',
+      ...PINNED_OPTS,
+    },
+  })
+
+  tl.to(content, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
+    .to(content, { xPercent: -70, ease: 'power2.out', duration: 0.33 }, 0.55)
+    .to(content, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
+}
+
+// Type B entry — H-crossing entry (gear 3, gear 5). Pinned at top BOTTOM
+// of THIS section, i.e. the moment the section first peeks into the
+// viewport from below. Content starts off-screen (upper-right) and is
+// animated into the viewport as the user scrolls through the pin range.
+//
+// The initial offset transform is applied INSIDE the timeline (via .set
+// at time 0) rather than via a top-level gsap.set. That keeps gear 3's
+// content at its identity transform (filling its own section, which is
+// below the fold) before the pin engages — otherwise the offset would
+// place content into the viewport coordinate space of an earlier section
+// and visually overlap it.
+function setupHCrossingEntry(section, content) {
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top bottom',
+      end: '+=100%',
+      ...PINNED_OPTS,
+      onToggle: (self) => {
+        // When scrolling backward past the trigger's start, snap content
+        // back to identity so it doesn't render its offscreen-up offset
+        // over the previous section in document flow.
+        if (!self.isActive && self.direction === -1) {
+          gsap.set(content, { xPercent: 0, yPercent: 0 })
+        }
+      },
+    },
+  })
+
+  tl.set(content, { xPercent: 50, yPercent: -200 }, 0)
+    .to(content, { yPercent: -150, ease: 'power2.out', duration: 0.33 }, 0.2)
+    .to(content, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
+    .to(content, { yPercent: -100, ease: 'power2.out', duration: 0.3 }, 0.9)
+}
+
+// Type C — Reverse shift (gear 6). Three-beat motion: gear 6 grows + soft
+// fade, slides off right, drops down. Reverse section eases in over the
+// last two beats.
+function setupReverseExit(section, content) {
+  const nextContent = document.querySelector('[data-gear-content="R"]')
+  if (nextContent) gsap.set(nextContent, { scale: 0.94, opacity: 0 })
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: '+=175%',
+      ...PINNED_OPTS,
+    },
+  })
+
+  tl.to(content, { scale: 0.9, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
+    .to(content, { xPercent: 50, ease: 'power2.inOut', duration: 0.28 }, 0.32)
+    .to(content, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
+
+  if (nextContent) {
+    tl.to(nextContent, { scale: 1, opacity: 1, ease: 'power2.out', duration: 0.55 }, 0.4)
+  }
+}
+
+const SETUPS = {
+  sameColumnExit: setupSameColumnExit,
+  hCrossingExit: setupHCrossingExit,
+  hCrossingEntry: setupHCrossingEntry,
+  reverseExit: setupReverseExit,
+}
+
+// ---------- Mobile setup -------------------------------------------------
+
+// Mobile collapses every transition into a fast upward slide. Reverse keeps
+// its zoom-out + fade because the lateral sweep doesn't read on a phone.
+function setupMobile(section, content, gear) {
+  const isReverse = gear === 6
+  const scrollTrigger = {
+    trigger: section,
+    start: 'top top',
+    end: isReverse ? '+=75%' : '+=50%',
+    ...PINNED_OPTS,
+  }
+
+  if (isReverse) {
+    const nextContent = document.querySelector('[data-gear-content="R"]')
+    if (nextContent) gsap.set(nextContent, { opacity: 0 })
+
+    const tl = gsap.timeline({ scrollTrigger })
+    tl.to(content, { scale: 1.2, opacity: 0, ease: 'expo.in', duration: 0.5 }, 0)
+    if (nextContent) tl.to(nextContent, { opacity: 1, ease: 'power2.out', duration: 0.5 }, 0.5)
+    return
+  }
+
+  gsap.timeline({ scrollTrigger })
+    .to(content, { yPercent: -100, ease: 'power2.inOut' }, 0)
+}
+
+// ---------- Component ----------------------------------------------------
+
 export default function GearSection({ gear, id, isLast = false, children }) {
   const sectionRef = useRef()
   const contentRef = useRef()
   const position = POSITION_MAP[gear] || 'center'
-  const isHCrossing = H_CROSSING_EXITS.has(gear)
-  const isReverseShift = gear === 6
 
   useGSAP(
     () => {
@@ -47,167 +183,16 @@ export default function GearSection({ gear, id, isLast = false, children }) {
 
       const mm = gsap.matchMedia()
 
-      // --- Desktop / tablet (≥768px): full H-pattern choreography ---
       mm.add(DESKTOP_QUERY, () => {
-        if (isHCrossing) {
-          // H-crossing (Type B). Two ScrollTriggers, both fired by THIS
-          // section's `top top`, so the outgoing and incoming animations
-          // run in parallel over the same scroll range:
-          //   1. Outgoing — pins this section natively, animates its
-          //      content out (drop → slide off-left → drop & fade).
-          //   2. Incoming — no native pin (the next section is still below
-          //      the viewport at this scroll position, so a native pin on
-          //      it would freeze empty space). Instead, we toggle a
-          //      `position: fixed` CSS class on the next section's content
-          //      for the active range so its transforms read against the
-          //      viewport. The next section's own same-column Type A pin
-          //      takes over for dwell once this transition ends.
-
-          // --- 1. Outgoing animation -----------------------------------
-          const outgoingTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top top',
-              end: SHIFT_DISTANCE_H_CROSSING,
-              scrub: true,
-              pin: true,
-              pinSpacing: true,
-              anticipatePin: 1,
-            },
-          })
-
-          outgoingTl
-            // Beat 1 — drop.
-            .to(contentRef.current, { yPercent: 50, ease: 'power2.out', duration: 0.33 }, 0.2)
-            // Beat 2 — slide off-left.
-            .to(contentRef.current, { xPercent: -70, ease: 'power2.out', duration: 0.33 }, 0.55)
-            // Beat 3 — drop further and fade.
-            .to(contentRef.current, { yPercent: 150, opacity: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
-
-          // --- 2. Incoming animation -----------------------------------
-          const nextContent = document.querySelector(
-            `[data-gear-content="${gear + 1}"]`
-          )
-
-          if (nextContent) {
-            const PINNED_CLASS = 'gear-section__content--pinned'
-            const pinIncoming = () => nextContent.classList.add(PINNED_CLASS)
-            const releaseIncoming = () =>
-              nextContent.classList.remove(PINNED_CLASS)
-
-            // Pre-position the incoming content for its entry path.
-            gsap.set(nextContent, { xPercent: 50, yPercent: -100 })
-
-            const incomingTl = gsap.timeline({
-              scrollTrigger: {
-                // Same trigger + range as the outgoing, so the two
-                // animations stay in lockstep.
-                trigger: sectionRef.current,
-                start: 'top top',
-                end: SHIFT_DISTANCE_H_CROSSING,
-                scrub: true,
-                onEnter: pinIncoming,
-                onEnterBack: pinIncoming,
-                onLeave: releaseIncoming,
-                onLeaveBack: releaseIncoming,
-              },
-            })
-
-            incomingTl
-              // Beat 1 — drop a touch (from -100 to -50, still above viewport).
-              .to(nextContent, { yPercent: -50, ease: 'power2.out', duration: 0.33 }, 0.2)
-              // Beat 2 — slide from right toward center.
-              .to(nextContent, { xPercent: 0, ease: 'power2.out', duration: 0.33 }, 0.55)
-              // Beat 3 — drop to final resting position.
-              .to(nextContent, { yPercent: 0, ease: 'power2.out', duration: 0.3 }, 0.9)
-          }
-
-          return
-        }
-
-        // Shared pin config for the remaining transition types.
-        const endDistance = isReverseShift
-          ? SHIFT_DISTANCE_REVERSE
-          : SHIFT_DISTANCE_SAME_COLUMN
-
-        const scrollTrigger = {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: endDistance,
-          scrub: true,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
-        }
-
-        if (isReverseShift) {
-          // Type C — signature Reverse shift, three-beat motion:
-          //   1. Section 6 grows + softly fades (stays visible).
-          //   2. It slides off to the right.
-          //   3. It drops down and out, completing the fade.
-          // Reverse section eases in with a gentle scale while that happens.
-          const nextContent = document.querySelector('[data-gear-content="R"]')
-
-          if (nextContent) gsap.set(nextContent, { scale: 0.94, opacity: 0 })
-
-          const tl = gsap.timeline({ scrollTrigger })
-
-          // Beat 1 — grow + partial fade (not gone, just softened).
-          tl.to(contentRef.current, { scale: 0.9, opacity: 0.55, ease: 'power2.out', duration: 0.3 }, 0)
-
-          // Beat 2 — slide to the right, off the viewport.
-          tl.to(contentRef.current, { xPercent: 50, ease: 'power2.inOut', duration: 0.28 }, 0.32)
-
-          // Beat 3 — drop down and finish the fade.
-          tl.to(contentRef.current, { yPercent: 120, opacity: 0, ease: 'power2.in', duration: 0.3 }, 0.62)
-
-          // Reverse enters during beats 2-3, settling into place.
-          if (nextContent) {
-            tl.to(nextContent, { scale: 1, opacity: 1, ease: 'power2.out', duration: 0.55 }, 0.4)
-          }
-
-          return
-        }
-
-        // Type A — same-column shift. The pin reserves scroll budget for the
-        // "shift moment" but the section sits still during the pin, then
-        // scrolls out as one unit when the pin releases.
-        gsap.timeline({ scrollTrigger })
+        const roles = ANIMATION_ROLES[gear] || []
+        roles.forEach((role) => {
+          const setupFn = SETUPS[role]
+          if (setupFn) setupFn(sectionRef.current, contentRef.current)
+        })
       })
 
-      // --- Mobile (<768px): simplified shift mode ---
-      // All three transition types collapse into a fast upward slide. The
-      // Reverse shift keeps its "into the screen" beat (zoom + fade) but drops
-      // the lateral sweep — incoming Reverse content simply settles.
       mm.add(MOBILE_QUERY, () => {
-        const scrollTrigger = {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: isReverseShift ? SHIFT_DISTANCE_MOBILE_REVERSE : SHIFT_DISTANCE_MOBILE,
-          scrub: true,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
-        }
-
-        if (isReverseShift) {
-          const nextContent = document.querySelector('[data-gear-content="R"]')
-
-          if (nextContent) gsap.set(nextContent, { opacity: 0 })
-
-          const tl = gsap.timeline({ scrollTrigger })
-
-          tl.to(contentRef.current, { scale: 1.2, opacity: 0, ease: 'expo.in', duration: 0.5 }, 0)
-
-          if (nextContent) tl.to(nextContent, { opacity: 1, ease: 'power2.out', duration: 0.5 }, 0.5)
-
-          return
-        }
-
-        // Every upshift — including H-crossings — is a fast upward slide.
-        gsap
-          .timeline({ scrollTrigger })
-          .to(contentRef.current, { yPercent: -100, ease: 'power2.inOut' }, 0)
+        setupMobile(sectionRef.current, contentRef.current, gear)
       })
     },
     { scope: sectionRef, dependencies: [gear, isLast] }
