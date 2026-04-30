@@ -128,15 +128,6 @@
   }
 
   .home__visual {
-    display: flex;
-    align-items: stretch;
-  }
-
-  .home__photo {
-    aspect-ratio: 16 / 10;
-  }
-
-  .home__caption {
     display: none;
   }
 
