@@ -32,7 +32,7 @@ const ANIMATION_ROLES = {
 
 // THIS IS FOR DEVELOPMENT THIS IS THE LINE TO CHANGE IF THERE IS ANIMATION OR NOT, CHANGE THIS >> TO no-preference
 const DESKTOP_QUERY = '(min-width: 768px) and (prefers-reduced-motion: none)'
-const MOBILE_QUERY = '(max-width: 767px) and (prefers-reduced-motion: no-preference)'
+const MOBILE_QUERY = '(max-width: 767px) and (prefers-reduced-motion: none)'
 
 // Shared pin options. Every desktop transition uses native GSAP pinning so
 // the section is held in place during its animation and during pauses.
