@@ -73,7 +73,11 @@ function openMobilePopup() {
   overlay.appendChild(popup)
   document.body.appendChild(overlay)
 
-  window.Calendly.initPopupWidget({
+  // initInlineWidget mounts only the booking iframe into our parent, with
+  // none of Calendly's own popup/overlay chrome. initPopupWidget would inject
+  // its own overlay wrapper even when parentElement is provided, producing a
+  // second popup stacked on top of ours.
+  window.Calendly.initInlineWidget({
     url: CALENDLY_URL,
     parentElement: popup,
   })
