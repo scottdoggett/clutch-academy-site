@@ -113,7 +113,7 @@
   .gear-section[data-gear="1"] .gear-section__inner {
     padding-top: calc(
       var(--nav-height) + var(--gear-indicator-size) +
-        var(--gear-indicator-padding)
+        var(--gear-indicator-padding) + clamp(1rem, 4vw, 2rem)
     );
   }
 
