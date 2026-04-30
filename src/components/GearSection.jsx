@@ -31,7 +31,7 @@ const ANIMATION_ROLES = {
 }
 
 // THIS IS FOR DEVELOPMENT THIS IS THE LINE TO CHANGE IF THERE IS ANIMATION OR NOT, CHANGE THIS >> TO no-preference
-const DESKTOP_QUERY = '(min-width: 768px) and (prefers-reduced-motion: no-preference)'
+const DESKTOP_QUERY = '(min-width: 768px) and (prefers-reduced-motion: none)'
 const MOBILE_QUERY = '(max-width: 767px) and (prefers-reduced-motion: no-preference)'
 
 // Shared pin options. Every desktop transition uses native GSAP pinning so
@@ -53,7 +53,7 @@ function setupSameColumnExit(section) {
     scrollTrigger: {
       trigger: section,
       start: 'top top',
-      end: '+=40%',
+      end: '+=20%',
       ...PINNED_OPTS,
     },
   })
@@ -66,7 +66,7 @@ function setupHCrossingExit(section, content) {
     scrollTrigger: {
       trigger: section,
       start: 'top top',
-      end: '+=100%',
+      end: '+=60%',
       ...PINNED_OPTS,
     },
   })
@@ -92,7 +92,7 @@ function setupHCrossingEntry(section, content) {
     scrollTrigger: {
       trigger: section,
       start: 'top bottom',
-      end: '+=100%',
+      end: '+=60%',
       ...PINNED_OPTS,
       onToggle: (self) => {
         // When scrolling backward past the trigger's start, snap content
@@ -122,7 +122,7 @@ function setupReverseExit(section, content) {
     scrollTrigger: {
       trigger: section,
       start: 'top top',
-      end: '+=175%',
+      end: '+=110%',
       ...PINNED_OPTS,
     },
   })
