@@ -19,13 +19,62 @@ export const CALENDLY_URL =
  */
 export function openCalendly() {
   if (typeof window === 'undefined') return false
-  if (window.Calendly?.initPopupWidget) {
-    window.Calendly.initPopupWidget({ url: CALENDLY_URL })
-  } else {
+  if (!window.Calendly?.initPopupWidget) {
     // The Calendly widget script is loaded async; in the rare case a user
     // clicks before it's ready, fall back to opening the scheduling page in a
     // new tab so the conversion isn't lost.
     window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer')
+    return false
+  }
+
+  const isMobile = window.matchMedia('(max-width: 767px)').matches
+
+  // Mobile: render into our own constrained container so iOS Safari can't
+  // mis-size the popup and stretch the document. Desktop uses the native
+  // Calendly popup unchanged.
+  if (isMobile) {
+    openMobilePopup()
+  } else {
+    window.Calendly.initPopupWidget({ url: CALENDLY_URL })
   }
   return false
+}
+
+function openMobilePopup() {
+  const overlay = document.createElement('div')
+  overlay.className = 'cal-host-overlay'
+
+  const popup = document.createElement('div')
+  popup.className = 'cal-host-popup'
+
+  const closeBtn = document.createElement('button')
+  closeBtn.type = 'button'
+  closeBtn.className = 'cal-host-close'
+  closeBtn.setAttribute('aria-label', 'Close booking dialog')
+  closeBtn.textContent = '×'
+
+  const close = () => {
+    overlay.remove()
+    document.body.style.overflow = ''
+    document.removeEventListener('keydown', onKeydown)
+  }
+  const onKeydown = (e) => {
+    if (e.key === 'Escape') close()
+  }
+
+  closeBtn.addEventListener('click', close)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) close()
+  })
+  document.addEventListener('keydown', onKeydown)
+
+  document.body.style.overflow = 'hidden'
+  popup.appendChild(closeBtn)
+  overlay.appendChild(popup)
+  document.body.appendChild(overlay)
+
+  window.Calendly.initPopupWidget({
+    url: CALENDLY_URL,
+    parentElement: popup,
+  })
 }
