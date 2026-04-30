@@ -124,7 +124,11 @@
   }
 
   .home__headline {
-    font-size: clamp(2rem, 9vw, 3rem);
+    font-size: clamp(2.5rem, 11vw, 3.75rem);
+  }
+
+  .home__subhead {
+    font-size: clamp(1.0625rem, 4.5vw, 1.25rem);
   }
 
   .home__visual {
