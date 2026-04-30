@@ -128,6 +128,21 @@
   .gear-section {
     --side-pad: 1rem;
     --edge-pad: 1rem;
+    /* Allow each section to grow taller than the viewport on mobile so
+       content is never clipped. Desktop keeps the strict 100vh pin. */
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* Let content participate in normal flow so the section can grow with it. */
+  .gear-section__content {
+    position: relative;
+    inset: auto;
+  }
+
+  .gear-section__inner {
+    height: auto;
+    min-height: 100vh;
   }
 
   .gear-section--top-left .gear-section__inner,
