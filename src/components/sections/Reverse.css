@@ -229,13 +229,6 @@
 
 /* ---------- Mobile: stack to a single column -------------------------- */
 @media (max-width: 767px) {
-  /* Push the form away from the bottom of the section by padding the
-     section's inner box (more reliable than padding .reverse, which sits
-     inside a flex parent that may not inflate as expected). */
-  .gear-section[data-gear="R"] .gear-section__inner {
-    padding-bottom: 3rem;
-  }
-
   .reverse {
     grid-template-columns: 1fr;
     gap: 0.75rem;
