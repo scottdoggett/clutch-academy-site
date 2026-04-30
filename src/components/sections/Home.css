@@ -156,7 +156,7 @@
     align-items: center;
     gap: 0.25rem;
     text-align: center;
-    margin-top: auto;
+    margin-top: 0.5rem;
   }
 
   .home__scroll-hint-desktop {
