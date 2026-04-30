@@ -42,9 +42,8 @@ export default function Packages({ onBookSingle, onBookPack }) {
         </article>
 
         <article className="package-card package-card--featured">
-          <span className="package-card__badge">Most Popular</span>
+          <span className="package-card__badge">Save $30</span>
           <div className="package-card__info">
-            <p className="package-card__tag">Save $30</p>
             <h3>3-Lesson Package</h3>
             <p className="package-card__desc">
               Full progression from basics to road-confident.
