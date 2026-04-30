@@ -61,10 +61,9 @@ export default function Footer({ onNavigate }) {
         <div className="footer__col">
           <h3 className="footer__heading">Follow</h3>
           <ul className="footer__list footer__list--social">
-            {/* PENDING: INSTAGRAM HANDLE */}
             <li>
               <a
-                href="#"
+                href="https://www.instagram.com/clutchacademy.ca/"
                 aria-label="Instagram"
                 rel="noopener noreferrer"
                 target="_blank"

@@ -1,3 +1,23 @@
+/* Section 6 can grow beyond 100vh on both desktop and mobile so expanded
+   answers are never clipped. The page scrolls naturally to reveal them. */
+.gear-section[data-gear="6"] {
+  height: auto;
+  min-height: 100vh;
+}
+
+.gear-section[data-gear="6"] .gear-section__inner {
+  height: auto;
+}
+
+/* On mobile, drop the 100vh floor — other sections size to content here
+   too, and forcing 100vh leaves a large empty gap before the Reverse section
+   when the FAQ list is short (or all collapsed). */
+@media (max-width: 767px) {
+  .gear-section[data-gear="6"] {
+    min-height: 0;
+  }
+}
+
 .faq-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5,7 +25,6 @@
   padding-right: clamp(0rem, 6vw, 5rem);
   flex: 1;
   min-height: 0;
-  overflow: hidden;
 }
 
 .faq {

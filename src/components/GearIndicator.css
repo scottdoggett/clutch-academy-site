@@ -59,7 +59,9 @@
   transform: translateX(-50%);
 }
 
-/* Mobile: always top-center, below the fixed nav */
+/* Mobile: top-pinned below the fixed nav. Horizontal placement varies by
+   section so left-content sections (1, 2) keep the indicator on the left
+   and right-content sections (5, 6) keep it on the right. */
 @media (max-width: 767px) {
   .gear-indicator {
     top: calc(var(--nav-height) + var(--gear-indicator-padding)) !important;
@@ -67,5 +69,19 @@
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
+  }
+
+  .gear-section[data-gear="1"] .gear-indicator,
+  .gear-section[data-gear="2"] .gear-indicator {
+    left: var(--gear-indicator-padding) !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  .gear-section[data-gear="5"] .gear-indicator,
+  .gear-section[data-gear="6"] .gear-indicator {
+    left: auto !important;
+    right: var(--gear-indicator-padding) !important;
+    transform: none !important;
   }
 }

@@ -127,7 +127,7 @@
 @media (max-width: 767px) {
   .gear-section {
     --side-pad: 1rem;
-    --edge-pad: 0.5rem;
+    --edge-pad: 0;
     /* Sections size to their content on mobile (no 100vh floor) so the
        trailing empty space between sections disappears. Desktop keeps the
        strict 100vh pin needed for gear-shift animations. */
@@ -154,11 +154,18 @@
   .gear-section--bottom-right .gear-section__inner,
   .gear-section--center .gear-section__inner {
     padding-top: calc(
-      var(--nav-height) + var(--indicator-zone) + clamp(1rem, 4vw, 2rem)
+      var(--nav-height) + var(--indicator-zone) + clamp(0.75rem, 2.5vw, 1.25rem)
     );
     padding-bottom: var(--edge-pad);
     padding-left: var(--side-pad);
     padding-right: var(--side-pad);
+  }
+
+  /* Section headers also contribute to the top gap via their margin-bottom.
+     Tighten on mobile so the eyebrow → h2 → lead block hugs the content
+     that follows without a desktop-sized buffer below it. */
+  .section-header {
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
   }
 
   .section-header h2 {
@@ -167,6 +174,27 @@
 
   .section-header__lead {
     font-size: var(--text-small);
+  }
+
+  /* Sections 5 and 6: right-align content on mobile (indicator unaffected
+     since it's positioned absolutely on the section, outside the inner). */
+  .gear-section[data-gear="5"] .gear-section__inner,
+  .gear-section[data-gear="6"] .gear-section__inner {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .gear-section[data-gear="5"] .section-header,
+  .gear-section[data-gear="6"] .section-header {
+    margin-left: auto;
+    align-items: flex-end;
+  }
+
+  /* Section 6 FAQ list keeps its original left alignment — only the section
+     header above it is right-aligned. */
+  .gear-section[data-gear="6"] .faq-columns {
+    text-align: left;
+    align-self: stretch;
   }
 }
 

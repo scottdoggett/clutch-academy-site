@@ -118,15 +118,30 @@
   }
 }
 
+/* Default: only the desktop-positioned (left-column) photo is visible. */
+.about__photo--mobile {
+  display: none;
+}
+
 @media (max-width: 767px) {
   .about {
     grid-template-columns: 1fr;
     align-items: start;
+    /* Remove the desktop top margin so content sits right under the gear-2
+       indicator instead of being pushed down. */
+    margin-top: 0;
   }
 
-  .about__photo {
-    max-width: 150px;
-    max-height: 180px;
+  /* Hide the left-column photo, show the in-flow one between role and bio. */
+  .about__photo--desktop {
+    display: none;
+  }
+
+  .about__photo--mobile {
+    display: block;
+    width: min(75%, 280px);
+    margin: 0.75rem auto;
+    max-height: none;
   }
 
   .about__name {
