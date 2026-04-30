@@ -1,3 +1,14 @@
+/* Section 6 can grow beyond 100vh on both desktop and mobile so expanded
+   answers are never clipped. The page scrolls naturally to reveal them. */
+.gear-section[data-gear="6"] {
+  height: auto;
+  min-height: 100vh;
+}
+
+.gear-section[data-gear="6"] .gear-section__inner {
+  height: auto;
+}
+
 .faq-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5,7 +16,6 @@
   padding-right: clamp(0rem, 6vw, 5rem);
   flex: 1;
   min-height: 0;
-  overflow: hidden;
 }
 
 .faq {
