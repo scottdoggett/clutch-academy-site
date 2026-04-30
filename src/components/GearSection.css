@@ -168,6 +168,20 @@
   .section-header__lead {
     font-size: var(--text-small);
   }
+
+  /* Sections 5 and 6: right-align content on mobile (indicator unaffected
+     since it's positioned absolutely on the section, outside the inner). */
+  .gear-section[data-gear="5"] .gear-section__inner,
+  .gear-section[data-gear="6"] .gear-section__inner {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .gear-section[data-gear="5"] .section-header,
+  .gear-section[data-gear="6"] .section-header {
+    margin-left: auto;
+    align-items: flex-end;
+  }
 }
 
 
