@@ -182,6 +182,13 @@
     margin-left: auto;
     align-items: flex-end;
   }
+
+  /* Section 6 FAQ list keeps its original left alignment — only the section
+     header above it is right-aligned. */
+  .gear-section[data-gear="6"] .faq-columns {
+    text-align: left;
+    align-self: stretch;
+  }
 }
 
 
