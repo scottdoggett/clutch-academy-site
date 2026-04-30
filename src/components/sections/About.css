@@ -127,6 +127,9 @@
   .about {
     grid-template-columns: 1fr;
     align-items: start;
+    /* Remove the desktop top margin so content sits right under the gear-2
+       indicator instead of being pushed down. */
+    margin-top: 0;
   }
 
   /* Hide the left-column photo, show the in-flow one between role and bio. */
