@@ -44,10 +44,5 @@
 @media (max-width: 767px) {
   :root {
     --gear-indicator-stroke: 2px;
-    /* Smaller indicator + tighter padding cuts the per-section top padding
-       (nav + indicator-zone + clearance) by ~50px, shrinking the visible
-       gap between sections without crowding content. */
-    --gear-indicator-size: 56px;
-    --gear-indicator-padding: 12px;
   }
 }

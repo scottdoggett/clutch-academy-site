@@ -154,11 +154,18 @@
   .gear-section--bottom-right .gear-section__inner,
   .gear-section--center .gear-section__inner {
     padding-top: calc(
-      var(--nav-height) + var(--indicator-zone) + clamp(1rem, 4vw, 2rem)
+      var(--nav-height) + var(--indicator-zone) + clamp(0.25rem, 1vw, 0.5rem)
     );
     padding-bottom: var(--edge-pad);
     padding-left: var(--side-pad);
     padding-right: var(--side-pad);
+  }
+
+  /* Section headers also contribute to the top gap via their margin-bottom.
+     Tighten on mobile so the eyebrow → h2 → lead block hugs the content
+     that follows without a desktop-sized buffer below it. */
+  .section-header {
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
   }
 
   .section-header h2 {
