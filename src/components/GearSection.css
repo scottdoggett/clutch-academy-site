@@ -127,7 +127,7 @@
 @media (max-width: 767px) {
   .gear-section {
     --side-pad: 1rem;
-    --edge-pad: 0.5rem;
+    --edge-pad: 0;
     /* Sections size to their content on mobile (no 100vh floor) so the
        trailing empty space between sections disappears. Desktop keeps the
        strict 100vh pin needed for gear-shift animations. */
