@@ -110,6 +110,13 @@
 }
 
 @media (max-width: 767px) {
+  /* Section 1 is the only mobile section forced to a full viewport so the
+     scroll hint can anchor to the bottom as a clear "shift" cue. */
+  .gear-section[data-gear="1"],
+  .gear-section[data-gear="1"] .gear-section__inner {
+    min-height: 100vh;
+  }
+
   .gear-section[data-gear="1"] .gear-section__inner {
     padding-top: calc(
       var(--nav-height) + var(--gear-indicator-size) +
@@ -121,6 +128,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    flex: 1;
   }
 
   .home__headline {
@@ -135,15 +143,39 @@
     display: none;
   }
 
+  /* Top-align the headline + CTAs and let the scroll hint push to the bottom. */
+  .home__copy {
+    flex: 1;
+    height: auto;
+    justify-content: flex-start;
+  }
+
   .home__scroll-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-align: center;
+    margin-top: auto;
+  }
+
+  .home__scroll-hint-desktop {
     display: none;
   }
 
-  /* Don't vertically center the copy on mobile — let content sit at the top
-     of its container so section 1 ends right after the CTAs, eliminating
-     dead space before section 2. */
-  .home__copy {
-    height: auto;
-    justify-content: flex-start;
+  .home__scroll-hint-mobile {
+    display: inline;
+  }
+
+  .home__scroll-hint::after {
+    content: '↓';
+    font-size: 1.5em;
+    line-height: 1;
+    animation: home-scroll-bounce 1.6s ease-in-out infinite;
+  }
+
+  @keyframes home-scroll-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
   }
 }
