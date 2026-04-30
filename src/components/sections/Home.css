@@ -132,31 +132,14 @@
   }
 
   .home__scroll-hint {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    text-align: center;
-    margin-top: 0.25rem;
-  }
-
-  .home__scroll-hint-desktop {
     display: none;
   }
 
-  .home__scroll-hint-mobile {
-    display: inline;
-  }
-
-  .home__scroll-hint::after {
-    content: '↓';
-    font-size: 1.5em;
-    line-height: 1;
-    animation: home-scroll-bounce 1.6s ease-in-out infinite;
-  }
-
-  @keyframes home-scroll-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(4px); }
+  /* Don't vertically center the copy on mobile — let content sit at the top
+     of its container so section 1 ends right after the CTAs, eliminating
+     dead space before section 2. */
+  .home__copy {
+    height: auto;
+    justify-content: flex-start;
   }
 }
