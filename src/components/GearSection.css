@@ -127,7 +127,23 @@
 @media (max-width: 767px) {
   .gear-section {
     --side-pad: 1rem;
-    --edge-pad: 1rem;
+    --edge-pad: 0.5rem;
+    /* Sections size to their content on mobile (no 100vh floor) so the
+       trailing empty space between sections disappears. Desktop keeps the
+       strict 100vh pin needed for gear-shift animations. */
+    height: auto;
+    min-height: 0;
+  }
+
+  /* Let content participate in normal flow so the section can grow with it. */
+  .gear-section__content {
+    position: relative;
+    inset: auto;
+  }
+
+  .gear-section__inner {
+    height: auto;
+    min-height: 0;
   }
 
   .gear-section--top-left .gear-section__inner,
@@ -137,7 +153,9 @@
   .gear-section--bottom-center .gear-section__inner,
   .gear-section--bottom-right .gear-section__inner,
   .gear-section--center .gear-section__inner {
-    padding-top: calc(var(--nav-height) + var(--indicator-zone));
+    padding-top: calc(
+      var(--nav-height) + var(--indicator-zone) + clamp(1rem, 4vw, 2rem)
+    );
     padding-bottom: var(--edge-pad);
     padding-left: var(--side-pad);
     padding-right: var(--side-pad);

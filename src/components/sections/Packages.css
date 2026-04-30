@@ -1,6 +1,10 @@
-/* Extra bottom breathing room so cards + payment note clear the "4" indicator. */
-.gear-section[data-gear="4"] {
-  padding-bottom: calc(var(--indicator-zone) + clamp(1.5rem, 4vw, 3rem));
+/* Extra bottom breathing room so cards + payment note clear the "4" indicator.
+   Desktop only — on mobile the indicator sits at top-center, so this would
+   just be dead space and create an oversized gap before section 5. */
+@media (min-width: 768px) {
+  .gear-section[data-gear="4"] {
+    padding-bottom: calc(var(--indicator-zone) + clamp(1.5rem, 4vw, 3rem));
+  }
 }
 
 /* Keep the gear-4 headline to a single tight line — the previous size wrapped

@@ -28,7 +28,8 @@ export default function Home({ onBookNow, onSeePackages }) {
           </div>
           {/* PENDING: SCROLL HINT MICROCOPY — fades out after first scroll event */}
           <p className="home__scroll-hint" aria-hidden="true">
-            ↓ Shift to 2nd
+            <span className="home__scroll-hint-desktop">↓ Shift to 2nd</span>
+            <span className="home__scroll-hint-mobile">Shift into 2nd</span>
           </p>
         </div>
 
