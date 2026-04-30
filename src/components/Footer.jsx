@@ -35,9 +35,8 @@ export default function Footer({ onNavigate }) {
         <div className="footer__col">
           <h3 className="footer__heading">Contact</h3>
           <ul className="footer__list">
-            {/* PENDING: PHONE NUMBER */}
             <li>
-              <a href="tel:">[pending phone]</a>
+              <a href="tel:+19023183193">+1 (902) 318-3193</a>
             </li>
             <li>
               <a href="mailto:">samanthony@live.ca</a>

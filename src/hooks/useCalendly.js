@@ -1,16 +1,23 @@
-// PENDING: CALENDLY URL — swap for client's actual Calendly scheduling link.
 // When clients provide separate event types per package, extend this hook to
 // accept a source-specific URL.
-export const CALENDLY_URL = 'https://calendly.com/CLUTCH_ACADEMY_URL'
+//
+// `primary_color` is the accent Calendly uses for selectable dates,
+// time-slot buttons, and the confirm CTA. The original snippet from Sam
+// passed `ffffff`, which made those elements white-on-white inside the
+// popup — switching to the brand red so they're legible.
+export const CALENDLY_URL =
+  'https://calendly.com/clutchacademy-ibca?primary_color=c8102e'
 
 /**
  * Opens the Calendly popup widget. Returns `false` so it can be used directly
  * as an onClick handler without the browser following any default link action.
  *
- * `source` is reserved for the GA4 `booking_cta_click` event wired up in
- * step 17 (e.g. "hero", "packages_single", "reverse").
+ * Callers may pass a `source` string (e.g. "hero", "packages_single",
+ * "reverse") for the GA4 `booking_cta_click` event wired up in step 17;
+ * the parameter is currently ignored but kept in the signature so call
+ * sites don't have to change once analytics is wired in.
  */
-export function openCalendly(_source = 'unknown') {
+export function openCalendly() {
   if (typeof window === 'undefined') return false
   if (window.Calendly?.initPopupWidget) {
     window.Calendly.initPopupWidget({ url: CALENDLY_URL })

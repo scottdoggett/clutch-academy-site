@@ -88,11 +88,9 @@ export default function App() {
 
   const handleNavigate = (gear) => scrollToGear(gear)
 
-  // Nav "Book Now": play the full Reverse-shift scroll into place, then open
-  // Calendly once the animation settles. All in-section CTAs open immediately.
-  const handleNavBookNow = () => {
-    scrollToGear('R', { onComplete: () => openCalendly('nav') })
-  }
+  // Nav "Book Now": open the Calendly popup immediately, no scroll. All
+  // in-section CTAs do the same.
+  const handleNavBookNow = () => openCalendly('nav')
 
   const makeBookHandler = (source) => () => openCalendly(source)
 
