@@ -1,21 +1,35 @@
-/* Extra bottom breathing room so cards + payment note clear the "4" indicator.
-   Desktop only — on mobile the indicator sits at top-center, so this would
-   just be dead space and create an oversized gap before section 5. */
+/* Extra bottom breathing room so cards + payment note clear the indicator.
+   Desktop only — on mobile this would just be dead space and create an
+   oversized gap before the next section. */
 @media (min-width: 768px) {
-  .gear-section[data-gear="4"] {
+  .gear-section[data-gear="3"] {
     padding-bottom: calc(var(--indicator-zone) + clamp(1.5rem, 4vw, 3rem));
+  }
+
+  /* Extra breathing room below the top-center "3" indicator before the header. */
+  .gear-section[data-gear="3"] .gear-section__inner {
+    padding-top: calc(
+      var(--nav-height) + var(--indicator-zone) + clamp(1.5rem, 3vw, 2.5rem)
+    );
   }
 }
 
-/* Keep the gear-4 headline to a single tight line — the previous size wrapped
-   to 3 lines and ate half the viewport. */
-.gear-section[data-gear="4"] .section-header h2 {
+/* Keep the Packages headline to a single tight line — the previous size
+   wrapped to 3 lines and ate half the viewport. */
+.gear-section[data-gear="3"] .section-header h2 {
   font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  white-space: nowrap;
 }
 
-.gear-section[data-gear="4"] .section-header {
-  margin-bottom: clamp(1rem, 2vw, 1.5rem);
-  gap: 0.375rem;
+@media (max-width: 767px) {
+  .gear-section[data-gear="3"] .section-header h2 {
+    white-space: normal;
+  }
+}
+
+.gear-section[data-gear="3"] .section-header {
+  margin-bottom: 0;
+  gap: 0.5rem;
 }
 
 .packages {
@@ -25,7 +39,7 @@
   gap: 1.25rem;
   max-width: 1100px;
   width: 100%;
-  margin: auto;
+  margin: 2rem auto;
 }
 
 /* ---------- Card ----------------------------------------------------- */

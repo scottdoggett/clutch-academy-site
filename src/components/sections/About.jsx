@@ -3,7 +3,7 @@ import './About.css'
 
 export default function About({ onBookNow }) {
   return (
-    <GearSection gear={2} id="about">
+    <GearSection gear={4} id="about">
       <div className="about">
         <img
           className="about__photo about__photo--desktop"

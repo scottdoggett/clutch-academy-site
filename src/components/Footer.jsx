@@ -2,9 +2,9 @@ import './Footer.css'
 
 const QUICK_LINKS = [
   { label: 'Home', gear: 1 },
-  { label: 'About', gear: 2 },
-  { label: 'How It Works', gear: 3 },
-  { label: 'Packages', gear: 4 },
+  { label: 'How It Works', gear: 2 },
+  { label: 'Packages', gear: 3 },
+  { label: 'About', gear: 4 },
   { label: 'Reviews', gear: 5 },
   { label: 'FAQ', gear: 6 },
   { label: 'Contact', gear: 'R' },
