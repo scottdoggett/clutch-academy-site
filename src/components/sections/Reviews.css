@@ -1,8 +1,7 @@
-/* The marquee is a viewport that clips the track. The track itself holds
-   two copies of the testimonials and slides from 0% -> -50% on a linear
-   loop. Because copy B is identical to copy A, the jump back to 0 is
-   invisible — the card at x=0 when the animation restarts is the same
-   card that was at x=-50% the instant before. */
+/* The marquee is a horizontally-scrollable viewport. JS auto-advances
+   scrollLeft and teleports back when it crosses scrollWidth/2 (the boundary
+   between the two duplicated copies). User can also swipe/drag to scroll;
+   auto-advance pauses for a few seconds after any user interaction. */
 .reviews__marquee {
   position: relative;
   flex: 1;
@@ -10,10 +9,14 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   display: flex;
   align-items: stretch;
   padding: 0.25rem 0 1rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
   /* Fade the edges so cards enter/exit gracefully instead of hard-clipping. */
   -webkit-mask-image: linear-gradient(
     to right,
@@ -31,37 +34,20 @@
   );
 }
 
+.reviews__marquee::-webkit-scrollbar {
+  display: none;
+}
+
 .reviews__track {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 1rem;
   display: flex;
   gap: 1rem;
-  width: max-content;
-  animation: reviews-marquee 48s linear infinite;
-}
-
-/* Pause when a user wants to read a card. */
-.reviews__marquee:hover .reviews__track,
-.reviews__marquee:focus-within .reviews__track {
-  animation-play-state: paused;
-}
-
-@keyframes reviews-marquee {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    /* -50% lands us exactly on copy B's first card, which is visually
-       indistinguishable from copy A's first card — so the restart looks
-       continuous. The extra -0.5rem compensates for the gap between
-       copy A's last card and copy B's first card. */
-    transform: translate3d(calc(-50% - 0.5rem), 0, 0);
-  }
 }
 
 .reviews__slide {
-  flex: 0 0 clamp(260px, 28vw, 380px);
+  flex: 0 0 clamp(420px, 48vw, 580px);
   display: flex;
   min-width: 0;
 }
@@ -81,8 +67,9 @@
 
 .review-card__quote {
   margin: 0;
-  font-size: var(--text-body);
-  line-height: 1.45;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.5;
   color: var(--cream);
   font-style: italic;
   position: relative;
@@ -162,45 +149,30 @@
   opacity: 0.75;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reviews__track {
-    animation: none;
-  }
-  .reviews__marquee {
-    overflow-x: auto;
-  }
-}
+/* Reduced motion: JS already skips the auto-advance loop; native scroll is
+   still allowed so the user can swipe through cards manually. */
 
 @media (max-width: 767px) {
   .reviews__slide {
-    flex-basis: 80vw;
+    flex-basis: 88vw;
   }
 
   .reviews__track {
-    animation-duration: 36s;
     gap: 0.75rem;
   }
 
-  @keyframes reviews-marquee {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(calc(-50% - 0.375rem), 0, 0);
-    }
-  }
-
   .review-card {
-    padding: 0.75rem 1rem;
-    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    gap: 0.625rem;
   }
 
   .review-card__quote {
-    font-size: var(--text-small);
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   .review-card__quote::before {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .reviews__footer {

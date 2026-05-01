@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import GearSection from '../GearSection'
 import './Reviews.css'
 
@@ -24,13 +25,66 @@ const PLACEHOLDERS = [
   },
 ]
 
-// The marquee works by translating a track that contains *two* copies of
-// the list from 0 to -50%. Because the second copy is an exact duplicate
-// of the first, the 100% -> 0% reset is visually seamless — card 1 of
+// Two copies of the list back-to-back. The auto-scroll teleports back to 0
+// once it crosses the halfway point, so the loop is invisible — card 1 of
 // copy B sits exactly where card 1 of copy A used to be.
 const MARQUEE_SEQUENCE = [...PLACEHOLDERS, ...PLACEHOLDERS]
 
+// Pixels per frame at ~60fps. Roughly doubles the previous CSS-keyframe pace.
+const SCROLL_SPEED = 1.2
+// How long to pause auto-advance after the user touches/swipes/scrolls.
+const RESUME_DELAY_MS = 2500
+
 export default function Reviews() {
+  const marqueeRef = useRef(null)
+  const trackRef = useRef(null)
+
+  useEffect(() => {
+    const marquee = marqueeRef.current
+    const track = trackRef.current
+    if (!marquee || !track) return
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) return
+
+    let raf
+    let paused = false
+    let resumeTimer
+
+    const tick = () => {
+      if (!paused) {
+        marquee.scrollLeft += SCROLL_SPEED
+        // Track holds 2 identical copies; scrollWidth/2 is the loop point.
+        const loopAt = track.scrollWidth / 2
+        if (marquee.scrollLeft >= loopAt) {
+          marquee.scrollLeft -= loopAt
+        }
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+
+    const pause = () => {
+      paused = true
+      clearTimeout(resumeTimer)
+      resumeTimer = setTimeout(() => {
+        paused = false
+      }, RESUME_DELAY_MS)
+    }
+
+    marquee.addEventListener('pointerdown', pause)
+    marquee.addEventListener('wheel', pause, { passive: true })
+    marquee.addEventListener('touchstart', pause, { passive: true })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      clearTimeout(resumeTimer)
+      marquee.removeEventListener('pointerdown', pause)
+      marquee.removeEventListener('wheel', pause)
+      marquee.removeEventListener('touchstart', pause)
+    }
+  }, [])
+
   return (
     <GearSection gear={5} id="reviews">
       <header className="section-header">
@@ -43,11 +97,12 @@ export default function Reviews() {
       </header>
 
       <div
+        ref={marqueeRef}
         className="reviews__marquee"
         aria-label="Student testimonials"
         role="region"
       >
-        <ul className="reviews__track">
+        <ul ref={trackRef} className="reviews__track">
           {MARQUEE_SEQUENCE.map((r, i) => (
             <li
               key={i}
