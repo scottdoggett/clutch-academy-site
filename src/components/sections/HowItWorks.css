@@ -1,13 +1,24 @@
 /* Extra breathing room below the gear-2 indicator before the header. */
 .gear-section[data-gear="2"] .section-header {
   margin-top: clamp(0.5rem, 2vw, 1.25rem);
-  margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+  margin-bottom: 0;
+  max-width: none;
+}
+
+/* Top row: header on the left, steps on the right. */
+.how-it-works__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+  margin-bottom: clamp(1rem, 2vw, 1.75rem);
 }
 
 .steps {
   list-style: none;
-  padding: 0;
-  margin: 0 0 clamp(0.875rem, 1.5vw, 1.25rem);
+  padding: clamp(0.75rem, 1.5vw, 1.25rem) 0 0;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
@@ -87,9 +98,9 @@
 }
 
 @media (max-width: 1023px) {
-  .steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 1.5rem;
+  .how-it-works__top {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 }
 
