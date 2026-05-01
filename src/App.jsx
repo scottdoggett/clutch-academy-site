@@ -78,9 +78,13 @@ export default function App() {
       return
     }
 
+    // autoKill must stay false: on iOS Safari, the address bar collapses as
+    // scrolling begins and fires synthetic scroll events that GSAP would
+    // otherwise treat as user input — killing the tween a split-second
+    // after it starts.
     gsap.to(window, {
       duration: SCROLL_DURATION,
-      scrollTo: { y: el, autoKill: true },
+      scrollTo: { y: el, autoKill: false },
       ease: 'power2.inOut',
       onComplete: afterScroll,
     })

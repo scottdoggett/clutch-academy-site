@@ -36,12 +36,13 @@ export default function Footer({ onNavigate }) {
           <h3 className="footer__heading">Contact</h3>
           <ul className="footer__list">
             <li>
-              <a href="tel:+19023183193">+1 (902) 318-3193</a>
+              <a href="tel:+14372231153">(437) 223-1153</a>
             </li>
             <li>
-              <a href="mailto:">samanthony@live.ca</a>
+              <a href="mailto:samuel.anthony@clutchacademy.ca">
+                samuel.anthony@clutchacademy.ca
+              </a>
             </li>
-            <li>Serving Toronto and the GTA</li>
           </ul>
         </div>
 
@@ -69,6 +70,16 @@ export default function Footer({ onNavigate }) {
                 target="_blank"
               >
                 Instagram
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.facebook.com/profile.php?id=61569269306023"
+                aria-label="Facebook"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Facebook
               </a>
             </li>
           </ul>

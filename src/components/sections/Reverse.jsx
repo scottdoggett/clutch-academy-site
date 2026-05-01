@@ -46,23 +46,21 @@ export default function Reverse({ onBookNow, isLast = false }) {
             Book Your First Lesson
           </button>
           <p className="reverse__payment-note">
-            Payment collected in person — cash, e-transfer, or PayPal.
+            Payment collected at time of booking, not in person 
+            <br/>
+            All cards accepted
           </p>
 
           <ul className="reverse__direct">
-            {/* PENDING: PHONE NUMBER */}
             <li className="reverse__direct-item">
               <span className="reverse__direct-label">Call</span>
-              <a href="tel:">+1 (902) 318-3193</a>
+              <a href="tel:+14372231153">(437) 223-1153</a>
             </li>
-            {/* PENDING: EMAIL ADDRESS */}
             <li className="reverse__direct-item">
               <span className="reverse__direct-label">Email</span>
-              <a href="mailto:">samanthony@live.ca</a>
-            </li>
-            <li className="reverse__direct-item">
-              <span className="reverse__direct-label">Service area</span>
-              <span>Toronto</span>
+              <a href="mailto:samuel.anthony@clutchacademy.ca">
+                samuel.anthony@clutchacademy.ca
+              </a>
             </li>
           </ul>
         </header>

@@ -129,8 +129,10 @@ img {
   outline-offset: 2px;
 }
 
-/* Focus ring for headings temporarily made focusable by scrollToGear. */
-:is(h1, h2, h3)[tabindex='-1']:focus {
+/* Focus ring for headings temporarily made focusable by scrollToGear.
+   Use :focus-visible so the box only appears for keyboard users — clicking
+   a nav link shouldn't leave a visible outline behind. */
+:is(h1, h2, h3)[tabindex='-1']:focus-visible {
   outline: 2px solid var(--white);
   outline-offset: 4px;
 }

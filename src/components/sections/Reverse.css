@@ -56,18 +56,20 @@
   list-style: none;
   margin: 0.25rem 0 0;
   padding: 0.875rem 0 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem 1rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   width: 100%;
-  max-width: 28rem;
+  max-width: 32rem;
 }
 
 .reverse__direct-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.5rem;
   min-width: 0;
 }
 
@@ -78,6 +80,7 @@
   letter-spacing: var(--letter-caps);
   text-transform: uppercase;
   color: var(--chrome);
+  flex-shrink: 0;
 }
 
 .reverse__direct-item a,
@@ -93,7 +96,6 @@
 .reverse__direct-item a {
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   padding-bottom: 0.125rem;
-  align-self: flex-start;
 }
 
 .reverse__direct-item a:hover {
