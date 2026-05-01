@@ -15,12 +15,12 @@ const PLACEHOLDERS = [
   },
   {
     quote:
-      'Best decision I made before my Europe trip. I felt completely comfortable renting a manual car.',
+      'Best decision I made before my Europe trip. Sam walked me through everything I needed to know in just a couple sessions and by the end I felt completely comfortable renting a manual car abroad without a hint of stress.',
     name: 'Scott D.',
   },
-  // PENDING: JAMIE'S REVIEW QUOTE
   {
-    quote: 'XYZ',
+    quote:
+      'Honestly did not think I would pick this up so quickly. I had tried teaching myself in a parking lot a few times and it was rough, but Sam broke down the clutch work in a way that finally clicked. By lesson three I was doing hill starts in midtown traffic without panicking, which felt impossible a month ago.',
     name: 'Jamie S.',
   },
 ]
