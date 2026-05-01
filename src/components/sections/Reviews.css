@@ -47,7 +47,7 @@
 }
 
 .reviews__slide {
-  flex: 0 0 clamp(420px, 48vw, 580px);
+  flex: 0 0 clamp(320px, 36vw, 460px);
   display: flex;
   min-width: 0;
 }
@@ -154,7 +154,7 @@
 
 @media (max-width: 767px) {
   .reviews__slide {
-    flex-basis: 88vw;
+    flex-basis: 78vw;
   }
 
   .reviews__track {
