@@ -1,12 +1,5 @@
-/* Extra bottom breathing room so cards + payment note clear the indicator.
-   Desktop only — on mobile this would just be dead space and create an
-   oversized gap before the next section. */
+/* Extra breathing room below the top-center "3" indicator before the header. */
 @media (min-width: 768px) {
-  .gear-section[data-gear="3"] {
-    padding-bottom: calc(var(--indicator-zone) + clamp(1.5rem, 4vw, 3rem));
-  }
-
-  /* Extra breathing room below the top-center "3" indicator before the header. */
   .gear-section[data-gear="3"] .gear-section__inner {
     padding-top: calc(
       var(--nav-height) + var(--indicator-zone) + clamp(1.5rem, 3vw, 2.5rem)
