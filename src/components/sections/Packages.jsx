@@ -3,7 +3,7 @@ import './Packages.css'
 
 export default function Packages({ onBookSingle, onBookPack }) {
   return (
-    <GearSection gear={4} id="packages">
+    <GearSection gear={3} id="packages">
       <header className="section-header section-header--center">
         <p className="section-header__eyebrow">Packages & Pricing</p>
         <h2>Simple, straightforward pricing</h2>

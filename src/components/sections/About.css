@@ -5,8 +5,18 @@
   align-items: center;
   flex: 1;
   min-height: 0;
-  padding-left: clamp(0rem, 4vw, 4rem);
-  margin-top: clamp(1.5rem, 6vh, 3rem);
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Extra breathing room below the top-center gear-4 indicator. */
+@media (min-width: 768px) {
+  .gear-section[data-gear="4"] .gear-section__inner {
+    padding-top: calc(
+      var(--nav-height) + var(--indicator-zone) + clamp(1.5rem, 3vw, 2.5rem)
+    );
+  }
 }
 
 /* The headshot is a JPEG with a white studio background. Tinting it to
@@ -114,7 +124,6 @@
   .about {
     grid-template-columns: 200px minmax(0, 1fr);
     gap: 1.5rem;
-    padding-left: 0;
   }
 }
 
@@ -127,9 +136,6 @@
   .about {
     grid-template-columns: 1fr;
     align-items: start;
-    /* Remove the desktop top margin so content sits right under the gear-2
-       indicator instead of being pushed down. */
-    margin-top: 0;
   }
 
   /* Hide the left-column photo, show the in-flow one between role and bio. */

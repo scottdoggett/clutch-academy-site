@@ -1,5 +1,5 @@
-/* Extra breathing room between the top-center "3" indicator and the header. */
-.gear-section[data-gear="3"] .section-header {
+/* Extra breathing room below the gear-2 indicator before the header. */
+.gear-section[data-gear="2"] .section-header {
   margin-top: clamp(0.5rem, 2vw, 1.25rem);
   margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
 }
