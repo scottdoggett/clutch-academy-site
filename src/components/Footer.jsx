@@ -43,7 +43,6 @@ export default function Footer({ onNavigate }) {
                 samuel.anthony@clutchacademy.ca
               </a>
             </li>
-            <li>Serving Toronto and the GTA</li>
           </ul>
         </div>
 
