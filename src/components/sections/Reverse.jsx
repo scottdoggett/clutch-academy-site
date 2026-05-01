@@ -46,7 +46,8 @@ export default function Reverse({ onBookNow, isLast = false }) {
             Book Your First Lesson
           </button>
           <p className="reverse__payment-note">
-            Payment collected in person — cash, e-transfer, or PayPal.
+            Payment collected at time of booking, not in person — cash,
+            e-transfer, PayPal, or all major cards accepted.
           </p>
 
           <ul className="reverse__direct">
