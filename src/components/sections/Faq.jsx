@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: 'Where do lessons take place?',
-    a: 'Lessons take place in Toronto. We typically start in a quieter area to build confidence, then transition to real-road driving. Exact meetup details are provided after booking.',
+    a: 'Lessons take place in Toronto. We typically start in a quieter area to build confidence, then transition to real-road driving. Selection of meeting location available at booking.',
   },
   {
     q: 'How many lessons will I need?',
