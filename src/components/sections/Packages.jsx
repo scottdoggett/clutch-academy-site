@@ -6,7 +6,7 @@ export default function Packages({ onBookSingle, onBookPack }) {
     <GearSection gear={4} id="packages">
       <header className="section-header section-header--center">
         <p className="section-header__eyebrow">Packages & Pricing</p>
-        <h2>Simple, straightforward pricing.</h2>
+        <h2>Simple, straightforward pricing</h2>
         <p className="section-header__lead">
           Two options. Pay in person when you arrive.
         </p>

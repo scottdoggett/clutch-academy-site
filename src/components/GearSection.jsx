@@ -7,11 +7,11 @@ import './GearSection.css'
 
 const POSITION_MAP = {
   1: 'top-left',
-  2: 'bottom-left',
+  2: 'top-left',
   3: 'top-center',
-  4: 'bottom-center',
+  4: 'top-center',
   5: 'top-right',
-  6: 'bottom-right',
+  6: 'top-right',
   R: 'center',
 }
 
