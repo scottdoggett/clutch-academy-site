@@ -2,11 +2,6 @@
 .gear-section {
   position: relative;
   width: 100%;
-  /* Each section is exactly one viewport tall. overflow must stay visible so
-     the H-crossing animation can translate an incoming section's content up
-     and out of its own (below-fold) container to overlap the outgoing
-     section's pinned viewport. */
-  height: 100vh;
   background-color: var(--red-primary);
   color: var(--white);
 
@@ -19,29 +14,22 @@
   --edge-pad: clamp(1rem, 2.5vw, 2rem);
 }
 
-/* ---------- Animated wrapper: indicator + inner content move together --- */
+/* ---------- Wrapper: flows in normal document order so sections size to
+     their content rather than being pinned to the viewport. `isolation`
+     creates a stacking context so children that use `mix-blend-mode` (e.g.
+     the About headshot) blend against this wrapper, not the red section
+     background. */
 .gear-section__content {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
-}
-
-/* During H-crossing transitions, the incoming section's content is pinned to
-   the viewport (the outgoing section's pin already covers the viewport, but
-   the incoming section sits far below in document flow). Flipping to fixed
-   with inset:0 from above makes transform percentages viewport-relative. */
-.gear-section__content--pinned {
-  position: fixed;
+  position: relative;
+  isolation: isolate;
 }
 
 /* ---------- Inner content: max-width centering + padding for clearance -- */
 .gear-section__inner {
   width: 100%;
-  height: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
 
 /* Top-positioned indicators (3, 5, R): content clears nav + indicator vertically. */
@@ -128,22 +116,6 @@
   .gear-section {
     --side-pad: 1rem;
     --edge-pad: 0;
-    /* Sections size to their content on mobile (no 100vh floor) so the
-       trailing empty space between sections disappears. Desktop keeps the
-       strict 100vh pin needed for gear-shift animations. */
-    height: auto;
-    min-height: 0;
-  }
-
-  /* Let content participate in normal flow so the section can grow with it. */
-  .gear-section__content {
-    position: relative;
-    inset: auto;
-  }
-
-  .gear-section__inner {
-    height: auto;
-    min-height: 0;
   }
 
   .gear-section--top-left .gear-section__inner,
