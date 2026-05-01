@@ -96,7 +96,6 @@
 .reverse__direct-item a {
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   padding-bottom: 0.125rem;
-  align-self: flex-start;
 }
 
 .reverse__direct-item a:hover {
