@@ -62,10 +62,6 @@ export default function Reverse({ onBookNow, isLast = false }) {
                 samuel.anthony@clutchacademy.ca
               </a>
             </li>
-            <li className="reverse__direct-item">
-              <span className="reverse__direct-label">Service area</span>
-              <span>Toronto</span>
-            </li>
           </ul>
         </header>
 
