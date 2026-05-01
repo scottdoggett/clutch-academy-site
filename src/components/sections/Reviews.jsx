@@ -4,12 +4,12 @@ import './Reviews.css'
 const PLACEHOLDERS = [
   {
     quote:
-      'I went from never touching manual to driving confidently in 3 lessons. Super patient and explains everything clearly.',
+      'Great experience learning manual here. Clear instruction, patient teaching, and I felt confident behind the wheel way faster than expected',
     name: 'Ethan B.',
   },
   {
     quote:
-      'Tried learning from a friend before and it was a disaster. This was way easier and actually enjoyable.',
+      'Used to think driving manual was super stressful, pure anxiety, lots of stalling, but one lesson with Sam and no more stalling, looking forward to learning smooth downshifts and hill starts in lessons 2 and 3',
     name: 'Obiora E.',
   },
   {
