@@ -72,6 +72,16 @@ export default function Footer({ onNavigate }) {
                 Instagram
               </a>
             </li>
+            <li>
+              <a
+                href="https://www.facebook.com/profile.php?id=61569269306023"
+                aria-label="Facebook"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Facebook
+              </a>
+            </li>
           </ul>
         </div>
       </div>
