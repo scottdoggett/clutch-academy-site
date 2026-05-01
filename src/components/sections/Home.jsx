@@ -16,7 +16,7 @@ export default function Home({ onBookNow, onSeePackages }) {
           </p>
           <div className="home__ctas">
             <button type="button" className="btn btn--primary" onClick={onBookNow}>
-              Start your manual driving journey today
+              Book a Lesson
             </button>
             <button
               type="button"
