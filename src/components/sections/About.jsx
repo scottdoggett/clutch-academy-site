@@ -32,7 +32,7 @@ export default function About({ onBookNow }) {
           </p>
           <p className="about__bio">
             We’ll take the pressure off, just build your confidence and
-            have fun doing it :)
+            have fun doing it.
           </p>
 
           <dl className="about__stats">

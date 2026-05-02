@@ -41,24 +41,24 @@ export default function HowItWorks() {
             <p className="section-header__eyebrow">Your first lesson</p>
             <h3>What to Expect</h3>
           </div>
-          <div className="first-lesson__copy">
-            <p className="first-lesson__body">
+          <ul className="first-lesson__copy">
+            <li className="first-lesson__body">
               Your first lesson is all about getting comfortable and building
               confidence.
-            </p>
-            <p className="first-lesson__body">
+            </li>
+            <li className="first-lesson__body">
               We’ll start with the basics — clutch control, finding the bite
               point, and smooth takeoffs.
-            </p>
-            <p className="first-lesson__body">
+            </li>
+            <li className="first-lesson__body">
               You’ll learn to start, stop, shift, and handle common situations
               like hills, all at your pace.
-            </p>
-            <p className="first-lesson__body">
+            </li>
+            <li className="first-lesson__body">
               By the end, you won’t just understand manual — you’ll be driving
               it.
-            </p>
-          </div>
+            </li>
+          </ul>
         </section>
       </div>
 

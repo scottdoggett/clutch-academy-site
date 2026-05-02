@@ -28,7 +28,7 @@ const FAQS = [
   },
   {
     q: 'What is your cancellation policy?',
-    a: "We require at least 24 hours' notice to cancel or reschedule a lesson. Late cancellations may be charged in full.",
+    a: "Cancellations are eligible for a full refund if made within 24 hours of booking and at least 24 hours before the scheduled lesson time. Cancellations made after 24 hours of booking or less than 24 hours before the lesson will be charged in ",
   },
   {
     q: 'What car will I be learning on?',

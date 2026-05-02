@@ -131,12 +131,9 @@
     font-size: clamp(1.0625rem, 4.5vw, 1.25rem);
   }
 
-  /* Left-align the long primary CTA's wrapped text. Stretching it to full
-     width makes the alignment visually meaningful instead of hugging the
-     text inside an auto-width pill. */
   .home__ctas .btn--primary {
-    text-align: left;
-    width: 100%;
+    width: auto;
+    align-self: flex-start;
   }
 
   .home__visual {

@@ -75,8 +75,8 @@
 .about__bio {
   color: var(--cream);
   margin: 0;
-  font-size: clamp(0.875rem, 1vw, 1rem);
-  line-height: 1.45;
+  font-size: 1.0625rem;
+  line-height: 1.5;
 }
 
 .about__bio + .about__bio {
