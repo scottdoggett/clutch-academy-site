@@ -90,16 +90,6 @@ export default function Footer({ onNavigate }) {
         <p className="footer__copy">
           &copy; 2026 Clutch Academy. All rights reserved.
         </p>
-        <ul className="footer__legal">
-          {/* PENDING: CANCELLATION POLICY DESTINATION */}
-          <li>
-            <a href="#">Cancellation Policy</a>
-          </li>
-          {/* PENDING: PRIVACY POLICY PAGE */}
-          <li>
-            <a href="#">Privacy Policy</a>
-          </li>
-        </ul>
       </div>
     </footer>
   )

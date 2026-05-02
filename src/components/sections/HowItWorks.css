@@ -86,6 +86,12 @@
   line-height: 1;
 }
 
+.first-lesson__copy {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
 .first-lesson__body {
   margin: 0;
   color: var(--cream);
