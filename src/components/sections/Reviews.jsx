@@ -44,6 +44,10 @@ export default function Reviews() {
     const track = trackRef.current
     if (!marquee || !track) return
 
+    // Skip the auto-scroll loop in prerender so the snapshot doesn't capture
+    // a mid-frame scrollLeft offset.
+    if (window.__PRERENDER__) return
+
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) return
 
