@@ -1,20 +1,25 @@
-// Post-build prerender: spawn `vite preview`, drive Puppeteer to capture the
-// fully-rendered HTML, splice in the FAQPage JSON-LD generated from the
-// FAQS source-of-truth in src/components/sections/Faq.jsx, and overwrite
-// dist/index.html with the result.
+// Post-build prerender: stand up Vite's preview server, drive Puppeteer to
+// capture the fully-rendered HTML, splice in the FAQPage JSON-LD generated
+// from the FAQS source-of-truth in src/components/sections/Faq.jsx, and
+// overwrite dist/index.html with the result.
 //
 // Run after `vite build` (see the "build" script in package.json).
 //
-// Why a custom 30-line script instead of a plugin: this site has exactly one
-// route. Plugins like @prerenderer/rollup-plugin or vike add a build-time
-// dependency surface that drifts with Vite/React releases; a small script we
-// own is cheaper to maintain and easier to debug.
+// Why a custom script instead of a plugin: this site has exactly one route.
+// Plugins like @prerenderer/rollup-plugin or vike add a build-time dependency
+// surface that drifts with Vite/React releases; a small script we own is
+// cheaper to maintain and easier to debug.
+//
+// Why Vite's programmatic API instead of `spawn('npx vite preview')`: the
+// shell-spawn approach was flaky on Vercel's build container — stdout buffering
+// or `npx` resolution caused the readiness probe to time out. Driving Vite
+// in-process is deterministic and works the same locally and in CI.
 
-import { spawn } from 'node:child_process'
 import { readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 import puppeteer from 'puppeteer'
+import { preview } from 'vite'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
@@ -84,37 +89,30 @@ function decodeJsString(s) {
     .replace(/\\\\/g, '\\')
 }
 
-// ---------- 2. Spawn vite preview, wait for the port to respond ---------
+// ---------- 2. Start Vite's preview server in-process --------------------
 
-function startPreview() {
-  return new Promise((resolveStarted, rejectStarted) => {
-    const proc = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], {
-      cwd: ROOT,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    })
-    let resolved = false
-    const onLine = (chunk) => {
-      const text = chunk.toString()
-      if (!resolved && /Local:\s+http/.test(text)) {
-        resolved = true
-        resolveStarted(proc)
-      }
-    }
-    proc.stdout.on('data', onLine)
-    proc.stderr.on('data', onLine)
-    proc.on('exit', (code) => {
-      if (!resolved) rejectStarted(new Error(`vite preview exited early with code ${code}`))
-    })
-    setTimeout(() => {
-      if (!resolved) rejectStarted(new Error('vite preview did not become ready within 15s'))
-    }, 15000)
+async function startPreview() {
+  const server = await preview({
+    root: ROOT,
+    preview: {
+      port: PORT,
+      strictPort: true,
+      host: '127.0.0.1',
+    },
   })
+  return server
 }
 
 // ---------- 3. Drive Puppeteer to snapshot the rendered HTML ------------
 
 async function snapshot() {
-  const browser = await puppeteer.launch({ headless: 'new' })
+  // --no-sandbox is required when Chromium runs as root inside many CI/CD
+  // build containers (Vercel, GitHub Actions, etc.). It's safe at build
+  // time because we're only loading our own preview server.
+  const browser = await puppeteer.launch({
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+  })
   try {
     const page = await browser.newPage()
     await page.evaluateOnNewDocument(() => {
@@ -139,14 +137,14 @@ async function main() {
   const faqLd = await buildFaqPageJsonLd()
 
   console.log('[prerender] starting vite preview on port ' + PORT + '…')
-  const preview = await startPreview()
+  const previewServer = await startPreview()
 
   let html
   try {
     console.log('[prerender] snapshotting ' + PREVIEW_URL + '…')
     html = await snapshot()
   } finally {
-    preview.kill('SIGTERM')
+    await new Promise((res) => previewServer.httpServer.close(res))
   }
 
   if (!html.includes('<!-- FAQPAGE_LD -->')) {
