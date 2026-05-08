@@ -19,8 +19,8 @@ const RED = '#C8102E'
 const TAGLINE = 'Learn Stick in Toronto'
 
 const TARGETS = [
-  // OG / social-share image. Wide enough that the logo + tagline both breathe.
-  { name: 'og-image.png', width: 1200, height: 630, withTagline: true, logoMaxWidth: '760px', padding: '64px' },
+  // OG / social-share image. Logo only, centered, with comfortable margin.
+  { name: 'og-image.png', width: 1200, height: 630, withTagline: false, logoMaxWidth: '100%', padding: '6%' },
   // iOS home-screen icon — Apple's recommended size.
   { name: 'apple-touch-icon.png', width: 180, height: 180, withTagline: false, logoMaxWidth: '100%', padding: '8%' },
   // PWA manifest icons (referenced from public/site.webmanifest).
