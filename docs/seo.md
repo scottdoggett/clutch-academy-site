@@ -6,20 +6,110 @@ The decision-state symbols match the rest of `docs/spec/`: ✅ decided / shipped
 
 ---
 
-## ⏸ Open TODOs (blocked on access / assets)
+## Status — what's done, what's open
 
-**GA4 + Google Business Profile linkage — blocked on partner access.** Sam's partner currently manages the shared Google account that owns the Google Business Profile. To finish the analytics + GBP wiring, that account needs to:
+This section is the running progress log. Anyone (human or AI) reading the doc cold can use it to know exactly what's wired up and what's left.
 
-1. **Create the GA4 property** for `clutchacademy.ca` and share the **Measurement ID** (`G-XXXXXXXXXX`). Once we have it, replace the two `G-XXXXXXXXXX` placeholders in `index.html` (the inline `gtag('config', …)` call and the `<script src="https://www.googletagmanager.com/gtag/js?id=…">` URL), commit, push.
-2. **Update the DrivingSchool JSON-LD** in `index.html`'s `@graph`: add the Google Business Profile listing URL (the long `https://maps.app.goo.gl/...` share link or `https://g.page/r/...` URL) to the `sameAs` array, alongside the existing Instagram + Facebook links. This is the canonical "this website is that GBP listing" signal for both Google's index and AI assistants.
-3. **(Optional, later) Wire `aggregateRating` JSON-LD** once GBP has accumulated real Google reviews. Cite GBP as the source. Don't hand-write self-attested review counts.
+### ✅ Shipped (May 2026)
 
-While this is open, the site is fully functional and crawlable — analytics is just deferred. The `gtag` placeholder is a harmless no-op until a real ID is filled in.
+**Build pipeline & runtime**
+- Build-time pre-render via `scripts/prerender.mjs` (Puppeteer + headless Chromium). Non-JS-executing crawlers now see fully-rendered HTML.
+- `@sparticuz/chromium` swap on Vercel (statically-linked Chromium with the libs Vercel's container is missing).
+- Vite's preview server driven in-process (no `npx` shell-out — was flaky in CI).
+- `window.__PRERENDER__` runtime gate in `main.jsx`, `GearSection.jsx`, `Reviews.jsx`, `ConsentBanner.jsx` so the snapshot has zero animation-injected attributes.
+- Calendly assets lazy-loaded on first CTA click (was a heavy `<head>` script before).
 
-**Other still-pending items** (designer / copy):
-- 📎 `public/og-image.png` (1200×630), `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` — referenced in `index.html` and `site.webmanifest` but not yet produced. Social shares show broken-image previews until these exist.
-- 📎 WebP versions of `hero-section.jpeg` and `headshot.jpeg` for performance.
-- 🟡 Privacy policy at `public/privacy.html` is a sensible draft; review wording before relying on it.
+**Meta surface in `index.html`**
+- `<html lang="en-CA">`, full `<title>` + meta description.
+- Canonical, robots, theme-color (`#C8102E`), Open Graph (image, locale, type, site_name, url, title, description), Twitter `summary_large_image`.
+- Apple touch icon link, manifest link.
+- Google Analytics 4 + Consent Mode v2 default-deny snippet (placeholder ID `G-XXXXXXXXXX`).
+- DrivingSchool / Offer / Person JSON-LD `@graph`.
+- `<!-- FAQPAGE_LD -->` splice marker (filled by the prerender script at build time).
+
+**Structured data**
+- DrivingSchool entity with name, url, description, telephone, email, priceRange, `areaServed: City "Toronto"`, image, logo, `sameAs: [Instagram, Facebook]`, `makesOffer`, `employee`.
+- Two `Offer` entities ($90 single, $240 3-pack) in CAD.
+- `Person` for Sam Anthony.
+- `FAQPage` generated automatically from `Faq.jsx`'s `FAQS` array on every build (build fails on truncated/unterminated answers — caught the original cancellation copy bug on first run).
+
+**Static SEO files (`public/`)**
+- `robots.txt` allowing all crawlers, with explicit allows for the major AI bots.
+- `sitemap.xml` (single canonical URL).
+- `llms.txt` (Mintlify-style summary for LLM crawlers).
+- `site.webmanifest` (PWA manifest).
+- `privacy.html` (standalone privacy page; resolves at `/privacy` via Vercel `cleanUrls`).
+
+**Assets generated from `logo2.svg` (via `scripts/generate-images.mjs`)**
+- `og-image.png` — 1200×630, logo centered on brand red, no tagline.
+- `apple-touch-icon.png` — 180×180.
+- `icon-192.png` — PWA manifest 192.
+- `icon-512.png` — PWA manifest 512.
+
+**On-page SEO fixes**
+- Footer anchor `href`s switched from `#` to real `#home` / `#packages` / etc.
+- About section h2 changed from instructor name to "Meet Your Instructor" (descriptive heading), name demoted to h3.
+- Packages payment copy aligned to FAQ + Reverse ("Pay securely at booking.").
+- FAQ #7 cancellation policy populated with finalized wording (was originally truncated mid-sentence).
+
+**Hosting (`vercel.json`)**
+- `cleanUrls: true`, `trailingSlash: false`.
+- Cache headers for `/assets/*` (1y immutable), images (30d), static SEO files (1h), root (5min + `X-Robots-Tag`).
+- Note: host-level redirects intentionally NOT in `vercel.json` — Vercel's domain dashboard handles `www`↔apex (an earlier `vercel.json` redirect rule clashed with that and produced a redirect loop; lesson learned).
+
+**External / user-side**
+- Domain `clutchacademy.ca` registered + live on Vercel.
+- Google Business Profile approved (managed by Sam's partner).
+- Google Search Console: domain property verified (auto-via GoDaddy), `sitemap.xml` submitted, status `Success`.
+- Bing Webmaster Tools: imported from GSC, sitemap synced, homepage `Request indexing` clicked.
+
+**Cache-bust convention**
+- OG image URL referenced from meta tags includes a `?v=N` query param. Bump the integer whenever `og-image.png` changes so Facebook / Slack / opengraph.xyz / Vercel's OG tab re-fetch instead of serving their cached copy. Currently at `?v=2`.
+
+---
+
+### 📎 Open
+
+Grouped by who/what is blocking. Anyone unblocking an item should follow the linked steps and tick it off here.
+
+#### Blocked on Sam's partner (shared Google account / GBP)
+
+These are queued waiting for access to the Google account that owns the Google Business Profile.
+
+1. **Create the GA4 property and share the Measurement ID.** Once you have `G-XXXXXXXXXX`, replace the two placeholder occurrences in `index.html` (one in the inline `gtag('config', …)` call, one in the async `<script src="https://www.googletagmanager.com/gtag/js?id=…">` URL). Commit and push. After deploy, click Accept on the consent banner and confirm yourself in **GA4 → Reports → Realtime**.
+2. **Add the GBP listing URL to the DrivingSchool JSON-LD `sameAs` array.** Find the listing's canonical link (`https://g.page/r/…` or the long `https://maps.app.goo.gl/…` share URL) inside business.google.com and append it to the `sameAs` array in `index.html` (currently has IG + FB). This is the canonical "this website is that GBP listing" signal Google's index and AI assistants both look for.
+3. **(Future) Wire `aggregateRating` JSON-LD** once GBP has accumulated real reviews. Cite GBP as the source — never hand-write the count or score.
+
+#### Visual identity polish
+
+4. **Refresh the favicon (browser tab + Google search result icon).**
+   - **Where it shows:** the icon in the user's browser tab, the icon next to the site title in Google's search results, and the iOS Safari pinned-tab icon.
+   - **Current state:** `public/favicon.svg` exists and is referenced from `index.html`'s `<link rel="icon" type="image/svg+xml" href="/favicon.svg">`. It's the original asset and may not match the rest of the new icon set generated from `logo2.svg`.
+   - **What to do:** replace `public/favicon.svg` with a square logomark on brand red (the bracket motif works at small sizes; the full wordmark doesn't). Then add a `favicon.ico` and a 32×32 PNG fallback for older browsers and Google's search-result icon (which, per Google's docs, prefers a 48px-multiple PNG/ICO). Recommended file set: `favicon.svg` (vector, primary), `favicon.ico` (legacy fallback), `favicon-32.png` (Google search), `favicon-48.png` (better resolution for some clients). Wire each into `index.html`:
+     ```html
+     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+     <link rel="alternate icon" href="/favicon.ico" />
+     ```
+     Cache-bust with `?v=2` once if the file path stays the same.
+   - **Re-using the existing pipeline:** `scripts/generate-images.mjs` can be extended with a square-only target that uses a tighter crop/different SVG source. Quickest path: ask the designer for a square logomark SVG (just the brackets, or a stylized "C"); drop it in as `favicon.svg`.
+   - **Why it matters for SEO:** Google shows the favicon in mobile search results next to the site name. A clean, branded favicon increases click-through rate.
+
+5. **WebP versions of hero + headshot for perf.**
+   - Re-export `public/hero-section.jpeg` and `public/headshot.jpeg` as `.webp` (same dimensions, quality ~80). Drop in `public/`.
+   - Update `Home.jsx` and `About.jsx` to use a `<picture>` element with the WebP source first, JPEG fallback. This is purely a Lighthouse Performance win — not strictly SEO, but Page Experience signals are part of Google's ranking now.
+
+#### User review
+
+6. **Privacy policy review (`public/privacy.html`).** I drafted a sensible default covering data collection, third parties (Calendly, GA4, Vercel), cookies, your-rights section, and contact. Read it through; tweak wording to match how you actually handle data.
+
+#### Future / opportunistic
+
+7. **Auto-bump OG `?v=` in `generate-images.mjs`.** Right now you have to manually bump the version param in `index.html` whenever you regenerate `og-image.png`. The generator script could read the current `v=N`, increment it, and write it back to `index.html` automatically. ~15 lines of code; do it next time you iterate the OG image.
+8. **Watch GSC + Bing for first indexing.** Within 1–2 weeks of the sitemap submission, check Search Console → Indexing → Pages and Bing Webmaster → URL Inspection. Should report "indexed" / "URL can appear on Bing" once their crawlers process the homepage.
+9. **Local pack monitoring.** ~2 weeks after GBP went live, search "manual driving lessons toronto" from a Toronto-area incognito window. Clutch's GBP card should appear in the local-3-pack on the SERP. If it isn't appearing, check GBP for category accuracy and service-area definition.
+10. **AI-citation testing.** Periodically ask ChatGPT, Claude, Perplexity, and Google Gemini "where can I learn manual transmission in Toronto?" — Clutch should appear in answers within a few weeks of each crawler's index refresh.
 
 ---
 
@@ -289,19 +379,9 @@ Then in browsers:
 
 ## What's still placeholder
 
-Things that exist as code/markup but reference content that is not yet final:
+See the **Status — what's done, what's open** section near the top of this doc. The `📎 Open` list there is the single source of truth for placeholders and TODOs; this section used to duplicate it and has been folded in to prevent drift.
 
-- **OG image** at `/og-image.png` — file does not exist yet. Social shares will currently show a broken-image preview.
-- **Apple touch icon** at `/apple-touch-icon.png` — file does not exist. iOS home-screen adds will fall back to the SVG favicon.
-- **Manifest icons** at `/icon-192.png`, `/icon-512.png` — same.
-- **GA4 measurement ID** — `G-XXXXXXXXXX` placeholder in `index.html`.
-- **Search Console verification token** — commented placeholder in `index.html`.
-- **Bing Webmaster verification token** — same approach when you set it up.
-- **FAQ #7 cancellation policy** — currently a safe fallback (`"please contact us directly to discuss options"`) marked with a `PENDING` comment. Replace with the real wording when finalized.
-- **Privacy policy** — drafted at `public/privacy.html`. Review before relying on it.
-- **Aggregate review rating** — intentionally absent from JSON-LD until Google Business Profile has reviews to cite.
-
-When you ship a placeholder replacement, run `npm run build` so the prerender re-snapshots and the JSON-LD re-emits.
+When you ship a placeholder replacement (icon, copy, GA4 ID, etc.), run `npm run build` so the prerender re-snapshots and the JSON-LD re-emits.
 
 ---
 
@@ -312,4 +392,6 @@ When you ship a placeholder replacement, run `npm run build` so the prerender re
 - **Don't move GSAP plugin registration out of the `__PRERENDER__` gate.** The snapshot will capture inline transforms and hydration will mismatch.
 - **Don't put the Calendly script back in `index.html`'s `<head>`.** It's lazy-loaded on purpose.
 - **The `dist/index.html` is regenerated every build.** Never edit `dist/` directly — edit `index.html` (template) and re-build.
-- **The prerender requires Puppeteer's bundled Chromium.** If a CI/Vercel build environment can't download Chromium, the build will fail. Vercel's default build environment supports this; if you change build provider, verify.
+- **The prerender uses `@sparticuz/chromium` on Vercel, Puppeteer's bundled Chromium locally.** The split is gated on `process.env.VERCEL` inside `scripts/prerender.mjs`. If you change build provider, you may need to add another branch (Netlify, Railway, etc.) or unify on `@sparticuz/chromium` everywhere if the local dev machine can also run a Linux Chromium binary.
+- **`vercel.json` has no `redirects` block on purpose.** A previous version had a `www → apex` redirect rule that fought Vercel's domain-dashboard auto-redirect (when the dashboard had `www` set as Primary, the two layers pointed at each other and produced an infinite loop). Use Vercel's domain dashboard for canonical-domain routing; do not re-add host redirects here.
+- **OG image cache-bust pattern.** When you regenerate `public/og-image.png`, increment the `?v=N` query param everywhere it appears in `index.html` (currently three places: `og:image`, `twitter:image`, JSON-LD `image`). Without this, Facebook / Slack / iMessage / opengraph.xyz / Vercel's OG preview tab will all serve their old cached copy until their TTL expires (1–30 days).
