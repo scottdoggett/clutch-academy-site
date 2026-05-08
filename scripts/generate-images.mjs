@@ -16,7 +16,7 @@ const ROOT = resolve(__dirname, '..')
 const PUBLIC = resolve(ROOT, 'public')
 
 const RED = '#C8102E'
-const TAGLINE = 'Manual Driving Lessons · Toronto'
+const TAGLINE = 'Learn Stick in Toronto'
 
 const TARGETS = [
   // OG / social-share image. Wide enough that the logo + tagline both breathe.
