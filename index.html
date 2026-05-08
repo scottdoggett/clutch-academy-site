@@ -1,28 +1,170 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clutch Academy — Manual Driving Lessons in Toronto</title>
-
-    <!-- Calendly widget assets -->
-    <link
-      href="https://assets.calendly.com/assets/external/widget.css"
-      rel="stylesheet"
+    <meta
+      name="description"
+      content="Manual transmission driving lessons in Toronto. One-on-one, on real roads, with founder-instructor Sam Anthony. Book your first hour online."
     />
+    <link rel="canonical" href="https://clutchacademy.ca/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#C8102E" />
+
+    <!-- Search Console verification (PENDING: paste content="..." once GSC token is issued) -->
+    <!-- <meta name="google-site-verification" content="" /> -->
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Clutch Academy" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:url" content="https://clutchacademy.ca/" />
+    <meta
+      property="og:title"
+      content="Clutch Academy — Manual Driving Lessons in Toronto"
+    />
+    <meta
+      property="og:description"
+      content="Manual transmission driving lessons in Toronto. One-on-one, on real roads. Book your first hour online."
+    />
+    <meta property="og:image" content="https://clutchacademy.ca/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Clutch Academy — manual transmission driving lessons in Toronto"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Clutch Academy — Manual Driving Lessons in Toronto"
+    />
+    <meta
+      name="twitter:description"
+      content="Manual transmission driving lessons in Toronto. One-on-one, on real roads."
+    />
+    <meta
+      name="twitter:image"
+      content="https://clutchacademy.ca/og-image.png"
+    />
+
+    <!-- Icons + PWA manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Google Analytics 4 with Consent Mode v2 (default-deny). The pageview
+         and any subsequent events are queued by gtag and only flushed once
+         the user grants consent through the in-app ConsentBanner.
+         PENDING: replace G-XXXXXXXXXX with the real measurement ID once the
+         GA4 property is created (Phase 0.5). Until then, gtag is a no-op. -->
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      window.gtag = gtag
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500
+      })
+      // Read persisted consent BEFORE the gtag config call so the page-view
+      // event respects a returning visitor's prior choice.
+      try {
+        var stored = localStorage.getItem('clutch.consent.v1')
+        if (stored === 'granted') {
+          gtag('consent', 'update', { analytics_storage: 'granted' })
+        }
+      } catch (_) {}
+      gtag('js', new Date())
+      // Skip GA in prerender so the snapshot doesn't fire a synthetic pageview.
+      if (!window.__PRERENDER__) {
+        gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true })
+      }
+    </script>
     <script
-      src="https://assets.calendly.com/assets/external/widget.js"
-      type="text/javascript"
       async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
     ></script>
 
-    <!-- Netlify form registration (scanner detects this at build time) -->
-    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <textarea name="message"></textarea>
-    </form>
+    <!-- LocalBusiness / Offer / Person structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "DrivingSchool",
+            "@id": "https://clutchacademy.ca/#business",
+            "name": "Clutch Academy",
+            "url": "https://clutchacademy.ca/",
+            "description": "Manual transmission driving school in Toronto. One-on-one lessons on real roads with founder-instructor Sam Anthony.",
+            "image": "https://clutchacademy.ca/og-image.png",
+            "logo": "https://clutchacademy.ca/logo.svg",
+            "telephone": "+1-437-223-1153",
+            "email": "samuel.anthony@clutchacademy.ca",
+            "priceRange": "$$",
+            "areaServed": {
+              "@type": "City",
+              "name": "Toronto",
+              "containedInPlace": {
+                "@type": "AdministrativeArea",
+                "name": "Ontario, Canada"
+              }
+            },
+            "sameAs": [
+              "https://www.instagram.com/clutchacademy.ca/",
+              "https://www.facebook.com/profile.php?id=61569269306023"
+            ],
+            "makesOffer": [
+              { "@id": "https://clutchacademy.ca/#offer-single" },
+              { "@id": "https://clutchacademy.ca/#offer-3pack" }
+            ],
+            "employee": [
+              { "@id": "https://clutchacademy.ca/#instructor-sam" }
+            ]
+          },
+          {
+            "@type": "Offer",
+            "@id": "https://clutchacademy.ca/#offer-single",
+            "name": "Single Lesson",
+            "description": "One hour of one-on-one manual transmission instruction.",
+            "price": "90.00",
+            "priceCurrency": "CAD",
+            "category": "Driving lesson",
+            "availability": "https://schema.org/InStock",
+            "offeredBy": { "@id": "https://clutchacademy.ca/#business" }
+          },
+          {
+            "@type": "Offer",
+            "@id": "https://clutchacademy.ca/#offer-3pack",
+            "name": "3-Lesson Package",
+            "description": "Three one-hour lessons: progression from clutch basics to road-confident driving.",
+            "price": "240.00",
+            "priceCurrency": "CAD",
+            "category": "Driving lesson package",
+            "availability": "https://schema.org/InStock",
+            "offeredBy": { "@id": "https://clutchacademy.ca/#business" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://clutchacademy.ca/#instructor-sam",
+            "name": "Samuel Anthony",
+            "jobTitle": "Founder & Lead Instructor",
+            "worksFor": { "@id": "https://clutchacademy.ca/#business" }
+          }
+        ]
+      }
+    </script>
+
+    <!-- FAQPAGE_LD -->
   </head>
   <body>
     <div id="root"></div>

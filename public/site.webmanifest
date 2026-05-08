@@ -1,0 +1,31 @@
+{
+  "name": "Clutch Academy",
+  "short_name": "Clutch",
+  "description": "Manual transmission driving lessons in Toronto.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "minimal-ui",
+  "background_color": "#C8102E",
+  "theme_color": "#C8102E",
+  "lang": "en-CA",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

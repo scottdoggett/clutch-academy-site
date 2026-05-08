@@ -8,7 +8,7 @@ export default function Packages({ onBookSingle, onBookPack }) {
         <p className="section-header__eyebrow">Packages & Pricing</p>
         <h2>Simple, straightforward pricing</h2>
         <p className="section-header__lead">
-          Two options. Pay in person when you arrive.
+          Two options. Pay securely at booking.
         </p>
       </header>
 

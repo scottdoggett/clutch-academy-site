@@ -1,13 +1,13 @@
 import './Footer.css'
 
 const QUICK_LINKS = [
-  { label: 'Home', gear: 1 },
-  { label: 'How It Works', gear: 2 },
-  { label: 'Packages', gear: 3 },
-  { label: 'About', gear: 4 },
-  { label: 'Reviews', gear: 5 },
-  { label: 'FAQ', gear: 6 },
-  { label: 'Contact', gear: 'R' },
+  { label: 'Home', gear: 1, href: '#home' },
+  { label: 'How It Works', gear: 2, href: '#how-it-works' },
+  { label: 'Packages', gear: 3, href: '#packages' },
+  { label: 'About', gear: 4, href: '#about' },
+  { label: 'Reviews', gear: 5, href: '#reviews' },
+  { label: 'FAQ', gear: 6, href: '#faq' },
+  { label: 'Contact', gear: 'R', href: '#book' },
 ]
 
 export default function Footer({ onNavigate }) {
@@ -51,7 +51,7 @@ export default function Footer({ onNavigate }) {
           <ul className="footer__list footer__list--two-col">
             {QUICK_LINKS.map((link) => (
               <li key={link.gear}>
-                <a href="#" onClick={(e) => handleClick(e, link.gear)}>
+                <a href={link.href} onClick={(e) => handleClick(e, link.gear)}>
                   {link.label}
                 </a>
               </li>

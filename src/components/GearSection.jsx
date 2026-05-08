@@ -180,6 +180,9 @@ export default function GearSection({ gear, id, isLast = false, children }) {
   useGSAP(
     () => {
       if (isLast) return
+      // During build-time prerender, skip all ScrollTrigger setup so the
+      // captured HTML stays free of GSAP-injected attributes.
+      if (typeof window !== 'undefined' && window.__PRERENDER__) return
 
       const mm = gsap.matchMedia()
 

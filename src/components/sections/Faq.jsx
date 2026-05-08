@@ -28,7 +28,7 @@ const FAQS = [
   },
   {
     q: 'What is your cancellation policy?',
-    a: "Cancellations are eligible for a full refund if made within 24 hours of booking and at least 24 hours before the scheduled lesson time. Cancellations made after 24 hours of booking or less than 24 hours before the lesson will be charged in ",
+    a: 'Cancellations made at least 24 hours before the scheduled lesson are eligible for a full refund. Cancellations made after 24 hours of booking or less than 24 hours before the lesson will be charged in full.',
   },
   {
     q: 'What car will I be learning on?',
