@@ -6,6 +6,23 @@ The decision-state symbols match the rest of `docs/spec/`: ✅ decided / shipped
 
 ---
 
+## ⏸ Open TODOs (blocked on access / assets)
+
+**GA4 + Google Business Profile linkage — blocked on partner access.** Sam's partner currently manages the shared Google account that owns the Google Business Profile. To finish the analytics + GBP wiring, that account needs to:
+
+1. **Create the GA4 property** for `clutchacademy.ca` and share the **Measurement ID** (`G-XXXXXXXXXX`). Once we have it, replace the two `G-XXXXXXXXXX` placeholders in `index.html` (the inline `gtag('config', …)` call and the `<script src="https://www.googletagmanager.com/gtag/js?id=…">` URL), commit, push.
+2. **Update the DrivingSchool JSON-LD** in `index.html`'s `@graph`: add the Google Business Profile listing URL (the long `https://maps.app.goo.gl/...` share link or `https://g.page/r/...` URL) to the `sameAs` array, alongside the existing Instagram + Facebook links. This is the canonical "this website is that GBP listing" signal for both Google's index and AI assistants.
+3. **(Optional, later) Wire `aggregateRating` JSON-LD** once GBP has accumulated real Google reviews. Cite GBP as the source. Don't hand-write self-attested review counts.
+
+While this is open, the site is fully functional and crawlable — analytics is just deferred. The `gtag` placeholder is a harmless no-op until a real ID is filled in.
+
+**Other still-pending items** (designer / copy):
+- 📎 `public/og-image.png` (1200×630), `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` — referenced in `index.html` and `site.webmanifest` but not yet produced. Social shares show broken-image previews until these exist.
+- 📎 WebP versions of `hero-section.jpeg` and `headshot.jpeg` for performance.
+- 🟡 Privacy policy at `public/privacy.html` is a sensible draft; review wording before relying on it.
+
+---
+
 ## TL;DR — what shipped and why it matters
 
 The site is a **single-page React + Vite app** that runs entirely in the browser. Without intervention, every crawler that doesn't execute JavaScript would fetch the page and see an empty `<div id="root"></div>` — and that's most AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Bytespider, etc.) plus a meaningful share of social-share scrapers and traditional indexers.
