@@ -105,14 +105,30 @@ async function startPreview() {
 
 // ---------- 3. Drive Puppeteer to snapshot the rendered HTML ------------
 
-async function snapshot() {
-  // --no-sandbox is required when Chromium runs as root inside many CI/CD
-  // build containers (Vercel, GitHub Actions, etc.). It's safe at build
-  // time because we're only loading our own preview server.
-  const browser = await puppeteer.launch({
+async function getLaunchOptions() {
+  // On Vercel (and similar Amazon-Linux build containers), the system is
+  // missing shared libs that Puppeteer's bundled Chromium needs — most
+  // notably libnspr4.so. @sparticuz/chromium ships a statically-linked
+  // Chromium built for exactly this environment.
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    const { default: chromium } = await import('@sparticuz/chromium')
+    return {
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+    }
+  }
+  // Local / macOS / standard Linux dev: use the Chromium that Puppeteer
+  // downloaded as part of `npm install`. --no-sandbox is harmless at build
+  // time and avoids permission errors on some Linux CI runners.
+  return {
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-  })
+  }
+}
+
+async function snapshot() {
+  const browser = await puppeteer.launch(await getLaunchOptions())
   try {
     const page = await browser.newPage()
     await page.evaluateOnNewDocument(() => {
