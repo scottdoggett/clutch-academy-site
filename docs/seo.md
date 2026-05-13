@@ -23,7 +23,7 @@ This section is the running progress log. Anyone (human or AI) reading the doc c
 - `<html lang="en-CA">`, full `<title>` + meta description.
 - Canonical, robots, theme-color (`#C8102E`), Open Graph (image, locale, type, site_name, url, title, description), Twitter `summary_large_image`.
 - Apple touch icon link, manifest link.
-- Google Analytics 4 + Consent Mode v2 default-deny snippet (placeholder ID `G-XXXXXXXXXX`).
+- Google Analytics 4 + Consent Mode v2 default-deny snippet (Measurement ID `G-5E5GEN5N59`).
 - DrivingSchool / Offer / Person JSON-LD `@graph`.
 - `<!-- FAQPAGE_LD -->` splice marker (filled by the prerender script at build time).
 
@@ -71,12 +71,33 @@ This section is the running progress log. Anyone (human or AI) reading the doc c
 
 **External / user-side**
 - Domain `clutchacademy.ca` registered + live on Vercel.
-- Google Business Profile approved (managed by Sam's partner).
+- Google Business Profile approved and **linked to the website** via the `sameAs` JSON-LD entry (`https://maps.app.goo.gl/Ubte7wrVTArPyqM29`).
 - Google Search Console: domain property verified (auto-via GoDaddy), `sitemap.xml` submitted, status `Success`.
 - Bing Webmaster Tools: imported from GSC, sitemap synced, homepage `Request indexing` clicked.
 
 **Cache-bust convention**
 - OG image URL referenced from meta tags includes a `?v=N` query param. Bump the integer whenever `og-image.png` changes so Facebook / Slack / opengraph.xyz / Vercel's OG tab re-fetch instead of serving their cached copy. Currently at `?v=2`.
+- Same convention applies to the favicon set in `index.html` and `public/privacy.html` — every `favicon.svg` / `favicon-32.png` / `favicon-48.png` / `apple-touch-icon.png` reference carries `?v=N`. SVG is currently `?v=3` (bumped once after a visual tweak); PNGs are at `?v=2`. Bump the integer next to any file whose bytes change so returning visitors don't keep serving the cached version.
+
+### ✅ Shipped 2026-05-13 (this session)
+
+**Analytics & local-business linkage**
+- GA4 Measurement ID `G-5E5GEN5N59` wired into both the inline `gtag('config', …)` call and the `googletagmanager.com/gtag/js?id=…` script src in `index.html`. The placeholder `G-XXXXXXXXXX` is gone; data flows after the user grants consent on the banner. Verify in **GA4 → Reports → Realtime**.
+- Google Business Profile listing URL (`https://maps.app.goo.gl/Ubte7wrVTArPyqM29`) appended to the DrivingSchool JSON-LD `sameAs` array. This is the canonical "this website is that GBP listing" signal for Google's index and AI assistants. After the deploy, Google Search Console URL Inspection was used to **Request Indexing** so the new `sameAs` is picked up on the next crawl.
+
+**Visual identity polish — favicon refresh**
+- Replaced `public/favicon.svg` with the new disc-and-bracket logomark (red circle with C+brackets cut out via `fill-rule: evenodd`). A white quadrilateral backing path was later added behind the disc so the cutouts render correctly regardless of where the SVG is composited (browser tab, iOS home screen).
+- Added `public/favicon-32.png` and `public/favicon-48.png` for legacy browsers and Google's search-result icon. New `<link rel="icon">` entries wired into both `index.html` and `public/privacy.html`.
+- Regenerated `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` on a **white background** (previously red — the new logomark is red, so red-on-red wouldn't read).
+- Refactored `scripts/generate-images.mjs` to support two source SVGs and two backgrounds: `logo2.svg` → OG image (red BG, unchanged); `favicon.svg` → icon set (white BG). One script, two output groups.
+
+**Performance — WebP for hero + headshot**
+- `public/hero-section.webp` (336 KB, **38% smaller** than the 541 KB JPEG) and `public/headshot.webp` (885 KB, **32% smaller** than the 1.3 MB JPEG) committed.
+- `Home.jsx` and `About.jsx` `<img>` tags wrapped in `<picture>` with WebP `<source>` first and the original JPEG retained as the fallback `<img>`. CSS classes stay on the inner img so layout/blend-mode are unchanged. Modern browsers serve WebP; older browsers fall back transparently.
+
+**Contact email**
+- Switched the public-facing contact email from `samuel.anthony@clutchacademy.ca` to `hello@clutchacademy.ca` across all surfaces: Reverse contact card, Footer, DrivingSchool JSON-LD `email` field, `public/llms.txt`, and `public/privacy.html` (two locations). Keeps the structured data, AI-readable summary, and visible contact UI all in sync.
+- **Confirm before relying on this:** `hello@clutchacademy.ca` must exist as a deliverable mailbox/alias at the email provider (Google Workspace / GoDaddy mail / wherever the domain email is hosted). Without that alias, clicking a `mailto:` link will bounce.
 
 ---
 
@@ -86,11 +107,7 @@ Grouped by who/what is blocking. Anyone unblocking an item should follow the lin
 
 #### Blocked on Sam's partner (shared Google account / GBP)
 
-These are queued waiting for access to the Google account that owns the Google Business Profile.
-
-1. **Create the GA4 property and share the Measurement ID.** Once you have `G-XXXXXXXXXX`, replace the two placeholder occurrences in `index.html` (one in the inline `gtag('config', …)` call, one in the async `<script src="https://www.googletagmanager.com/gtag/js?id=…">` URL). Commit and push. After deploy, click Accept on the consent banner and confirm yourself in **GA4 → Reports → Realtime**.
-2. **Add the GBP listing URL to the DrivingSchool JSON-LD `sameAs` array.** Find the listing's canonical link (`https://g.page/r/…` or the long `https://maps.app.goo.gl/…` share URL) inside business.google.com and append it to the `sameAs` array in `index.html` (currently has IG + FB). This is the canonical "this website is that GBP listing" signal Google's index and AI assistants both look for.
-3. **(Future) Wire `aggregateRating` JSON-LD** once GBP has accumulated real reviews. Cite GBP as the source — never hand-write the count or score.
+1. **(Future) Wire `aggregateRating` JSON-LD** once GBP has accumulated real reviews. Cite GBP as the source — never hand-write the count or score.
 
 #### Blocked on Sam (Meta Pixel / ad launch)
 
@@ -108,34 +125,18 @@ e. **Does Sam want a custom audience for retargeting set up in Ads Manager?** On
 
 #### Visual identity polish
 
-4. **Refresh the favicon (browser tab + Google search result icon).**
-   - **Where it shows:** the icon in the user's browser tab, the icon next to the site title in Google's search results, and the iOS Safari pinned-tab icon.
-   - **Current state:** `public/favicon.svg` exists and is referenced from `index.html`'s `<link rel="icon" type="image/svg+xml" href="/favicon.svg">`. It's the original asset and may not match the rest of the new icon set generated from `logo2.svg`.
-   - **What to do:** replace `public/favicon.svg` with a square logomark on brand red (the bracket motif works at small sizes; the full wordmark doesn't). Then add a `favicon.ico` and a 32×32 PNG fallback for older browsers and Google's search-result icon (which, per Google's docs, prefers a 48px-multiple PNG/ICO). Recommended file set: `favicon.svg` (vector, primary), `favicon.ico` (legacy fallback), `favicon-32.png` (Google search), `favicon-48.png` (better resolution for some clients). Wire each into `index.html`:
-     ```html
-     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
-     <link rel="alternate icon" href="/favicon.ico" />
-     ```
-     Cache-bust with `?v=2` once if the file path stays the same.
-   - **Re-using the existing pipeline:** `scripts/generate-images.mjs` can be extended with a square-only target that uses a tighter crop/different SVG source. Quickest path: ask the designer for a square logomark SVG (just the brackets, or a stylized "C"); drop it in as `favicon.svg`.
-   - **Why it matters for SEO:** Google shows the favicon in mobile search results next to the site name. A clean, branded favicon increases click-through rate.
-
-5. **WebP versions of hero + headshot for perf.**
-   - Re-export `public/hero-section.jpeg` and `public/headshot.jpeg` as `.webp` (same dimensions, quality ~80). Drop in `public/`.
-   - Update `Home.jsx` and `About.jsx` to use a `<picture>` element with the WebP source first, JPEG fallback. This is purely a Lighthouse Performance win — not strictly SEO, but Page Experience signals are part of Google's ranking now.
+2. **(Optional) Add a `favicon.ico` legacy fallback.** The SVG + 32/48 PNG variants are shipped, which covers all modern browsers and Google's search-result icon. A `favicon.ico` is only needed for older IE-era browsers — almost no real-world impact today. If you want one anyway, ImageMagick (`convert favicon-32.png favicon-48.png favicon.ico`) generates a multi-resolution ICO; then add `<link rel="alternate icon" href="/favicon.ico" />` to `index.html` and `public/privacy.html`.
 
 #### User review
 
-6. **Privacy policy review (`public/privacy.html`).** I drafted a sensible default covering data collection, third parties (Calendly, GA4, Vercel), cookies, your-rights section, and contact. Read it through; tweak wording to match how you actually handle data.
+3. **Privacy policy review (`public/privacy.html`).** I drafted a sensible default covering data collection, third parties (Calendly, GA4, Vercel), cookies, your-rights section, and contact. Read it through; tweak wording to match how you actually handle data.
 
 #### Future / opportunistic
 
-7. **Auto-bump OG `?v=` in `generate-images.mjs`.** Right now you have to manually bump the version param in `index.html` whenever you regenerate `og-image.png`. The generator script could read the current `v=N`, increment it, and write it back to `index.html` automatically. ~15 lines of code; do it next time you iterate the OG image.
-8. **Watch GSC + Bing for first indexing.** Within 1–2 weeks of the sitemap submission, check Search Console → Indexing → Pages and Bing Webmaster → URL Inspection. Should report "indexed" / "URL can appear on Bing" once their crawlers process the homepage.
-9. **Local pack monitoring.** ~2 weeks after GBP went live, search "manual driving lessons toronto" from a Toronto-area incognito window. Clutch's GBP card should appear in the local-3-pack on the SERP. If it isn't appearing, check GBP for category accuracy and service-area definition.
-10. **AI-citation testing.** Periodically ask ChatGPT, Claude, Perplexity, and Google Gemini "where can I learn manual transmission in Toronto?" — Clutch should appear in answers within a few weeks of each crawler's index refresh.
+4. **Auto-bump cache-bust `?v=` in `generate-images.mjs`.** Right now you have to manually bump the version param in `index.html` and `public/privacy.html` whenever you regenerate the OG image or any icon. The generator script could read each current `v=N`, increment it, and write it back automatically. ~15 lines of code; do it next time you iterate.
+5. **Watch GSC + Bing for first indexing.** Within 1–2 weeks of the sitemap submission, check Search Console → Indexing → Pages and Bing Webmaster → URL Inspection. Should report "indexed" / "URL can appear on Bing" once their crawlers process the homepage.
+6. **Local pack monitoring.** ~2 weeks after GBP went live, search "manual driving lessons toronto" from a Toronto-area incognito window. Clutch's GBP card should appear in the local-3-pack on the SERP. If it isn't appearing, check GBP for category accuracy and service-area definition.
+7. **AI-citation testing.** Periodically ask ChatGPT, Claude, Perplexity, and Google Gemini "where can I learn manual transmission in Toronto?" — Clutch should appear in answers within a few weeks of each crawler's index refresh.
 
 ---
 
@@ -171,12 +172,14 @@ public/
   llms.txt                       <- Mintlify-style summary for LLM crawlers
   site.webmanifest               <- PWA manifest
   privacy.html                   <- Static privacy policy
-  favicon.svg                    <- Existing
-  apple-touch-icon.png           <- 📎 PENDING from designer
-  icon-192.png, icon-512.png     <- 📎 PENDING from designer
-  og-image.png                   <- 📎 PENDING from designer
-  hero-section.webp              <- 📎 PENDING (perf, not strictly SEO)
-  headshot.webp                  <- 📎 PENDING (perf, not strictly SEO)
+  logo2.svg                      <- Wide wordmark — source for og-image.png
+  favicon.svg                    <- Square logomark — source for icon set
+  og-image.png                   <- Generated by scripts/generate-images.mjs
+  apple-touch-icon.png           <- Generated (icon on white BG, iOS)
+  icon-192.png, icon-512.png     <- Generated (PWA manifest icons)
+  favicon-32.png, favicon-48.png <- Generated (browser tab + Google search)
+  hero-section.jpeg + .webp      <- Home hero, served via <picture>
+  headshot.jpeg + .webp          <- About headshot, served via <picture>
 src/
   main.jsx                       <- Gates GSAP behind window.__PRERENDER__
   components/
@@ -320,9 +323,9 @@ The setup uses Google's Consent Mode v2 with a hard default-deny:
 5. Decline → stored as `'denied'`. GA never fires.
 6. On subsequent visits, the inline `<script>` reads localStorage **before** the gtag config call so consent is restored without a banner re-prompt.
 
-The measurement ID is currently the placeholder `G-XXXXXXXXXX`. Until you swap it in (two locations in `index.html`), gtag is a harmless no-op.
+The Measurement ID is `G-5E5GEN5N59` (wired in two places in `index.html`: the inline `gtag('config', …)` call and the `googletagmanager.com/gtag/js?id=…` script src).
 
-We track one custom event: `booking_cta_click` with a `source` parameter (`hero` / `nav` / `packages_single` / `packages_3pack` / `about` / `reverse`), fired from `useCalendly.js`. Once GA4 is live, you'll be able to see which CTA is converting best.
+We track one custom event: `booking_cta_click` with a `source` parameter (`hero` / `nav` / `packages_single` / `packages_3pack` / `about` / `reverse`), fired from `useCalendly.js`. Watch which CTA converts best in GA4 → Explore.
 
 ---
 
@@ -363,7 +366,7 @@ The prerender output `dist/index.html` contains **zero** Meta Pixel artifacts �
 | Loaded when? | Library loads on every page; Consent Mode suppresses data | Library not loaded at all until consent |
 | Used for | Site analytics | Ad performance + audience building |
 | Custom event | `booking_cta_click` | `Lead`, `Contact` |
-| ID | `G-XXXXXXXXXX` (placeholder, 2 places in `index.html`) | `2845684255788584` (in `src/lib/metaPixel.js`) |
+| ID | `G-5E5GEN5N59` (2 places in `index.html`) | `2845684255788584` (in `src/lib/metaPixel.js`) |
 | Owns the account | Sam's partner (shared Google account) | Sam (Meta Business) |
 
 ### Adding new event firings
@@ -417,13 +420,16 @@ The redirect rules will only fire if those alternate hosts are pointed at the Ve
 | Change a price | The visible copy in `Packages.jsx` **and** the `price` field in the Offer JSON-LD in `index.html`. These are not yet linked. |
 | Update the LLM business summary | `public/llms.txt` |
 | Change AI-bot policy | `public/robots.txt` |
-| Add the GA4 measurement ID | `index.html` — replace `G-XXXXXXXXXX` in two locations (the inline `gtag('config', ...)` call and the script `src=`) |
+| Change the GA4 measurement ID | `index.html` — `G-5E5GEN5N59` appears in two locations (the inline `gtag('config', ...)` call and the script `src=`) |
 | Update the Meta Pixel ID | `src/lib/metaPixel.js` — `PIXEL_ID` constant. Single source of truth. |
 | Add a new Meta Pixel event | Import a helper from `src/lib/metaPixel.js` in the calling component. Add a new exported wrapper there if it's a standard event used in multiple places. |
 | Add Search Console verification | Uncomment the meta line at `index.html:15-16` and paste the GSC token |
 | Change the canonical domain | Six places in `index.html` (canonical link, og:url, og:image, twitter:image, JSON-LD URLs) **and** `public/sitemap.xml`, `public/llms.txt`, `vercel.json`, `public/privacy.html`. Use a search-and-replace. |
 | Change cache or redirect rules | `vercel.json` |
 | Update the privacy policy | `public/privacy.html` |
+| Change the contact email | 5 places (search-and-replace): `src/components/Footer.jsx`, `src/components/sections/Reverse.jsx`, the DrivingSchool JSON-LD `email` in `index.html`, `public/llms.txt`, and `public/privacy.html`. Currently `hello@clutchacademy.ca`. |
+| Regenerate the OG image or icon set | `npm run generate:images` (reads `public/logo2.svg` + `public/favicon.svg`, writes the PNGs). Bump the relevant `?v=N` cache-bust in `index.html` and `public/privacy.html` afterward. |
+| Add/edit a `<picture>` source | `src/components/sections/Home.jsx` (hero) or `src/components/sections/About.jsx` (headshot). Keep the className on the inner `<img>` so CSS stays attached. |
 
 ---
 
