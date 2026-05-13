@@ -122,7 +122,7 @@ function setupReverseExit(section, content) {
     scrollTrigger: {
       trigger: section,
       start: 'top top',
-      end: '+=110%',
+      end: '+=70%',
       ...PINNED_OPTS,
     },
   })
