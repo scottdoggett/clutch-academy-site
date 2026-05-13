@@ -58,9 +58,7 @@
 
     <!-- Google Analytics 4 with Consent Mode v2 (default-deny). The pageview
          and any subsequent events are queued by gtag and only flushed once
-         the user grants consent through the in-app ConsentBanner.
-         PENDING: replace G-XXXXXXXXXX with the real measurement ID once the
-         GA4 property is created (Phase 0.5). Until then, gtag is a no-op. -->
+         the user grants consent through the in-app ConsentBanner. -->
     <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
@@ -87,12 +85,12 @@
       gtag('js', new Date())
       // Skip GA in prerender so the snapshot doesn't fire a synthetic pageview.
       if (!window.__PRERENDER__) {
-        gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true })
+        gtag('config', 'G-5E5GEN5N59', { anonymize_ip: true })
       }
     </script>
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+      src="https://www.googletagmanager.com/gtag/js?id=G-5E5GEN5N59"
     ></script>
 
     <!-- LocalBusiness / Offer / Person structured data -->
