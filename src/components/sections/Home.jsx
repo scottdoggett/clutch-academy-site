@@ -34,11 +34,14 @@ export default function Home({ onBookNow, onSeePackages }) {
         </div>
 
         <div className="home__visual">
-          <img
-            className="home__photo"
-            src="/hero-section.jpeg"
-            alt="Clutch Academy instructor with the training car"
-          />
+          <picture>
+            <source srcSet="/hero-section.webp" type="image/webp" />
+            <img
+              className="home__photo"
+              src="/hero-section.jpeg"
+              alt="Clutch Academy instructor with the training car"
+            />
+          </picture>
           <div className="home__caption">
             Real roads, real confidence. Lessons across Toronto.
           </div>

@@ -5,23 +5,29 @@ export default function About({ onBookNow }) {
   return (
     <GearSection gear={4} id="about">
       <div className="about">
-        <img
-          className="about__photo about__photo--desktop"
-          src="/headshot.jpeg"
-          alt="Sam Anthony, founder and lead instructor"
-        />
+        <picture>
+          <source srcSet="/headshot.webp" type="image/webp" />
+          <img
+            className="about__photo about__photo--desktop"
+            src="/headshot.jpeg"
+            alt="Sam Anthony, founder and lead instructor"
+          />
+        </picture>
 
         <div className="about__text">
           <h2 className="about__eyebrow">Meet Your Instructor</h2>
           <h3 className="about__name">Samuel Anthony</h3>
           <p className="about__role">Founder · Lead Instructor</p>
 
-          <img
-            className="about__photo about__photo--mobile"
-            src="/headshot.jpeg"
-            alt=""
-            aria-hidden="true"
-          />
+          <picture>
+            <source srcSet="/headshot.webp" type="image/webp" />
+            <img
+              className="about__photo about__photo--mobile"
+              src="/headshot.jpeg"
+              alt=""
+              aria-hidden="true"
+            />
+          </picture>
 
           <p className="about__bio">
             Hey, I’m Sam — I run Clutch Academy.
