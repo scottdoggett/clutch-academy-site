@@ -1,4 +1,5 @@
 import GearSection from '../GearSection'
+import { trackContact } from '../../lib/metaPixel'
 import './Reverse.css'
 
 export default function Reverse({ onBookNow, isLast = false }) {
@@ -35,11 +36,19 @@ export default function Reverse({ onBookNow, isLast = false }) {
           <ul className="reverse__contact-list">
             <li className="reverse__contact-item">
               <span className="reverse__contact-label">Call</span>
-              <a href="tel:+14372231153">(437) 223-1153</a>
+              <a
+                href="tel:+14372231153"
+                onClick={() => trackContact('phone')}
+              >
+                (437) 223-1153
+              </a>
             </li>
             <li className="reverse__contact-item">
               <span className="reverse__contact-label">Email</span>
-              <a href="mailto:samuel.anthony@clutchacademy.ca">
+              <a
+                href="mailto:samuel.anthony@clutchacademy.ca"
+                onClick={() => trackContact('email')}
+              >
                 samuel.anthony@clutchacademy.ca
               </a>
             </li>
@@ -49,6 +58,7 @@ export default function Reverse({ onBookNow, isLast = false }) {
                 href="https://www.instagram.com/clutchacademy.ca/"
                 rel="noopener noreferrer"
                 target="_blank"
+                onClick={() => trackContact('instagram')}
               >
                 @clutchacademy.ca
               </a>
@@ -59,6 +69,7 @@ export default function Reverse({ onBookNow, isLast = false }) {
                 href="https://www.facebook.com/profile.php?id=61569269306023"
                 rel="noopener noreferrer"
                 target="_blank"
+                onClick={() => trackContact('facebook')}
               >
                 Clutch Academy
               </a>

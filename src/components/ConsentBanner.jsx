@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './ConsentBanner.css'
+import { loadPixel } from '../lib/metaPixel'
 
 const STORAGE_KEY = 'clutch.consent.v1'
 
@@ -41,6 +42,7 @@ export default function ConsentBanner() {
         analytics_storage: choice === 'granted' ? 'granted' : 'denied',
       })
     }
+    if (choice === 'granted') loadPixel()
     setVisible(false)
   }
 
@@ -52,9 +54,9 @@ export default function ConsentBanner() {
       aria-label="Cookie consent"
     >
       <p className="consent-banner__copy">
-        We use cookies to understand how visitors use the site and improve
-        your experience. Calendly (used for bookings) sets its own cookies
-        when you book a lesson.{' '}
+        We use cookies for analytics (Google Analytics) and ad measurement
+        (Meta Pixel) to understand how visitors use the site and how our ads
+        perform. Calendly sets its own cookies when you book a lesson.{' '}
         <a href="/privacy" className="consent-banner__link">
           Privacy policy
         </a>

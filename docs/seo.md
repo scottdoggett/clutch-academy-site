@@ -46,6 +46,18 @@ This section is the running progress log. Anyone (human or AI) reading the doc c
 - `icon-192.png` — PWA manifest 192.
 - `icon-512.png` — PWA manifest 512.
 
+**Meta Pixel (ad measurement, shipped 2026-05-12)**
+- Pixel ID `2845684255788584` integrated via `src/lib/metaPixel.js`.
+- `fbevents.js` is **lazy-loaded only after consent** (mirrors GA4 gating). Zero requests to `connect.facebook.net` before the user clicks Accept.
+- Returning visitors with stored consent get the Pixel loaded from `main.jsx` on boot; first-time visitors load it from `ConsentBanner.jsx` on accept.
+- Events fired from the site:
+  - `PageView` — once after consent.
+  - `Lead` with `{ source }` — on every Book Now CTA (`hero`, `nav`, `packages_single`, `packages_3pack`, `about`, `reverse`), called from `useCalendly.js` alongside the existing GA4 `booking_cta_click`.
+  - `Contact` with `{ method }` — on phone / email / Instagram / Facebook taps in the Reverse section.
+- **Booking completions (`Schedule` / `CompleteRegistration`) are NOT fired from this site.** Sam has Calendly's native Meta integration wired on his end, so adding a completion event here would double-count. See also "Common pitfalls" below.
+- Consent banner copy and `public/privacy.html` updated to disclose Meta as a third-party data recipient.
+- Prerender verified clean: `grep -c -E "fbq|connect\.facebook|2845684255788584" dist/index.html` returns `0`.
+
 **On-page SEO fixes**
 - Footer anchor `href`s switched from `#` to real `#home` / `#packages` / etc.
 - About section h2 changed from instructor name to "Meet Your Instructor" (descriptive heading), name demoted to h3.
@@ -79,6 +91,20 @@ These are queued waiting for access to the Google account that owns the Google B
 1. **Create the GA4 property and share the Measurement ID.** Once you have `G-XXXXXXXXXX`, replace the two placeholder occurrences in `index.html` (one in the inline `gtag('config', …)` call, one in the async `<script src="https://www.googletagmanager.com/gtag/js?id=…">` URL). Commit and push. After deploy, click Accept on the consent banner and confirm yourself in **GA4 → Reports → Realtime**.
 2. **Add the GBP listing URL to the DrivingSchool JSON-LD `sameAs` array.** Find the listing's canonical link (`https://g.page/r/…` or the long `https://maps.app.goo.gl/…` share URL) inside business.google.com and append it to the `sameAs` array in `index.html` (currently has IG + FB). This is the canonical "this website is that GBP listing" signal Google's index and AI assistants both look for.
 3. **(Future) Wire `aggregateRating` JSON-LD** once GBP has accumulated real reviews. Cite GBP as the source — never hand-write the count or score.
+
+#### Blocked on Sam (Meta Pixel / ad launch)
+
+These were surfaced 2026-05-12 when Sam sent the Pixel ID `2845684255788584` and asked for integration before launching Meta ads. The browser-side integration is shipped; the items below need Sam's input or confirmation.
+
+a. **Confirm Pixel is firing in Meta Events Manager.** After the next deploy, open Events Manager → Test Events for dataset `2845684255788584`, paste the live URL, click around the site (Book Now CTA + a contact link), and confirm `PageView`, `Lead`, and `Contact` show up within seconds. If they don't, check whether consent was actually accepted (the banner appears once per browser; `localStorage.removeItem('clutch.consent.v1')` resets it).
+
+b. **Conversions API (CAPI) — does Sam want it?** Current setup is browser-only via the Pixel. CAPI is server-side, survives ad-blockers and iOS tracking restrictions, and Meta's own guidance recommends dual browser+CAPI. Not required to launch ads, but it's a known quality signal in Meta's ad optimization. Adding it later requires either: (i) a small serverless endpoint that proxies events to Meta's Graph API, or (ii) a connector service (Stape, Zapier, etc.). Decision is Sam's — implementation effort is ~half a day either way.
+
+c. **Confirm Sam's Calendly→Meta integration uses the same Pixel ID.** If Calendly is configured to fire `Schedule` against a *different* dataset/Pixel than `2845684255788584`, his ad-optimization signal will be split across two assets. Have him open Calendly → Integrations → Meta Pixel and verify the ID matches. (This is also why the site code does NOT fire `Schedule` — see "Common pitfalls".)
+
+d. **Does Sam want a `ViewContent` event on the Packages section?** Standard for e-commerce-style ads; tells Meta which visitors actually saw pricing. Cheap to add (an IntersectionObserver in `Packages.jsx` calling a `trackViewContent` helper). Useful if he plans to run "viewed pricing but didn't book" retargeting audiences. Defer until he asks.
+
+e. **Does Sam want a custom audience for retargeting set up in Ads Manager?** Once Pixel data starts flowing, Sam can create audiences like "visited site in last 30 days" or "clicked Book Now but didn't complete booking." That's a Meta Ads Manager task, not a code task — but worth flagging during the FaceTime so he sets it up before launching ads, not after.
 
 #### Visual identity polish
 
@@ -159,7 +185,9 @@ src/
     sections/Reviews.jsx         <- Same gate around the rAF marquee
     sections/Faq.jsx             <- Source-of-truth FAQS array (drives FAQPage JSON-LD)
   hooks/
-    useCalendly.js               <- Lazy-loads Calendly + fires booking_cta_click
+    useCalendly.js               <- Lazy-loads Calendly; fires booking_cta_click (GA4) + Lead (Meta)
+  lib/
+    metaPixel.js                 <- Loads fbevents.js on consent + trackLead/trackContact helpers
 docs/
   seo.md                         <- This file
   spec/                          <- Original build specification (mostly historical now)
@@ -298,6 +326,60 @@ We track one custom event: `booking_cta_click` with a `source` parameter (`hero`
 
 ---
 
+## Meta Pixel + conversion tracking
+
+Sam runs Meta (Facebook + Instagram) ads to drive bookings. To measure performance and optimize delivery, the site fires a small set of standard Meta events. The Pixel ID is `2845684255788584` (hardcoded in `src/lib/metaPixel.js` — change there if it ever rotates).
+
+### Architecture: consent-gated lazy load
+
+Unlike GA4 (which uses Consent Mode v2 and loads `gtag.js` unconditionally, suppressing data until consent), the Meta Pixel is **not loaded at all** until the user grants consent. This is the strictest interpretation of consent gating and the cleanest match for PIPEDA / GDPR:
+
+1. `src/lib/metaPixel.js` exports `loadPixel()`, `trackLead(source)`, and `trackContact(method)`.
+2. On app boot in `src/main.jsx`, if `localStorage['clutch.consent.v1'] === 'granted'` (returning visitor), `loadPixel()` fires immediately.
+3. On first-time accept in `src/components/ConsentBanner.jsx`, the same `loadPixel()` runs.
+4. `loadPixel()` is idempotent (guards on a module-level `loaded` flag and on `window.fbq?.loaded`) and short-circuits during the build-time prerender (`window.__PRERENDER__`). It defines the standard `fbq` queue, injects `https://connect.facebook.net/en_US/fbevents.js`, then fires `fbq('init', PIXEL_ID)` + `fbq('track', 'PageView')`.
+5. The track helpers (`trackLead`, `trackContact`) guard with `typeof window.fbq !== 'function'` so they no-op silently before consent.
+
+The prerender output `dist/index.html` contains **zero** Meta Pixel artifacts — verified with `grep -c -E "fbq|connect\.facebook|2845684255788584" dist/index.html` returning `0`.
+
+### Events fired from this site
+
+| Event | Where it fires | Params |
+|---|---|---|
+| `PageView` | Once, after consent — inside `loadPixel()` | — |
+| `Lead` | `useCalendly.js` → `openCalendly(source)` — every Book Now CTA click that opens Calendly | `{ source: "hero" \| "nav" \| "packages_single" \| "packages_3pack" \| "about" \| "reverse" }` |
+| `Contact` | `Reverse.jsx` — click on phone / email / Instagram / Facebook contact links | `{ method: "phone" \| "email" \| "instagram" \| "facebook" }` |
+
+### Events NOT fired from this site
+
+- **`Schedule` / `CompleteRegistration` (completed booking).** Sam has Calendly's native Meta integration configured on his end, so it fires booking-completion events to the same dataset. Firing one here too would double-count. See the FaceTime open item `c.` above — if Sam ever turns off the Calendly-side integration, we'd need to listen to Calendly's `event_scheduled` postMessage and fire it from `useCalendly.js`.
+- **`ViewContent` (saw pricing).** Cheap to add via IntersectionObserver on the Packages section, but not requested. Tracked as FaceTime open item `d.`.
+- **Server-side events via CAPI.** Browser-only setup. CAPI would survive ad-blockers + iOS tracking restrictions but needs a small backend. Tracked as FaceTime open item `b.`.
+
+### How this differs from GA4
+
+| | GA4 | Meta Pixel |
+|---|---|---|
+| Loaded when? | Library loads on every page; Consent Mode suppresses data | Library not loaded at all until consent |
+| Used for | Site analytics | Ad performance + audience building |
+| Custom event | `booking_cta_click` | `Lead`, `Contact` |
+| ID | `G-XXXXXXXXXX` (placeholder, 2 places in `index.html`) | `2845684255788584` (in `src/lib/metaPixel.js`) |
+| Owns the account | Sam's partner (shared Google account) | Sam (Meta Business) |
+
+### Adding new event firings
+
+Pattern: import the helper, call it in the click/effect handler. Example for a hypothetical new "Watch demo video" event:
+
+```js
+import { trackEvent } from '../lib/metaPixel' // would need to export a generic helper
+
+trackEvent('ViewContent', { content_name: 'demo_video' })
+```
+
+Currently only `trackLead` and `trackContact` are exported. If you need a generic `track`, export the internal `track` function from `metaPixel.js` — it's already implemented.
+
+---
+
 ## Calendly: now lazy-loaded
 
 Previously the Calendly widget script (~100 KB of third-party JS) and stylesheet loaded on every page visit, blocking the prerender and inflating critical-path payload. They now inject only on the first call to `openCalendly()`. The hook caches a load promise so subsequent calls reuse the same script tag, and there's a fallback that opens `calendly.com` in a new tab if the script fails (ad-blocker, network).
@@ -336,6 +418,8 @@ The redirect rules will only fire if those alternate hosts are pointed at the Ve
 | Update the LLM business summary | `public/llms.txt` |
 | Change AI-bot policy | `public/robots.txt` |
 | Add the GA4 measurement ID | `index.html` — replace `G-XXXXXXXXXX` in two locations (the inline `gtag('config', ...)` call and the script `src=`) |
+| Update the Meta Pixel ID | `src/lib/metaPixel.js` — `PIXEL_ID` constant. Single source of truth. |
+| Add a new Meta Pixel event | Import a helper from `src/lib/metaPixel.js` in the calling component. Add a new exported wrapper there if it's a standard event used in multiple places. |
 | Add Search Console verification | Uncomment the meta line at `index.html:15-16` and paste the GSC token |
 | Change the canonical domain | Six places in `index.html` (canonical link, og:url, og:image, twitter:image, JSON-LD URLs) **and** `public/sitemap.xml`, `public/llms.txt`, `vercel.json`, `public/privacy.html`. Use a search-and-replace. |
 | Change cache or redirect rules | `vercel.json` |
@@ -363,6 +447,9 @@ curl -I https://clutchacademy.ca/privacy
 # Both JSON-LD blocks present
 curl -s https://clutchacademy.ca/ | grep -c "application/ld+json"   # expect 2
 
+# Prerender output is Meta-Pixel-free (Pixel must only load at runtime, after consent)
+curl -s https://clutchacademy.ca/ | grep -c -E "fbq|connect\.facebook|2845684255788584"  # expect 0
+
 # Canonical redirects
 curl -sI https://www.clutchacademy.ca/ | grep -i location            # expect 301 → apex
 curl -sI https://clutchacademy.com/ | grep -i location               # expect 301 → .ca (if .com is owned + pointed)
@@ -374,6 +461,8 @@ Then in browsers:
 - **Twitter Card Validator** — same idea for X.
 - **PageSpeed Insights / Lighthouse** — SEO score should be 100. Performance ≥ 85 mobile.
 - **Google Search Console → URL Inspection** — once verified, paste the homepage URL. Expect "URL is on Google" within 1–2 weeks.
+- **Meta Events Manager → Test Events** (for dataset `2845684255788584`) — paste the live URL, accept the consent banner, click around the site. `PageView` fires immediately; `Lead` fires when you click any Book Now CTA; `Contact` fires when you tap a phone/email/social link in the Reverse section. **Note:** Test Events only shows events from sessions matching the test URL, so use the actual live origin (not localhost).
+- **Meta Pixel Helper** (Chrome extension by Meta) — visit the live site as a normal user, accept consent, and confirm the extension badge shows the Pixel ID and recent events. Faster sanity check than opening Events Manager.
 
 ---
 
@@ -395,3 +484,6 @@ When you ship a placeholder replacement (icon, copy, GA4 ID, etc.), run `npm run
 - **The prerender uses `@sparticuz/chromium` on Vercel, Puppeteer's bundled Chromium locally.** The split is gated on `process.env.VERCEL` inside `scripts/prerender.mjs`. If you change build provider, you may need to add another branch (Netlify, Railway, etc.) or unify on `@sparticuz/chromium` everywhere if the local dev machine can also run a Linux Chromium binary.
 - **`vercel.json` has no `redirects` block on purpose.** A previous version had a `www → apex` redirect rule that fought Vercel's domain-dashboard auto-redirect (when the dashboard had `www` set as Primary, the two layers pointed at each other and produced an infinite loop). Use Vercel's domain dashboard for canonical-domain routing; do not re-add host redirects here.
 - **OG image cache-bust pattern.** When you regenerate `public/og-image.png`, increment the `?v=N` query param everywhere it appears in `index.html` (currently three places: `og:image`, `twitter:image`, JSON-LD `image`). Without this, Facebook / Slack / iMessage / opengraph.xyz / Vercel's OG preview tab will all serve their old cached copy until their TTL expires (1–30 days).
+- **Don't add a `Schedule` / `CompleteRegistration` event for completed Calendly bookings.** Sam wired up Calendly's native Meta integration on his end, so the booking-completion conversion is already firing from Calendly's side. Adding one from the site would double-count in Ads Manager and mis-train Meta's ad-optimization algorithm. If Sam ever turns off the Calendly-side integration, *then* add a `postMessage` listener for Calendly's `calendly.event_scheduled` message inside `useCalendly.js`.
+- **Don't load `fbevents.js` unconditionally from `index.html`.** The Pixel is intentionally not loaded before consent — moving it to `<head>` breaks the consent gate and creates PIPEDA / GDPR exposure. The lazy-load pattern in `src/lib/metaPixel.js` is the supported pattern.
+- **Don't change the Pixel ID without telling Sam.** It's hardcoded in `src/lib/metaPixel.js`. If it's wrong, Sam's ad data flows to a dataset he can't see — symptoms are "no events showing up in Events Manager" despite `fbq` running fine in the browser console. Mismatched Pixel ID is the #1 cause of "the Pixel doesn't work."

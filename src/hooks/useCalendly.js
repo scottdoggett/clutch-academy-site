@@ -1,3 +1,5 @@
+import { trackLead } from '../lib/metaPixel'
+
 // When clients provide separate event types per package, extend this hook to
 // accept a source-specific URL.
 //
@@ -63,6 +65,7 @@ export function openCalendly(source) {
   if (typeof window.gtag === 'function') {
     window.gtag('event', 'booking_cta_click', { source: source || 'unknown' })
   }
+  trackLead(source)
 
   ensureCalendlyLoaded().then((ok) => {
     if (!ok || !window.Calendly?.initPopupWidget) {
