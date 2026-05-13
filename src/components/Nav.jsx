@@ -3,9 +3,9 @@ import './Nav.css'
 
 const NAV_LINKS = [
   { label: 'Home', href: '#home', gear: 1 },
-  { label: 'Packages', href: '#packages', gear: 3 },
-  { label: 'About', href: '#about', gear: 4 },
-  { label: 'Reviews', href: '#reviews', gear: 5 },
+  { label: 'Reviews', href: '#reviews', gear: 2 },
+  { label: 'Packages', href: '#packages', gear: 4 },
+  { label: 'About', href: '#about', gear: 5 },
   { label: 'FAQ', href: '#faq', gear: 6 },
   { label: 'Contact', href: '#book', gear: 'R' },
 ]

@@ -90,7 +90,7 @@ export default function Reviews() {
   }, [])
 
   return (
-    <GearSection gear={5} id="reviews">
+    <GearSection gear={2} id="reviews">
       <header className="section-header">
         <p className="section-header__eyebrow">Student Stories</p>
         <h2>What Students Are Saying</h2>

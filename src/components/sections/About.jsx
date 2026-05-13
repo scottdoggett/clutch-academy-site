@@ -3,7 +3,7 @@ import './About.css'
 
 export default function About({ onBookNow }) {
   return (
-    <GearSection gear={4} id="about">
+    <GearSection gear={5} id="about">
       <div className="about">
         <picture>
           <source srcSet="/headshot.webp" type="image/webp" />

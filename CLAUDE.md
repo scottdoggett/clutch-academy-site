@@ -10,7 +10,7 @@ Manual transmission driving school in Toronto. Single-page React site with a gea
 
 The build specification lives in `docs/spec/` and is still useful for *intent* (audience, content, brand voice, pending assets). Several decisions in the spec have been **superseded by the current code** — when the two disagree, the code wins. Notable drift to be aware of before quoting the spec:
 
-- **Gear → section mapping has changed.** The spec's earlier ordering put About at gear 2 and HowItWorks at gear 3. The shipped order is `Home → HowItWorks → Packages → About → Reviews → Faq → Reverse` (see "Architecture" below).
+- **Gear → section mapping has changed.** The spec's earlier ordering put About at gear 2 and HowItWorks at gear 3. The shipped order is `Home → Reviews → HowItWorks → Packages → About → Faq → Reverse` (see "Architecture" below). Reviews was previously at gear 5 — moving it forward to gear 2 was a deliberate ordering decision (social proof up high).
 - **Payment is now collected at booking time**, not in person. The Reverse section ("Payment collected at time of booking, not in person — All cards accepted") and FAQ #6 ("Payment is securely collected at the time of your booking using Stripe…") reflect this. The Packages section still has stale `Pay in person when you arrive.` copy — flag it before relying on it.
 - **The Reverse contact form was removed** (commit `eea4250`) and replaced with a contact info card (phone, email, IG, FB). `index.html` still contains the hidden Netlify form-registration stub; it is unused by the rendered app.
 - **No analytics is wired up.** The spec recommends GA4; the code references it only in a comment in `useCalendly.js`.
@@ -60,10 +60,10 @@ src/
 │   ├── Footer.jsx
 │   └── sections/        # One component per gear
 │       ├── Home.jsx         # gear 1 — top-left
-│       ├── HowItWorks.jsx   # gear 2 — top-left
-│       ├── Packages.jsx     # gear 3 — top-center
-│       ├── About.jsx        # gear 4 — top-center
-│       ├── Reviews.jsx      # gear 5 — top-right
+│       ├── Reviews.jsx      # gear 2 — top-left
+│       ├── HowItWorks.jsx   # gear 3 — top-center
+│       ├── Packages.jsx     # gear 4 — top-center
+│       ├── About.jsx        # gear 5 — top-right
 │       ├── Faq.jsx          # gear 6 — top-right
 │       └── Reverse.jsx      # gear R — center; Book CTA + contact info card
 ├── hooks/

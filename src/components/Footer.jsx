@@ -2,10 +2,10 @@ import './Footer.css'
 
 const QUICK_LINKS = [
   { label: 'Home', gear: 1, href: '#home' },
-  { label: 'How It Works', gear: 2, href: '#how-it-works' },
-  { label: 'Packages', gear: 3, href: '#packages' },
-  { label: 'About', gear: 4, href: '#about' },
-  { label: 'Reviews', gear: 5, href: '#reviews' },
+  { label: 'Reviews', gear: 2, href: '#reviews' },
+  { label: 'How It Works', gear: 3, href: '#how-it-works' },
+  { label: 'Packages', gear: 4, href: '#packages' },
+  { label: 'About', gear: 5, href: '#about' },
   { label: 'FAQ', gear: 6, href: '#faq' },
   { label: 'Contact', gear: 'R', href: '#book' },
 ]

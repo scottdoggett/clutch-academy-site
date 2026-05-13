@@ -26,7 +26,7 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <GearSection gear={2} id="how-it-works">
+    <GearSection gear={3} id="how-it-works">
       <div className="how-it-works__top">
         <header className="section-header">
           <p className="section-header__eyebrow">The Process</p>

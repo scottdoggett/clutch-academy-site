@@ -14,10 +14,10 @@ import { openCalendly } from './hooks/useCalendly'
 
 const GEAR_TO_ID = {
   1: 'home',
-  2: 'how-it-works',
-  3: 'packages',
-  4: 'about',
-  5: 'reviews',
+  2: 'reviews',
+  3: 'how-it-works',
+  4: 'packages',
+  5: 'about',
   6: 'faq',
   R: 'book',
 }
@@ -112,15 +112,15 @@ export default function App() {
       <main id="main">
         <Home
           onBookNow={makeBookHandler('hero')}
-          onSeePackages={() => scrollToGear(3)}
+          onSeePackages={() => scrollToGear(4)}
         />
+        <Reviews />
         <HowItWorks />
         <Packages
           onBookSingle={makeBookHandler('packages_single')}
           onBookPack={makeBookHandler('packages_3pack')}
         />
         <About onBookNow={makeBookHandler('about')} />
-        <Reviews />
         <Faq />
         <Reverse onBookNow={makeBookHandler('reverse')} isLast />
       </main>
