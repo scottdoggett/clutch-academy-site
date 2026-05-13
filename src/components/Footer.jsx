@@ -39,8 +39,8 @@ export default function Footer({ onNavigate }) {
               <a href="tel:+14372231153">(437) 223-1153</a>
             </li>
             <li>
-              <a href="mailto:samuel.anthony@clutchacademy.ca">
-                samuel.anthony@clutchacademy.ca
+              <a href="mailto:hello@clutchacademy.ca">
+                hello@clutchacademy.ca
               </a>
             </li>
           </ul>

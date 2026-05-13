@@ -46,10 +46,10 @@ export default function Reverse({ onBookNow, isLast = false }) {
             <li className="reverse__contact-item">
               <span className="reverse__contact-label">Email</span>
               <a
-                href="mailto:samuel.anthony@clutchacademy.ca"
+                href="mailto:hello@clutchacademy.ca"
                 onClick={() => trackContact('email')}
               >
-                samuel.anthony@clutchacademy.ca
+                hello@clutchacademy.ca
               </a>
             </li>
             <li className="reverse__contact-item">
