@@ -1,10 +1,13 @@
-// One-shot generator for og-image.png + the icon set, rendered from
-// public/logo2.svg on the brand-red background. Uses Puppeteer (already a
-// devDep for the prerender pipeline) so we get crisp Google Fonts rendering
+// One-shot generator for og-image.png + the icon set. Uses Puppeteer (already
+// a devDep for the prerender pipeline) so we get crisp Google Fonts rendering
 // without dragging in another library.
 //
+// Two source SVGs feed two output groups:
+//   - logo2.svg  -> og-image.png (wide canvas, white wordmark on brand red)
+//   - favicon.svg -> icon set (square logomark on white background)
+//
 // Run: `npm run generate:images`
-// Re-run whenever the logo or tagline changes; outputs are committed to git.
+// Re-run whenever the logo or icon changes; outputs are committed to git.
 
 import { readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -16,21 +19,28 @@ const ROOT = resolve(__dirname, '..')
 const PUBLIC = resolve(ROOT, 'public')
 
 const RED = '#C8102E'
+const WHITE = '#FFFFFF'
 const TAGLINE = 'Learn Stick in Toronto'
 
 const TARGETS = [
-  // OG / social-share image. Logo only, centered, with comfortable margin.
-  { name: 'og-image.png', width: 1200, height: 630, withTagline: false, logoMaxWidth: '100%', padding: '6%' },
-  // iOS home-screen icon — Apple's recommended size.
-  { name: 'apple-touch-icon.png', width: 180, height: 180, withTagline: false, logoMaxWidth: '100%', padding: '8%' },
+  // OG / social-share image. White wordmark on brand red.
+  { name: 'og-image.png', width: 1200, height: 630, source: 'logo2.svg', bg: RED, withTagline: false, padding: '6%' },
+
+  // Icon set — red disc logomark on white background. Apple-touch must be
+  // opaque (Apple composites transparent icons on black on iOS home screen).
+  { name: 'apple-touch-icon.png', width: 180, height: 180, source: 'favicon.svg', bg: WHITE, withTagline: false, padding: '6%' },
   // PWA manifest icons (referenced from public/site.webmanifest).
-  { name: 'icon-192.png', width: 192, height: 192, withTagline: false, logoMaxWidth: '100%', padding: '8%' },
-  { name: 'icon-512.png', width: 512, height: 512, withTagline: false, logoMaxWidth: '100%', padding: '8%' },
+  { name: 'icon-192.png', width: 192, height: 192, source: 'favicon.svg', bg: WHITE, withTagline: false, padding: '6%' },
+  { name: 'icon-512.png', width: 512, height: 512, source: 'favicon.svg', bg: WHITE, withTagline: false, padding: '6%' },
+  // Favicon PNG fallbacks for legacy browsers + Google's search-result icon
+  // (Google's docs prefer a 48px-multiple PNG/ICO).
+  { name: 'favicon-32.png', width: 32, height: 32, source: 'favicon.svg', bg: WHITE, withTagline: false, padding: '4%' },
+  { name: 'favicon-48.png', width: 48, height: 48, source: 'favicon.svg', bg: WHITE, withTagline: false, padding: '4%' },
 ]
 
-function makeHtml(logoSvg, t) {
+function makeHtml(svg, t) {
   // Strip any width/height attrs from the SVG root so CSS sizing wins.
-  const cleanSvg = logoSvg.replace(/<svg([^>]*?)\swidth="[^"]*"/, '<svg$1').replace(/<svg([^>]*?)\sheight="[^"]*"/, '<svg$1')
+  const cleanSvg = svg.replace(/<svg([^>]*?)\swidth="[^"]*"/, '<svg$1').replace(/<svg([^>]*?)\sheight="[^"]*"/, '<svg$1')
 
   const tagline = t.withTagline
     ? `<p class="tagline">${TAGLINE}</p>`
@@ -48,7 +58,7 @@ function makeHtml(logoSvg, t) {
     html, body {
       width: 100%;
       height: 100%;
-      background: ${RED};
+      background: ${t.bg};
       overflow: hidden;
     }
     body {
@@ -61,7 +71,7 @@ function makeHtml(logoSvg, t) {
     }
     .logo {
       width: 100%;
-      max-width: ${t.logoMaxWidth};
+      max-width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -91,7 +101,14 @@ function makeHtml(logoSvg, t) {
 }
 
 async function main() {
-  const logoSvg = await readFile(resolve(PUBLIC, 'logo2.svg'), 'utf8')
+  // Cache SVG sources so we only read each one once.
+  const svgCache = new Map()
+  async function loadSvg(name) {
+    if (!svgCache.has(name)) {
+      svgCache.set(name, await readFile(resolve(PUBLIC, name), 'utf8'))
+    }
+    return svgCache.get(name)
+  }
 
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -100,10 +117,11 @@ async function main() {
 
   try {
     for (const t of TARGETS) {
-      console.log(`[gen-images] ${t.name} (${t.width}×${t.height})`)
+      console.log(`[gen-images] ${t.name} (${t.width}×${t.height}) from ${t.source}`)
+      const svg = await loadSvg(t.source)
       const page = await browser.newPage()
       await page.setViewport({ width: t.width, height: t.height, deviceScaleFactor: 1 })
-      await page.setContent(makeHtml(logoSvg, t), { waitUntil: 'networkidle0' })
+      await page.setContent(makeHtml(svg, t), { waitUntil: 'networkidle0' })
       // Wait for the Google Font to be ready before screenshotting; otherwise
       // FOUT can produce a system-font fallback in the snapshot.
       await page.evaluate(() => document.fonts.ready)
