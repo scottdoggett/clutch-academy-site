@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './ConsentBanner.css'
-import { loadPixel } from '../lib/metaPixel'
+import { loadPixel as loadMetaPixel } from '../lib/metaPixel'
+import { loadPixel as loadTiktokPixel } from '../lib/tiktokPixel'
 
 const STORAGE_KEY = 'clutch.consent.v1'
 
@@ -42,7 +43,10 @@ export default function ConsentBanner() {
         analytics_storage: choice === 'granted' ? 'granted' : 'denied',
       })
     }
-    if (choice === 'granted') loadPixel()
+    if (choice === 'granted') {
+      loadMetaPixel()
+      loadTiktokPixel()
+    }
     setVisible(false)
   }
 
@@ -55,8 +59,9 @@ export default function ConsentBanner() {
     >
       <p className="consent-banner__copy">
         We use cookies for analytics (Google Analytics) and ad measurement
-        (Meta Pixel) to understand how visitors use the site and how our ads
-        perform. Calendly sets its own cookies when you book a lesson.{' '}
+        (Meta Pixel, TikTok Pixel) to understand how visitors use the site
+        and how our ads perform. Calendly sets its own cookies when you book
+        a lesson.{' '}
         <a href="/privacy" className="consent-banner__link">
           Privacy policy
         </a>

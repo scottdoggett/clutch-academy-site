@@ -1,5 +1,11 @@
 import GearSection from '../GearSection'
-import { trackContact } from '../../lib/metaPixel'
+import { trackContact as trackMetaContact } from '../../lib/metaPixel'
+import { trackContact as trackTiktokContact } from '../../lib/tiktokPixel'
+
+function trackContact(method) {
+  trackMetaContact(method)
+  trackTiktokContact(method)
+}
 import './Reverse.css'
 
 export default function Reverse({ onBookNow, isLast = false }) {
