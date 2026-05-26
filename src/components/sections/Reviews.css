@@ -144,11 +144,6 @@
   color: var(--white);
 }
 
-.reviews__badge-count {
-  font-size: var(--text-small);
-  opacity: 0.75;
-}
-
 /* Reduced motion: JS already skips the auto-advance loop; native scroll is
    still allowed so the user can swipe through cards manually. */
 

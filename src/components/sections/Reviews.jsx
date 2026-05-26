@@ -2,33 +2,87 @@ import { useEffect, useRef } from 'react'
 import GearSection from '../GearSection'
 import './Reviews.css'
 
-const PLACEHOLDERS = [
+const REVIEWS = [
   {
     quote:
-      'Great experience learning manual here. Clear instruction, patient teaching, and I felt confident behind the wheel way faster than expected',
-    name: 'Ethan B.',
+      'Had such a positive experience! Very professional, calm, and efficient. Would definitely recommend!',
+    name: 'Hannah Bance',
   },
   {
     quote:
-      'Used to think driving manual was super stressful, pure anxiety, lots of stalling, but one lesson with Sam and no more stalling, looking forward to learning smooth downshifts and hill starts in lessons 2 and 3',
-    name: 'Obiora E.',
+      "Honestly one of the best driving instructors out there if you want to learn manual. Super patient, explains everything in a way that actually makes sense, and makes you feel comfortable even if you're nervous or completely new to stick.",
+    name: 'Anthony Mannella',
   },
   {
     quote:
-      'Best decision I made before my Europe trip. Sam walked me through everything I needed to know in just a couple sessions and by the end I felt completely comfortable renting a manual car abroad without a hint of stress.',
-    name: 'Scott D.',
+      'I had the best time learning how to drive manual with Sam. He has great customer service and wonderful tips for driving with a stick. Thank you Clutch team!!!',
+    name: 'Dakota Abell',
   },
   {
     quote:
-      'Honestly did not think I would pick this up so quickly. I had tried teaching myself in a parking lot a few times and it was rough, but Sam broke down the clutch work in a way that finally clicked. By lesson three I was doing hill starts in midtown traffic without panicking, which felt impossible a month ago.',
-    name: 'Jamie S.',
+      "Sam is an incredible and clear instructor. I just moved to the city and learning manual in Toronto was an intimidating task but he made it simple. I couldn't be more grateful!",
+    name: 'Michael C.',
+  },
+  {
+    quote:
+      "Sam was super patient and a great teacher throughout the lessons. I highly recommend Clutch Academy if you're wanting to learn how to drive a manual!",
+    name: 'Mollie MacDonald',
+  },
+  {
+    quote: 'Such a kind, informational and educated young man!',
+    name: 'Bailey Mabey',
+  },
+  {
+    quote:
+      'Sam is an excellent teacher who showed patience and encouragement throughout every lesson. He is the best teacher I could have had to learn to drive a standard.',
+    name: 'Kait',
+  },
+  {
+    quote:
+      'Best experience with Sam! Incredibly knowledgeable, personable, and easy to learn from. Highly recommend.',
+    name: 'Ven Djukic',
+  },
+  {
+    quote:
+      'Used to think driving manual was super stressful, pure anxiety, lots of stalling, but one lesson with Sam and no more stalling, looking forward to learning smooth downshifts and hill starts in lessons 2 and 3!',
+    name: 'Obiora Ejiofor',
+  },
+  {
+    quote:
+      'Great experience learning manual here. Clear instruction, patient teaching, and I felt confident behind the wheel way faster than expected.',
+    name: 'Ethan Black',
+  },
+  {
+    quote:
+      'Learning to drive a standard with Sam was a low stress experience with a patient and knowledgable instructor. I highly recommend Clutch Academy for anyone wanting to master the stick.',
+    name: 'Tahnee Anthony',
+  },
+  {
+    quote:
+      "Sam is a fantastic driving instructor! Incredibly patient and calm under stress, he can boost up a driving student's confidence behind the wheel in just a few hours. Manual driving was an intimidating skill for me to learn, so it was great to have trusted support for my first time trying!",
+    name: 'Ryan Bergman',
+  },
+  {
+    quote:
+      "Sam was fantastic throughout the whole process. He was patient with me on my first lesson and by the third, I feel ready to navigate in Europe driving standard. Can't recommend Clutch enough to anyone looking to learn standard.",
+    name: 'Erica Carnicelli',
+  },
+  {
+    quote:
+      "Did my first lesson last week with Sam, he was calm and patient around my nerves. Stalled twice on a hill and he didn't flinch. Finally feel like I actually get the clutch. Worth every dollar.",
+    name: 'Sol',
+  },
+  {
+    quote:
+      'I have never driven a manual car before taking a lesson with Sam. Even after 1 session, Sam quickly was able to teach me the basics and I was comfortable enough to go driving on my own without him. I would definitely recommend Sam teaching you to drive manual!',
+    name: 'Cole Janostin',
   },
 ]
 
 // Two copies of the list back-to-back. The auto-scroll teleports back to 0
 // once it crosses the halfway point, so the loop is invisible — card 1 of
 // copy B sits exactly where card 1 of copy A used to be.
-const MARQUEE_SEQUENCE = [...PLACEHOLDERS, ...PLACEHOLDERS]
+const MARQUEE_SEQUENCE = [...REVIEWS, ...REVIEWS]
 
 // Pixels per frame at ~60fps. Roughly doubles the previous CSS-keyframe pace.
 const SCROLL_SPEED = 1.2
@@ -111,7 +165,7 @@ export default function Reviews() {
             <li
               key={i}
               className="reviews__slide"
-              aria-hidden={i >= PLACEHOLDERS.length ? 'true' : undefined}
+              aria-hidden={i >= REVIEWS.length ? 'true' : undefined}
             >
               <article className="review-card">
                 <p className="review-card__quote">{r.quote}</p>
@@ -130,14 +184,16 @@ export default function Reviews() {
       <div className="reviews__footer">
         <div className="reviews__badge">
           <span className="reviews__badge-label">Google reviews</span>
-          {/* PENDING: FINAL STAR RATING ONCE REVIEWS PUBLISHED */}
           <span className="reviews__badge-stars" aria-hidden="true">
             ★★★★★
           </span>
-          <span className="reviews__badge-count">pending</span>
         </div>
-        {/* PENDING: GOOGLE BUSINESS PROFILE URL */}
-        <a href="#" className="btn btn--secondary" rel="noopener">
+        <a
+          href="https://maps.app.goo.gl/5Mi1EeB3jRs35Ezr5"
+          className="btn btn--secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Read more reviews on Google
         </a>
       </div>
