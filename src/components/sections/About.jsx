@@ -15,7 +15,7 @@ export default function About({ onBookNow }) {
         </picture>
 
         <div className="about__text">
-          <h2 className="about__eyebrow">Meet Your Instructor</h2>
+          <h2 className="about__eyebrow">Meet Your Manual Driving Instructor</h2>
           <h3 className="about__name">Samuel Anthony</h3>
           <p className="about__role">Founder · Lead Instructor</p>
 
