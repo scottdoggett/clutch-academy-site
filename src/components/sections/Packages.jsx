@@ -1,25 +1,28 @@
 import GearSection from '../GearSection'
 import './Packages.css'
 
-export default function Packages({ onBookSingle, onBookPack }) {
+export default function Packages({
+  onBookSingle,
+  onBookPack,
+  onBookGroup1hr,
+  onBookGroup2hr,
+}) {
   return (
     <GearSection gear={4} id="packages">
       <header className="section-header section-header--center">
         <p className="section-header__eyebrow">Packages & Pricing</p>
         <h2>Simple, straightforward pricing</h2>
         <p className="section-header__lead">
-          Two options. Pay securely at booking.
+          Solo or with a friend. Pay securely at booking.
         </p>
       </header>
 
-      <div className="packages">
-        <article className="package-card">
+      <div className="packages packages--four">
+        <article className="package-card package-card--red-1">
           <div className="package-card__info">
-            <p className="package-card__tag">Single</p>
+            <p className="package-card__tag">Private · Single</p>
             <h3>Single Lesson</h3>
-            <p className="package-card__desc">
-              Best for refreshers.
-            </p>
+            <p className="package-card__desc">Best for refreshers.</p>
             <p className="package-card__price">
               <span className="package-card__currency">$</span>90
               <span className="package-card__unit">/hour</span>
@@ -32,7 +35,6 @@ export default function Packages({ onBookSingle, onBookPack }) {
               <li>One-on-one instruction</li>
               <li>Clutch control basics</li>
               <li>First-gear starts and stops</li>
-              <li>Personalized feedback</li>
             </ul>
 
             <button type="button" className="btn btn--secondary" onClick={onBookSingle}>
@@ -41,12 +43,13 @@ export default function Packages({ onBookSingle, onBookPack }) {
           </div>
         </article>
 
-        <article className="package-card package-card--featured">
+        <article className="package-card package-card--featured package-card--red-2">
           <span className="package-card__badge">Save $30</span>
           <div className="package-card__info">
+            <p className="package-card__tag">Private · 3-Pack</p>
             <h3>3-Lesson Package</h3>
             <p className="package-card__desc">
-              Full progression from basics to road-confident.
+              Full progression to road-confident.
             </p>
             <p className="package-card__price">
               <span className="package-card__currency">$</span>240
@@ -64,6 +67,59 @@ export default function Packages({ onBookSingle, onBookPack }) {
 
             <button type="button" className="btn btn--primary" onClick={onBookPack}>
               Book This Package
+            </button>
+          </div>
+        </article>
+
+        <article className="package-card package-card--red-3">
+          <div className="package-card__info">
+            <p className="package-card__tag">Group · 1 Hour</p>
+            <h3>Group Lesson</h3>
+            <p className="package-card__desc">
+              Bring a friend. Split the experience.
+            </p>
+            <p className="package-card__price">
+              <span className="package-card__currency">$</span>90
+              <span className="package-card__unit">/hour</span>
+            </p>
+          </div>
+
+          <div className="package-card__details">
+            <ul className="package-card__list">
+              <li>Learn with a friend</li>
+              <li>Supportive, low-pressure setting</li>
+              <li>Great for first-timers</li>
+            </ul>
+
+            <button type="button" className="btn btn--secondary" onClick={onBookGroup1hr}>
+              Book 1-Hour Group
+            </button>
+          </div>
+        </article>
+
+        <article className="package-card package-card--red-4">
+          <div className="package-card__info">
+            <p className="package-card__tag">Group · 2 Hours</p>
+            <h3>Extended Group Lesson</h3>
+            <p className="package-card__desc">
+              Twice the seat time, same friendly pace.
+            </p>
+            <p className="package-card__price">
+              <span className="package-card__currency">$</span>180
+              <span className="package-card__unit">/ 2 hours</span>
+            </p>
+          </div>
+
+          <div className="package-card__details">
+            {/* PENDING: GROUP 2HR INCLUSIONS + confirm whether $180 is per-person or per-pair */}
+            <ul className="package-card__list">
+              <li>Two-hour group session</li>
+              <li>More turns at the wheel</li>
+              <li>Build real-road confidence</li>
+            </ul>
+
+            <button type="button" className="btn btn--secondary" onClick={onBookGroup2hr}>
+              Book 2-Hour Group
             </button>
           </div>
         </article>
