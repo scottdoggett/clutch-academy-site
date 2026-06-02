@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You're booked — Clutch Academy</title>
+    <meta
+      name="description"
+      content="Your manual transmission driving lesson with Clutch Academy is confirmed. Here's what happens next and how to prepare."
+    />
+    <link rel="canonical" href="https://clutchacademy.ca/booked" />
+    <!-- Post-conversion page: keep it out of the index, but let crawlers follow. -->
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#C8102E" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+
+    <!-- Self-contained styles, mirroring the privacy page so the three static
+         surfaces (app, privacy, this) stay visually consistent. Brand tokens
+         are duplicated here because this page ships outside the React bundle.
+         Booking *conversions* are tracked by Sam outside the site code, so no
+         analytics/pixel firing lives here by design. -->
+    <style>
+      :root {
+        --red-primary: #c8102e;
+        --red-deep: #8a0a1f;
+        --cream: #fdf8f2;
+        --white: #ffffff;
+        --chrome: #d9d9d9;
+        --black: #0a0a0a;
+        --font-display: 'Plus Jakarta Sans', sans-serif;
+        --font-body: 'Inter', sans-serif;
+        --letter-caps: 0.08em;
+        --letter-tight: -0.02em;
+        --hairline: rgba(255, 255, 255, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      body {
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--red-primary);
+        color: var(--cream);
+        font-family: var(--font-body);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: clamp(1.5rem, 5vw, 4rem) 1.25rem;
+      }
+
+      main {
+        width: 100%;
+        max-width: 640px;
+        animation: rise 0.5s ease both;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        letter-spacing: var(--letter-tight);
+        line-height: 1.1;
+      }
+
+      /* ---------- Success mark ---------- */
+      .mark {
+        display: block;
+        width: clamp(56px, 14vw, 72px);
+        height: clamp(56px, 14vw, 72px);
+        margin-bottom: 1.25rem;
+        color: var(--cream);
+      }
+      .mark circle {
+        stroke: currentColor;
+        opacity: 0.35;
+      }
+      .mark path {
+        stroke: currentColor;
+        stroke-dasharray: 30;
+        stroke-dashoffset: 30;
+        animation: draw 0.5s ease 0.25s forwards;
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      /* ---------- Hero ---------- */
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: var(--letter-caps);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.8125rem;
+        color: var(--chrome);
+        margin: 0 0 0.5rem;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 6vw, 3.25rem);
+        margin: 0 0 0.75rem;
+      }
+
+      .subhead {
+        font-size: clamp(1.0625rem, 1.8vw, 1.25rem);
+        margin: 0;
+        max-width: 36ch;
+      }
+
+      /* ---------- Booking details panel (only when Calendly passes them) -- */
+      .details {
+        margin: 1.75rem 0 0;
+        padding: 1.125rem 1.25rem;
+        background: var(--red-deep);
+        border: 1px solid var(--hairline);
+      }
+      .details dl {
+        margin: 0;
+        display: grid;
+        gap: 0.875rem;
+      }
+      .detail {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+      }
+      .detail dt {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: var(--letter-caps);
+        text-transform: uppercase;
+        color: var(--chrome);
+      }
+      .detail dd {
+        margin: 0;
+        font-size: 1.0625rem;
+        color: var(--white);
+      }
+      .addcal {
+        display: inline-block;
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cream);
+        text-underline-offset: 3px;
+      }
+
+      /* ---------- Content sections ---------- */
+      section {
+        margin-top: 2.25rem;
+      }
+      section h2 {
+        font-size: 1.25rem;
+        margin: 0 0 0.875rem;
+      }
+
+      .steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 1rem;
+      }
+      .steps li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.75rem;
+        align-items: start;
+      }
+      .steps li::before {
+        content: '';
+        width: 0.5rem;
+        height: 0.5rem;
+        margin-top: 0.6rem;
+        background: var(--cream);
+        transform: rotate(45deg);
+        flex: none;
+      }
+      .steps strong {
+        font-family: var(--font-display);
+      }
+      .steps span {
+        display: block;
+        opacity: 0.92;
+      }
+
+      .fineprint {
+        margin-top: 1.5rem;
+        font-size: 0.9375rem;
+        opacity: 0.85;
+      }
+
+      /* ---------- Contact card ---------- */
+      .contact {
+        margin-top: 2.25rem;
+        padding: 1.125rem 1.25rem;
+        background: var(--red-deep);
+        border: 1px solid var(--hairline);
+      }
+      .contact h2 {
+        font-size: 1.125rem;
+        margin: 0 0 0.875rem;
+        padding-bottom: 0.625rem;
+        border-bottom: 1px solid var(--hairline);
+      }
+      .contact ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+      .contact li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+        min-width: 0;
+      }
+      .contact .label {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: var(--letter-caps);
+        text-transform: uppercase;
+        color: var(--chrome);
+      }
+
+      a {
+        color: var(--cream);
+        text-underline-offset: 2px;
+        overflow-wrap: anywhere;
+      }
+      .contact a {
+        color: var(--white);
+        align-self: flex-start;
+        max-width: 100%;
+      }
+      a:focus-visible {
+        outline: 2px solid var(--white);
+        outline-offset: 2px;
+      }
+
+      .back {
+        display: inline-block;
+        margin: 0 0 1.75rem;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.9375rem;
+        letter-spacing: var(--letter-caps);
+        text-transform: uppercase;
+      }
+
+      /* Honour reduced-motion: no entrance animation, mark drawn instantly. */
+      @media (prefers-reduced-motion: reduce) {
+        main {
+          animation: none;
+        }
+        .mark path {
+          animation: none;
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- target="_top" so the link escapes the Calendly embed iframe and
+           loads the full site in the top window. -->
+      <a href="/" target="_top" class="back">← Back to home</a>
+
+      <svg
+        class="mark"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="M7 12.5l3.2 3.2L17 9" />
+      </svg>
+
+      <p class="eyebrow">Booking confirmed</p>
+      <h1 id="headline">You're in gear.</h1>
+      <p class="subhead">
+        Your manual lesson is locked in. Here's everything you need before we
+        hit the road.
+      </p>
+
+      <!-- Populated from Calendly's redirect params when available. -->
+      <div class="details" id="details" hidden>
+        <dl id="details-list"></dl>
+        <a id="addcal" class="addcal" target="_blank" rel="noopener" hidden
+          >+ Add to Google Calendar</a
+        >
+      </div>
+
+      <section aria-labelledby="next-heading">
+        <h2 id="next-heading">What happens next</h2>
+        <ul class="steps">
+          <li>
+            <span>
+              <strong>Check your inbox.</strong> Calendly just emailed your
+              confirmation and a calendar invite with the full details.
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>Payment's handled.</strong> You paid securely at booking,
+              so there's nothing to settle in person.
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>Sam will be in touch.</strong> Your instructor reaches out
+              before the lesson to confirm details and answer any last
+              questions.
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="prep-heading">
+        <h2 id="prep-heading">Come prepared</h2>
+        <ul class="steps">
+          <li>
+            <span>
+              <strong>Bring your licence.</strong> A valid G2 or G license is
+              required to get behind the wheel.
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>Dress for the pedals.</strong> Comfortable clothes and
+              thin-soled shoes — no sandals or open-toe — so you can feel the
+              clutch.
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>No experience needed.</strong> You'll learn step by step
+              on a forgiving 2015 Volkswagen Golf.
+            </span>
+          </li>
+        </ul>
+        <p class="fineprint">
+          Need a different time? Use the reschedule link in your confirmation
+          email. Cancellations are free up to 24 hours before your lesson.
+        </p>
+      </section>
+
+      <section class="contact" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Questions before then?</h2>
+        <ul>
+          <li>
+            <span class="label">Call</span>
+            <a href="tel:+14372231153">(437) 223-1153</a>
+          </li>
+          <li>
+            <span class="label">Email</span>
+            <a href="mailto:hello@clutchacademy.ca">hello@clutchacademy.ca</a>
+          </li>
+          <li>
+            <span class="label">Instagram</span>
+            <a
+              href="https://www.instagram.com/clutchacademy.ca/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >@clutchacademy.ca</a
+            >
+          </li>
+          <li>
+            <span class="label">Facebook</span>
+            <a
+              href="https://www.facebook.com/profile.php?id=61569269306023"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Clutch Academy</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <script>
+      // Progressive enhancement: personalize from Calendly's redirect params
+      // ("Pass event details to your redirected page" must be enabled in the
+      // event type's confirmation settings). Everything below is optional —
+      // with no params the page still reads as a complete confirmation. All
+      // user-supplied values are written via textContent / encodeURIComponent,
+      // never innerHTML, so the query string can't inject markup.
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search)
+          var fullName = (params.get('invitee_full_name') || '').trim()
+          var eventName = (params.get('event_type_name') || '').trim()
+          var startRaw = (params.get('event_start_time') || '').trim()
+          var endRaw = (params.get('event_end_time') || '').trim()
+
+          if (fullName) {
+            var first = fullName.split(/\s+/)[0]
+            if (first && first.length <= 40) {
+              var h = document.getElementById('headline')
+              if (h) h.textContent = "You're in gear, " + first + '.'
+            }
+          }
+
+          var start = startRaw ? new Date(startRaw) : null
+          var hasStart = start && !isNaN(start.getTime())
+
+          if (eventName || hasStart) {
+            var list = document.getElementById('details-list')
+            if (eventName) list.appendChild(makeRow('Lesson', eventName))
+            if (hasStart) {
+              list.appendChild(
+                makeRow(
+                  'When',
+                  start.toLocaleString('en-CA', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    timeZoneName: 'short',
+                  })
+                )
+              )
+            }
+            document.getElementById('details').hidden = false
+
+            var end = endRaw ? new Date(endRaw) : null
+            if (hasStart && end && !isNaN(end.getTime())) {
+              var cal = document.getElementById('addcal')
+              cal.href = googleCalUrl(
+                eventName || 'Manual driving lesson — Clutch Academy',
+                start,
+                end
+              )
+              cal.hidden = false
+            }
+          }
+        } catch (e) {
+          /* Personalization must never block the confirmation. */
+        }
+
+        function makeRow(label, value) {
+          var row = document.createElement('div')
+          row.className = 'detail'
+          var dt = document.createElement('dt')
+          dt.textContent = label
+          var dd = document.createElement('dd')
+          dd.textContent = value
+          row.appendChild(dt)
+          row.appendChild(dd)
+          return row
+        }
+
+        function googleCalUrl(title, start, end) {
+          var pad = function (n) {
+            return (n < 10 ? '0' : '') + n
+          }
+          var fmt = function (d) {
+            return (
+              d.getUTCFullYear() +
+              pad(d.getUTCMonth() + 1) +
+              pad(d.getUTCDate()) +
+              'T' +
+              pad(d.getUTCHours()) +
+              pad(d.getUTCMinutes()) +
+              pad(d.getUTCSeconds()) +
+              'Z'
+            )
+          }
+          return (
+            'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+            '&text=' +
+            encodeURIComponent(title) +
+            '&dates=' +
+            fmt(start) +
+            '/' +
+            fmt(end) +
+            '&details=' +
+            encodeURIComponent(
+              'Your manual transmission lesson with Clutch Academy. Questions? hello@clutchacademy.ca'
+            )
+          )
+        }
+      })()
+    </script>
+  </body>
+</html>
