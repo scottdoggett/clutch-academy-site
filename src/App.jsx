@@ -119,6 +119,8 @@ export default function App() {
         <Packages
           onBookSingle={makeBookHandler('packages_single')}
           onBookPack={makeBookHandler('packages_3pack')}
+          onBookGroup1hr={makeBookHandler('packages_group_1hr')}
+          onBookGroup2hr={makeBookHandler('packages_group_2hr')}
         />
         <About onBookNow={makeBookHandler('about')} />
         <Faq />

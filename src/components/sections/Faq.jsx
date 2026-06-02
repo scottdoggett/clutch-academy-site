@@ -59,9 +59,9 @@ export default function Faq() {
 
       <div className="faq-columns">
         {[left, right].map((col, ci) => (
-          <div key={ci} className="faq">
-            {col.map((item, i) => (
-              <details key={i} name="faq-accordion" className="faq__item">
+          <div key={ci === 0 ? 'left' : 'right'} className="faq">
+            {col.map((item) => (
+              <details key={item.q} name="faq-accordion" className="faq__item">
                 <summary className="faq__question">{item.q}</summary>
                 <p className="faq__answer">{item.a}</p>
               </details>

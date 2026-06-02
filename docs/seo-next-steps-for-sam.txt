@@ -1,0 +1,450 @@
+CLUTCH ACADEMY — SEO NEXT STEPS FOR THE OWNER
+==============================================
+Written: May 28, 2026
+For: Sam Anthony
+Companion to: seo-for-sam.txt (the overview)
+
+
+WHY THIS DOC EXISTS
+-------------------
+The technical SEO on the website is solid. Google can crawl every word,
+the structured data is rich, and we just shipped a major upgrade (your
+business hours, service area, review rating, and 7 GTA cities are now
+declared in the page so Google understands exactly who and where you
+are).
+
+But you're still landing on page 4-7 of Google for searches like
+"manual driving lessons toronto." That's not a website problem
+anymore — that's an OFF-site problem. The things that decide whether
+you appear in the local map results (the "3-pack" at the top of
+Google) are almost entirely things YOU control, not things the
+website controls.
+
+This document is the action plan. It's prioritized — the items at the
+top move the needle far more than the items at the bottom. Do them in
+order. Don't skip to the fun stuff.
+
+
+THE HONEST DIAGNOSIS
+--------------------
+According to Google's own data on local search ranking (Whitespark
+2026), here's what actually decides who shows up first when someone
+searches "manual driving school near me" in Toronto:
+
+  Proximity to searcher        ~55%   (luck-based — depends on where
+                                       they are when they search)
+  Google Business Profile      ~32%   (YOU control this — see below)
+  Reviews on GBP               ~16-20% (and rising every year)
+  Website signals               ~19%   (mostly done — keep iterating)
+
+You can't change physics (proximity). You CAN dominate the other three.
+Stick GTA (your main competitor) has 226 Google reviews. You have ~10.
+That gap alone is most of why they rank ahead of you. Closing it is
+the single highest-leverage thing on this list.
+
+
+THE PRIORITIZED ACTION LIST
+============================
+
+
+PRIORITY 1 — GET TO 25 GOOGLE REVIEWS BY END OF AUGUST 2026
+-----------------------------------------------------------
+You have ~10 right now. Target: 25 by end of August. That's ~5 new
+reviews per month for 3 months. With ~3 lessons per week, that's
+asking less than half of your students.
+
+HOW TO ACTUALLY DO IT (don't skip these — they're the difference
+between hitting and missing the target):
+
+1. Generate your short "leave a review" link ONCE:
+   - Open https://business.google.com on your phone
+   - Tap your Clutch Academy profile
+   - Tap "Get more reviews" → "Share review form"
+   - Copy the short link (looks like g.page/r/...something/review)
+   - Save this link in your phone's notes — you'll use it for every
+     student
+
+2. Set up a phone template you can send in 5 seconds:
+
+   Hey [Name] — really enjoyed our lesson today, hope the clutch is
+   starting to feel natural. If you have 60 seconds to leave a quick
+   Google review, it genuinely helps a ton:
+   [your short review link]
+
+   Either way, see you next time / good luck out there!
+
+3. Send it within 1 HOUR of every lesson ending. Not the next day —
+   the next day they're at work and forget. Within an hour while the
+   feeling is fresh, you'll get 50%+ conversion. Wait 24 hours and
+   you'll get 10%.
+
+4. If someone is hesitant about leaving a public review, ask them to
+   tag @clutchacademy.ca in an Instagram story instead. Story tags
+   help your Instagram (which feeds into Google's overall picture of
+   your business), and you can repost them to your Story too.
+
+WHY THIS WORKS:
+- Review COUNT is a direct ranking factor. More reviews = higher rank.
+- Review VELOCITY (how quickly you're adding new ones) matters
+  separately. A business with 10 reviews from last year ranks worse
+  than one with 10 reviews from the last 3 months. Google reads
+  "still active" from velocity.
+- Once you cross ~20 reviews, Scott can add the gold-star rating to
+  your search result (called a "rich result"). That makes your link
+  visibly stand out vs. plain blue links — click-through goes up,
+  which feeds back into ranking.
+
+WHAT NOT TO DO:
+- DON'T buy reviews from any service. Google detects this and will
+  suspend your profile. Years of work, gone.
+- DON'T ask your friends/family to leave reviews unless they've
+  actually taken a lesson. Reviews from unverified customers get
+  flagged.
+- DON'T offer a discount/freebie in exchange for a review. Google
+  calls this "review gating" and it violates their policy.
+- DON'T respond defensively to a 3 or 4 star review (you don't have
+  any yet, but you will eventually). Calm, professional, brief.
+  Future readers see your response more than the reviewer ever will.
+
+
+PRIORITY 2 — MAKE YOUR GBP "100% COMPLETE" THIS WEEK
+-----------------------------------------------------
+A complete profile outranks an incomplete one — every time. Spend 30
+minutes on this. Check each item:
+
+  [ ] BUSINESS NAME — should be exactly "Clutch Academy Manual
+      Driving Lessons" (do NOT keyword-stuff it like "Clutch Academy
+      Best Cheap Manual Driving Lessons Toronto" — that gets you
+      suspended).
+
+  [ ] PRIMARY CATEGORY — must be "Driving school". If it's set to
+      something generic like "Education" or "Service", change it.
+      This is the single most common reason businesses rank poorly.
+
+  [ ] SECONDARY CATEGORIES — add up to 9. Suggestions:
+      - Driving instructor
+      - Auto driving school
+
+  [ ] SERVICE AREA — make sure all the cities you'll travel to are
+      listed: Toronto, Etobicoke, North York, Scarborough, East York,
+      Mississauga, Vaughan. This matches what the website now
+      declares so Google sees the same answer in both places.
+
+  [ ] HOURS — 8am-9pm Monday through Sunday (matches what we just
+      put on the website).
+
+  [ ] PHONE — (437) 223-1153
+
+  [ ] WEBSITE — https://clutchacademy.ca/ (the .ca, not .com)
+
+  [ ] BUSINESS DESCRIPTION (750 chars max) — write something like:
+
+      Clutch Academy is Toronto's dedicated one-on-one manual
+      transmission driving school. Whether you've never touched a
+      stick shift or you're prepping for a European road trip, you'll
+      learn at your pace on real Toronto roads with founder-instructor
+      Sam Anthony. Lessons run in a 2015 Volkswagen Golf with a
+      smooth, forgiving clutch — perfect for building confidence.
+      Single lessons are $90/hr; 3-lesson packages are $240 (save $30).
+      Service across Toronto, Etobicoke, North York, Scarborough,
+      East York, Mississauga, and Vaughan. Book online.
+
+  [ ] PHOTOS — upload AT LEAST 10. GBP shows photo count publicly
+      and Google uses it as a "is this business real" signal:
+      - 1x logo
+      - 1x exterior shot (you next to the VW Golf)
+      - 1-2x interior of the car (dashboard / gear shifter / clutch)
+      - 2-3x photos of you teaching a lesson (with student permission)
+      - 1-2x photos from a Toronto street/landmark visible in lesson
+        background
+      - 1x photo of yourself (instructor portrait)
+      Re-upload a new one every couple weeks — recency is a signal.
+
+  [ ] PRODUCTS / SERVICES — add both packages as Services:
+      - "Single Manual Driving Lesson" — $90 — 1 hour
+      - "3-Lesson Manual Driving Package" — $240 — 3 hours
+      Add a 1-2 sentence description to each. This makes them
+      appear directly in your GBP card.
+
+  [ ] ATTRIBUTES — toggle on the ones that apply (likely):
+      Identifies as woman-owned: no
+      LGBTQ+ friendly: yes
+      Wheelchair accessible: depends on car
+      Online appointments: yes
+      Languages spoken: English (and any others you teach in)
+
+
+PRIORITY 3 — POST ON GBP EVERY WEEK (3 MINUTES)
+------------------------------------------------
+Google rewards GBPs that "look alive." A profile that posts weekly
+ranks higher than an identical profile that doesn't, full stop.
+
+GBP posts are like mini-blog posts that show up on your profile.
+You don't need to write anything fancy. A photo + 2 sentences is fine.
+
+WEEKLY POST IDEAS (rotate through these):
+
+  - "Just finished a great first-lesson with [name] — went from
+    stalling on every start to smooth hill takeoffs in under an
+    hour. Book your first hour at clutchacademy.ca."
+    (Use a student's first name only, with their permission. Add
+    a photo if they're cool with it.)
+
+  - "Spring booking is open — manual driving lessons across Toronto
+    and the GTA. Single lessons $90, 3-pack $240. Beginners welcome."
+
+  - Short tip post: "Tip of the week: most people stall because
+    they're moving their feet too fast, not because they're doing
+    anything wrong. Slow down the clutch release and the rest
+    works itself out."
+
+  - "Now booking weekend lessons in [specific neighbourhood] this
+    Saturday — comment or message to grab a slot."
+
+To post: GBP dashboard → "Add update" → photo + text → publish.
+
+CADENCE: every Monday morning, before opening your inbox. Make it
+a 3-minute ritual. Pair it with checking your weekly review count
+(see priority 1).
+
+
+PRIORITY 4 — POPULATE YOUR GBP Q&A SECTION
+-------------------------------------------
+Almost no business does this and it's a huge missed opportunity.
+The "Questions and Answers" section on your GBP can be SEEDED by
+the business owner. Google treats these like FAQs and surfaces them
+in search results.
+
+Add these questions yourself (sign in to Google as Clutch Academy,
+go to your own GBP, ask the question, then answer it):
+
+  Q: Is stick shift hard to learn?
+  A: Most students find it clicks within one or two lessons with the
+     right one-on-one coaching. The trick is calm, structured
+     practice in a forgiving training car — not natural talent.
+
+  Q: How long does it take to learn manual transmission?
+  A: Most beginners feel confident driving manual after three
+     one-on-one lessons. Drivers with some prior stick experience
+     usually only need one or two.
+
+  Q: How much do manual driving lessons cost in Toronto?
+  A: Clutch Academy lessons are $90 CAD per hour, or $240 CAD for a
+     three-lesson package ($30 saving). Payment is collected at the
+     time of booking.
+
+  Q: Do I need a driver's license to take lessons?
+  A: Yes — a valid G2 or G license is required for all lessons.
+
+  Q: Where do you teach in the GTA?
+  A: Toronto and the surrounding GTA — including Etobicoke, North
+     York, Scarborough, East York, Mississauga, and Vaughan.
+
+This intentionally mirrors what's now on the website's FAQ section.
+Same answer in both places = Google trusts the answer more.
+
+
+PRIORITY 5 — LIST YOUR BUSINESS ON KEY DIRECTORIES
+---------------------------------------------------
+Every time a reputable website lists your business with the SAME
+name, address (or service area), and phone number as your GBP, it's
+a "citation." Citations make Google more confident you're a real
+business at the location you claim.
+
+Do these 6 in order. They're free and take 10 minutes each:
+
+  1. Yelp Canada (yelp.ca)
+  2. YellowPages.ca
+  3. BlogTO Listings (blogto.com — search for their business
+     submission page)
+  4. Find a Driving School (find-a-driving-school.ca)
+  5. Drive Test BC / Ontario directory (search "drivetest.ca
+     driving schools Ontario")
+  6. 411.ca
+
+CRITICAL RULE: USE THE EXACT SAME NAME / PHONE EVERY TIME.
+- Name: "Clutch Academy Manual Driving Lessons"
+- Phone: (437) 223-1153
+- Website: https://clutchacademy.ca/
+- Email: hello@clutchacademy.ca
+
+Inconsistent NAP (Name, Address, Phone) actively HURTS rankings
+because Google can't tell if "Clutch Academy" and "Clutch Academy
+Manual Driving" are the same business.
+
+
+PRIORITY 6 — GET ONE LOCAL BACKLINK PER MONTH
+----------------------------------------------
+Backlinks (other websites linking to clutchacademy.ca) are still
+a major Google ranking signal for organic results (not just local).
+Stick GTA and Shifters both got Toronto Star features — that's
+why they punch above their weight.
+
+You don't need media coverage to start. Easy local backlinks to
+pursue (in order of effort, low to high):
+
+  EASY — DO THIS WEEK:
+  - Add clutchacademy.ca to your Instagram bio (if it's not there)
+  - Add to your Facebook page "About" section
+  - Your email signature
+  - LinkedIn personal profile under "current position"
+
+  MEDIUM — DO THIS MONTH:
+  - Find 2-3 Toronto-area car enthusiast forums / Facebook
+    groups. Post a genuine introduction (NOT a sales pitch) and
+    mention what you do. Link to your site in your forum profile.
+  - Reach out to any local mechanic shops you know — see if they'd
+    list you as a "we recommend" partner on their website. Easy
+    trade: you recommend them when students ask about repairs.
+
+  HARDER — TRY EVERY 2 MONTHS:
+  - Pitch BlogTO with a story angle. Possible angles:
+    • "Toronto's only one-on-one manual driving school" (unique
+      positioning angle)
+    • "Why younger Torontonians are suddenly learning stick"
+      (trend angle — link manual driving to nostalgia, EU travel,
+      enthusiast cars)
+    • "Founder profile: from teaching friends to running Toronto's
+      manual driving academy" (founder-story angle)
+    Pitch to: tips@blogto.com with a clear subject line and 2-3
+    sentence summary.
+  - Same idea for Daily Hive Toronto, Toronto Life, NarcityToronto.
+  - If you ever rent the car out for film/TV (a manual VW Golf has
+    a 1980s/90s vibe), that production company often credits "Car
+    provided by [Clutch Academy]" with a link. Cheap backlink.
+
+EVERY BACKLINK to clutchacademy.ca from a Toronto-relevant site
+moves you up. Don't pay for backlinks — that's "link buying," and
+Google penalizes it. Earn them.
+
+
+PRIORITY 7 — TURN ON GOOGLE SEARCH CONSOLE (15-MINUTE TASK)
+------------------------------------------------------------
+Google Search Console is the dashboard that shows you EXACTLY what
+search queries are bringing people to your site, where you currently
+rank for them, and which Google penalties (if any) apply to you.
+Without this, you're flying blind. With it, you can see the moment
+your ranking starts improving.
+
+You may already have this set up. If yes — skip this. If not:
+
+  1. Go to https://search.google.com/search-console
+  2. Add a property → choose "URL prefix" → enter
+     https://clutchacademy.ca/
+  3. Verify ownership. The easiest way:
+     - Pick "HTML tag" verification
+     - Google gives you a string like content="abc123def456..."
+     - Send that string to Scott — he'll paste it into the website
+       and re-deploy
+  4. Once verified: Submit your sitemap at:
+     https://clutchacademy.ca/sitemap.xml
+  5. Wait 1-2 weeks for data to start populating
+
+Once it's live, check it every Monday alongside your weekly post.
+The Performance tab tells you which queries are getting you
+impressions and clicks. THIS is the dashboard that will show you
+moving from page 4-7 to page 1.
+
+
+WHAT NOT TO WASTE TIME ON
+==========================
+
+- DON'T try to rank for "how to drive stick shift." Those results
+  are owned by AAA, The Zebra, and giant national driving sites.
+  A local Toronto landing page will never outrank them, no matter
+  how good. Focus on local intent queries instead.
+
+- DON'T pay for "SEO services" that send you mass-emailed offers.
+  99% of these are spam-backlink schemes that will get your site
+  penalized. If anyone offers to "get you to #1 on Google in 30
+  days for $499," they're going to either steal your money or
+  burn your site.
+
+- DON'T obsessively change your website copy looking for SEO
+  improvements. The on-site work is done — over-tweaking will
+  reset Google's "fresh content" clock and you'll see no movement
+  AND your design will degrade.
+
+- DON'T worry about Facebook page likes, Instagram followers, or
+  TikTok views as SEO signals. They're indirect. What matters is
+  whether those platforms are driving real traffic to your site
+  AND whether they're earning you reviews/bookings. Vanity metrics
+  are vanity metrics.
+
+
+WHAT "WORKING" LOOKS LIKE (HOW TO TELL)
+========================================
+
+Use this as your monthly check-in. Open an incognito window (so
+Google doesn't show personalized results) and search:
+
+  Search: "manual driving lessons toronto"
+  Today:  pages 4-7
+  Target by end of August: top 3 results in the local map pack
+  Target by end of October: top 3 in both the map AND blue links
+
+  Search: "stick shift driving lessons toronto"
+  Today:  unknown — check
+  Target by end of August: top 5 results
+
+  Search: "clutch academy"
+  Today:  should already be #1
+  Target: stays #1
+
+  Search: "how to learn manual transmission toronto"
+  Today:  probably nowhere
+  Target by end of October: appear in the first page somewhere
+
+If by end of August you're STILL on pages 4-7 for the first query,
+something is wrong — call Scott. Either reviews haven't grown
+enough, GBP completeness slipped, or there's a technical issue
+to investigate.
+
+
+THE 90-DAY CALENDAR
+====================
+
+WEEK 1 (this week):
+  - Complete the GBP audit (Priority 2)
+  - Set up Search Console (Priority 7)
+  - Send review-request texts to your last 5 students
+
+WEEKS 2-4:
+  - Start the weekly GBP post ritual (Priority 3)
+  - Seed your GBP Q&A section (Priority 4)
+  - Submit 3 directory listings (Priority 5)
+
+MONTH 2:
+  - Continue weekly posts
+  - Hit 18-20 reviews
+  - Submit the remaining 3 directory listings
+  - Add 1 backlink (start with the easy ones)
+
+MONTH 3:
+  - Continue weekly posts
+  - Hit 25 reviews — tell Scott so he can add the star-rating
+    rich result to your search result
+  - Add 1 more backlink (try a medium-effort one)
+  - Pitch BlogTO
+
+By end of month 3, you should see clear movement in your search
+positions. If you don't, we'll know what to investigate.
+
+
+SHORT VERSION (FOR THE FRIDGE)
+===============================
+
+Every Monday morning, 15 minutes:
+  1. Send the weekly GBP post
+  2. Check Search Console for new query data
+  3. Reply to any reviews from the past week
+  4. Send review-request texts to the past week's students you
+     haven't asked yet
+
+That's it. Everything else on this doc is one-time setup or
+quarterly review. The weekly habit is what wins.
+
+
+QUESTIONS, BROKEN LINKS, NEED HELP?
+====================================
+Text Scott. Screenshots help.

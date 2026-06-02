@@ -11,7 +11,7 @@ Manual transmission driving school in Toronto. Single-page React site with a gea
 The build specification lives in `docs/spec/` and is still useful for *intent* (audience, content, brand voice, pending assets). Several decisions in the spec have been **superseded by the current code** — when the two disagree, the code wins. Notable drift to be aware of before quoting the spec:
 
 - **Gear → section mapping has changed.** The spec's earlier ordering put About at gear 2 and HowItWorks at gear 3. The shipped order is `Home → Reviews → HowItWorks → Packages → About → Faq → Reverse` (see "Architecture" below). Reviews was previously at gear 5 — moving it forward to gear 2 was a deliberate ordering decision (social proof up high).
-- **Payment is now collected at booking time**, not in person. The Reverse section ("Payment collected at time of booking, not in person — All cards accepted") and FAQ #6 ("Payment is securely collected at the time of your booking using Stripe…") reflect this. The Packages section still has stale `Pay in person when you arrive.` copy — flag it before relying on it.
+- **Payment is now collected at booking time**, not in person. The Reverse section ("Payment collected at time of booking, not in person — All cards accepted"), FAQ #6 ("Payment is securely collected at the time of your booking using Stripe…"), and the Packages lead ("Pay securely at booking.") all reflect this.
 - **The Reverse contact form was removed** (commit `eea4250`) and replaced with a contact info card (phone, email, IG, FB). `index.html` still contains the hidden Netlify form-registration stub; it is unused by the rendered app.
 - **No analytics is wired up.** The spec recommends GA4; the code references it only in a comment in `useCalendly.js`.
 
@@ -117,7 +117,7 @@ Many brand assets (final logo, instructor photo, color overrides) are tracked as
 
 ## Non-negotiable constraints
 
-- **Two pricing tiers, not three.** $90 single lesson, $240 for a 3-pack.
+- **Four pricing cards: two private + two group.** Private — $90 single lesson, $240 for a 3-pack. Group — $90 1-hour, $180 2-hour. (Whether the group prices are per-person or per-pair is still PENDING client confirmation — see the `PENDING` comments in `Packages.jsx`.) `App.jsx` wires one Calendly handler per card (`onBookSingle`, `onBookPack`, `onBookGroup1hr`, `onBookGroup2hr`), each tagged with its own analytics `source`.
 - **Gear-shift metaphor is core, not decoration.** Don't simplify away layout positions or animation choreography without explicit approval.
 - **iOS Safari is a first-class target.** The `autoKill: false` scroll tween and the custom mobile Calendly host both exist because of iOS-specific bugs — don't "clean them up" without testing on iOS.
 - **Reduced motion must remain a fully functional path.** Every new animation needs a matchMedia gate or equivalent fallback.

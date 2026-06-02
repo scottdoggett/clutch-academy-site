@@ -93,11 +93,20 @@ export function openCalendly(source) {
 }
 
 function openMobilePopup() {
+  // Remember what opened the dialog so focus can be restored to it on close.
+  const trigger = document.activeElement
+
   const overlay = document.createElement('div')
   overlay.className = 'cal-host-overlay'
 
   const popup = document.createElement('div')
   popup.className = 'cal-host-popup'
+  // WAI-ARIA dialog contract: announce as a named modal dialog, and make the
+  // container focusable so initial focus can land inside it.
+  popup.setAttribute('role', 'dialog')
+  popup.setAttribute('aria-modal', 'true')
+  popup.setAttribute('aria-label', 'Book a lesson')
+  popup.tabIndex = -1
 
   const closeBtn = document.createElement('button')
   closeBtn.type = 'button'
@@ -105,10 +114,20 @@ function openMobilePopup() {
   closeBtn.setAttribute('aria-label', 'Close booking dialog')
   closeBtn.textContent = '×'
 
+  // Top-level nodes (i.e. the app root) marked inert while the dialog is open,
+  // restored on close. A manual Tab trap can't see into Calendly's cross-origin
+  // iframe, so inerting the background is the reliable way to both contain
+  // keyboard focus to the dialog and hide the page from assistive tech.
+  const inerted = []
+
   const close = () => {
     overlay.remove()
     document.body.style.overflow = ''
     document.removeEventListener('keydown', onKeydown)
+    inerted.forEach((el) => el.removeAttribute('inert'))
+    if (trigger && typeof trigger.focus === 'function') {
+      trigger.focus({ preventScroll: true })
+    }
   }
   const onKeydown = (e) => {
     if (e.key === 'Escape') close()
@@ -125,6 +144,13 @@ function openMobilePopup() {
   overlay.appendChild(popup)
   document.body.appendChild(overlay)
 
+  for (const el of document.body.children) {
+    if (el !== overlay && !el.hasAttribute('inert')) {
+      el.setAttribute('inert', '')
+      inerted.push(el)
+    }
+  }
+
   // initInlineWidget mounts only the booking iframe into our parent, with
   // none of Calendly's own popup/overlay chrome. initPopupWidget would inject
   // its own overlay wrapper even when parentElement is provided, producing a
@@ -133,4 +159,8 @@ function openMobilePopup() {
     url: CALENDLY_URL,
     parentElement: popup,
   })
+
+  // Move focus into the dialog so keyboard and screen-reader users start
+  // inside it and hear the dialog's name announced.
+  popup.focus({ preventScroll: true })
 }

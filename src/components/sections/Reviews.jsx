@@ -162,8 +162,10 @@ export default function Reviews() {
       >
         <ul ref={trackRef} className="reviews__track">
           {MARQUEE_SEQUENCE.map((r, i) => (
+            // Composite key: the marquee is REVIEWS duplicated back-to-back, so
+            // name alone would collide between the two copies.
             <li
-              key={i}
+              key={`${r.name}-${i}`}
               className="reviews__slide"
               aria-hidden={i >= REVIEWS.length ? 'true' : undefined}
             >
