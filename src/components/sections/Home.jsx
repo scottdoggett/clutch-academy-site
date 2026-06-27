@@ -43,7 +43,7 @@ export default function Home({ onBookNow, onSeePackages }) {
             />
           </picture>
           <div className="home__caption">
-            Real roads, real confidence. Lessons across Toronto.
+            Real roads, real confidence. Stick shift lessons across Toronto.
           </div>
         </div>
       </div>

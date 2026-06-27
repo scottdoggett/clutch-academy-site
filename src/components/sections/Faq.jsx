@@ -11,6 +11,10 @@ const FAQS = [
     a: "Absolutely. Most students start as complete beginners. Lessons are tailored to your level, so you'll learn step by step without feeling overwhelmed.",
   },
   {
+    q: "What's the difference between manual, stick shift, and standard?",
+    a: "Nothing — they're three names for the same thing: a car you shift yourself with a clutch. Whether you call it manual, stick shift, or standard transmission, that's exactly what you'll learn to drive here.",
+  },
+  {
     q: 'Where do lessons take place?',
     a: 'Lessons take place in Toronto. We typically start in a quieter area to build confidence, then transition to real-road driving. Selection of meeting location available at booking.',
   },
