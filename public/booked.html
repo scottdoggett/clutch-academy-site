@@ -17,11 +17,58 @@
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
 
+    <!-- Google Analytics 4 + Google Ads (gtag.js) with Consent Mode v2
+         (default-deny), mirroring the main site (index.html). This page is the
+         post-payment confirmation, so after the pageview the conversion script
+         at the end of <body> also fires a `purchase` (GA4) and a Google Ads
+         conversion. gtag queues under default-deny and flushes once the
+         visitor's stored consent (set on the main site) is read as granted. No
+         __PRERENDER__ guard is needed — booked.html ships verbatim from /public
+         and is never run through the prerender snapshot. -->
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      window.gtag = gtag
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500
+      })
+      // Honour the choice the visitor already made on the main site (same
+      // origin → shared localStorage), so the pageview + conversions respect it.
+      try {
+        var stored = localStorage.getItem('clutch.consent.v1')
+        if (stored === 'granted') {
+          gtag('consent', 'update', {
+            analytics_storage: 'granted',
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
+          })
+        }
+      } catch (_) {}
+      gtag('js', new Date())
+      gtag('config', 'G-5E5GEN5N59', { anonymize_ip: true })
+      // Google Ads conversion tag — same library, second config (see index.html).
+      gtag('config', 'AW-18196514948')
+    </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5E5GEN5N59"
+    ></script>
+
     <!-- Self-contained styles, mirroring the privacy page so the three static
          surfaces (app, privacy, this) stay visually consistent. Brand tokens
          are duplicated here because this page ships outside the React bundle.
-         Booking *conversions* are tracked by Sam outside the site code, so no
-         analytics/pixel firing lives here by design. -->
+         Booking *conversions* are now tracked here too — a Purchase across GA4,
+         Meta, and TikTok — in addition to Calendly's own tracking and whatever
+         Sam reconciles off-site. See the conversion script before </body>. -->
     <style>
       :root {
         --red-primary: #c8102e;
@@ -370,7 +417,7 @@
         </ul>
         <p class="fineprint">
           Need a different time? Use the reschedule link in your confirmation
-          email. Cancellations are free up to 24 hours before your lesson.
+          email. Cancellations are free up to 24 hours after booking your lesson.
         </p>
       </section>
 
@@ -510,6 +557,223 @@
               'Your manual transmission lesson with Clutch Academy. Questions? hello@clutchacademy.ca'
             )
           )
+        }
+      })()
+    </script>
+
+    <!-- Conversion tracking. This is the post-payment confirmation, so it fires
+         a Purchase across GA4, Meta, and TikTok. The price is derived from the
+         booked package (Calendly's event_type_name param). GA4 runs under
+         Consent Mode regardless; Meta + TikTok load ONLY when the visitor
+         granted consent on the main site (clutch.consent.v1, same origin →
+         shared localStorage), matching how ConsentBanner gates them in the app.
+         A localStorage guard keyed on the booking prevents double-counting on
+         refresh or a later revisit of the same confirmation URL. -->
+    <script>
+      ;(function () {
+        var CONSENT_KEY = 'clutch.consent.v1'
+        var FIRED_PREFIX = 'clutch.booked.fired.'
+        var CURRENCY = 'CAD'
+        // Single lesson AND group 1-hour are both $90, so it's the safe default
+        // when the event name is missing or unrecognized.
+        var DEFAULT_VALUE = 90
+        var META_PIXEL_ID = '2845684255788584'
+        var TIKTOK_PIXEL_ID = 'D87LSEBC77UENKCNER8G'
+
+        var params = new URLSearchParams(window.location.search)
+        var eventName = (params.get('event_type_name') || '').trim()
+        var startRaw = (params.get('event_start_time') || '').trim()
+        var invitee = (params.get('invitee_full_name') || '').trim()
+
+        var value = priceForEvent(eventName)
+
+        // Identify THIS booking so a refresh or a later revisit of the same
+        // confirmation URL doesn't re-fire, while a genuinely new booking (new
+        // start time) still counts. Requires Calendly's "Pass event details to
+        // your redirected page" — without params this collapses to one bucket.
+        var bookingId =
+          (startRaw || '') + '|' + (eventName || '') + '|' + (invitee || '')
+        if (alreadyFired(bookingId)) return
+        markFired(bookingId)
+
+        // Stable id shared across pixels so Meta/TikTok (and any future
+        // server-side CAPI) can de-duplicate this single conversion.
+        var eventId = 'booked_' + hash(bookingId)
+        var contentName = eventName || 'Manual driving lesson'
+
+        // --- GA4 — Consent Mode handles the storage gating ---
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'purchase', {
+            transaction_id: eventId,
+            value: value,
+            currency: CURRENCY,
+            items: [{ item_name: contentName }],
+          })
+        }
+
+        // --- Google Ads conversion — also governed by Consent Mode (modeled
+        // while ad_storage is denied, observed once the visitor consents).
+        // PENDING: paste the conversion label from Google Ads (Goals →
+        // Conversions → create a booking/"Purchase" action; the label looks
+        // like 'AbC-D_efGhIj'). Left empty it's a no-op, so we never report
+        // conversions against a missing/incorrect label.
+        var GOOGLE_ADS_CONVERSION_LABEL = ''
+        if (typeof window.gtag === 'function' && GOOGLE_ADS_CONVERSION_LABEL) {
+          window.gtag('event', 'conversion', {
+            send_to: 'AW-18196514948/' + GOOGLE_ADS_CONVERSION_LABEL,
+            value: value,
+            currency: CURRENCY,
+            transaction_id: eventId,
+          })
+        }
+
+        // --- Meta + TikTok — only with explicit prior consent ---
+        if (readConsent() !== 'granted') return
+
+        loadMetaPixel(META_PIXEL_ID)
+        if (typeof window.fbq === 'function') {
+          window.fbq(
+            'track',
+            'Purchase',
+            { value: value, currency: CURRENCY },
+            { eventID: eventId }
+          )
+        }
+
+        loadTiktokPixel(TIKTOK_PIXEL_ID)
+        if (window.ttq && typeof window.ttq.track === 'function') {
+          window.ttq.track(
+            'CompletePayment',
+            {
+              value: value,
+              currency: CURRENCY,
+              contents: [
+                { content_type: 'product', content_name: contentName },
+              ],
+            },
+            { event_id: eventId }
+          )
+        }
+
+        // ---------- helpers ----------
+
+        // PENDING: confirm the exact Calendly event-type names with Sam and
+        // tighten this mapping. Until then we keyword-match the five packages
+        // (private single $90 / 3-pack $240 / 5-pack "Confidence Drive" $400,
+        // group 1-hour $90 / 2-hour $180) and fall back to $90. They all open
+        // one Calendly page today, so the event name is the only signal of
+        // which package was booked.
+        function priceForEvent(name) {
+          var n = (name || '').toLowerCase()
+          if (!n) return DEFAULT_VALUE
+          // 5-lesson "Highway & City Confidence Drive". Checked first because
+          // a "5-Pack" name would otherwise be swallowed by the "pack" rule.
+          if (/confidence|highway|five|\b5\b/.test(n)) return 400
+          if (/3|three|pack/.test(n)) return 240 // private 3-pack
+          if (/2\s*-?\s*h|two\s*hour|120/.test(n)) return 180 // group 2-hour
+          return DEFAULT_VALUE // single lesson or group 1-hour
+        }
+
+        function readConsent() {
+          try {
+            return localStorage.getItem(CONSENT_KEY)
+          } catch (_) {
+            return null
+          }
+        }
+        function alreadyFired(id) {
+          try {
+            return localStorage.getItem(FIRED_PREFIX + hash(id)) === '1'
+          } catch (_) {
+            return false
+          }
+        }
+        function markFired(id) {
+          try {
+            localStorage.setItem(FIRED_PREFIX + hash(id), '1')
+          } catch (_) {}
+        }
+        // djb2 — a tiny, stable string hash; keeps storage keys + event ids
+        // compact without leaking the invitee's name into them.
+        function hash(s) {
+          var h = 5381
+          for (var i = 0; i < s.length; i++) {
+            h = ((h << 5) + h + s.charCodeAt(i)) | 0
+          }
+          return (h >>> 0).toString(36)
+        }
+
+        // Standard Meta Pixel bootstrap, inlined because the React app's
+        // src/lib/metaPixel.js module isn't available on this static page.
+        function loadMetaPixel(id) {
+          if (window.fbq) return
+          var n = (window.fbq = function () {
+            n.callMethod
+              ? n.callMethod.apply(n, arguments)
+              : n.queue.push(arguments)
+          })
+          if (!window._fbq) window._fbq = n
+          n.push = n
+          n.loaded = true
+          n.version = '2.0'
+          n.queue = []
+          var s = document.createElement('script')
+          s.async = true
+          s.src = 'https://connect.facebook.net/en_US/fbevents.js'
+          var f = document.getElementsByTagName('script')[0]
+          f.parentNode.insertBefore(s, f)
+          window.fbq('init', id)
+          window.fbq('track', 'PageView')
+        }
+
+        // Standard TikTok Pixel bootstrap, inlined for the same reason as Meta.
+        function loadTiktokPixel(id) {
+          if (window.ttq) return
+          var w = window
+          var d = document
+          var t = 'ttq'
+          var src = 'https://analytics.tiktok.com/i18n/pixel/events.js'
+          w.TiktokAnalyticsObject = t
+          var ttq = (w[t] = w[t] || [])
+          ttq.methods = [
+            'page', 'track', 'identify', 'instances', 'debug', 'on', 'off',
+            'once', 'ready', 'alias', 'group', 'enableCookie', 'disableCookie',
+            'holdConsent', 'revokeConsent', 'grantConsent',
+          ]
+          ttq.setAndDefer = function (target, method) {
+            target[method] = function () {
+              target.push(
+                [method].concat(Array.prototype.slice.call(arguments, 0))
+              )
+            }
+          }
+          for (var i = 0; i < ttq.methods.length; i++) {
+            ttq.setAndDefer(ttq, ttq.methods[i])
+          }
+          ttq.instance = function (e) {
+            var inst = ttq._i[e] || []
+            for (var j = 0; j < ttq.methods.length; j++) {
+              ttq.setAndDefer(inst, ttq.methods[j])
+            }
+            return inst
+          }
+          ttq.load = function (e, o) {
+            ttq._i = ttq._i || {}
+            ttq._i[e] = []
+            ttq._i[e]._u = src
+            ttq._t = ttq._t || {}
+            ttq._t[e] = +new Date()
+            ttq._o = ttq._o || {}
+            ttq._o[e] = o || {}
+            var s = d.createElement('script')
+            s.type = 'text/javascript'
+            s.async = true
+            s.src = src + '?sdkid=' + e + '&lib=' + t
+            var f = d.getElementsByTagName('script')[0]
+            f.parentNode.insertBefore(s, f)
+          }
+          ttq.load(id)
+          ttq.page()
         }
       })()
     </script>

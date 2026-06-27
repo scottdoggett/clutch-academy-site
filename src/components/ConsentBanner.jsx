@@ -39,8 +39,15 @@ export default function ConsentBanner() {
       /* localStorage may be disabled (private mode, quota); fall through */
     }
     if (typeof window.gtag === 'function') {
+      // Flip analytics + ad storage together so Google Ads conversion tracking
+      // and remarketing work for visitors who accept. GA4, Google Ads, and the
+      // Meta/TikTok pixels are all disclosed in the banner copy below.
+      const consent = choice === 'granted' ? 'granted' : 'denied'
       window.gtag('consent', 'update', {
-        analytics_storage: choice === 'granted' ? 'granted' : 'denied',
+        analytics_storage: consent,
+        ad_storage: consent,
+        ad_user_data: consent,
+        ad_personalization: consent,
       })
     }
     if (choice === 'granted') {
@@ -59,9 +66,9 @@ export default function ConsentBanner() {
     >
       <p className="consent-banner__copy">
         We use cookies for analytics (Google Analytics) and ad measurement
-        (Meta Pixel, TikTok Pixel) to understand how visitors use the site
-        and how our ads perform. Calendly sets its own cookies when you book
-        a lesson.{' '}
+        (Google Ads, Meta Pixel, TikTok Pixel) to understand how visitors use
+        the site and how our ads perform. Calendly sets its own cookies when
+        you book a lesson.{' '}
         <a href="/privacy" className="consent-banner__link">
           Privacy policy
         </a>

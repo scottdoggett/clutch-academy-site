@@ -58,9 +58,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Google Analytics 4 with Consent Mode v2 (default-deny). The pageview
-         and any subsequent events are queued by gtag and only flushed once
-         the user grants consent through the in-app ConsentBanner. -->
+    <!-- Google Analytics 4 + Google Ads (gtag.js) with Consent Mode v2
+         (default-deny). The pageview and any subsequent events are queued by
+         gtag and only flushed once the user grants consent through the in-app
+         ConsentBanner, which flips analytics + ad storage to granted. -->
     <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
@@ -81,13 +82,21 @@
       try {
         var stored = localStorage.getItem('clutch.consent.v1')
         if (stored === 'granted') {
-          gtag('consent', 'update', { analytics_storage: 'granted' })
+          gtag('consent', 'update', {
+            analytics_storage: 'granted',
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
+          })
         }
       } catch (_) {}
       gtag('js', new Date())
       // Skip GA in prerender so the snapshot doesn't fire a synthetic pageview.
       if (!window.__PRERENDER__) {
         gtag('config', 'G-5E5GEN5N59', { anonymize_ip: true })
+        // Google Ads conversion tag — same gtag.js library, added as a second
+        // config per Google's "tag already installed (e.g. via GA)" setup path.
+        gtag('config', 'AW-18196514948')
       }
     </script>
     <script
@@ -111,6 +120,12 @@
             "logo": "https://clutchacademy.ca/logo.svg",
             "telephone": "+1-437-223-1153",
             "email": "hello@clutchacademy.ca",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Toronto",
+              "addressRegion": "ON",
+              "addressCountry": "CA"
+            },
             "priceRange": "$$",
             "currenciesAccepted": "CAD",
             "paymentAccepted": "Credit Card, Debit Card, E-Transfer",
@@ -148,7 +163,7 @@
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "5.0",
-              "reviewCount": 10,
+              "reviewCount": 15,
               "bestRating": 5,
               "worstRating": 1
             },
@@ -159,7 +174,8 @@
             ],
             "makesOffer": [
               { "@id": "https://clutchacademy.ca/#offer-single" },
-              { "@id": "https://clutchacademy.ca/#offer-3pack" }
+              { "@id": "https://clutchacademy.ca/#offer-3pack" },
+              { "@id": "https://clutchacademy.ca/#offer-confidence-5pack" }
             ],
             "employee": [
               { "@id": "https://clutchacademy.ca/#instructor-sam" }
@@ -182,6 +198,17 @@
             "name": "3-Lesson Package",
             "description": "Three one-hour lessons: progression from clutch basics to road-confident driving.",
             "price": "240.00",
+            "priceCurrency": "CAD",
+            "category": "Driving lesson package",
+            "availability": "https://schema.org/InStock",
+            "offeredBy": { "@id": "https://clutchacademy.ca/#business" }
+          },
+          {
+            "@type": "Offer",
+            "@id": "https://clutchacademy.ca/#offer-confidence-5pack",
+            "name": "Highway & City Confidence Drive (5-Lesson Package)",
+            "description": "Five one-hour lessons covering downtown driving, highway merging, hill starts, and rush-hour practice, with a confidence guarantee.",
+            "price": "400.00",
             "priceCurrency": "CAD",
             "category": "Driving lesson package",
             "availability": "https://schema.org/InStock",

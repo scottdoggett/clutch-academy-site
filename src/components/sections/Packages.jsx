@@ -6,6 +6,7 @@ export default function Packages({
   onBookPack,
   onBookGroup1hr,
   onBookGroup2hr,
+  onBookConfidence,
 }) {
   return (
     <GearSection gear={4} id="packages">
@@ -17,7 +18,7 @@ export default function Packages({
         </p>
       </header>
 
-      <div className="packages packages--four">
+      <div className="packages packages--five">
         <article className="package-card package-card--red-1">
           <div className="package-card__info">
             <p className="package-card__tag">Private · Single</p>
@@ -120,6 +121,37 @@ export default function Packages({
 
             <button type="button" className="btn btn--secondary" onClick={onBookGroup2hr}>
               Book 2-Hour Group
+            </button>
+          </div>
+        </article>
+
+        <article className="package-card package-card--hero package-card--red-5">
+          <span className="package-card__badge">Best Value</span>
+          <div className="package-card__info">
+            <p className="package-card__tag">Private · 5-Pack</p>
+            <h3>Highway &amp; City Confidence Drive</h3>
+            <p className="package-card__desc">
+              The Toronto Confidence Drive — city, highway, and rush-hour
+              mastery.
+            </p>
+            <p className="package-card__price">
+              <span className="package-card__currency">$</span>400
+              <span className="package-card__unit">/ 5 lessons</span>
+            </p>
+          </div>
+
+          <div className="package-card__details">
+            {/* PENDING: confirm final price + the "confidence guarantee" terms with client */}
+            <ul className="package-card__list">
+              <li>Downtown driving</li>
+              <li>Highway merging</li>
+              <li>Hill starts</li>
+              <li>Rush-hour practice</li>
+              <li>Confidence guarantee</li>
+            </ul>
+
+            <button type="button" className="btn btn--primary" onClick={onBookConfidence}>
+              Book This Package
             </button>
           </div>
         </article>

@@ -121,6 +121,7 @@ export default function App() {
           onBookPack={makeBookHandler('packages_3pack')}
           onBookGroup1hr={makeBookHandler('packages_group_1hr')}
           onBookGroup2hr={makeBookHandler('packages_group_2hr')}
+          onBookConfidence={makeBookHandler('packages_confidence_5pack')}
         />
         <About onBookNow={makeBookHandler('about')} />
         <Faq />
