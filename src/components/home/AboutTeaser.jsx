@@ -11,7 +11,7 @@ export default function AboutTeaser() {
     <section className="section" id="about" aria-labelledby="about-heading">
       <div className="section__inner about">
         <Image
-          className="about__photo about__photo--desktop"
+          className="tinted-photo about__photo about__photo--desktop"
           src={headshot}
           alt="Sam Anthony, founder and lead instructor"
           sizes="(max-width: 767px) 280px, 380px"
@@ -25,7 +25,7 @@ export default function AboutTeaser() {
           <p className="about__role">Founder · Lead Instructor</p>
 
           <Image
-            className="about__photo about__photo--mobile"
+            className="tinted-photo about__photo about__photo--mobile"
             src={headshot}
             alt=""
             aria-hidden="true"

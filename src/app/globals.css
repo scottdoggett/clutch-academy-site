@@ -217,6 +217,19 @@ img {
   max-width: 48ch;
 }
 
+/* Studio photos ship with white backgrounds; multiply-blend over a red fill
+   tints them into the brand field while the subject keeps its depth. Needs
+   an `isolation: isolate` ancestor so blending stays inside its section. */
+.tinted-photo {
+  background-color: var(--red-primary);
+  mix-blend-mode: multiply;
+  filter: grayscale(0.15) contrast(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+  display: block;
+  object-fit: cover;
+}
+
 /* Stub-page link lists (lessons hub, 404) — legible on the brand red. */
 .placeholder-hero ul {
   list-style: none;
