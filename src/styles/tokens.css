@@ -8,9 +8,12 @@
   --chrome: #D9D9D9;
   --black: #0A0A0A;
 
-  /* Typography — Display (Plus Jakarta Sans) */
-  --font-display: 'Plus Jakarta Sans', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  /* Typography — display (Plus Jakarta Sans) and body (Inter). The
+     --font-jakarta / --font-inter variables are set on <html> by next/font
+     in app/layout.jsx (self-hosted, zero-CLS); the named families remain as
+     fallbacks for surfaces outside the app bundle (booked.html, privacy.html). */
+  --font-display: var(--font-jakarta, 'Plus Jakarta Sans'), sans-serif;
+  --font-body: var(--font-inter, 'Inter'), sans-serif;
 
   /* Type Scale */
   --text-gear: clamp(4rem, 12vw, 10rem);
@@ -33,9 +36,9 @@
   /* Height of the fixed announcement strip above the nav, when present. Kept
      at 0 by default and set to the strip's real rendered height by
      AnnouncementBanner (via ResizeObserver). Because --nav-height (below) is
-     the top-clearance token every section + gear indicator keys off, this is
-     the single value that makes the whole layout account for the strip — and
-     reverts to 0 automatically when the strip auto-hides after July 31. */
+     the top-clearance token every section keys off, this is the single value
+     that makes the whole layout account for the strip — and reverts to 0
+     automatically when the strip auto-hides after July 31. */
   --announcement-height: 0px;
   /* Total fixed-header clearance: nav bar plus any announcement strip. */
   --nav-height: calc(var(--nav-bar-height) + var(--announcement-height));

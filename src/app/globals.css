@@ -1,0 +1,162 @@
+@import '../styles/tokens.css';
+@import '../styles/buttons.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--white);
+  background-color: var(--red-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  /* Defensive: keep third-party fixed-position widgets (Calendly popup)
+     from forcing the page to scroll horizontally on mobile. */
+  overflow-x: hidden;
+}
+
+/* ---------- Mobile Calendly: custom container we fully control --------
+   Calendly's native popup uses fixed pixel sizing and JS-injected styles
+   that iOS Safari mis-sizes, stretching the document. On mobile we mount
+   the iframe into our own host via Calendly's `parentElement` option. */
+.cal-host-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.cal-host-popup {
+  position: relative;
+  width: min(92vw, 600px);
+  height: min(90vh, 900px);
+  max-width: 92vw;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Calendly injects an iframe into our popup; force it to fill. */
+.cal-host-popup iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+  display: block;
+}
+
+.cal-host-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.cal-host-close:hover,
+.cal-host-close:focus {
+  background: rgba(0, 0, 0, 0.8);
+  outline: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-tight);
+  line-height: 1.1;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Skip link: hidden off-screen until focused via keyboard. Jumps past the nav
+   so keyboard + screen-reader users don't have to tab through it every visit. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--white);
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-120%);
+  transition: transform var(--transition-reduced) ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
+/* Scaffold-only homepage hero; replaced when Phase 4 rebuilds the homepage
+   sections. Clears the fixed nav via --nav-height like every section did. */
+.placeholder-hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: calc(var(--nav-height) + clamp(2rem, 6vw, 4rem))
+    clamp(1.25rem, 5vw, 4rem) clamp(3rem, 8vw, 5rem);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.placeholder-hero h1 {
+  font-size: var(--text-display-xl);
+}
+
+.placeholder-hero p {
+  font-size: var(--text-body-lg);
+  max-width: 48ch;
+}
+
+/* Reduced motion: neutralize any incidental CSS transitions/animations so
+   the site is fully static for users who ask for it. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--transition-reduced) !important;
+    scroll-behavior: auto !important;
+  }
+}

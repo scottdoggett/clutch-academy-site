@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem 1rem;
   padding: 0.6rem clamp(1rem, 3vw, 2rem);
   background-color: var(--white);
   color: var(--red-deep);
@@ -55,7 +56,6 @@
   color: var(--red-primary);
 }
 
-/* The lock-in nudge reads as the action prompt now that the button is gone. */
 .announcement-banner__lock {
   font-weight: 700;
   color: var(--red-deep);
@@ -66,9 +66,38 @@
   white-space: nowrap;
 }
 
+/* Compact booking CTA — inverted (red on white strip) so it reads as the
+   banner's action without competing with the nav's white Book Now button. */
+.announcement-banner__cta {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.6875rem, 1.1vw, 0.8125rem);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--white);
+  background-color: var(--red-primary);
+  border: none;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  transition: background-color var(--transition-reduced) ease;
+}
+
+.announcement-banner__cta:hover {
+  background-color: var(--red-deep);
+}
+
+.announcement-banner__cta:focus-visible {
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
 @media (max-width: 767px) {
   .announcement-banner {
-    padding: 0.55rem 1rem;
+    /* Stack copy over the CTA so mobile reads flag / detail / action / button. */
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem 0.65rem;
   }
 
   .announcement-banner__copy {
@@ -87,7 +116,7 @@
   }
 
   /* Break the lock-in prompt onto its own line so mobile reads as a clean
-     three-part stack: flag / detail / action. */
+     stack: flag / detail / action prompt. */
   .announcement-banner__lock {
     display: block;
     margin-top: 0.25rem;

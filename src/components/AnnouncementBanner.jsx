@@ -1,4 +1,7 @@
+'use client'
+
 import { useEffect, useRef, useState } from 'react'
+import BookButton from './BookButton'
 import './AnnouncementBanner.css'
 
 // The banner is a pre-August-1 pricing notice; it auto-hides once the new
@@ -8,7 +11,7 @@ const DEADLINE = new Date('2026-08-01T00:00:00-04:00')
 const isBeforeDeadline = () => new Date() < DEADLINE
 
 export default function AnnouncementBanner() {
-  // Start shown so the prerendered snapshot and the first client paint match
+  // Start shown so the server-rendered HTML and the first client paint match
   // (crawler-visible, no flash-in), then retract in a post-mount effect if
   // we're already past the deadline. Mirrors ConsentBanner's hydration-safe
   // pattern, reversed: start visible, hide when expired.
@@ -21,9 +24,9 @@ export default function AnnouncementBanner() {
   }, [])
 
   // Publish the strip's real height to --announcement-height so every
-  // --nav-height-based clearance (sections, gear indicators, nav offset)
-  // tracks it exactly across breakpoints and copy wrapping. Reverts to the
-  // 0px token default when the strip unmounts (auto-hide / past deadline).
+  // --nav-height-based clearance (sections, nav offset) tracks it exactly
+  // across breakpoints and copy wrapping. Reverts to the 0px token default
+  // when the strip unmounts (auto-hide / past deadline).
   useEffect(() => {
     if (!visible) return
     const el = bannerRef.current
@@ -47,8 +50,7 @@ export default function AnnouncementBanner() {
   // lockstep (both read the shared --header-shift var) until the banner has
   // slid fully out of view and the nav is parked at the top. Clamped to the
   // banner's own height, so once you've scrolled past it the nav stays locked
-  // in place. Structure is untouched (both stay position: fixed), so the gear
-  // pin/scroll math is undisturbed.
+  // in place. Structure is untouched (both stay position: fixed).
   useEffect(() => {
     if (!visible) return
     const el = bannerRef.current
@@ -95,6 +97,7 @@ export default function AnnouncementBanner() {
           </span>
         </span>
       </p>
+      <BookButton source="announcement" className="announcement-banner__cta" />
     </aside>
   )
 }

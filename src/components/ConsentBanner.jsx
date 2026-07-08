@@ -1,30 +1,19 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import './ConsentBanner.css'
+import { CONSENT_STORAGE_KEY, readStoredConsent } from '../lib/consent'
 import { loadPixel as loadMetaPixel } from '../lib/metaPixel'
 import { loadPixel as loadTiktokPixel } from '../lib/tiktokPixel'
 
-const STORAGE_KEY = 'clutch.consent.v1'
-
-// Returns 'granted' | 'denied' | null (not yet decided)
-function readStored() {
-  if (typeof window === 'undefined') return null
-  try {
-    return localStorage.getItem(STORAGE_KEY)
-  } catch {
-    return null
-  }
-}
-
 export default function ConsentBanner() {
   // Start hidden, then reveal on the client if no decision is stored. This
-  // post-mount toggle is intentional: the prerendered HTML contains no banner,
-  // and we want hydration to match before revealing — see PRERENDER pipeline
-  // in CLAUDE.md.
+  // post-mount toggle is intentional: the server-rendered HTML contains no
+  // banner, and we want hydration to match before revealing.
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (window.__PRERENDER__) return
-    if (readStored() === null) {
+    if (readStoredConsent() === null) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe client-only reveal
       setVisible(true)
     }
@@ -34,7 +23,7 @@ export default function ConsentBanner() {
 
   const decide = (choice) => {
     try {
-      localStorage.setItem(STORAGE_KEY, choice)
+      localStorage.setItem(CONSENT_STORAGE_KEY, choice)
     } catch {
       /* localStorage may be disabled (private mode, quota); fall through */
     }

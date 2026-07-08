@@ -1,40 +1,35 @@
+'use client'
+
 import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import BookButton from './BookButton'
 import './Nav.css'
 
+// Target sitemap routes (08-overhaul-reference §1). The dedicated pages land
+// in Phase 3 — until then, non-home links resolve to the framework 404.
 const NAV_LINKS = [
-  { label: 'Home', href: '#home', gear: 1 },
-  { label: 'Reviews', href: '#reviews', gear: 2 },
-  { label: 'Packages', href: '#packages', gear: 4 },
-  { label: 'About', href: '#about', gear: 5 },
-  { label: 'FAQ', href: '#faq', gear: 6 },
-  { label: 'Contact', href: '#book', gear: 'R' },
+  { label: 'Home', href: '/' },
+  { label: 'Lessons', href: '/manual-driving-lessons' },
+  { label: 'About', href: '/about' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
 ]
 
-export default function Nav({ currentGear = 1, onNavigate, onBookNow }) {
+export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
-
-  const handleClick = (e, gear) => {
-    e.preventDefault()
-    setMenuOpen(false)
-    if (onNavigate) onNavigate(gear)
-  }
-
-  const handleBookNow = (e) => {
-    e.preventDefault()
-    setMenuOpen(false)
-    if (onBookNow) onBookNow()
-  }
+  const pathname = usePathname()
 
   return (
     <nav className="nav" aria-label="Primary">
-      <a
-        href="#home"
+      <Link
+        href="/"
         className="nav__brand"
         aria-label="Clutch Academy — home"
-        onClick={(e) => handleClick(e, 1)}
+        onClick={() => setMenuOpen(false)}
       >
         <img src="/logo.svg" alt="Clutch Academy" className="nav__logo" />
-      </a>
+      </Link>
 
       <button
         className="nav__toggle"
@@ -52,21 +47,19 @@ export default function Nav({ currentGear = 1, onNavigate, onBookNow }) {
       >
         {NAV_LINKS.map((link) => (
           <li key={link.href} className="nav__item">
-            <a
+            <Link
               href={link.href}
-              className={`nav__link ${currentGear === link.gear ? 'nav__link--active' : ''}`}
-              aria-current={currentGear === link.gear ? 'true' : undefined}
-              onClick={(e) => handleClick(e, link.gear)}
+              className={`nav__link ${pathname === link.href ? 'nav__link--active' : ''}`}
+              aria-current={pathname === link.href ? 'page' : undefined}
+              onClick={() => setMenuOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
 
-      <button className="nav__book" onClick={handleBookNow}>
-        Book Now
-      </button>
+      <BookButton source="nav" className="nav__book" />
     </nav>
   )
 }

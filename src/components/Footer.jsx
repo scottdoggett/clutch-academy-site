@@ -1,21 +1,17 @@
+import Link from 'next/link'
 import './Footer.css'
 
+// Top-level pages only for now; Phase 3 fills out the full sitemap
+// (individual package pages) once those routes exist.
 const QUICK_LINKS = [
-  { label: 'Home', gear: 1, href: '#home' },
-  { label: 'Reviews', gear: 2, href: '#reviews' },
-  { label: 'How It Works', gear: 3, href: '#how-it-works' },
-  { label: 'Packages', gear: 4, href: '#packages' },
-  { label: 'About', gear: 5, href: '#about' },
-  { label: 'FAQ', gear: 6, href: '#faq' },
-  { label: 'Contact', gear: 'R', href: '#book' },
+  { label: 'Home', href: '/' },
+  { label: 'Lessons', href: '/manual-driving-lessons' },
+  { label: 'About', href: '/about' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
 ]
 
-export default function Footer({ onNavigate }) {
-  const handleClick = (e, gear) => {
-    e.preventDefault()
-    if (onNavigate) onNavigate(gear)
-  }
-
+export default function Footer() {
   return (
     <footer className="footer" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="footer__sr-only">
@@ -50,10 +46,8 @@ export default function Footer({ onNavigate }) {
           <h3 className="footer__heading">Explore</h3>
           <ul className="footer__list footer__list--two-col">
             {QUICK_LINKS.map((link) => (
-              <li key={link.gear}>
-                <a href={link.href} onClick={(e) => handleClick(e, link.gear)}>
-                  {link.label}
-                </a>
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
               </li>
             ))}
           </ul>

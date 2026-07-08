@@ -14,7 +14,6 @@ let loaded = false
 
 export function loadPixel() {
   if (typeof window === 'undefined') return
-  if (window.__PRERENDER__) return
   if (loaded) return
 
   // Standard TikTok Pixel bootstrap, expanded from the official one-liner for
