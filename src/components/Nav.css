@@ -1,10 +1,16 @@
 .nav {
   position: fixed;
-  top: 0;
+  /* Sits directly below the announcement strip when present; --announcement-height
+     is 0 when the strip is absent, so this collapses to top: 0. */
+  top: var(--announcement-height);
   left: 0;
   right: 0;
   z-index: 100;
-  min-height: var(--nav-height);
+  /* Ride up with the banner on scroll: both read --header-shift, so the nav
+     travels from top: --announcement-height up to 0 and then locks there once
+     the banner has slid out. Falls back to 0 before JS runs / when no banner. */
+  transform: translateY(calc(-1 * var(--header-shift, 0px)));
+  min-height: var(--nav-bar-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
