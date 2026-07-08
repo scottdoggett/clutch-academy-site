@@ -1,3 +1,5 @@
+> ⚠️ **PARTIALLY SUPERSEDED — July 2026 overhaul.** Business context, audience, motivations (including the Europe-rental angle), positioning, and brand voice below remain valid. What changed: the site is now a **conventional multi-page, SEO-focused** build (not single-page); lessons and pricing moved to the **new offering** (75-minute lessons; new package names and prices); and **SEO is now a primary goal** alongside bookings and trust. Authoritative for current direction: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, and `CLAUDE.md`.
+
 # 01 — Project Brief
 
 ## Business Overview

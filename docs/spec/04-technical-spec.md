@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED (stack) — July 2026 overhaul.** The stack is now **Next.js (App Router) with static generation** — not React + Vite + GSAP. GSAP/ScrollTrigger and the `useShiftTransition` animation layer are **removed**; the Puppeteer prerender script is **retired** (SSG replaces it). Calendly, consent-gated analytics (GA4 / Google Ads / Meta / TikTok), and Vercel hosting **carry over** — see the migration map in `08-overhaul-reference.md` §6. Payment is now **collected at booking**. Authoritative: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
+
 # 04 — Technical Specification
 
 ## Stack Overview

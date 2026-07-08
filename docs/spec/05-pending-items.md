@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — July 2026 overhaul.** The **May 1, 2026** launch schedule and milestones below no longer apply; the overhaul is **sequenced, not dated** (see `07-overhaul-build-plan.md`). The current list of open decisions and pending assets lives in `08-overhaul-reference.md` §7. Payment is now **collected at booking**, not in person. Authoritative: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
+
 # 05 — Pending Items & Open Decisions
 
 This file is the single source of truth for what is NOT yet known. An AI agent building the site should use this as a checklist for where to place TODOs and placeholder comments.

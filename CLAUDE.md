@@ -4,120 +4,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # Clutch Academy Website
 
-Manual transmission driving school in Toronto. Single-page React site with a gear-shift animation metaphor. The original launch target was **May 1, 2026**; that date has now passed, so treat ongoing work as polish/iteration on a live or near-live build rather than greenfield scaffolding.
+Manual transmission driving school in Toronto. The site is being rebuilt from a single-page React/Vite/GSAP brochure into a **conventional, SEO-focused, multi-page site on Next.js**.
 
-## Spec vs. implementation
+## ⚠️ Active overhaul — read this first
 
-The build specification lives in `docs/spec/` and is still useful for *intent* (audience, content, brand voice, pending assets). Several decisions in the spec have been **superseded by the current code** — when the two disagree, the code wins. Notable drift to be aware of before quoting the spec:
+- **Authoritative docs:** `docs/spec/07-overhaul-build-plan.md` (ordered build phases) and `docs/spec/08-overhaul-reference.md` (sitemap, per-page content, pricing, SEO targets, migration map). These win over everything else — including the current code — where they conflict.
+- **Older spec files `01`–`06` are superseded** for structure, stack, and animation (each carries a notice at its top). Use them only for durable intent: audience, positioning, brand voice, color, typography.
+- **Branch:** do all overhaul work on a dedicated **`overhaul`** branch (`git checkout -b overhaul`). Keep `main` as the live/stable baseline and merge to `main` only when the rebuild is verified. Never commit overhaul changes directly to `main`.
+- **Locked decisions:** migrate to Next.js App Router; conventional multi-page (real routes, real nav); the **gear-shift animation is removed entirely** (keep a similar homepage content structure, but no GSAP, no H-pattern, no scroll-jacking); static generation replaces the custom Puppeteer prerender.
 
-- **Gear → section mapping has changed.** The spec's earlier ordering put About at gear 2 and HowItWorks at gear 3. The shipped order is `Home → Reviews → HowItWorks → Packages → About → Faq → Reverse` (see "Architecture" below). Reviews was previously at gear 5 — moving it forward to gear 2 was a deliberate ordering decision (social proof up high).
-- **Payment is now collected at booking time**, not in person. The Reverse section ("Payment collected at time of booking, not in person — All cards accepted"), FAQ #6 ("Payment is securely collected at the time of your booking using Stripe…"), and the Packages lead ("Pay securely at booking.") all reflect this.
-- **The Reverse contact form was removed** (commit `eea4250`) and replaced with a contact info card (phone, email, IG, FB). `index.html` still contains the hidden Netlify form-registration stub; it is unused by the rendered app.
-- **No analytics is wired up.** The spec recommends GA4; the code references it only in a comment in `useCalendly.js`.
+## Current code vs. target
 
-When loading spec files, start with `docs/spec/README.md` for the routing table and decision-state legend (✅ decided / 🟡 recommended / ❓ open / 📎 pending asset), then load only the file(s) relevant to the task.
+The repo currently holds the **pre-overhaul single-page build** (React 19 + Vite + GSAP, live on Vercel). Treat it as the starting point being migrated, not the target. When the current code and the overhaul docs disagree, the docs win.
 
-## Stack
+Facts about the current build worth knowing before touching it:
 
-- React 19 + Vite 8
-- GSAP 3 with `@gsap/react` (`useGSAP`), `ScrollTrigger`, and `ScrollToPlugin` — registered in `src/main.jsx`, gated behind `window.__PRERENDER__` so the build-time prerender captures clean static HTML
-- Calendly (popup widget) for bookings — script is **lazy-loaded** by `useCalendly.js` on first CTA click, not in `<head>`, to keep the prerendered HTML and critical-path payload small
-- Google Analytics 4 with Consent Mode v2 default-deny — initialized in `index.html`; `ConsentBanner.jsx` flips `analytics_storage` to granted
-- **Hosting: Vercel.** `vercel.json` defines the `.com → .ca` and `www.` redirects plus per-asset cache headers
-- Puppeteer (devDep only) for the build-time prerender script
+- **Payment is collected at booking** (Stripe), not in person — Reverse/Contact, FAQ, and Packages copy already reflect this.
+- **Analytics is fully wired** behind a consent gate: GA4 `G-5E5GEN5N59`, Google Ads `AW-18196514948`, Meta Pixel `2845684255788584`, and TikTok Pixel. `public/booked.html` tracks the Calendly-redirect conversion. All of this carries over to the Next build.
+- **The Reverse section is a contact-info card** (phone, email, Instagram, Facebook) — it becomes the `/contact` page. The hidden Netlify form stub in `index.html` is unused and gets removed.
+- Pricing/naming is mid-flight: the current cards show the **old** prices; the overhaul target is the **new** offering (75-minute lessons; "Manual Foundations" / "Complete Manual Confidence" names; new prices) — see `08` §3.
 
-No testing or routing libraries are installed.
+## Target stack (post-migration)
 
-## Commands
+- **Next.js (App Router)** with static generation for content/landing pages; React 19.
+- **Calendly** (popup) for bookings — lazy-loaded on first CTA; keep the iOS Safari mobile-host fix.
+- **GA4 + Consent Mode v2** default-deny; `ConsentBanner` grants; Meta / TikTok / Google Ads gated the same way.
+- **Hosting: Vercel.** Redirects (`.com → .ca`, `www →` apex) and per-asset cache headers move from `vercel.json` into `next.config`.
+- **`next/image`** replaces the manual WebP/JPEG pipeline and `scripts/generate-images.mjs`.
+- **Removed:** GSAP + `@gsap/react`, `GearSection`, `GearIndicator`, the `window.__PRERENDER__` guards, and `scripts/prerender.mjs` (SSG replaces it).
 
-- `npm run dev` — Vite dev server
-- `npm run build` — production build to `dist/` **and** runs `scripts/prerender.mjs` to snapshot fully-rendered HTML over `dist/index.html` and inject the FAQPage JSON-LD
-- `npm run preview` — preview production build locally
-- `npm run lint` — ESLint over the project
+## SEO architecture (target)
+
+SEO is the primary goal of the overhaul. Next's static generation gives each route crawlable HTML natively — no more bespoke prerender. Per-route metadata via `generateMetadata` (unique title / description / canonical / OG). FAQPage JSON-LD generated from the FAQ array so on-page copy and structured data can't drift. DrivingSchool / Offer / Person schema on the homepage. `robots.txt`, `sitemap.xml` (now multi-URL), and `llms.txt` carry over. **No `Review` / `aggregateRating` schema** until Google Business Profile reviews can be legitimately cited — self-attested rating markup risks a manual action.
 
 ## Conventions
 
-- **Use the `useGSAP` hook** from `@gsap/react` for all GSAP animation code — never raw `useEffect` with GSAP. This guarantees cleanup on unmount. The Reviews marquee uses `useEffect` because it's a `requestAnimationFrame` loop, not a GSAP timeline.
 - **Design tokens in CSS custom properties** (`src/styles/tokens.css`), not hardcoded values.
-- **Gear sections are components.** Each of the seven sections is its own component under `src/components/sections/`, wrapped by `GearSection`, which handles pinning, viewport-position alignment, and the per-gear scroll-triggered transition.
-- **Respect `prefers-reduced-motion`.** Both `GearSection` (matchMedia gate) and `Reviews` (early return) check this. Any new motion must follow suit.
-- **`useGSAP` over `useEffect` for animations**, but co-locate the timeline setup with the component that owns the animated DOM (per `GearSection`'s `mm.add(...)` blocks).
-
-## Architecture
-
-Single-page app where scroll position drives a gear-shift metaphor. Seven sections map to gear positions on an H-pattern shifter:
-
-```
-src/
-├── App.jsx              # Wires sections, owns currentGear state, scrollToGear,
-│                        # and the nav/CTA → Calendly handlers
-├── main.jsx             # Registers ScrollTrigger + ScrollToPlugin
-├── components/
-│   ├── Nav.jsx          # Sticky nav, mobile toggle, "Book Now" CTA
-│   ├── GearSection.jsx  # Wrapper: pinning + position + per-gear ScrollTrigger
-│   │                    # animation setup (no separate hook file)
-│   ├── GearIndicator.jsx
-│   ├── Footer.jsx
-│   └── sections/        # One component per gear
-│       ├── Home.jsx         # gear 1 — top-left
-│       ├── Reviews.jsx      # gear 2 — top-left
-│       ├── HowItWorks.jsx   # gear 3 — top-center
-│       ├── Packages.jsx     # gear 4 — top-center
-│       ├── About.jsx        # gear 5 — top-right
-│       ├── Faq.jsx          # gear 6 — top-right
-│       └── Reverse.jsx      # gear R — center; Book CTA + contact info card
-├── hooks/
-│   └── useCalendly.js   # openCalendly(): native popup on desktop, custom
-│                        # iframe host on mobile (iOS Safari sizing fix)
-└── styles/
-    ├── tokens.css       # CSS custom properties (colors, type scale, timings)
-    └── buttons.css      # Shared button utility classes
-```
-
-Key animation concepts (detailed in `docs/spec/06-design-system.md`):
-
-- **Three transition types**, all driven by `ScrollTrigger` pinning inside `GearSection.jsx`:
-  - **Same-column shifts** (1→2, 3→4, 5→6) — `setupSameColumnExit`: pins for a short scroll beat with no content motion.
-  - **H-crossing shifts** (2→3, 4→5) — `setupHCrossingExit` on the outgoing gear and `setupHCrossingEntry` on the incoming gear; content drops, slides laterally, and fades.
-  - **Reverse shift** (6→R) — `setupReverseExit`: gear 6 scales/fades/slides out while the Reverse section eases in.
-- **Mobile** collapses every transition to a fast upward slide (`setupMobile`); Reverse keeps a zoom-out + fade.
-- **`useShiftTransition` does NOT exist as a hook** — animation logic lives directly in `GearSection.jsx` as standalone setup functions keyed by `ANIMATION_ROLES[gear]`. If you're refactoring, that's the file to touch.
-- **Nav navigation** uses `gsap.to(window, { scrollTo: ... })` with `autoKill: false` (iOS Safari address-bar workaround — don't change this without re-testing on iOS) and focuses the destination heading or primary CTA for a11y.
-- **Calendly popup opens immediately** for every CTA (nav "Book Now", hero, packages, about, reverse). It does **not** wait for the Reverse shift to complete. On mobile, `openCalendly` mounts an inline widget into a custom overlay because the native popup mis-sizes on iOS Safari.
-
-## SEO architecture
-
-The site is a CSR React app, but the build emits a **pre-rendered** `dist/index.html` so non-JS-executing crawlers (GPTBot, ClaudeBot, PerplexityBot, plain Googlebot fetches, social-share scrapers) see the full body content. Three pieces work together:
-
-1. **`scripts/prerender.mjs`** (runs after `vite build`): spawns `vite preview`, drives Puppeteer with `window.__PRERENDER__ = true` set via `evaluateOnNewDocument`, captures the rendered HTML, splices in the FAQPage JSON-LD, and overwrites `dist/index.html`.
-2. **Runtime guards behind `window.__PRERENDER__`**: `src/main.jsx` skips GSAP plugin registration; `src/components/GearSection.jsx` short-circuits its `useGSAP` setup; `src/components/sections/Reviews.jsx` skips its rAF marquee loop; `src/components/ConsentBanner.jsx` stays hidden. This guarantees the snapshotted HTML has zero animation-injected attributes — clean static markup that hydrates without mismatch warnings.
-3. **FAQPage JSON-LD is generated from the FAQS array in `Faq.jsx`** at build time, so on-page FAQ copy and the structured data can never drift. The script *fails the build* if any answer ends with whitespace or non-terminal punctuation (caught the truncated FAQ #7 cancellation answer the first time it ran). To add an FAQ: edit the FAQS array; the next build re-emits the JSON-LD.
-
-Other SEO surfaces:
-
-- `index.html` `<head>` carries the static meta (description, canonical, OG, Twitter, robots, theme-color), the apple-touch-icon link, the manifest link, and the DrivingSchool / Offer / Person JSON-LD `@graph`. The `<!-- FAQPAGE_LD -->` marker is the splice point for the prerender script — don't remove it.
-- `public/robots.txt` allows all crawlers including the major AI bots (per business decision).
-- `public/sitemap.xml` lists the single canonical URL.
-- `public/llms.txt` is a Mintlify-style summary for LLM crawlers.
-- `public/site.webmanifest` plus `apple-touch-icon.png` cover home-screen install.
-- `public/privacy.html` is a static privacy page; `vercel.json` `cleanUrls: true` makes `/privacy` resolve to it.
-
-**No `Review` or `aggregateRating` schema** until Google Business Profile reviews exist and can be cited. Self-attested testimonial markup violates Google's 2019 guidance and can earn a manual action.
-
-## Pending assets
-
-Many brand assets (final logo, instructor photo, color overrides) are tracked as `<!-- PENDING: [name] -->` HTML comments. When you encounter a missing asset, follow the same convention. Never invent content that conflicts with the client's brand — see `docs/spec/05-pending-items.md` for the full list and rules.
-
-## Workflow
-
-- Follow the build order in `docs/spec/04-technical-spec.md` ("Build Order Recommendation") for any greenfield work, but most of that order is already complete — typical tasks now are content/copy edits, layout polish, and animation tuning.
-- After completing each numbered step in a multi-step task, pause and report progress. The developer will review before continuing.
-- Track new `<!-- PENDING: -->` comments as you add them.
-- If the spec conflicts with itself, with the code, or with what the developer is asking, flag it — don't silently pick a side. The drift list at the top of this file is not exhaustive.
+- **Respect `prefers-reduced-motion`.** With the gear animation gone this is largely automatic, but any new motion needs a matchMedia gate or equivalent fallback.
+- **Pending assets** are tracked as `<!-- PENDING: [name] -->` comments (or the JSX equivalent). Never invent content that conflicts with the client's brand — see `08` §7 for the open-decisions and pending-asset list.
+- After completing each numbered step in a multi-step task, **pause and report progress** before continuing.
+- If a doc conflicts with the code, with itself, or with what the developer is asking, **flag it — don't silently pick a side.**
 
 ## Non-negotiable constraints
 
-- **Four pricing cards: two private + two group.** Private — $90 single lesson, $240 for a 3-pack. Group — $90 1-hour, $180 2-hour. (Whether the group prices are per-person or per-pair is still PENDING client confirmation — see the `PENDING` comments in `Packages.jsx`.) `App.jsx` wires one Calendly handler per card (`onBookSingle`, `onBookPack`, `onBookGroup1hr`, `onBookGroup2hr`), each tagged with its own analytics `source`.
-- **Gear-shift metaphor is core, not decoration.** Don't simplify away layout positions or animation choreography without explicit approval.
-- **iOS Safari is a first-class target.** The `autoKill: false` scroll tween and the custom mobile Calendly host both exist because of iOS-specific bugs — don't "clean them up" without testing on iOS.
-- **Reduced motion must remain a fully functional path.** Every new animation needs a matchMedia gate or equivalent fallback.
+- **Work on the `overhaul` branch, never directly on `main`.**
+- **SEO-first and multi-page.** The whole point of the rebuild is dedicated, crawlable landing pages per package for organic search and Google Ads. Don't collapse the pages back together.
+- **iOS Safari is a first-class target.** The Calendly mobile-host fix exists because of an iOS-specific bug — don't remove it without testing on iOS.
+- **Reduced motion must remain a fully functional path.**
+- **New pricing/naming is the target state** (see `08` §3); keep old pricing live only until the August 1 switch, and only if launching before then.

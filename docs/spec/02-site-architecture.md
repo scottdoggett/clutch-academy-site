@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — July 2026 overhaul.** This file describes the retired **single-page gear-shift / H-pattern** architecture. The site is now **conventional multi-page** — sitemap and routes are in `08-overhaul-reference.md` §1. The gear metaphor, H-pattern layout, and pinned gear-shift animations are **removed entirely**. Payment is now **collected at booking (Stripe)**, not in person. Authoritative: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
+
 # 02 — Site Architecture
 
 ## Approach

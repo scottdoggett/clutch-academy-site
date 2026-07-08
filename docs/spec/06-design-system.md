@@ -1,3 +1,5 @@
+> ⚠️ **PARTIALLY SUPERSEDED — July 2026 overhaul.** The color palette, typography, whitespace, mobile-first stance, and accessibility / reduced-motion principles below remain valid. What changed: the **gear-shift animation system, H-pattern grid, and camera-travel motion are removed entirely** — the site no longer animates between sections. Disregard the GSAP / ScrollSmoother and H-pattern sections. Authoritative: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
+
 # 06 — Design System
 
 This file is the authoritative reference for visual language: color, typography, layout grammar, the gear-shift animation system, and responsive/accessibility rules. Architecture decisions live in `02-site-architecture.md`; this file is about how the site *feels* and *moves*.

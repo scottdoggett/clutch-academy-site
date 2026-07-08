@@ -1,3 +1,5 @@
+> ⚠️ **PARTIALLY SUPERSEDED — July 2026 overhaul.** Copy direction, brand voice, and FAQ intent remain useful. What changed: pricing is **no longer "two tiers only"** — there are dedicated pages for the Individual lesson, Manual Foundations (3), Complete Manual Confidence (5), and Group lessons (per-page content in `08-overhaul-reference.md` §2; pricing in §3). Payment is now **collected at booking**, so "in-person only / do not mention online payment" no longer applies. Authoritative: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
+
 # 03 — Content Specification
 
 This file describes what content goes in each section. Final copy will be refined from the client's marketing package. Where exact copy is provided, use verbatim. Where a placeholder is used, flag with a code comment for the client review pass.
