@@ -1,23 +1,204 @@
-import PageStub from '../../../components/PageStub'
+import Link from 'next/link'
+import BookButton from '../../../components/BookButton'
+import TrustBlock from '../../../components/lessons/TrustBlock'
+import LessonFaq from '../../../components/lessons/LessonFaq'
+import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
   title: 'Group Manual Driving Lessons in Toronto | Clutch Academy',
   description:
-    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. Book online.',
+    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 1-hour and 2-hour options. Book online.',
   alternates: { canonical: '/lessons/group' },
 }
 
-// Page-level source tag for now; the per-option packages_group_1hr /
-// packages_group_2hr tags return in Phase 6 once the Phase 0 ❓ (1-hour +
-// 2.5-hour vs. 2.5-hour only, per-person vs. per-pair pricing) is resolved.
-// PENDING: Phase 6 explains the group option(s) that survive that decision.
+// Keyword target (08 §4): "group manual driving lessons Toronto" /
+// learn-with-a-friend.
+//
+// ❓ BLOCKED (Phase 0, still open): the post-August-1 group format —
+//    brief text says both 1-hour and 2.5-hour options, but the new pricing
+//    lists ONLY a 2.5-hour group at $219 + HST. The options below are the
+//    CURRENT (pre-August-1) offering exactly as sold on the live site.
+//    Phase 10 must apply whichever format Sam confirms.
+// ❓ BLOCKED: whether group pricing is per person or per pair — copy below
+//    deliberately avoids claiming either. Confirm with Sam before launch.
+const OPTIONS = [
+  {
+    title: '1-Hour Group Lesson',
+    desc: 'Bring a friend and split the experience — a fun, low-pressure first exposure to the clutch.',
+    price: '$90',
+    unit: '/ hour + HST',
+    source: 'packages_group_1hr',
+    cta: 'Book 1-Hour Group',
+  },
+  {
+    title: '2-Hour Group Lesson',
+    desc: 'Twice the seat time, same friendly pace — more turns at the wheel for both of you.',
+    price: '$180',
+    unit: '/ 2 hours + HST',
+    source: 'packages_group_2hr',
+    cta: 'Book 2-Hour Group',
+  },
+]
+
+// Real quotes from the Google-review set — chosen for the fun, supportive
+// experience this page sells (no review names a group lesson specifically,
+// so none is presented as one).
+const QUOTES = [
+  {
+    text: 'I had the best time learning how to drive manual with Sam. He has great customer service and wonderful tips for driving with a stick. Thank you Clutch team!!!',
+    name: 'Dakota Abell',
+  },
+  {
+    text: 'Had such a positive experience! Very professional, calm, and efficient. Would definitely recommend!',
+    name: 'Hannah Bance',
+  },
+]
+
+const FAQ_IDS = ['license', 'never-driven', 'wear', 'pay', 'gift']
+
 export default function GroupLessonsPage() {
   return (
-    <PageStub
-      heading="Group Manual Lessons"
-      lede="Learn manual alongside a friend — a fun, supportive way to get
-        comfortable with the clutch on real Toronto roads."
-      source="packages_group"
-    />
+    <>
+      {/* ---------- Hero ---------- */}
+      <section
+        className="section section--first"
+        aria-labelledby="lesson-heading"
+      >
+        <div className="section__inner lesson-hero__inner">
+          <p className="section-header__eyebrow">Group · With a Friend</p>
+          <h1 id="lesson-heading" className="lesson-hero__headline">
+            Group Manual Lessons
+          </h1>
+          <p className="lesson-hero__lead">
+            Group manual driving lessons in Toronto for people who’d rather
+            not do it alone: grab a friend, share the nerves, and learn the
+            clutch together in a fun, supportive environment — on real roads,
+            with Sam coaching every turn at the wheel.
+          </p>
+          <p className="lesson-hero__price">
+            From $90
+            <span className="lesson-hero__price-unit">+ HST</span>
+          </p>
+          <BookButton source="packages_group" className="btn btn--primary">
+            Book a Group Lesson
+          </BookButton>
+        </div>
+      </section>
+
+      {/* ---------- The two current options ---------- */}
+      <section className="section" aria-labelledby="options-heading">
+        <div className="section__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Two ways to share it</p>
+            <h2 id="options-heading">Pick your session length</h2>
+          </header>
+          <div className="lesson-options">
+            {OPTIONS.map((o) => (
+              <article key={o.source} className="lesson-option">
+                <h3 className="lesson-option__title">{o.title}</h3>
+                <p className="lesson-option__desc">{o.desc}</p>
+                <p className="lesson-option__price">
+                  {o.price}
+                  <span className="lesson-option__unit">{o.unit}</span>
+                </p>
+                <BookButton source={o.source} className="btn btn--secondary">
+                  {o.cta}
+                </BookButton>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- What to expect ---------- */}
+      <section className="section" aria-labelledby="expect-heading">
+        <div className="section__inner lesson-block__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">What to expect</p>
+            <h2 id="expect-heading">Supportive, social, low-pressure</h2>
+          </header>
+          {/* PENDING: GROUP-LESSON INCLUSIONS — final 3–5 bullets from Sam
+              (08 §7). The list below carries over the placeholder bullets
+              already shown on the live site's group cards. */}
+          <ul className="lesson-block__list">
+            <li>Learn with a friend in a supportive, low-pressure setting</li>
+            <li>Take turns at the wheel — watching is learning too</li>
+            <li>Great for first-timers who want the moral support</li>
+          </ul>
+          <p className="lesson-block__note">
+            Taught in a manual 2015 Volkswagen Golf on real Toronto roads.
+            Every driver needs a valid G2 or G licence.
+          </p>
+        </div>
+      </section>
+
+      {/* ---------- Trust ---------- */}
+      <section className="section" aria-label="Student trust">
+        <div className="section__inner">
+          <TrustBlock />
+        </div>
+      </section>
+
+      {/* ---------- Real reviews ---------- */}
+      <section className="section" aria-labelledby="quotes-heading">
+        <div className="section__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">From the Google reviews</p>
+            <h2 id="quotes-heading">The experience, in students’ words</h2>
+          </header>
+          <div className="lesson-quotes">
+            {QUOTES.map((q) => (
+              <figure key={q.name} className="lesson-quote">
+                <blockquote className="lesson-quote__text">
+                  “{q.text}”
+                </blockquote>
+                <figcaption className="lesson-quote__name">
+                  — {q.name}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- FAQ subset ---------- */}
+      <section className="section" aria-labelledby="faq-heading">
+        <div className="section__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Good to know</p>
+            <h2 id="faq-heading">Quick answers</h2>
+          </header>
+          <LessonFaq items={faqSubset(FAQ_IDS)} />
+        </div>
+      </section>
+
+      {/* ---------- Final CTA + cross-links ---------- */}
+      <section className="section" aria-labelledby="next-heading">
+        <div className="section__inner lesson-next">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Bring a friend</p>
+            <h2 id="next-heading">Book your group lesson</h2>
+          </header>
+          <BookButton
+            source="packages_group"
+            className="btn btn--primary btn--xl"
+          >
+            Book a Group Lesson
+          </BookButton>
+          <p className="lesson-next__links">
+            Prefer the wheel to yourself? Start with an{' '}
+            <Link href="/lessons/individual">individual lesson</Link> or the{' '}
+            <Link href="/lessons/manual-foundations">
+              Manual Foundations Package
+            </Link>{' '}
+            — or{' '}
+            <Link href="/manual-driving-lessons">
+              compare all lesson options
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+    </>
   )
 }
