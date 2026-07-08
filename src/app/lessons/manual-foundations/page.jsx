@@ -72,6 +72,11 @@ export default function ManualFoundationsPage() {
             first touch of the clutch to driving real roads independently —
             each one picking up exactly where the last left off.
           </p>
+          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          <p className="lesson-hero__lead">
+            Most students arrive nervous — and leave wondering what they were
+            nervous about.
+          </p>
           <p className="lesson-hero__price">
             $240
             <span className="lesson-hero__price-unit">

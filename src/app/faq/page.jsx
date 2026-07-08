@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
+import TrustBlock from '../../components/lessons/TrustBlock'
 import { FAQS } from '../../lib/faqs'
 import './faq.css'
 
@@ -68,6 +69,12 @@ export default function FaqPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section" aria-label="Student trust">
+        <div className="section__inner">
+          <TrustBlock />
         </div>
       </section>
 

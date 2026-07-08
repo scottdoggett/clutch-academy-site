@@ -45,6 +45,9 @@ export const FAQS = [
   },
   {
     id: 'cancellation',
+    // PENDING: final cancellation-policy wording from Sam (08 §7). This is
+    // the wording currently live on the site; it renders on /faq, /contact,
+    // and the package-page FAQ subsets — updating it here updates them all.
     q: 'What is your cancellation policy?',
     a: 'Cancellations made at least 24 hours before the scheduled lesson are eligible for a full refund. Cancellations made after 24 hours of booking or less than 24 hours before the lesson will be charged in full.',
   },

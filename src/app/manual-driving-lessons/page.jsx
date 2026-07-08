@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
+import TrustBlock from '../../components/lessons/TrustBlock'
 import './hub.css'
 
 export const metadata = {
@@ -106,6 +107,7 @@ export default function LessonsOverviewPage() {
         aria-labelledby="hub-heading"
       >
         <div className="section__inner hub-intro__inner">
+          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="section-header__eyebrow">
             Manual · Stick Shift · Standard — same lessons
           </p>
@@ -176,6 +178,13 @@ export default function LessonsOverviewPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ---------- Trust ---------- */}
+      <section className="section" aria-label="Student trust">
+        <div className="section__inner">
+          <TrustBlock />
         </div>
       </section>
 

@@ -68,6 +68,7 @@ export default function ManualConfidencePage() {
         aria-labelledby="lesson-heading"
       >
         <div className="section__inner lesson-hero__inner">
+          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="section-header__eyebrow">
             Private · 5 Lessons · The Flagship
           </p>

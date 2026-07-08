@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
+import TrustBlock from '../../components/lessons/TrustBlock'
 import headshot from '../../../public/headshot.jpeg'
 import './about.css'
 
@@ -204,6 +205,16 @@ export default function AboutPage() {
               </p>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ---------- Trust ---------- */}
+      {/* PENDING: dedicated student testimonials from Sam (08 §7 — real
+          quotes only, no invented reviews). When they land, they slot in
+          here as a quote strip alongside the rating block. */}
+      <section className="section" aria-label="Student trust">
+        <div className="section__inner">
+          <TrustBlock />
         </div>
       </section>
 

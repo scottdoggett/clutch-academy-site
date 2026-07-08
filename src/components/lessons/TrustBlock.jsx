@@ -11,6 +11,7 @@ export default function TrustBlock() {
       </p>
       <p className="trust__line">Hundreds of successful lessons taught.</p>
       <p className="trust__line">Trusted by beginners across Toronto.</p>
+      <p className="trust__line">Online booking &amp; secure payment.</p>
       <a
         className="trust__link"
         href="https://maps.app.goo.gl/5Mi1EeB3jRs35Ezr5"

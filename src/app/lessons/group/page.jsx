@@ -75,6 +75,11 @@ export default function GroupLessonsPage() {
             clutch together in a fun, supportive environment — on real roads,
             with Sam coaching every turn at the wheel.
           </p>
+          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          <p className="lesson-hero__lead">
+            Most students arrive nervous — and leave wondering what they were
+            nervous about. Bringing a friend makes that even easier.
+          </p>
           <p className="lesson-hero__price">
             From $90
             <span className="lesson-hero__price-unit">+ HST</span>

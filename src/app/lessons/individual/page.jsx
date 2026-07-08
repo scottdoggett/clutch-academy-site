@@ -48,6 +48,11 @@ export default function IndividualLessonPage() {
             skill has gone rusty — and the easiest first introduction if
             you’ve never touched a stick shift.
           </p>
+          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          <p className="lesson-hero__lead">
+            Most students arrive nervous — and leave wondering what they were
+            nervous about.
+          </p>
           <p className="lesson-hero__price">
             $90
             <span className="lesson-hero__price-unit">/ hour + HST</span>
