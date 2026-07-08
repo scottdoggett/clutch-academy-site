@@ -1,0 +1,241 @@
+/* ---------- Intro ------------------------------------------------------ */
+.hub-intro__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  max-width: 900px;
+}
+
+.hub-intro__headline {
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+  font-weight: 800;
+}
+
+.hub-intro__lead {
+  color: var(--cream);
+  margin: 0;
+  font-size: var(--text-body-lg);
+  line-height: 1.55;
+  max-width: 58ch;
+}
+
+/* ---------- Package cards ---------------------------------------------- */
+.hub-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 1100px;
+}
+
+.hub-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  --card-red: var(--red-deep);
+  background: linear-gradient(
+    180deg,
+    var(--card-red) 0%,
+    color-mix(in srgb, var(--card-red) 85%, var(--black)) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition:
+    border-color var(--transition-reduced) ease,
+    box-shadow var(--transition-reduced) ease;
+}
+
+@media (hover: hover) {
+  .hub-card:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 8px 24px -10px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Same tiered-red family as the homepage teasers. */
+.hub-card--tier-1 {
+  --card-red: color-mix(in srgb, var(--red-primary) 30%, var(--red-deep));
+}
+
+.hub-card--tier-2 {
+  --card-red: var(--red-deep);
+}
+
+.hub-card--tier-3 {
+  --card-red: color-mix(in srgb, var(--red-dark) 45%, var(--red-deep));
+}
+
+.hub-card--tier-4 {
+  --card-red: color-mix(in srgb, var(--red-dark) 65%, var(--black));
+}
+
+.hub-card--featured {
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(200, 16, 46, 0.35),
+    0 14px 36px -12px rgba(0, 0, 0, 0.55);
+}
+
+.hub-card__badge {
+  position: absolute;
+  top: 0;
+  right: clamp(1rem, 2vw, 1.5rem);
+  transform: translateY(-50%);
+  background-color: var(--white);
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1px;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+
+.hub-card__tag {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.hub-card__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  line-height: 1.05;
+  letter-spacing: var(--letter-tight);
+  color: var(--white);
+  margin: 0;
+}
+
+.hub-card__who {
+  margin: 0;
+  color: var(--cream);
+  opacity: 0.85;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.hub-card__list {
+  list-style: none;
+  padding: 0.25rem 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hub-card__list li {
+  position: relative;
+  padding-left: 1.125rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--cream);
+}
+
+/* Bullet — small horizontal white slash, matching the old pricing grid. */
+.hub-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 0.5rem;
+  height: 2px;
+  background-color: var(--white);
+}
+
+.hub-card__price {
+  margin: auto 0 0;
+  padding-top: 0.875rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.hub-card__unit {
+  font-size: 0.35em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.hub-card__cta {
+  margin-top: 0.875rem;
+  text-align: center;
+}
+
+/* ---------- Help me choose ---------------------------------------------- */
+.hub-choose__inner {
+  max-width: 900px;
+}
+
+.hub-choose__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.hub-choose__item {
+  padding: 0.875rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--cream);
+  font-size: var(--text-body-lg);
+  line-height: 1.5;
+}
+
+.hub-choose__item:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hub-choose__item a,
+.hub-choose__aside a {
+  color: var(--white);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.hub-choose__item a:focus-visible,
+.hub-choose__aside a:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.hub-choose__aside {
+  margin: 1.25rem 0 0;
+  color: var(--cream);
+}
+
+/* ---------- Responsive --------------------------------------------------- */
+@media (max-width: 767px) {
+  .hub-cards {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+}
