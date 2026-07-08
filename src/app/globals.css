@@ -150,6 +150,25 @@ img {
   max-width: 48ch;
 }
 
+/* Stub-page link lists (lessons hub, 404) — legible on the brand red. */
+.placeholder-hero ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.placeholder-hero ul a {
+  color: var(--white);
+  font-size: var(--text-body-lg);
+  text-underline-offset: 3px;
+}
+
+.placeholder-hero ul a:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
 /* Reduced motion: neutralize any incidental CSS transitions/animations so
    the site is fully static for users who ask for it. */
 @media (prefers-reduced-motion: reduce) {

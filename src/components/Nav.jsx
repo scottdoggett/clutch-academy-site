@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation'
 import BookButton from './BookButton'
 import './Nav.css'
 
-// Target sitemap routes (08-overhaul-reference §1). The dedicated pages land
-// in Phase 3 — until then, non-home links resolve to the framework 404.
+// Top-level pages only (08-overhaul-reference §1); the lessons hub links out
+// to the four package pages, and the footer lists the full sitemap.
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Lessons', href: '/manual-driving-lessons' },

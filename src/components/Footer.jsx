@@ -1,11 +1,15 @@
 import Link from 'next/link'
 import './Footer.css'
 
-// Top-level pages only for now; Phase 3 fills out the full sitemap
-// (individual package pages) once those routes exist.
+// Full sitemap (08 §1) — the footer doubles as the site-wide internal-linking
+// block, so every route is listed, package pages included.
 const QUICK_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'Lessons', href: '/manual-driving-lessons' },
+  { label: 'Lessons Overview', href: '/manual-driving-lessons' },
+  { label: 'Individual Lesson', href: '/lessons/individual' },
+  { label: 'Manual Foundations', href: '/lessons/manual-foundations' },
+  { label: 'Manual Confidence', href: '/lessons/manual-confidence' },
+  { label: 'Group Lessons', href: '/lessons/group' },
   { label: 'About', href: '/about' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
