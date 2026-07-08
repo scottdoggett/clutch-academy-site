@@ -128,7 +128,7 @@ export default function Packages({
         <article className="package-card package-card--hero package-card--red-5">
           <span className="package-card__badge">Best Value</span>
           <div className="package-card__info">
-            <p className="package-card__tag">Private · 5-Pack</p>
+            <p className="package-card__tag">5-Lesson Pack</p>
             <h3>Highway &amp; City Confidence Drive</h3>
             <p className="package-card__desc">
               The Toronto Confidence Drive — city, highway, and rush-hour
