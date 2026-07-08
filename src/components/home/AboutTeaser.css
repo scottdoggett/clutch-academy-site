@@ -47,7 +47,6 @@
   letter-spacing: var(--letter-caps);
   text-transform: uppercase;
   color: var(--chrome);
-  opacity: 0.9;
   margin: 0;
 }
 
@@ -83,7 +82,6 @@
   letter-spacing: var(--letter-caps);
   text-transform: uppercase;
   color: var(--chrome);
-  opacity: 0.8;
 }
 
 .about__stat dd {

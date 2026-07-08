@@ -30,7 +30,6 @@
   letter-spacing: var(--letter-caps);
   text-transform: uppercase;
   color: var(--chrome);
-  opacity: 0.85;
 }
 
 /* ---------- Payment & cancellation ---------- */

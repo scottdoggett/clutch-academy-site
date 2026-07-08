@@ -45,7 +45,9 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  /* Solid cream for AA contrast on the brand red — white-alpha blends
+     inherit the red's low-luminance G/B channels and keep failing 4.5:1. */
+  color: var(--cream);
 }
 
 /* ---------- Who it's for / content blocks ------------------------------- */
@@ -83,7 +85,6 @@
 .lesson-block__note {
   margin: 1rem 0 0;
   color: var(--cream);
-  opacity: 0.8;
   font-size: var(--text-small);
 }
 
@@ -216,7 +217,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
 }
 
 .lesson-option .btn {

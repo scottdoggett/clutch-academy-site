@@ -111,7 +111,7 @@
   line-height: 1;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
 }
 
 .hub-card__title {
@@ -181,7 +181,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
 }
 
 .hub-card__cta {

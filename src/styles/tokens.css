@@ -5,7 +5,9 @@
   --red-dark: #4A0510;
   --white: #FFFFFF;
   --cream: #FDF8F2;
-  --chrome: #D9D9D9;
+  /* Lifted from #D9D9D9 for WCAG AA: 4.64:1 on --red-primary (the old value
+     measured 4.18:1, failing small-text contrast on eyebrows/labels). */
+  --chrome: #E4E4E4;
   --black: #0A0A0A;
 
   /* Typography — display (Plus Jakarta Sans) and body (Inter). The

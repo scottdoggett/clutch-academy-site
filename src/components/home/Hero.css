@@ -75,7 +75,8 @@
 .hero__caption {
   font-size: var(--text-small);
   color: var(--cream);
-  opacity: 0.75;
+  /* 0.9 keeps AA contrast on the brand red; 0.75 dipped below 4.5:1. */
+  opacity: 0.9;
   font-style: italic;
   text-align: right;
 }
