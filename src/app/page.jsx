@@ -1,4 +1,8 @@
-import BookButton from '../components/BookButton'
+import Hero from '../components/home/Hero'
+import Reviews from '../components/home/Reviews'
+import HowItWorks from '../components/home/HowItWorks'
+import PackagesTeaser from '../components/home/PackagesTeaser'
+import AboutTeaser from '../components/home/AboutTeaser'
 
 export const metadata = {
   description:
@@ -149,9 +153,9 @@ const SCHEMA_GRAPH = {
   ],
 }
 
-// Scaffold-only homepage. Phase 4 rebuilds the real sections (hero, reviews,
-// how-it-works, package teasers, about teaser) from the copy preserved in
-// src/components/sections/.
+// Conventional scrolling homepage (Phase 4): introduce Clutch Academy, build
+// trust, showcase reviews, introduce Sam, and route visitors to the dedicated
+// package pages — the detail lives there, not inline.
 export default function HomePage() {
   return (
     <>
@@ -159,14 +163,11 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_GRAPH) }}
       />
-      <section className="placeholder-hero" aria-labelledby="hero-heading">
-        <h1 id="hero-heading">Manual Driving Lessons in Toronto</h1>
-        <p>
-          One-on-one manual transmission lessons on real Toronto roads with
-          founder-instructor Sam Anthony. Book your lesson online.
-        </p>
-        <BookButton source="hero" className="btn btn--primary btn--xl" />
-      </section>
+      <Hero />
+      <Reviews />
+      <HowItWorks />
+      <PackagesTeaser />
+      <AboutTeaser />
     </>
   )
 }

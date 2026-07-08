@@ -1,0 +1,116 @@
+/* Fill most of the first viewport without pinning: a tall-but-natural block
+   that scrolls away normally. */
+.hero {
+  display: flex;
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100svh - var(--nav-height));
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: stretch;
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  margin: 0;
+}
+
+.hero__headline {
+  font-size: clamp(2.5rem, 5vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+  font-weight: 800;
+}
+
+.hero__subhead {
+  font-size: var(--text-body);
+  color: var(--cream);
+  margin: 0;
+  max-width: 48ch;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero__visual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 0;
+}
+
+.hero__photo {
+  width: 100%;
+  height: auto;
+  max-height: min(72vh, 640px);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+  display: block;
+}
+
+.hero__caption {
+  font-size: var(--text-small);
+  color: var(--cream);
+  opacity: 0.75;
+  font-style: italic;
+  text-align: right;
+}
+
+@media (max-width: 1023px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .hero__visual {
+    align-items: stretch;
+  }
+
+  .hero__caption {
+    text-align: left;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .hero__headline {
+    font-size: clamp(2.75rem, 13vw, 4.5rem);
+  }
+
+  .hero__subhead {
+    font-size: clamp(1.0625rem, 4.5vw, 1.25rem);
+  }
+
+  /* Keep mobile above-the-fold lean: copy + CTAs, no photo (matches the
+     pre-overhaul behavior). */
+  .hero__visual {
+    display: none;
+  }
+}

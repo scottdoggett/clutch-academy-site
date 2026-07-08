@@ -17,7 +17,7 @@ export default function AboutPage() {
       lede="Founded by instructor Sam Anthony, Clutch Academy teaches manual
         transmission driving one-on-one, on real Toronto roads — calm, patient,
         and judgment-free."
-      source="about"
+      source="about_page"
     />
   )
 }

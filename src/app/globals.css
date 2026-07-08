@@ -126,8 +126,75 @@ img {
   outline-offset: 2px;
 }
 
-/* Scaffold-only homepage hero; replaced when Phase 4 rebuilds the homepage
-   sections. Clears the fixed nav via --nav-height like every section did. */
+/* ---------- Page sections (conventional scrolling layout) -------------
+   Replaces the gear-section wrappers: plain blocks in document flow with
+   consistent padding. Only the first section clears the fixed nav. */
+.section {
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 4rem);
+}
+
+.section__inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section--first {
+  padding-top: calc(var(--nav-height) + clamp(1.5rem, 4vw, 3rem));
+}
+
+/* ---------- Section headers (shared treatment, ported from the gear
+   layout so every home section keeps its established type hierarchy) --- */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  max-width: 60ch;
+}
+
+.section-header--center {
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header__eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  margin: 0;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.section-header__lead {
+  font-size: var(--text-body);
+  color: var(--cream);
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .section-header h2 {
+    font-size: clamp(1.625rem, 7vw, 2.25rem);
+  }
+
+  .section-header__lead {
+    font-size: var(--text-small);
+  }
+}
+
+/* Stub-page hero for the Phase 3 route placeholders (About, FAQ, packages…);
+   each gets replaced as Phases 5-7 land its real content. Clears the fixed
+   nav via --nav-height. */
 .placeholder-hero {
   min-height: 70vh;
   display: flex;
