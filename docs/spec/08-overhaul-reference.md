@@ -1,5 +1,21 @@
 # Clutch Academy — Overhaul Reference
 
+> ✅ **BUILD STATUS (July 9, 2026)** — the sitemap in §1 is fully built; the
+> content specs in §2 are implemented (with PENDING/BLOCKED markers in code
+> where §7 inputs are still owed); §3 pricing: the site deliberately shows the
+> **old** prices with new package names until the Aug-1 switch; §5 carry-over
+> is complete and `sitemap.xml` is now multi-URL. The §6 migration is done —
+> treat §6 as history. **Every ❓ and 📎 in §7 is still open.** Notable
+> deltas from this doc as written:
+> - The per-CTA `source` tags were extended to: `nav`, `announcement`,
+>   `hero`, `about` (homepage teaser), `about_page`, `lessons_overview`,
+>   `packages_single`, `packages_3pack`, `packages_confidence_5pack`,
+>   `packages_group` (+ historical `packages_group_1hr`/`_2hr` on the group
+>   option cards), `faq`, `contact`. `reverse` retired.
+> - The FAQ array's single source is now `src/lib/faqs.js` (renders /faq,
+>   generates its JSON-LD, feeds package-page subsets and /contact).
+> Current-state authority: **`09-handoff-status.md`**.
+
 Companion to `07-overhaul-build-plan.md`. The build steps point here for the "what" (sitemap, content, pricing, SEO, migration, open decisions). Tags: ✅ decided · 🟡 recommended · ❓ open · 📎 pending asset.
 
 ---

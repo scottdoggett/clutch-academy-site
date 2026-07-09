@@ -1,5 +1,14 @@
 # Clutch Academy — Overhaul Build Plan
 
+> ✅ **BUILD STATUS (July 9, 2026)** — most of this plan has been executed on
+> the `overhaul` branch. Per-phase: **0 partial** (open decisions unresolved),
+> **1–8 done**, **9 mostly absorbed** into the page builds (sitemap expanded
+> in Phase 12; keyword/slug lock + aggregateRating decision outstanding),
+> **10 NOT run** (the Aug-1 switch — full checklist in `09` §7), **11 code
+> side done** (account-side Ads work pending, see `docs/google-ads-mapping.md`),
+> **12 QA done, merge/deploy deliberately paused** (runbook in `09` §8).
+> Authoritative current-state doc: **`09-handoff-status.md`**.
+
 **Status:** Supersedes the single-page assumptions in `01`–`06`. Where this file and the older spec files disagree, this file and the current code win.
 
 This is the ordered development plan for rebuilding Clutch Academy from a single-page brochure into a conventional, SEO-focused, multi-page site. 

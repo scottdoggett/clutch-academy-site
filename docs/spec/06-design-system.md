@@ -68,7 +68,7 @@ The screen acts as a virtual gearbox. Each section's content is anchored to the 
 | `--red-dark` | `#4A0510` | Footer background — visually exits the gear-red field |
 | `--white` | `#FFFFFF` | Primary text, gear numbers, borders |
 | `--cream` | `#FDF8F2` | 🟡 Optional softer white for long body copy (pure white on red can feel harsh at small sizes) |
-| `--chrome` | `#D9D9D9` | Sparingly used metallic accent — small detail lines, dividers |
+| `--chrome` | `#E4E4E4` | Sparingly used metallic accent — small detail lines, dividers, eyebrow labels. **Changed from `#D9D9D9` in the July 2026 QA pass**: the old value measured 4.18:1 on `--red-primary`, failing WCAG AA for small text; `#E4E4E4` measures 4.64:1. Related rule learned in that pass: white-alpha or opacity-faded text on the saturated red fails AA — use solid `--cream` for muted text on red. |
 | `--black` | `#0A0A0A` | Footer text, deep shadows |
 
 🟡 The red hex is a recommendation, not a lock. The client's marketing package may specify a different red — if so, replace `--red-primary` and derive the other shades proportionally (deep = ~60% luminance of primary; dark = ~30%).

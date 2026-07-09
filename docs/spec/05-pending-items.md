@@ -1,4 +1,4 @@
-> ⚠️ **SUPERSEDED — July 2026 overhaul.** The **May 1, 2026** launch schedule and milestones below no longer apply; the overhaul is **sequenced, not dated** (see `07-overhaul-build-plan.md`). The current list of open decisions and pending assets lives in `08-overhaul-reference.md` §7. Payment is now **collected at booking**, not in person. Authoritative: `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
+> ⚠️ **SUPERSEDED — July 2026 overhaul.** The **May 1, 2026** launch schedule and milestones below no longer apply; the overhaul is **sequenced, not dated** (see `07-overhaul-build-plan.md`). The current list of open decisions and pending assets lives in `08-overhaul-reference.md` §7 and, with build-state context, **`09-handoff-status.md` §5**. Payment is now **collected at booking**, not in person. Many items below were since resolved (contact details, car, Calendly URL, GA4, hosting=Vercel, Meta/TikTok pixels added); do not work from this list. Authoritative: `09-handoff-status.md`, `07-overhaul-build-plan.md`, `08-overhaul-reference.md`, `CLAUDE.md`.
 
 # 05 — Pending Items & Open Decisions
 

@@ -2,9 +2,9 @@
 
 This folder contains the specification for the Clutch Academy website. It is written for AI coding agents building and iterating on the site.
 
-> ⚠️ **The site is undergoing a July 2026 overhaul: single-page → conventional multi-page on Next.js, SEO-focused, gear-shift animation removed.** The authoritative docs are **`07-overhaul-build-plan.md`** (ordered build steps) and **`08-overhaul-reference.md`** (sitemap, content, pricing, SEO, migration). Files `01`–`06` predate the overhaul and each carry a supersession notice — treat them as intent/history, not current direction. See `CLAUDE.md` at the repo root for the master summary.
+> ⚠️ **The July 2026 overhaul (single-page → multi-page Next.js) is BUILT but not yet merged/deployed.** Start with **`09-handoff-status.md`** for where the build actually is — phase status, git state, open flags, the Aug-1 pricing checklist, and the launch runbook. `07`/`08` remain the plan/reference; files `01`–`06` predate the overhaul and each carry a supersession notice — treat them as intent/history, not current direction. See `CLAUDE.md` at the repo root for the master summary.
 >
-> **Branch:** all overhaul work happens on the **`overhaul`** branch; `main` stays the live baseline.
+> **Branch:** all overhaul work lives on the **`overhaul`** branch (10 commits unpushed at handoff); `main` still holds the old live Vite site.
 
 ## Quick Facts
 
@@ -26,14 +26,17 @@ Load the file(s) relevant to your current task. Start with the two overhaul docs
 
 | File | Contains | Status |
 |---|---|---|
-| `07-overhaul-build-plan.md` | Ordered build phases for the multi-page rebuild | **Authoritative** |
-| `08-overhaul-reference.md` | Sitemap/routes, per-page content, pricing, SEO targets, analytics carry-over, Vite→Next migration map, open decisions | **Authoritative** |
+| `09-handoff-status.md` | **Where the build actually is**: phase status, git state, flags, Aug-1 checklist, launch runbook | **Authoritative for current state — read first** |
+| `07-overhaul-build-plan.md` | Ordered build phases for the multi-page rebuild (status banner at top) | Authoritative plan — mostly executed |
+| `08-overhaul-reference.md` | Sitemap/routes, per-page content, pricing, SEO targets, analytics carry-over, Vite→Next migration map, open decisions | Authoritative reference (status banner notes deltas) |
+| `../google-ads-mapping.md` | Google Ads work to apply in the Ads UI: conversion action, final URLs, sitelinks, Aug-1 price assets | Pending application (account-side) |
 | `01-project-brief.md` | Business context, audience, positioning, voice | Intent still valid; see notice |
 | `02-site-architecture.md` | Old single-page gear-shift architecture | Superseded (see `08` §1) |
 | `03-content-spec.md` | Per-section copy direction, FAQ | Partially superseded (see `08` §2) |
 | `04-technical-spec.md` | Old React/Vite/GSAP stack & integrations | Superseded on stack (see `08` §6) |
-| `05-pending-items.md` | Old open decisions + May-1 schedule | Superseded (see `08` §7) |
-| `06-design-system.md` | Color, typography, layout, animation system | Visual language valid; animation removed |
+| `05-pending-items.md` | Old open decisions + May-1 schedule | Superseded (current open items: `08` §7 + `09` §5) |
+| `06-design-system.md` | Color, typography, layout, animation system | Visual language valid; animation removed; `--chrome` updated for WCAG AA |
+| `Clutch_Academy_Website_Revamp_Brief_July2026.pdf` | The client brief driving the overhaul (verbatim copy sources, trust elements, timeline) | Source document |
 
 ## Decision State Legend
 
