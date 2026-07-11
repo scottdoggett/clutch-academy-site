@@ -5,7 +5,7 @@ const STEPS = [
   {
     n: 1,
     title: 'Pick a package',
-    desc: 'Choose the single lesson or 3-pack that fits your goals.',
+    desc: 'Choose the lesson or package that fits your goals.',
   },
   {
     n: 2,
