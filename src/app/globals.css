@@ -9,6 +9,13 @@
   padding: 0;
 }
 
+/* In-page anchors glide instead of jumping — motion-gated. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 html {
   font-family: var(--font-body);
   font-size: var(--text-body);

@@ -1,26 +1,167 @@
 /* ---------- Intro ------------------------------------------------------ */
+/* Hero is capped just short of the viewport so the darker packages band
+   always peeks above the fold — the scroll cue points at it. */
+.hub-intro {
+  display: flex;
+  flex-direction: column;
+  min-height: min(88vh, 820px);
+  min-height: min(88svh, 820px);
+}
+
 .hub-intro__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(2rem, 4vh, 3rem);
+}
+
+.hub-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 360px);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.hub-intro__copy {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: flex-start;
-  max-width: 900px;
 }
 
 .hub-intro__headline {
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
-  line-height: 0.98;
+  font-size: clamp(2.25rem, 4.2vw, 3.5rem);
+  line-height: 1.04;
   letter-spacing: var(--letter-tight);
   margin: 0;
   font-weight: 800;
+  max-width: 18ch;
 }
 
 .hub-intro__lead {
   color: var(--cream);
   margin: 0;
-  font-size: var(--text-body-lg);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 56ch;
+}
+
+/* Requirements line — utility register, quieter than the lead. */
+.hub-intro__note {
+  margin: 0;
+  padding-left: 0.875rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.35);
+  color: var(--chrome);
+  font-size: 0.9375rem;
   line-height: 1.55;
-  max-width: 58ch;
+  max-width: 52ch;
+}
+
+.hub-intro__ctas {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+/* Scroll cue — labelled anchor into the packages band. */
+.hub-intro__scroll {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  color: var(--cream);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+}
+
+.hub-intro__scroll svg {
+  width: 1.125rem;
+  height: auto;
+}
+
+.hub-intro__scroll:hover {
+  color: var(--white);
+}
+
+.hub-intro__scroll:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hub-intro__scroll svg {
+    animation: hub-scroll-bob 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hub-scroll-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(4px);
+    }
+  }
+}
+
+/* ---------- Hero media placeholder --------------------------------------- */
+/* Dashed frame = honest "asset pending" state, styled enough not to look
+   broken. Swaps for the real lesson photo when it lands (see PENDING). */
+.hub-intro__media {
+  margin: 0;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.16);
+  border: 1.5px dashed rgba(255, 255, 255, 0.35);
+  color: var(--chrome);
+}
+
+.hub-intro__media svg {
+  width: 2.5rem;
+  height: auto;
+  opacity: 0.7;
+}
+
+.hub-intro__media figcaption {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+}
+
+/* ---------- Packages band ----------------------------------------------- */
+/* Darker ground than the hero: its top edge is the "there's more" signal
+   that peeks above the fold. */
+.hub-packages {
+  background-color: color-mix(in srgb, var(--red-deep) 45%, var(--red-primary));
+}
+
+/* Page-scoped type correction: the global section h2 (4rem) overwhelms a
+   hub page; keep headings editorial, not billboard. */
+.hub-packages .section-header h2,
+.hub-choose .section-header h2 {
+  font-size: clamp(1.75rem, 3.2vw, 2.625rem);
+  line-height: 1.05;
+}
+
+.hub-packages .section-header h2 {
+  scroll-margin-top: calc(var(--nav-height) + 1.25rem);
 }
 
 /* ---------- Package cards ---------------------------------------------- */
@@ -101,6 +242,28 @@
   border-radius: 1px;
   box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
   white-space: nowrap;
+}
+
+.hub-card__top {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+/* The card's position on the hero shift gate. */
+.hub-card__gear {
+  width: 1.625rem;
+  height: 1.625rem;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1;
 }
 
 .hub-card__tag {
@@ -203,11 +366,16 @@
 }
 
 .hub-choose__item {
-  padding: 0.875rem 0;
+  padding: 0.875rem 0.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   color: var(--cream);
-  font-size: var(--text-body-lg);
-  line-height: 1.5;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  transition: background-color var(--transition-reduced) ease;
+}
+
+.hub-choose__item:hover {
+  background-color: rgba(0, 0, 0, 0.12);
 }
 
 .hub-choose__item:last-child {
@@ -230,12 +398,28 @@
 .hub-choose__aside {
   margin: 1.25rem 0 0;
   color: var(--cream);
+  font-size: 0.9375rem;
 }
 
 /* ---------- Responsive --------------------------------------------------- */
+@media (max-width: 899px) {
+  .hub-intro__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .gate__plate {
+    max-width: 300px;
+  }
+}
+
 @media (max-width: 767px) {
   .hub-cards {
     grid-template-columns: 1fr;
     gap: 0.875rem;
+  }
+
+  .hub-intro__headline {
+    font-size: clamp(2rem, 8vw, 2.5rem);
   }
 }

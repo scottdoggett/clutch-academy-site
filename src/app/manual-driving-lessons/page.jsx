@@ -107,27 +107,84 @@ export default function LessonsOverviewPage() {
         aria-labelledby="hub-heading"
       >
         <div className="section__inner hub-intro__inner">
-          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
-          <p className="section-header__eyebrow">
-            Manual · Stick Shift · Standard — same lessons
-          </p>
-          <h1 id="hub-heading" className="hub-intro__headline">
-            Stick Shift Lessons in Toronto
-          </h1>
-          <p className="hub-intro__lead">
-            Every Clutch Academy lesson is taught one-on-one by Sam, on real
-            Toronto roads — not a simulator, not an empty lot for an hour.
-            Whether you want to learn manual in Toronto from zero or just
-            shake the rust off, there’s a package shaped to where you’re
-            starting from.
-          </p>
-          <p className="hub-intro__lead">
-            You’ll need a valid G2 or G licence, and you book and pay securely
-            online — pick a time, and the seat is yours.
-          </p>
-          <BookButton source="lessons_overview" className="btn btn--primary">
-            Book a Lesson
-          </BookButton>
+          <div className="hub-intro__grid">
+            <div className="hub-intro__copy">
+              <p className="section-header__eyebrow">
+                Manual · Stick Shift · Standard — same lessons
+              </p>
+              <h1 id="hub-heading" className="hub-intro__headline">
+                Manual Driving Lesson Packages in Toronto
+              </h1>
+              <p className="hub-intro__lead">
+                Every Clutch Academy lesson is taught one-on-one by Sam, on
+                real Toronto roads — not a simulator, not an empty lot for an
+                hour. Whether you want to learn manual in Toronto from zero or
+                just shake the rust off, there’s a package shaped to where
+                you’re starting from.
+              </p>
+              <p className="hub-intro__note">
+                You’ll need a valid G2 or G licence, and you book and pay
+                securely online — pick a time, and the seat is yours.
+              </p>
+              <div className="hub-intro__ctas">
+                <BookButton
+                  source="lessons_overview"
+                  className="btn btn--primary"
+                >
+                  Book a Lesson
+                </BookButton>
+              </div>
+            </div>
+            {/* PENDING: real lesson photo for this page (08 §7 pending
+                assets) — visible placeholder frame until the asset lands. */}
+            <figure className="hub-intro__media" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <rect
+                  x="2.5"
+                  y="4.5"
+                  width="19"
+                  height="15"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <circle cx="8.5" cy="10" r="1.75" fill="currentColor" />
+                <path
+                  d="M4.5 17.5l4.5-4 3.5 3 4-4.5 3 3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <figcaption>Photo coming soon</figcaption>
+            </figure>
+          </div>
+          <a
+            className="hub-intro__scroll"
+            href="#hub-packages-heading"
+            aria-label="Scroll to the four packages"
+          >
+            <span>Four ways to learn</span>
+            <svg
+              viewBox="0 0 16 9"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M1 1l7 6 7-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
         </div>
       </section>
 
@@ -155,7 +212,14 @@ export default function LessonsOverviewPage() {
                 }`}
               >
                 {p.badge && <span className="hub-card__badge">{p.badge}</span>}
-                <p className="hub-card__tag">{p.tag}</p>
+                <div className="hub-card__top">
+                  {/* Chip number = the card's position on the hero shift
+                      gate, so the two indexes read as one system. */}
+                  <span className="hub-card__gear" aria-hidden="true">
+                    {p.tier}
+                  </span>
+                  <p className="hub-card__tag">{p.tag}</p>
+                </div>
                 <h3 className="hub-card__title">{p.title}</h3>
                 <p className="hub-card__who">{p.who}</p>
                 <ul className="hub-card__list">
