@@ -10,6 +10,13 @@
   --chrome: #E4E4E4;
   --black: #0A0A0A;
 
+  /* Google-rating badge (TrustBlock / reviews). Star gold is Google's own
+     review-star colour; both star tones are decorative (aria-hidden).
+     --ink-muted is body text on cream surfaces — 7.1:1 on --cream. */
+  --star-gold: #FBBC04;
+  --star-track: #DADCE0;
+  --ink-muted: #55504B;
+
   /* Typography — display (Plus Jakarta Sans) and body (Inter). The
      --font-jakarta / --font-inter variables are set on <html> by next/font
      in app/layout.jsx (self-hosted, zero-CLS); the named families remain as

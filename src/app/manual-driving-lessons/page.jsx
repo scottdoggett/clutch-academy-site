@@ -182,11 +182,8 @@ export default function LessonsOverviewPage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      <section className="section" aria-label="Student trust">
-        <div className="section__inner">
-          <TrustBlock />
-        </div>
-      </section>
+      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
+      <TrustBlock />
 
       {/* ---------- Help me choose ---------- */}
       <section

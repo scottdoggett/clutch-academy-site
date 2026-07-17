@@ -72,11 +72,8 @@ export default function FaqPage() {
         </div>
       </section>
 
-      <section className="section" aria-label="Student trust">
-        <div className="section__inner">
-          <TrustBlock />
-        </div>
-      </section>
+      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
+      <TrustBlock />
 
       <section className="section" aria-labelledby="faq-cta-heading">
         <div className="section__inner lesson-next">

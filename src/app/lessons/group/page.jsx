@@ -138,11 +138,8 @@ export default function GroupLessonsPage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      <section className="section" aria-label="Student trust">
-        <div className="section__inner">
-          <TrustBlock />
-        </div>
-      </section>
+      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
+      <TrustBlock />
 
       {/* ---------- Real reviews ---------- */}
       <section className="section" aria-labelledby="quotes-heading">

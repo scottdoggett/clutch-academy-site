@@ -212,11 +212,8 @@ export default function AboutPage() {
       {/* PENDING: dedicated student testimonials from Sam (08 §7 — real
           quotes only, no invented reviews). When they land, they slot in
           here as a quote strip alongside the rating block. */}
-      <section className="section" aria-label="Student trust">
-        <div className="section__inner">
-          <TrustBlock />
-        </div>
-      </section>
+      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
+      <TrustBlock />
 
       {/* ---------- Route out to the package pages ---------- */}
       <section

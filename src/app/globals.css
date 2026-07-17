@@ -126,6 +126,19 @@ img {
   outline-offset: 2px;
 }
 
+/* Screen-reader-only text: visually removed, still announced. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Page sections (conventional scrolling layout) -------------
    Replaces the gear-section wrappers: plain blocks in document flow with
    consistent padding. Only the first section clears the fixed nav. */

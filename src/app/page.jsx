@@ -3,6 +3,7 @@ import Reviews from '../components/home/Reviews'
 import HowItWorks from '../components/home/HowItWorks'
 import PackagesTeaser from '../components/home/PackagesTeaser'
 import AboutTeaser from '../components/home/AboutTeaser'
+import googleReviews from '../lib/googleReviews'
 
 export const metadata = {
   description:
@@ -89,10 +90,14 @@ const SCHEMA_GRAPH = {
         { '@type': 'City', name: 'Mississauga', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
         { '@type': 'City', name: 'Vaughan', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
       ],
+      // Wired to the shared Business Profile numbers module so the markup can
+      // never drift from the visible badges. Whether aggregateRating should
+      // exist at all is still the open flag in 09 §5.3 — this only keeps it
+      // accurate while it does.
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: '5.0',
-        reviewCount: 15,
+        ratingValue: googleReviews.rating.toFixed(1),
+        reviewCount: googleReviews.reviewCount,
         bestRating: 5,
         worstRating: 1,
       },
