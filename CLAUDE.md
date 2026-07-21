@@ -20,7 +20,7 @@ Where docs disagree: `09` wins on *current state*, `07`/`08` win on *target dire
 - **All 9 routes are built with real content**: `/`, `/about`, `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`, `/faq`, `/contact`, plus a custom 404.
 - Phases 2–8 of the build plan are **done**; Phase 12 QA has **run** (Lighthouse 100 accessibility / 100 SEO on every route; crawlability, redirects, links, consent all verified). Phase 9 was largely absorbed into the page builds; **Phase 10 (Aug-1 pricing switch) has NOT run**; Phase 11's account-side Ads work is pending (see `docs/google-ads-mapping.md`).
 - **Old pricing + new package names is the deliberate current state** — the announcement banner (auto-hides Aug 1) explains the upcoming change. Do not "fix" prices to the new offering before the switch.
-- **10 commits on `overhaul` are unpushed**; the working tree carries one intentional uncommitted change (Scott's own deletion of `docs/spec/coding-agent-prompts.md` — keep excluding it from commits: `git add -A -- . ':!docs/spec/coding-agent-prompts.md'`).
+- **`overhaul` is pushed** — `origin/overhaul` is in sync as of July 21, 2026. (`docs/spec/coding-agent-prompts.md` was deleted for good in the July 21 cleanup commit; the old note about excluding its deletion from commits no longer applies.)
 
 ## Stack & architecture
 
@@ -30,7 +30,7 @@ Where docs disagree: `09` wins on *current state*, `07`/`08` win on *target dire
 - **Calendly** popup via `src/hooks/useCalendly.js` — keep the iOS Safari mobile-host fix; every CTA goes through `src/components/BookButton.jsx` with a per-placement `source` tag (full tag map in `09` §6).
 - **FAQ single source**: `src/lib/faqs.js` renders `/faq`, generates its FAQPage JSON-LD, feeds package-page subsets, and supplies `/contact` cancellation copy. Never fork FAQ copy.
 - **Redirects/rewrites/headers** live in `next.config.mjs` (`vercel.json` deleted): `.com`/`www` → apex, `/booked` + `/privacy` rewrites, cache headers.
-- `src/components/sections/` is **dead code kept as copy reference** (old gear sections; they import deleted modules — never import them).
+- `src/components/sections/` (old gear-section components) and `src/components/PageStub.jsx` were **removed in the July 21, 2026 cleanup**. The old section/card copy is recoverable via `git log -- 'src/components/sections/*'` if ever needed.
 
 ## Conventions
 

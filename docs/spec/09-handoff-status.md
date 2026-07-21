@@ -25,9 +25,9 @@ switch is Phase 10, not yet run).
 | Fact | Value |
 |---|---|
 | Working branch | `overhaul` |
-| `origin/overhaul` | at `fe863f6` (Phase 2 only) — **10 local commits are unpushed** |
+| `origin/overhaul` | **in sync with local `overhaul`** (as of July 21, 2026 — the "10 unpushed commits" state at handoff has since been pushed) |
 | `main` | pre-overhaul live Vite site; never touched during the rebuild |
-| Working tree | one uncommitted change: `docs/spec/coding-agent-prompts.md` **deleted by Scott himself** — deliberately left out of every commit. Keep excluding it: `git add -A -- . ':!docs/spec/coding-agent-prompts.md'` |
+| Working tree | no handoff-era quirks remain — `docs/spec/coding-agent-prompts.md` (deleted-but-uncommitted at handoff, later restored) was **deleted for good in the July 21, 2026 cleanup commit** |
 | node_modules | **4,490 tracked node_modules files were untracked in `fe863f6`** (they predated .gitignore). Never re-add them. This is why the Phase 2 commit shows ~1.16M deletions |
 
 Commits on `overhaul` beyond `main` (oldest → newest): docs/plan (`16a0fd8`,
@@ -35,7 +35,10 @@ Commits on `overhaul` beyond `main` (oldest → newest): docs/plan (`16a0fd8`,
 (`0cfee2a`), Phase 4 homepage (`db8e531`), Phase 5 About (`0d6648a`), Phase 5
 hub (`17baba9`), Phase 6a individual (`18bfbad`), Phases 6b–d (`61e40ed`),
 Phase 7 FAQ+Contact (`0ed1e4b`), Phase 8 trust (`bd0abf2`), Phase 11 Ads doc
-(`366bc93`), Phase 12 QA fixes (`193fe37`).
+(`366bc93`), Phase 12 QA fixes (`193fe37`). Post-handoff: docs refresh
+(`2bf0456`), Google rating strip + shared review module (`b563e14`), hub page
+redesign (`52d94a2`), `/lessons/individual` redesign (`9fd607d`), repo cleanup
+— dead `sections/` removal + doc refresh (July 21, 2026).
 
 ## 3. Phase-by-phase status (against `07-overhaul-build-plan.md`)
 
@@ -112,11 +115,10 @@ preview build, and anything requiring the production domain.
 
 ## 6. Things that will confuse you (repo quirks)
 
-- **`src/components/sections/` is dead code kept on purpose.** The old
-  gear-section components still import `gsap` and the deleted `GearSection` —
-  they are unimported, excluded from the build, and exist only as copy
-  reference (Packages.css still has legacy 0.6-alpha colors — irrelevant).
-  Safe to delete once Phase 10 lands and nobody needs the old card copy.
+- **`src/components/sections/` was removed in the July 21, 2026 cleanup**
+  (along with `PageStub.jsx` and the unused `public/logo3.svg`). The old
+  gear-section components had been kept as copy reference; that copy is
+  recoverable from git history: `git log -- 'src/components/sections/*'`.
 - **`--chrome` token changed** `#D9D9D9` → `#E4E4E4` (Phase 12): the old value
   failed WCAG AA (4.18:1) on the brand red. Related pattern: **white-alpha or
   opacity-faded text on the saturated red fails AA** even when grey-blend math
@@ -176,7 +178,7 @@ launch slips **past** Aug 1, flip before merging.
 
 ## 8. Launch runbook (what "go live" actually takes from here)
 
-1. `git push` the `overhaul` branch (10 unpushed commits).
+1. `git push` the `overhaul` branch if any local commits are unpushed (in sync as of July 21, 2026).
 2. **Check the Vercel dashboard**: framework preset must be Next.js (the
    project previously built Vite with `dist` output — a stale override will
    break the deploy). Confirm the preview URL builds.

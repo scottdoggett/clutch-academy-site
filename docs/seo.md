@@ -1,5 +1,7 @@
 # SEO Reference — Clutch Academy
 
+> ⚠️ **SUPERSEDED (July 2026 overhaul).** This doc is the operational manual for the **old single-page Vite site** (`main` branch): prerender scripts, `index.html` meta splicing, `scripts/generate-images.mjs`, and `src/components/sections/` are all gone from the `overhaul` branch — SEO there is handled natively by Next.js (per-route metadata, `src/lib/faqs.js` JSON-LD, `next.config.mjs` redirects). For current state see `docs/spec/09-handoff-status.md` and `docs/spec/08-overhaul-reference.md` §"SEO". Still-durable facts in here: keyword targets, analytics/pixel IDs and event taxonomy, the Calendly double-count warning (Sam fires booking completions from Calendly's own integrations — never fire them from the site), and `public/logo2.svg` as the source artwork for `og-image.png` and the icon set.
+
 This doc explains how SEO is wired on this site, what every file does, where to make changes, and how to verify things. It's the operational manual for the implementation that landed in May 2026.
 
 The decision-state symbols match the rest of `docs/spec/`: ✅ decided / shipped, 🟡 default that can change, 📎 waiting on an asset.
