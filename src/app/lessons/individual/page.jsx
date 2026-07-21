@@ -16,6 +16,57 @@ export const metadata = {
 // 75 min · $109 + HST.
 const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 
+// "Who it's for" scenarios — the same four situations the old bullet list
+// described, each with a name and a line icon a visitor can self-identify
+// with at a glance. Icons inherit stroke styling from the svg wrapper.
+const WHO = [
+  {
+    label: 'The returning driver',
+    text: 'You learned manual years ago and want the muscle memory back before it matters.',
+    icon: (
+      // Loop arrow — the skill coming back around.
+      <>
+        <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+        <path d="M21 3v6h-6" />
+      </>
+    ),
+  },
+  {
+    label: 'The Europe trip',
+    text: 'You’re renting a car in Europe this summer — where manual is often the default — and want to arrive ready.',
+    icon: (
+      // Paper plane.
+      <>
+        <path d="M22 2 11 13" />
+        <path d="M22 2 15 22l-4-9-9-4Z" />
+      </>
+    ),
+  },
+  {
+    label: 'The total beginner',
+    text: 'You’ve never driven stick and want a real first introduction before committing to a package.',
+    icon: (
+      // Learner's L-plate.
+      <>
+        <rect x="3.5" y="3.5" width="17" height="17" rx="2" />
+        <path d="M10 8v8h5" />
+      </>
+    ),
+  },
+  {
+    label: 'The one skill to fix',
+    text: 'You have a specific skill to iron out — hill starts, smoother shifting, downshifting — and one focused hour will do it.',
+    icon: (
+      // Target.
+      <>
+        <circle cx="12" cy="12" r="8.5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="12" cy="12" r="0.75" fill="currentColor" />
+      </>
+    ),
+  },
+]
+
 // Real quotes from the Google-review set, chosen because both describe a
 // first/single lesson experience.
 const QUOTES = [
@@ -31,7 +82,7 @@ const QUOTES = [
 
 export default function IndividualLessonPage() {
   return (
-    <>
+    <div className="lesson-page">
       {/* ---------- Hero ---------- */}
       <section
         className="section section--first"
@@ -49,7 +100,7 @@ export default function IndividualLessonPage() {
             you’ve never touched a stick shift.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
-          <p className="lesson-hero__lead">
+          <p className="lesson-hero__pull">
             Most students arrive nervous — and leave wondering what they were
             nervous about.
           </p>
@@ -70,24 +121,27 @@ export default function IndividualLessonPage() {
             <p className="section-header__eyebrow">Who it’s for</p>
             <h2 id="who-heading">Best for refreshers and first tastes</h2>
           </header>
-          <ul className="lesson-block__list">
-            <li>
-              You learned manual years ago and want the muscle memory back
-              before it matters.
-            </li>
-            <li>
-              You’re renting a car in Europe this summer — where manual is
-              often the default — and want to arrive ready.
-            </li>
-            <li>
-              You’ve never driven stick and want a real first introduction
-              before committing to a package.
-            </li>
-            <li>
-              You have a specific skill to iron out — hill starts, smoother
-              shifting, downshifting — and one focused hour will do it.
-            </li>
-          </ul>
+          <div className="lesson-who">
+            {WHO.map((w) => (
+              <article key={w.label} className="lesson-who__item">
+                <svg
+                  className="lesson-who__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  {w.icon}
+                </svg>
+                <h3 className="lesson-who__label">{w.label}</h3>
+                <p className="lesson-who__text">{w.text}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -177,6 +231,6 @@ export default function IndividualLessonPage() {
           </p>
         </div>
       </section>
-    </>
+    </div>
   )
 }
