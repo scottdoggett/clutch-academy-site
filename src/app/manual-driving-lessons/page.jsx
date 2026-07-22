@@ -143,7 +143,7 @@ export default function LessonsOverviewPage() {
                 src={lessonsCar}
                 alt="A grey manual-transmission hatchback like the one used for Clutch Academy lessons"
                 priority
-                sizes="(max-width: 767px) 90vw, 360px"
+                sizes="(max-width: 767px) 90vw, 460px"
               />
             </figure>
           </div>

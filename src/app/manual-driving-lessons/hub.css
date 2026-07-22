@@ -18,7 +18,7 @@
 
 .hub-intro__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 360px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 460px);
   gap: clamp(2.5rem, 6vw, 6rem);
   align-items: center;
 }
@@ -120,7 +120,7 @@
 .hub-intro__media {
   margin: 0;
   width: 100%;
-  max-width: 360px;
+  max-width: 460px;
 }
 
 .hub-intro__photo {
@@ -130,7 +130,6 @@
   object-fit: cover;
   display: block;
   background-color: var(--white);
-  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
 }
 
