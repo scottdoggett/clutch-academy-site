@@ -1,6 +1,8 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
 import TrustBlock from '../../components/lessons/TrustBlock'
+import lessonsCar from '../../../public/lessons-car.png'
 import './hub.css'
 
 export const metadata = {
@@ -135,33 +137,14 @@ export default function LessonsOverviewPage() {
                 </BookButton>
               </div>
             </div>
-            {/* PENDING: real lesson photo for this page (08 §7 pending
-                assets) — visible placeholder frame until the asset lands. */}
-            <figure className="hub-intro__media" aria-hidden="true">
-              <svg
-                viewBox="0 0 24 24"
-                focusable="false"
-              >
-                <rect
-                  x="2.5"
-                  y="4.5"
-                  width="19"
-                  height="15"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-                <circle cx="8.5" cy="10" r="1.75" fill="currentColor" />
-                <path
-                  d="M4.5 17.5l4.5-4 3.5 3 4-4.5 3 3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <figcaption>Photo coming soon</figcaption>
+            <figure className="hub-intro__media">
+              <Image
+                className="hub-intro__photo"
+                src={lessonsCar}
+                alt="A grey manual-transmission hatchback like the one used for Clutch Academy lessons"
+                priority
+                sizes="(max-width: 767px) 90vw, 360px"
+              />
             </figure>
           </div>
           <a

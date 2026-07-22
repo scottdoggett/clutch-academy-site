@@ -113,36 +113,25 @@
   }
 }
 
-/* ---------- Hero media placeholder --------------------------------------- */
-/* Dashed frame = honest "asset pending" state, styled enough not to look
-   broken. Swaps for the real lesson photo when it lands (see PENDING). */
+/* ---------- Hero media --------------------------------------------------- */
+/* Framed shot of the training car. Studio white/grey backdrop, so no red
+   multiply tint (it would stain the background) — just the site's standard
+   photo frame (border + rounded corners), mirroring .hero__photo. */
 .hub-intro__media {
   margin: 0;
   width: 100%;
-  max-width: 400px;
-  aspect-ratio: 4 / 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background-color: rgba(0, 0, 0, 0.16);
-  border: 1.5px dashed rgba(255, 255, 255, 0.35);
-  color: var(--chrome);
+  max-width: 360px;
 }
 
-.hub-intro__media svg {
-  width: 2.5rem;
+.hub-intro__photo {
+  width: 100%;
   height: auto;
-  opacity: 0.7;
-}
-
-.hub-intro__media figcaption {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background-color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
 }
 
 /* ---------- Packages band ----------------------------------------------- */
