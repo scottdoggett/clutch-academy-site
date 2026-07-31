@@ -20,12 +20,12 @@ export default function Packages({
       <div className="packages">
         <article className="package-card package-card--red-1">
           <div className="package-card__info">
-            <p className="package-card__tag">Private · 1 Hour</p>
-            <h3>1hr Individual Manual Lesson</h3>
+            <p className="package-card__tag">Private · 75 Minutes</p>
+            <h3>75min Individual Manual Lesson</h3>
             <p className="package-card__desc">Best for refreshers.</p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>90
-              <span className="package-card__unit">/hour</span>
+              <span className="package-card__currency">$</span>109
+              <span className="package-card__unit">/ 75 min</span>
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export default function Packages({
         </article>
 
         <article className="package-card package-card--featured package-card--red-2">
-          <span className="package-card__badge">Save $30</span>
+          <span className="package-card__badge">Save $28</span>
           <div className="package-card__info">
             <p className="package-card__tag">Private · 3 Lessons</p>
             <h3>Manual Foundations Package</h3>
@@ -52,7 +52,7 @@ export default function Packages({
               Full progression to road-confident.
             </p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>240
+              <span className="package-card__currency">$</span>299
               <span className="package-card__unit">/ 3 lessons</span>
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function Packages({
               Master manual driving in real-world conditions.
             </p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>400
+              <span className="package-card__currency">$</span>469
               <span className="package-card__unit">/ 5 lessons</span>
             </p>
           </div>
@@ -103,27 +103,27 @@ export default function Packages({
 
         <article className="package-card package-card--red-4">
           <div className="package-card__info">
-            <p className="package-card__tag">Group · 2 Hours</p>
-            <h3>2hr Group Manual Lesson</h3>
+            <p className="package-card__tag">Group · 2.5 Hours</p>
+            <h3>2.5hr Group Manual Lesson</h3>
             <p className="package-card__desc">
               Bring a friend. Split the experience.
             </p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>180
-              <span className="package-card__unit">/ 2 hours</span>
+              <span className="package-card__currency">$</span>219
+              <span className="package-card__unit">/ 2.5 hours</span>
             </p>
           </div>
 
           <div className="package-card__details">
-            {/* PENDING: GROUP 2HR INCLUSIONS + confirm whether $180 is per-person or per-pair */}
+            {/* PENDING: GROUP 2.5HR INCLUSIONS + confirm whether $219 is per-person or per-pair */}
             <ul className="package-card__list">
               <li>Learn with a friend</li>
-              <li>Two-hour group session</li>
+              <li>Two-and-a-half-hour group session</li>
               <li>More turns at the wheel</li>
             </ul>
 
             <button type="button" className="btn btn--secondary" onClick={onBookGroup2hr}>
-              Book 2-Hour Group
+              Book 2.5-Hour Group
             </button>
           </div>
         </article>

@@ -12,7 +12,7 @@ export default function Home({ onBookNow, onSeePackages }) {
           </h1>
           <p className="home__subhead">
             One-on-one manual transmission lessons on real Toronto roads. Book
-            your first hour in under a minute.
+            your first lesson in under a minute.
           </p>
           <div className="home__ctas">
             <button type="button" className="btn btn--primary" onClick={onBookNow}>
