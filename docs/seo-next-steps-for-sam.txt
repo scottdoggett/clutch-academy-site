@@ -1,8 +1,14 @@
 CLUTCH ACADEMY — SEO NEXT STEPS FOR THE OWNER
 ==============================================
 Written: May 28, 2026
+Updated: August 16, 2026
 For: Sam Anthony
 Companion to: seo-for-sam.txt (the overview)
+
+UPDATE, AUGUST 2026: You hit Priority 1. Reviews went from ~10 to 33
+at a 5.0 average — ahead of the 25 target. Priority 1 below has been
+rewritten with the next target. Everything else still stands, and
+Priority 7 (Search Console) is now the one genuinely blocking item.
 
 
 WHY THIS DOC EXISTS
@@ -38,20 +44,25 @@ searches "manual driving school near me" in Toronto:
   Website signals               ~19%   (mostly done — keep iterating)
 
 You can't change physics (proximity). You CAN dominate the other three.
-Stick GTA (your main competitor) has 226 Google reviews. You have ~10.
-That gap alone is most of why they rank ahead of you. Closing it is
-the single highest-leverage thing on this list.
+Stick GTA (your main competitor) had 226 Google reviews when this was
+written; you had ~10. You're now at 33, which is real progress and
+already enough to compete on quality (5.0 average). The gap is still
+the biggest single factor, so this stays at the top of the list —
+but it's now a grind, not an emergency.
 
 
 THE PRIORITIZED ACTION LIST
 ============================
 
 
-PRIORITY 1 — GET TO 25 GOOGLE REVIEWS BY END OF AUGUST 2026
------------------------------------------------------------
-You have ~10 right now. Target: 25 by end of August. That's ~5 new
-reviews per month for 3 months. With ~3 lessons per week, that's
-asking less than half of your students.
+PRIORITY 1 — KEEP THE REVIEW HABIT: 50 BY END OF 2026
+------------------------------------------------------
+DONE: the original target was 25 by end of August. You're at 33 with a
+5.0 average. That's the hardest part behind you.
+
+New target: 50 by December 31, 2026. That's ~4 per month — roughly the
+same habit you've already proved you can keep. The routine below is
+what got you here, so don't stop doing it.
 
 HOW TO ACTUALLY DO IT (don't skip these — they're the difference
 between hitting and missing the target):
@@ -145,7 +156,9 @@ minutes on this. Check each item:
       learn at your pace on real Toronto roads with founder-instructor
       Sam Anthony. Lessons run in a 2015 Volkswagen Golf with a
       smooth, forgiving clutch — perfect for building confidence.
-      Single lessons are $90/hr; 3-lesson packages are $240 (save $30).
+      Single lessons are $109 for 75 minutes; 3-lesson packages are
+      $299 (save $28). Five-lesson package $469; 2.5-hour group
+      lessons $219.
       Service across Toronto, Etobicoke, North York, Scarborough,
       East York, Mississauga, and Vaughan. Book online.
 
@@ -160,11 +173,15 @@ minutes on this. Check each item:
       - 1x photo of yourself (instructor portrait)
       Re-upload a new one every couple weeks — recency is a signal.
 
-  [ ] PRODUCTS / SERVICES — add both packages as Services:
-      - "Single Manual Driving Lesson" — $90 — 1 hour
-      - "3-Lesson Manual Driving Package" — $240 — 3 hours
+  [ ] PRODUCTS / SERVICES — add all four packages as Services:
+      - "Individual Manual Lesson" — $109 — 75 minutes
+      - "Manual Foundations Package (3 Lessons)" — $299
+      - "Complete Manual Confidence Package (5 Lessons)" — $469
+      - "Group Manual Lesson" — $219 — 2.5 hours
       Add a 1-2 sentence description to each. This makes them
-      appear directly in your GBP card.
+      appear directly in your GBP card. Keep these matching the
+      website exactly — mismatched prices confuse both Google and
+      customers.
 
   [ ] ATTRIBUTES — toggle on the ones that apply (likely):
       Identifies as woman-owned: no
@@ -186,12 +203,12 @@ WEEKLY POST IDEAS (rotate through these):
 
   - "Just finished a great first-lesson with [name] — went from
     stalling on every start to smooth hill takeoffs in under an
-    hour. Book your first hour at clutchacademy.ca."
+    lesson. Book your first lesson at clutchacademy.ca."
     (Use a student's first name only, with their permission. Add
     a photo if they're cool with it.)
 
-  - "Spring booking is open — manual driving lessons across Toronto
-    and the GTA. Single lessons $90, 3-pack $240. Beginners welcome."
+  - "Booking is open — manual driving lessons across Toronto and the
+    GTA. Single lessons $109, 3-pack $299. Beginners welcome."
 
   - Short tip post: "Tip of the week: most people stall because
     they're moving their feet too fast, not because they're doing
@@ -229,9 +246,10 @@ go to your own GBP, ask the question, then answer it):
      usually only need one or two.
 
   Q: How much do manual driving lessons cost in Toronto?
-  A: Clutch Academy lessons are $90 CAD per hour, or $240 CAD for a
-     three-lesson package ($30 saving). Payment is collected at the
-     time of booking.
+  A: Clutch Academy lessons are $109 CAD for a 75-minute lesson, or
+     $299 CAD for a three-lesson package ($28 saving). Five lessons
+     are $469, and a 2.5-hour group lesson is $219. All prices are
+     plus HST. Payment is collected at the time of booking.
 
   Q: Do I need a driver's license to take lessons?
   A: Yes — a valid G2 or G license is required for all lessons.

@@ -1,78 +1,83 @@
-# Clutch Academy — Website Build Spec
+# Clutch Academy — Website Spec
 
-This folder contains the specification for the Clutch Academy website. It is written for AI coding agents building and iterating on the site.
+Specification for the Clutch Academy website, written for the developer and for
+AI coding agents working in this repo. Everything here describes the site **as
+it actually is** on the `overhaul` branch as of **August 16, 2026**.
 
-> ⚠️ **The July 2026 overhaul (single-page → multi-page Next.js) is BUILT but not yet merged/deployed.** Start with **`09-handoff-status.md`** for where the build actually is — phase status, git state, open flags, the Aug-1 pricing checklist, and the launch runbook. `07`/`08` remain the plan/reference; files `01`–`06` predate the overhaul and each carry a supersession notice — treat them as intent/history, not current direction. See `CLAUDE.md` at the repo root for the master summary.
->
-> **Branch:** all overhaul work lives on the **`overhaul`** branch (10 commits unpushed at handoff); `main` still holds the old live Vite site.
+Superseded material lives in `archive/` and should not be worked from.
 
-## Quick Facts
+## Quick facts
 
 | Field | Value |
 |---|---|
-| Business | Clutch Academy |
-| Type | Manual transmission driving school |
-| Location | Toronto, Ontario |
-| Site type | **Conventional multi-page site** (Next.js App Router, static-generated) |
-| Build sequencing | **Ordered, not dated** — see `07-overhaul-build-plan.md` |
-| Framework | **Next.js (App Router)** — migrated from Vite; gear-shift animation removed |
-| Primary conversion | Book a lesson via Calendly |
-| Payment | Collected securely at booking (Stripe) |
-| Design/styling | Premium red/white brand; modern type; whitespace; mobile-first (see `06` for the still-valid visual language) |
+| Business | Clutch Academy — manual transmission driving school, Toronto |
+| Site | Multi-page, statically generated, 9 routes + 404 |
+| Stack | Next.js 16 (App Router) · React 19 · plain CSS |
+| Primary conversion | Book a lesson via Calendly popup |
+| Payment | Collected at booking via Stripe (never in person) |
+| Hosting | Vercel — **two projects**, one per branch (see `06-deployment.md`) |
+| Live site | `clutchacademy.ca` — built from **`main`** (the old Vite build) |
+| Rebuild | Built from **`overhaul`** (Next.js) on its own Vercel project, for review |
+| Pricing | Post-August-1 offering — $109 / $299 / $469 / $219, all + HST |
 
-## How to Use This Spec
+## The one thing to understand first
 
-Load the file(s) relevant to your current task. Start with the two overhaul docs; reach for `01`–`06` only for durable intent they still carry.
+There are **two sites deployed right now**. `main` holds the original
+single-page Vite/GSAP build and serves the real domain. `overhaul` holds the
+Next.js rebuild and serves a separate Vercel project so work can be shown to
+people before cutover. They are different codebases in the same repo, and they
+have drifted. `06-deployment.md` covers what each one is, and what a cutover
+takes.
 
-| File | Contains | Status |
-|---|---|---|
-| `09-handoff-status.md` | **Where the build actually is**: phase status, git state, flags, Aug-1 checklist, launch runbook | **Authoritative for current state — read first** |
-| `07-overhaul-build-plan.md` | Ordered build phases for the multi-page rebuild (status banner at top) | Authoritative plan — mostly executed |
-| `08-overhaul-reference.md` | Sitemap/routes, per-page content, pricing, SEO targets, analytics carry-over, Vite→Next migration map, open decisions | Authoritative reference (status banner notes deltas) |
-| `../google-ads-mapping.md` | Google Ads work to apply in the Ads UI: conversion action, final URLs, sitelinks, Aug-1 price assets | Pending application (account-side) |
-| `01-project-brief.md` | Business context, audience, positioning, voice | Intent still valid; see notice |
-| `02-site-architecture.md` | Old single-page gear-shift architecture | Superseded (see `08` §1) |
-| `03-content-spec.md` | Per-section copy direction, FAQ | Partially superseded (see `08` §2) |
-| `04-technical-spec.md` | Old React/Vite/GSAP stack & integrations | Superseded on stack (see `08` §6) |
-| `05-pending-items.md` | Old open decisions + May-1 schedule | Superseded (current open items: `08` §7 + `09` §5) |
-| `06-design-system.md` | Color, typography, layout, animation system | Visual language valid; animation removed; `--chrome` updated for WCAG AA |
-| `Clutch_Academy_Website_Revamp_Brief_July2026.pdf` | The client brief driving the overhaul (verbatim copy sources, trust elements, timeline) | Source document |
+Unless you are specifically fixing the live site, **work on `overhaul`.**
 
-## Decision State Legend
+## The files
+
+| File | Contains |
+|---|---|
+| `01-brief.md` | Business context, audience, positioning, brand voice, scope boundaries |
+| `02-architecture.md` | Stack, routes, component map, styling system, conventions |
+| `03-content-and-pricing.md` | Per-page content, the four packages, current pricing, copy rules |
+| `04-seo.md` | SEO architecture, per-route targets, structured data, crawler policy |
+| `05-analytics.md` | Consent Mode, GA4 / Ads / Meta / TikTok, conversion tracking, CTA source tags |
+| `06-deployment.md` | The two Vercel projects, branch model, config, launch runbook |
+| `07-status.md` | What's done, what isn't, and every open question needing a human |
+| `../google-ads-mapping.md` | Account-side Google Ads work still to apply |
+| `../seo.md` | Long-form SEO reference and maintenance guide |
+| `archive/` | The retired single-page spec and the rebuild's own planning docs |
+
+## Decision-state legend
+
+Used throughout these files:
 
 - ✅ **DECIDED** — locked in
-- 🟡 **RECOMMENDED** — default unless overridden
-- ❓ **OPEN** — still needs a decision; use a placeholder / leave TODO
-- 📎 **PENDING ASSET** — waiting on client to deliver content
+- 🟡 **RECOMMENDED** — the default unless someone overrides it
+- ❓ **OPEN** — needs a decision before it can ship
+- 📎 **PENDING ASSET** — waiting on the client to deliver something
 
-## Scope Boundaries
+In code, the same states appear as `{/* PENDING: ... */}` and `❓ BLOCKED`
+comments. `grep -rn "PENDING\|BLOCKED" src/ public/` lists every one.
 
-**In scope:**
-- Conventional multi-page Next.js application (real routes + navigation)
-- Dedicated, SEO-optimized landing page per package (organic + Google Ads destinations)
-- SEO architecture: static generation, per-route metadata, structured data
-- Calendly booking integration; payment collected securely at booking
-- Responsive, mobile-first, and reduced-motion-friendly (no scroll animations to gate)
+## Non-negotiable constraints
 
-**Out of scope (for now):**
-- CMS / admin panel
-- Blog / driving-tips content (a likely *next* phase — the brief seeds topics; Next makes it easy)
-- Sound effects / audio
+1. **Work on `overhaul`; never commit directly to `main`.** `main` is live.
+2. **SEO-first and multi-page.** Each package page is a real landing page and a
+   Google Ads destination. Don't collapse them back together.
+3. **The instructor is the product.** Trust — About, reviews, testimonials — is
+   the primary conversion lever, not feature lists.
+4. **Payment is collected at booking.** Keep secure-payment and cancellation
+   messaging explicit and consistent.
+5. **Reduced motion must remain fully functional.** Every animation needs a
+   matchMedia gate.
+6. **Never invent content.** No fabricated reviews, bios, policies, or package
+   inclusions. If it isn't supplied, flag it `PENDING`.
+7. **iOS Safari is a first-class target.** The Calendly mobile-host workaround
+   exists for a real iOS bug.
 
-**Pending (delivered separately by client):**
-- Final brand assets (logo variants, instructor/real-lesson photos)
-- Student testimonials, cancellation-policy wording, package inclusions (see `08` §7)
+## Conventions for updating these docs
 
-## Critical Constraints
-
-1. **Work on the `overhaul` branch, never directly on `main`.**
-2. **SEO-first, multi-page.** Dedicated crawlable landing pages are the point of the rebuild — don't collapse them back together.
-3. **The instructor is the product.** Trust (About + testimonials + reviews) is the primary conversion lever.
-4. **Payment is collected at booking** (Stripe) — keep secure-payment and cancellation messaging clear.
-5. **Reduced motion must work.** The site must be fully functional and accessible.
-
-## Cross-Reference Notes
-
-- Sitemap, routes, and per-page content → `08-overhaul-reference.md`.
-- Build order and checkpoints → `07-overhaul-build-plan.md`.
-- Stack, analytics IDs, and the migration map → `08` §5–§6 and `CLAUDE.md`.
+- If a doc disagrees with the code, **the code wins** — then fix the doc.
+- If a doc disagrees with another doc, **flag it; don't silently pick a side.**
+- Convert relative dates to absolute ones ("July 2026", not "last month").
+- When a decision moves from ❓ to ✅, update `07-status.md` in the same commit
+  as the code change.

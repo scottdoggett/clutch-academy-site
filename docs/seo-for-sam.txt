@@ -1,10 +1,13 @@
 CLUTCH ACADEMY — SEO OVERVIEW FOR THE OWNER
 ============================================
-Last updated: May 13, 2026
+Last updated: August 16, 2026
 
 Hey Sam — this is the plain-English version of what's happening with
 your website's SEO. No tech jargon. Read it once, keep it handy, and
-come back to the "what to track" section every couple weeks.
+come back to the "what to track" section every couple of weeks.
+
+The companion document, seo-next-steps-for-sam.txt, is the action list
+of things only YOU can do. This one is just background.
 
 
 WHAT IS SEO, IN ONE SENTENCE?
@@ -15,272 +18,159 @@ and similar phrases — in Google, in Bing, and increasingly in AI
 assistants like ChatGPT, Claude, and Perplexity.
 
 
+THE BIG CHANGE THIS SUMMER
+==========================
+
+Your original site was one long scrolling page. It looked great, but
+it gave Google exactly ONE page to rank, competing for every search
+term at once. That's a real handicap.
+
+We rebuilt it as a proper multi-page site. It now has nine pages,
+each one aimed at something specific:
+
+  - Home
+  - Lessons overview (all four packages compared)
+  - Individual Manual Lesson
+  - Manual Foundations (3 lessons)
+  - Complete Manual Confidence (5 lessons)
+  - Group Manual Lessons
+  - About
+  - FAQ
+  - Contact
+
+Why this matters: someone searching "group manual lessons toronto"
+now lands on a page that is *entirely about* group lessons, instead of
+a homepage that mentions them halfway down. Google rewards that, and
+so do customers — they book more often when the page answers the exact
+thing they searched for.
+
+It also gives you four proper destinations for Google Ads, instead of
+sending every ad to the same homepage.
+
+IMPORTANT: the new site is BUILT but not yet switched on. Your live
+site is still the old one. The new version is deployed separately so
+you can review it before we flip the switch. Nothing changes for your
+customers until we do.
+
+
 WHAT WE'VE DONE FOR YOU (THE HIGHLIGHTS)
 ========================================
 
 1. MADE THE SITE READABLE TO GOOGLE AND AI ASSISTANTS
-   Most modern websites are tricky for search engines to read. We
-   built yours so Google, Bing, ChatGPT, Claude, and the others can
-   all see the full content (your services, prices, FAQ, contact info)
-   even if they don't run any JavaScript. This is the single biggest
-   thing we did and it's invisible to you.
+   Most modern websites are tricky for search engines to read. Yours
+   is built so Google, Bing, ChatGPT, Claude, and the rest can see the
+   full content — services, prices, FAQ, contact info — even if they
+   don't run any JavaScript. This is the single biggest technical
+   thing we did, and it's completely invisible to you.
 
 2. CONNECTED YOUR WEBSITE TO YOUR GOOGLE BUSINESS PROFILE
-   When someone Googles "Clutch Academy", your Maps/Business listing
-   and your website are now officially linked. Google understands
-   they're the same business. This helps you appear in the "local
-   3-pack" (the map results that show up at the top of local
-   searches) and gives AI assistants confidence to recommend you.
+   When someone Googles "Clutch Academy", your Maps listing and your
+   website are officially linked. Google understands they're the same
+   business. This helps you appear in the "local 3-pack" (the map
+   results at the top of local searches) and gives AI assistants
+   confidence to recommend you.
 
 3. LISTED YOUR BUSINESS INFO IN A FORMAT GOOGLE LOVES
    Behind the scenes we tell Google things like:
    - You're a driving school in Toronto
-   - You offer two packages: $90 single lesson, $240 3-pack
-   - Sam Anthony is the founder/instructor
+   - Your packages and prices: $109 single lesson (75 min), $299 for
+     three lessons, $469 for five, $219 for a 2.5-hour group lesson
+   - Sam Anthony is the founder and instructor
    - Your phone, email, Instagram, Facebook, and Google Business
-   - Your full FAQ (so individual questions can show up directly in
-     Google's search results)
+     Profile
+   - The areas you serve: Toronto, Etobicoke, North York,
+     Scarborough, East York, Mississauga, Vaughan
 
-4. SUBMITTED YOUR SITE TO GOOGLE AND BING
-   We registered your site with both, told them where every page
-   lives, and asked them to start indexing it. They'll re-check the
-   site periodically and update what they show in search results.
+   This is why your prices can show up directly in search results.
 
-5. HOOKED UP GOOGLE ANALYTICS
-   Every visitor (who agrees to the cookie banner) is now counted.
-   You can see how many people are visiting, where they came from
-   (Instagram, Google, direct typing, etc.), what pages they look
-   at, and which "Book Now" buttons they click.
+4. PUBLISHED YOUR FAQ IN A SPECIAL FORMAT
+   Your FAQ answers are marked up so Google can show them as
+   expandable questions right in the search results. More space on
+   the page for you, less for competitors.
 
-6. HOOKED UP META PIXEL (FOR YOUR FACEBOOK/INSTAGRAM ADS)
-   Same idea but for Meta. When you run ads, Meta can see which ad
-   clicks turned into someone visiting your site, clicking Book Now,
-   or contacting you. This makes your ad spend more efficient
-   because Meta learns which audiences actually convert.
+5. OPENED THE DOOR TO AI ASSISTANTS DELIBERATELY
+   Most sites either block AI crawlers or ignore them. We explicitly
+   welcome sixteen of them — ChatGPT, Claude, Perplexity, Google's AI,
+   Apple's, and others — and we publish a plain-language summary file
+   just for them. When someone asks ChatGPT "where can I learn stick
+   shift in Toronto", we want you in that answer.
 
-7. SET UP A COOKIE CONSENT BANNER
-   When a visitor first arrives, they get a small popup asking if
-   they're OK with tracking. Nothing fires until they accept. This
-   keeps you compliant with Canadian and European privacy laws.
+   This was a deliberate business decision. If you ever want to
+   reverse it, say so — it's a one-file change.
 
-8. OPTIMIZED EVERYTHING FOR PHONES
-   Loads fast on mobile, works on iPhone/Android, the icon looks
-   right when someone adds the site to their iPhone home screen,
-   and the photos are now smaller files so the site loads faster
-   (good for SEO — Google ranks fast sites higher).
+6. COVERED THE WORDS PEOPLE ACTUALLY USE
+   Not everyone says "manual". Plenty of people search "stick shift"
+   or "standard". The site uses all three deliberately, and there's an
+   FAQ entry explaining they're the same thing — which catches the
+   people who genuinely aren't sure.
 
-9. MADE THE BRAND ICON CONSISTENT
-   The little icon you see in the browser tab and next to your
-   website in Google search results is now the new Clutch logo.
+7. MADE IT FAST AND ACCESSIBLE
+   The site scores 100/100 on Google's accessibility and SEO audits
+   across every page. Accessibility is a ranking factor and, more
+   importantly, it means the site works for everyone.
 
 
-THINGS YOU SHOULD DO YOURSELF
-=============================
+WHERE YOU STAND RIGHT NOW
+=========================
 
-A. ASK YOUR STUDENTS FOR GOOGLE REVIEWS
-   This is THE highest-leverage thing you can do. Reviews on your
-   Google Business Profile:
-   - Push you higher in local search results
-   - Let us eventually add a star-rating to your website that shows
-     up directly in Google results (we can't do this until you have
-     real reviews)
-   - Influence whether ChatGPT/Claude recommends you
-   How: After every lesson, text the student a link to your Google
-   review page. Make it dead simple — most won't bother if they have
-   to find your business themselves.
+The good news: your Google reviews went from about 10 in May to 33,
+at a 5.0 average. That was the single most important thing on your
+list, and you did it. It's the biggest reason your local ranking can
+move.
 
-B. CONFIRM "hello@clutchacademy.ca" ACTUALLY RECEIVES EMAIL
-   We updated the contact email everywhere on the site to
-   "hello@clutchacademy.ca" because it looks more professional than
-   a personal address. BUT — you need to make sure this email
-   address actually works. Log into your email provider (Google
-   Workspace, GoDaddy, wherever your email is hosted) and either
-   create the inbox or set up "hello@" as an alias that forwards to
-   your main email. Otherwise inquiries will bounce.
-
-C. KEEP POSTING ON INSTAGRAM AND FACEBOOK
-   Both are linked from your site, which strengthens your overall
-   web presence. Google notices when a business has active social
-   accounts that point back to its website.
-
-D. SEARCH YOURSELF EVERY COUPLE WEEKS
-   In an incognito/private window (so you see what a stranger sees):
-   - Google: "manual driving lessons toronto" — do you appear in
-     the map results at the top?
-   - Google: "clutch academy" — does your website appear first?
-   - ChatGPT/Claude/Perplexity/Gemini: "where can I learn manual
-     transmission in Toronto?" — do you get mentioned?
-   This is how you know SEO is working. If you don't show up, tell
-   Scott so he can investigate.
-
-E. SHARE YOUR WEBSITE LINK EVERYWHERE
-   Every time another website mentions "clutchacademy.ca", it's a
-   signal to Google that you're real and reputable. Some easy wins:
-   - Your Instagram bio
-   - Your Facebook page "About" section
-   - Email signature
-   - Any directory listings (Yelp, local Toronto business
-     directories, driving school review sites)
+The honest part: technical SEO is largely a solved problem for you
+now. The remaining gap between you and the top of the local results
+is mostly things only you can do — reviews, your Google Business
+Profile, and local mentions of your business. That's what the
+next-steps document covers.
 
 
-WHAT TO TRACK — THE FOUR DASHBOARDS
-====================================
+WHAT TO TRACK (EVERY COUPLE OF WEEKS)
+=====================================
 
-You can check these whenever you want — weekly is a good rhythm
-once ads are running.
+Don't obsess. Fifteen minutes, twice a month.
 
+1. GOOGLE BUSINESS PROFILE INSIGHTS
+   How many people found you, called, or asked for directions. This
+   is your realest number.
 
-1. GOOGLE ANALYTICS — "Who's visiting my site?"
-   URL: https://analytics.google.com
+2. YOUR REVIEW COUNT AND AVERAGE
+   Still the highest-leverage lever you have. Keep asking.
 
-   What to look at:
-   - Reports → Realtime — see if anyone is on the site RIGHT NOW
-     (good for verifying it's working after a change)
-   - Reports → Acquisition → Traffic acquisition — where are
-     visitors coming from? Google, Instagram, ads, direct?
-   - Reports → Engagement → Events — look for "booking_cta_click"
-     to see how often people click any Book Now button. The
-     "source" tells you which Book Now button (hero, packages,
-     about section, etc.)
+3. SEARCH CONSOLE (once it's turned on — see next-steps)
+   Which searches show your site, and where you rank for them.
 
-   What to actually care about:
-   - Total visitors per week (trending up?)
-   - What percentage of visitors click Book Now
-   - Which traffic source (Instagram vs Google vs ads) converts best
+4. WHERE BOOKINGS ACTUALLY COME FROM
+   Every "Book" button on the site is tagged, so we can tell whether
+   bookings come from the homepage, a package page, the FAQ, or an
+   ad. That tells us what's working.
 
-
-2. GOOGLE BUSINESS PROFILE INSIGHTS — "How many people found my GBP?"
-   URL: https://business.google.com
-
-   What to look at:
-   - Performance tab — searches that showed your business
-   - "Calls", "Directions", "Website clicks" counts
-
-   What to actually care about:
-   - Are searches for "manual driving lessons toronto" showing
-     your business?
-   - Are people calling/visiting your website from the GBP card?
-   - Reviews count — when this number grows, your local SEO improves
+WHAT NOT TO TRACK: your own Google searches. Google personalises
+results based on your history and location, so searching for yourself
+tells you almost nothing. Use the Search Console numbers instead.
 
 
-3. META EVENTS MANAGER — "Are my Facebook/Instagram ads working?"
-   URL: https://business.facebook.com → Events Manager →
-        dataset 2845684255788584
+THINGS STILL WAITING ON YOU
+===========================
 
-   What to look at (especially after launching ads):
-   - Test Events tab — paste your live URL, click around, confirm
-     the events PageView, Lead, Contact are all firing
-   - Overview — see total event counts over the last 7/28 days
+Small stuff, but it's holding up the launch:
 
-   What to actually care about:
-   - Cost per Lead (Meta Ads Manager) — what does it cost in ad
-     spend to get someone to click Book Now?
-   - "Lead" events should match the number of people opening
-     Calendly from the site
+  - Google Search Console verification code (15-minute task, and it
+    unlocks the ranking data above)
+  - The exact wording of your cancellation policy
+  - What's included in the individual and group lessons — 3 to 5
+    bullet points each
+  - The terms of the "confidence guarantee" mentioned on the
+    five-lesson page
+  - Whether group pricing is per person or per pair
+  - Real photos from actual lessons, if you have any
+  - A look at the new site to confirm the fonts and your About story
+    read the way you want
 
-   IMPORTANT: Your Calendly is already linked to Meta separately
-   and fires a "Schedule" event when someone actually books. The
-   website does NOT fire a duplicate "Schedule" event because that
-   would inflate your stats. So:
-   - "Lead" = clicked Book Now (website tracks this)
-   - "Schedule" = actually booked (Calendly tracks this)
-   The combination of the two tells you "click-to-book" conversion.
+Once those land, we can switch the new site on.
 
 
-4. GOOGLE SEARCH CONSOLE — "What are people searching to find me?"
-   URL: https://search.google.com/search-console
-
-   What to look at:
-   - Performance → Search results — see what search queries are
-     showing your site, how often you appear, and how often people
-     click through
-   - Indexing → Pages — confirms Google has crawled and indexed
-     your homepage
-
-   What to actually care about:
-   - Which queries you're appearing for (and which you'd LIKE to
-     appear for but aren't)
-   - Average position (lower number is better — position 1 is the
-     top result)
-   - Total clicks per month
-
-
-STILL PENDING (THINGS WE NEED FROM YOU OR YOUR PARTNER)
-========================================================
-
-Most of the heavy lifting is done. The remaining items are either
-waiting on you, or are nice-to-haves for later:
-
-- REVIEWS: Once you have ~5+ Google reviews, tell Scott. He can add
-  a star-rating display directly to your website's Google search
-  result (called "rich result"). Right now we can't because doing so
-  without real reviews violates Google's rules.
-
-- CALENDLY → META INTEGRATION CHECK: In Calendly → Integrations →
-  Meta Pixel, confirm the Pixel ID is 2845684255788584 (matches
-  what's on the website). If a different ID is there, your booking
-  signal is split across two accounts and ads will be less
-  efficient.
-
-- PRIVACY POLICY: There's a privacy policy at clutchacademy.ca/privacy
-  Scott drafted a sensible default. Read it through — let him know
-  if anything needs to change to match how you actually handle data.
-
-- OPTIONAL META FEATURES: When you're ready, ask Scott about:
-  * "ViewContent" event — tells Meta who actually scrolled to the
-    Packages section (useful for retargeting "viewed pricing but
-    didn't book" audiences)
-  * Conversions API (CAPI) — server-side event tracking that
-    survives ad blockers and iOS privacy settings. Meta recommends
-    it alongside the browser-side Pixel.
-  * Custom retargeting audiences — once Pixel data has been flowing
-    for a couple weeks, you can build audiences like "visited site
-    in last 30 days but didn't book" and run targeted ads at them.
-
-
-WHAT TO EXPECT, TIMELINE-WISE
-=============================
-
-- IMMEDIATE: Site works, ads can run, Analytics records every visit
-- 1-2 WEEKS: Google finishes its first full crawl, your site
-  reliably appears for "clutch academy" searches
-- 2-4 WEEKS: Local pack appearance for "manual driving lessons
-  toronto" should solidify (depends partly on your GBP activity
-  and any new reviews)
-- 1-3 MONTHS: AI assistants (ChatGPT, Claude, etc.) update their
-  data and start mentioning Clutch as a Toronto manual-driving
-  option
-
-SEO is a slow burn. Don't worry if you don't see massive movement
-in the first few weeks — what matters is that the foundation is
-solid and you're slowly building up trust signals (reviews, social
-posts, third-party mentions, returning visitors).
-
-
-QUICK LINKS
-===========
-
-YOUR LIVE SITE
-  https://clutchacademy.ca
-
-YOUR DASHBOARDS
-  Google Analytics:       https://analytics.google.com
-  Google Search Console:  https://search.google.com/search-console
-  Google Business:        https://business.google.com
-  Meta Events Manager:    https://business.facebook.com
-  Calendly:               https://calendly.com
-
-TEST TOOLS (USE THESE TO VERIFY THINGS LOOK RIGHT)
-  Google Rich Results:    https://search.google.com/test/rich-results
-  Schema Validator:       https://validator.schema.org/
-  Facebook Sharing Debug: https://developers.facebook.com/tools/debug/
-  Twitter Card Validator: https://cards-dev.twitter.com/validator
-  PageSpeed Insights:     https://pagespeed.web.dev/
-
-
-HAVE A QUESTION OR SOMETHING ISN'T WORKING?
-============================================
-Text/email Scott with what you saw and where. Screenshots help a
-lot. Don't try to fix anything in the code yourself — almost
-everything in this document can be checked or adjusted without
-touching code.
+QUESTIONS?
+==========
+Ask Scott. Nothing in here is urgent enough to lose sleep over — the
+foundation is solid, and the rest is steady work.
