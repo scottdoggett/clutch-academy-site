@@ -10,7 +10,7 @@
   --chrome: #E4E4E4;
   --black: #0A0A0A;
 
-  /* Google-rating badge (TrustBlock / reviews). Star gold is Google's own
+  /* Google-rating badge (home reviews section). Star gold is Google's own
      review-star colour; both star tones are decorative (aria-hidden).
      --ink-muted is body text on cream surfaces — 7.1:1 on --cream. */
   --star-gold: #FBBC04;
@@ -42,12 +42,11 @@
   --gear-indicator-padding: clamp(24px, 3vw, 40px);
   --gear-indicator-stroke: 3px;
   --nav-bar-height: 64px;
-  /* Height of the fixed announcement strip above the nav, when present. Kept
-     at 0 by default and set to the strip's real rendered height by
-     AnnouncementBanner (via ResizeObserver). Because --nav-height (below) is
-     the top-clearance token every section keys off, this is the single value
-     that makes the whole layout account for the strip — and reverts to 0
-     automatically when the strip auto-hides after July 31. */
+  /* Height of a fixed announcement strip above the nav, when one is present.
+     The August-1 pricing banner that used to set this was removed once the
+     switch shipped (it can be recovered from git history if another notice is
+     ever needed). Held at 0 so --nav-height below stays correct; a future strip
+     only has to publish its own height into this one token. */
   --announcement-height: 0px;
   /* Total fixed-header clearance: nav bar plus any announcement strip. */
   --nav-height: calc(var(--nav-bar-height) + var(--announcement-height));

@@ -23,7 +23,7 @@ export default function Reviews() {
 
         <div className="reviews__footer">
           {/* Stars/count derive from the shared numbers module so the badge
-              can never disagree with the TrustBlocks. */}
+              can never disagree with the homepage aggregateRating schema. */}
           <div className="reviews__badge">
             <span className="reviews__badge-label">Google reviews</span>
             <span className="reviews__badge-stars" aria-hidden="true">

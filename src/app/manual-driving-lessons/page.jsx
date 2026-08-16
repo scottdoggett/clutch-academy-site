@@ -1,8 +1,4 @@
-import Image from 'next/image'
 import Link from 'next/link'
-import BookButton from '../../components/BookButton'
-import TrustBlock from '../../components/lessons/TrustBlock'
-import lessonsCar from '../../../public/lessons-car.png'
 import './hub.css'
 
 export const metadata = {
@@ -14,8 +10,8 @@ export const metadata = {
 
 // Summary cards for the four dedicated pages. Who-it's-for and lesson-content
 // lines come from the July 2026 brief; names are the overhaul-target package
-// names. Prices are the CURRENT (pre-August-1) offering.
-// PENDING: Phase 10 flips prices/durations to the new offering (08 §3).
+// names. Prices are the post-August-1 offering (08 §3), matching the switch
+// already shipped on the live site in 308317c.
 const PACKAGES = [
   {
     tag: 'Private · Single Lesson',
@@ -25,8 +21,8 @@ const PACKAGES = [
       'One-on-one instruction on real Toronto roads',
       'Tailored to your starting level — zero experience is fine',
     ],
-    price: '$90',
-    unit: '/ hour + HST',
+    price: '$109',
+    unit: '/ 75 min + HST',
     href: '/lessons/individual',
     tier: 1,
   },
@@ -39,7 +35,7 @@ const PACKAGES = [
       'Lesson 2: traffic, intersections, hill starts',
       'Lesson 3: independent driving, smoother shifting',
     ],
-    price: '$240',
+    price: '$299',
     unit: '/ 3 lessons + HST',
     href: '/lessons/manual-foundations',
     tier: 2,
@@ -54,8 +50,8 @@ const PACKAGES = [
       'Share the experience and split the nerves',
       'Great low-pressure first exposure to the clutch',
     ],
-    price: 'From $90',
-    unit: '+ HST',
+    price: '$219',
+    unit: '/ 2.5 hours + HST',
     href: '/lessons/group',
     tier: 3,
   },
@@ -68,7 +64,7 @@ const PACKAGES = [
       'Advanced hill starts and parking',
       'Personalized coaching throughout',
     ],
-    price: '$400',
+    price: '$469',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
     tier: 4,
@@ -103,83 +99,20 @@ const CHOOSER = [
 export default function LessonsOverviewPage() {
   return (
     <>
-      {/* ---------- Frame the offering ---------- */}
-      <section
-        className="section section--first hub-intro"
-        aria-labelledby="hub-heading"
-      >
-        <div className="section__inner hub-intro__inner">
-          <div className="hub-intro__grid">
-            <div className="hub-intro__copy">
-              <p className="section-header__eyebrow">
-                Manual · Stick Shift · Standard — same lessons
-              </p>
-              <h1 id="hub-heading" className="hub-intro__headline">
-                Manual Driving Lesson Packages in Toronto
-              </h1>
-              <p className="hub-intro__lead">
-                Every Clutch Academy lesson is taught one-on-one by Sam, on
-                real Toronto roads — not a simulator, not an empty lot for an
-                hour. Whether you want to learn manual in Toronto from zero or
-                just shake the rust off, there’s a package shaped to where
-                you’re starting from.
-              </p>
-              <p className="hub-intro__note">
-                You’ll need a valid G2 or G licence, and you book and pay
-                securely online — pick a time, and the seat is yours.
-              </p>
-              <div className="hub-intro__ctas">
-                <BookButton
-                  source="lessons_overview"
-                  className="btn btn--primary"
-                >
-                  Book a Lesson
-                </BookButton>
-              </div>
-            </div>
-            <figure className="hub-intro__media">
-              <Image
-                className="hub-intro__photo"
-                src={lessonsCar}
-                alt="A grey manual-transmission hatchback like the one used for Clutch Academy lessons"
-                priority
-                sizes="(max-width: 767px) 90vw, 460px"
-              />
-            </figure>
-          </div>
-          <a
-            className="hub-intro__scroll"
-            href="#hub-packages-heading"
-            aria-label="Scroll to the four packages"
-          >
-            <span>Four ways to learn</span>
-            <svg
-              viewBox="0 0 16 9"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                d="M1 1l7 6 7-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
-        </div>
-      </section>
-
       {/* ---------- The four packages ---------- */}
       <section
-        className="section hub-packages"
+        className="section section--first hub-packages"
         aria-labelledby="hub-packages-heading"
       >
         <div className="section__inner">
           <header className="section-header">
-            <p className="section-header__eyebrow">Packages</p>
-            <h2 id="hub-packages-heading">Four ways to learn</h2>
+            <p className="section-header__eyebrow">
+              Manual · Stick Shift · Standard — same lessons
+            </p>
+            {/* This is the page's h1: the intro hero that used to carry it was
+                removed in August 2026 so the page opens straight on the
+                packages. */}
+            <h1 id="hub-packages-heading">Four ways to learn</h1>
             <p className="section-header__lead">
               Each package has its own page with full details, pricing, and
               booking.
@@ -229,9 +162,6 @@ export default function LessonsOverviewPage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
-      <TrustBlock />
-
       {/* ---------- Help me choose ---------- */}
       <section
         className="section hub-choose"
@@ -256,6 +186,7 @@ export default function LessonsOverviewPage() {
           </p>
         </div>
       </section>
+
     </>
   )
 }

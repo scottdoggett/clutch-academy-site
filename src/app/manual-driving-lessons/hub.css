@@ -1,154 +1,20 @@
-/* ---------- Intro ------------------------------------------------------ */
-/* Hero is capped just short of the viewport so the darker packages band
-   always peeks above the fold — the scroll cue points at it. */
-.hub-intro {
-  display: flex;
-  flex-direction: column;
-  min-height: min(88vh, 820px);
-  min-height: min(88svh, 820px);
-}
-
-.hub-intro__inner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(2rem, 4vh, 3rem);
-}
-
-.hub-intro__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 460px);
-  gap: clamp(2.5rem, 6vw, 6rem);
-  align-items: center;
-}
-
-.hub-intro__copy {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.hub-intro__headline {
-  font-size: clamp(2.25rem, 4.2vw, 3.5rem);
-  line-height: 1.04;
-  letter-spacing: var(--letter-tight);
-  margin: 0;
-  font-weight: 800;
-  max-width: 18ch;
-}
-
-.hub-intro__lead {
-  color: var(--cream);
-  margin: 0;
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  max-width: 56ch;
-}
-
-/* Requirements line — utility register, quieter than the lead. */
-.hub-intro__note {
-  margin: 0;
-  padding-left: 0.875rem;
-  border-left: 2px solid rgba(255, 255, 255, 0.35);
-  color: var(--chrome);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  max-width: 52ch;
-}
-
-.hub-intro__ctas {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 0.5rem;
-}
-
-/* Scroll cue — labelled anchor into the packages band. */
-.hub-intro__scroll {
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: auto;
-  color: var(--cream);
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
-}
-
-.hub-intro__scroll svg {
-  width: 1.125rem;
-  height: auto;
-}
-
-.hub-intro__scroll:hover {
-  color: var(--white);
-}
-
-.hub-intro__scroll:focus-visible {
-  outline: 2px solid var(--white);
-  outline-offset: 4px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .hub-intro__scroll svg {
-    animation: hub-scroll-bob 2.4s ease-in-out infinite;
-  }
-
-  @keyframes hub-scroll-bob {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(4px);
-    }
-  }
-}
-
-/* ---------- Hero media --------------------------------------------------- */
-/* Framed shot of the training car. Studio white/grey backdrop, so no red
-   multiply tint (it would stain the background) — just the site's standard
-   photo frame (border + rounded corners), mirroring .hero__photo. */
-.hub-intro__media {
-  margin: 0;
-  width: 100%;
-  max-width: 460px;
-}
-
-.hub-intro__photo {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  display: block;
-  background-color: var(--white);
-  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
-}
-
 /* ---------- Packages band ----------------------------------------------- */
-/* Darker ground than the hero: its top edge is the "there's more" signal
-   that peeks above the fold. */
+/* Now the page's opening section — the intro hero above it was removed in
+   August 2026 so /manual-driving-lessons lands straight on the packages. */
 .hub-packages {
   background-color: color-mix(in srgb, var(--red-deep) 45%, var(--red-primary));
 }
 
 /* Page-scoped type correction: the global section h2 (4rem) overwhelms a
    hub page; keep headings editorial, not billboard. */
+.hub-packages .section-header h1,
 .hub-packages .section-header h2,
 .hub-choose .section-header h2 {
   font-size: clamp(1.75rem, 3.2vw, 2.625rem);
   line-height: 1.05;
 }
 
-.hub-packages .section-header h2 {
+.hub-packages .section-header h1 {
   scroll-margin-top: calc(var(--nav-height) + 1.25rem);
 }
 
@@ -391,11 +257,6 @@
 
 /* ---------- Responsive --------------------------------------------------- */
 @media (max-width: 899px) {
-  .hub-intro__grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
   .gate__plate {
     max-width: 300px;
   }
@@ -405,9 +266,5 @@
   .hub-cards {
     grid-template-columns: 1fr;
     gap: 0.875rem;
-  }
-
-  .hub-intro__headline {
-    font-size: clamp(2rem, 8vw, 2.5rem);
   }
 }

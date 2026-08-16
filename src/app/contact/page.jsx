@@ -57,8 +57,8 @@ export default function ContactPage() {
               <dt>Secure payment</dt>
               <dd>
                 Payment is securely collected at the time of your booking
-                using Stripe — there’s nothing to settle in person.
-                Arrangements can be made to also accept e-transfer and PayPal.
+                using Stripe — there’s nothing to settle in person. All major
+                credit and debit cards are accepted.
               </dd>
             </div>
             <div className="contact-policies__item">

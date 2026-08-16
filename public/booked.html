@@ -574,9 +574,10 @@
         var CONSENT_KEY = 'clutch.consent.v1'
         var FIRED_PREFIX = 'clutch.booked.fired.'
         var CURRENCY = 'CAD'
-        // Single lesson AND group 1-hour are both $90, so it's the safe default
+        // The 75-minute individual lesson is the most common booking, so it's
+        // the safe default when the event name is missing or unrecognised
         // when the event name is missing or unrecognized.
-        var DEFAULT_VALUE = 90
+        var DEFAULT_VALUE = 109
         var META_PIXEL_ID = '2845684255788584'
         var TIKTOK_PIXEL_ID = 'D87LSEBC77UENKCNER8G'
 
@@ -658,20 +659,22 @@
         // ---------- helpers ----------
 
         // PENDING: confirm the exact Calendly event-type names with Sam and
-        // tighten this mapping. Until then we keyword-match the five packages
-        // (private single $90 / 3-pack $240 / 5-pack "Confidence Drive" $400,
-        // group 1-hour $90 / 2-hour $180) and fall back to $90. They all open
-        // one Calendly page today, so the event name is the only signal of
-        // which package was booked.
+        // tighten this mapping. Until then we keyword-match the four packages
+        // (individual 75-min $109 / 3-pack $299 / 5-pack "Complete Manual
+        // Confidence" $469 / group 2.5-hour $219) and fall back to $109. They
+        // all open one Calendly page today, so the event name is the only
+        // signal of which package was booked.
         function priceForEvent(name) {
           var n = (name || '').toLowerCase()
           if (!n) return DEFAULT_VALUE
-          // 5-lesson "Highway & City Confidence Drive". Checked first because
-          // a "5-Pack" name would otherwise be swallowed by the "pack" rule.
-          if (/confidence|highway|five|\b5\b/.test(n)) return 400
-          if (/3|three|pack/.test(n)) return 240 // private 3-pack
-          if (/2\s*-?\s*h|two\s*hour|120/.test(n)) return 180 // group 2-hour
-          return DEFAULT_VALUE // single lesson or group 1-hour
+          // Group is tested first: a "2.5" in the event name satisfies the
+          // 5-pack's \b5\b rule and would misprice a $219 group booking as $469.
+          if (/group|2\.5|two\s*and\s*a\s*half|150/.test(n)) return 219
+          // 5-lesson "Complete Manual Confidence". Checked before the "pack"
+          // rule, which would otherwise swallow a "5-Pack" name.
+          if (/confidence|highway|five|\b5\b/.test(n)) return 469
+          if (/3|three|pack/.test(n)) return 299 // private 3-pack
+          return DEFAULT_VALUE // 75-minute individual lesson
         }
 
         function readConsent() {

@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
-import TrustBlock from '../../../components/lessons/TrustBlock'
+import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
   title: 'Group Manual Driving Lessons in Toronto | Clutch Academy',
   description:
-    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 1-hour and 2-hour options. Book online.',
+    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 2.5 hours, $219 + HST. Book online.',
   alternates: { canonical: '/lessons/group' },
 }
 
@@ -15,28 +15,24 @@ export const metadata = {
 // learn-with-a-friend.
 //
 // ❓ BLOCKED (Phase 0, still open): the post-August-1 group format —
-//    brief text says both 1-hour and 2.5-hour options, but the new pricing
-//    lists ONLY a 2.5-hour group at $219 + HST. The options below are the
-//    CURRENT (pre-August-1) offering exactly as sold on the live site.
-//    Phase 10 must apply whichever format Sam confirms.
+//    the brief mentioned both 1-hour and 2.5-hour options, but the new pricing
+//    lists ONLY a 2.5-hour group at $219 + HST, and that is what the live site
+//    shipped on August 1 (308317c). This page now matches the live offering.
+//    If Sam wants a shorter option back, it is an addition, not a revert.
 // ❓ BLOCKED: whether group pricing is per person or per pair — copy below
 //    deliberately avoids claiming either. Confirm with Sam before launch.
+//
+// The source tag stays `packages_group_2hr` even though the option is now
+// 2.5 hours: it is the same card in the same slot, and keeping the tag keeps
+// the GA4 series continuous across the switch (matches the live site).
 const OPTIONS = [
   {
-    title: '1-Hour Group Lesson',
-    desc: 'Bring a friend and split the experience — a fun, low-pressure first exposure to the clutch.',
-    price: '$90',
-    unit: '/ hour + HST',
-    source: 'packages_group_1hr',
-    cta: 'Book 1-Hour Group',
-  },
-  {
-    title: '2-Hour Group Lesson',
-    desc: 'Twice the seat time, same friendly pace — more turns at the wheel for both of you.',
-    price: '$180',
-    unit: '/ 2 hours + HST',
+    title: '2.5-Hour Group Lesson',
+    desc: 'Bring a friend and split the experience — plenty of seat time each, at a fun, low-pressure pace.',
+    price: '$219',
+    unit: '/ 2.5 hours + HST',
     source: 'packages_group_2hr',
-    cta: 'Book 2-Hour Group',
+    cta: 'Book 2.5-Hour Group',
   },
 ]
 
@@ -59,6 +55,14 @@ const FAQ_IDS = ['license', 'never-driven', 'wear', 'pay', 'gift']
 export default function GroupLessonsPage() {
   return (
     <>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Lessons', href: '/manual-driving-lessons' },
+          { label: 'Group Manual Lessons' },
+        ]}
+      />
+
       {/* ---------- Hero ---------- */}
       <section
         className="section section--first"
@@ -81,8 +85,8 @@ export default function GroupLessonsPage() {
             nervous about. Bringing a friend makes that even easier.
           </p>
           <p className="lesson-hero__price">
-            From $90
-            <span className="lesson-hero__price-unit">+ HST</span>
+            $219
+            <span className="lesson-hero__price-unit">/ 2.5 hours + HST</span>
           </p>
           <BookButton source="packages_group" className="btn btn--primary">
             Book a Group Lesson
@@ -90,12 +94,12 @@ export default function GroupLessonsPage() {
         </div>
       </section>
 
-      {/* ---------- The two current options ---------- */}
+      {/* ---------- The current group option ---------- */}
       <section className="section" aria-labelledby="options-heading">
         <div className="section__inner">
           <header className="section-header">
-            <p className="section-header__eyebrow">Two ways to share it</p>
-            <h2 id="options-heading">Pick your session length</h2>
+            <p className="section-header__eyebrow">How it works</p>
+            <h2 id="options-heading">The group session</h2>
           </header>
           <div className="lesson-options">
             {OPTIONS.map((o) => (
@@ -138,9 +142,6 @@ export default function GroupLessonsPage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
-      <TrustBlock />
-
       {/* ---------- Real reviews ---------- */}
       <section className="section" aria-labelledby="quotes-heading">
         <div className="section__inner">
@@ -201,6 +202,7 @@ export default function GroupLessonsPage() {
           </p>
         </div>
       </section>
+
     </>
   )
 }

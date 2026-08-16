@@ -93,9 +93,10 @@ const SCROLL_SPEED = 1.2
 // How long to pause auto-advance after the user touches/swipes/scrolls.
 const RESUME_DELAY_MS = 2500
 
-// Shared auto-scrolling strip of review cards — used by the home "What
-// Students Are Saying" section and by the TrustBlock band on every package/
-// info page. The only JS is the marquee auto-advance: a progressive
+// Auto-scrolling strip of review cards, used by the home "What Students Are
+// Saying" section. (It was also shared with the TrustBlock band until that was
+// removed sitewide in August 2026.) The only JS is the marquee auto-advance: a
+// progressive
 // enhancement over a natively scrollable list. Server-rendered HTML contains
 // every review; reduced-motion users get a static, swipeable strip.
 export default function ReviewsMarquee() {

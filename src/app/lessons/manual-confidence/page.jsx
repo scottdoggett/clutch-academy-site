@@ -1,20 +1,19 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
-import TrustBlock from '../../../components/lessons/TrustBlock'
+import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
   title: 'Complete Manual Confidence Package — 5 Lessons | Clutch Academy',
   description:
-    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $400 + HST.',
+    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $469 + HST.',
   alternates: { canonical: '/lessons/manual-confidence' },
 }
 
 // Keyword target (08 §4): "highway + city manual lessons Toronto"
 // (supporting: highway lessons, hill starts, city driving).
-// Price is the CURRENT (pre-August-1) offering — PENDING: Phase 10 flips to
-// $469 + HST with 75-minute lessons.
+// Pricing is the post-August-1 offering: $469 + HST, five 75-minute lessons.
 
 // The six skills, verbatim from the brief. Descriptions add only light,
 // generic framing — no invented curriculum detail or route specifics.
@@ -62,6 +61,14 @@ const FAQ_IDS = ['synonyms', 'location', 'pay', 'cancellation', 'gift']
 export default function ManualConfidencePage() {
   return (
     <>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Lessons', href: '/manual-driving-lessons' },
+          { label: 'Complete Manual Confidence' },
+        ]}
+      />
+
       {/* ---------- Hero ---------- */}
       <section
         className="section section--first"
@@ -90,9 +97,9 @@ export default function ManualConfidencePage() {
             guarantee.
           </p>
           <p className="lesson-hero__price">
-            $400
+            $469
             <span className="lesson-hero__price-unit">
-              / 5 lessons + HST · save $50 vs. five singles
+              / 5 lessons + HST · save $76 vs. five singles
             </span>
           </p>
           <BookButton
@@ -151,9 +158,6 @@ export default function ManualConfidencePage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
-      <TrustBlock />
-
       {/* ---------- Real reviews ---------- */}
       <section className="section" aria-labelledby="quotes-heading">
         <div className="section__inner">
@@ -213,6 +217,7 @@ export default function ManualConfidencePage() {
           </p>
         </div>
       </section>
+
     </>
   )
 }

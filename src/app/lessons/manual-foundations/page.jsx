@@ -1,19 +1,18 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
-import TrustBlock from '../../../components/lessons/TrustBlock'
+import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
   title: 'Manual Foundations Package — 3 Lessons | Clutch Academy',
   description:
-    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $240 + HST.',
+    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $299 + HST.',
   alternates: { canonical: '/lessons/manual-foundations' },
 }
 
 // Keyword target (08 §4): "learn to drive manual Toronto" (beginners).
-// Price is the CURRENT (pre-August-1) offering — PENDING: Phase 10 flips to
-// $299 + HST with 75-minute lessons.
+// Pricing is the post-August-1 offering: $299 + HST, three 75-minute lessons.
 
 // The three-lesson progression, from the brief. Descriptions elaborate only
 // with language already established on the site (HowItWorks first-lesson
@@ -54,6 +53,14 @@ const FAQ_IDS = ['never-driven', 'how-many', 'location', 'car', 'cancellation']
 export default function ManualFoundationsPage() {
   return (
     <>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Lessons', href: '/manual-driving-lessons' },
+          { label: 'Manual Foundations' },
+        ]}
+      />
+
       {/* ---------- Hero ---------- */}
       <section
         className="section section--first"
@@ -78,9 +85,9 @@ export default function ManualFoundationsPage() {
             nervous about.
           </p>
           <p className="lesson-hero__price">
-            $240
+            $299
             <span className="lesson-hero__price-unit">
-              / 3 lessons + HST · save $30 vs. three singles
+              / 3 lessons + HST · save $28 vs. three singles
             </span>
           </p>
           <BookButton source="packages_3pack" className="btn btn--primary">
@@ -141,9 +148,6 @@ export default function ManualFoundationsPage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
-      <TrustBlock />
-
       {/* ---------- Real reviews ---------- */}
       <section className="section" aria-labelledby="quotes-heading">
         <div className="section__inner">
@@ -206,6 +210,7 @@ export default function ManualFoundationsPage() {
           </p>
         </div>
       </section>
+
     </>
   )
 }

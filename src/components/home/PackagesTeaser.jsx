@@ -6,16 +6,15 @@ import './PackagesTeaser.css'
 // to the package pages; don't explain every service inline").
 //
 // Names are the overhaul-target package names so they match the pages they
-// link to; prices are the CURRENT (pre-August-1) offering to match what a
-// student pays today — the announcement banner explains the upcoming change.
-// PENDING: Phase 10 flips prices/durations to the new offering (08 §3).
+// link to; prices are the post-August-1 offering (08 §3), matching the switch
+// already shipped on the live site in 308317c.
 const TEASERS = [
   {
     tag: 'Private · Single',
     title: 'Individual Manual Lesson',
     desc: 'Best for refreshers or a first introduction to stick.',
-    price: '$90',
-    unit: '/ hour + HST',
+    price: '$109',
+    unit: '/ 75 min + HST',
     href: '/lessons/individual',
     tier: 1,
   },
@@ -23,7 +22,7 @@ const TEASERS = [
     tag: 'Private · 3 Lessons',
     title: 'Manual Foundations',
     desc: 'Full progression from clutch control to road-confident.',
-    price: '$240',
+    price: '$299',
     unit: '/ 3 lessons + HST',
     href: '/lessons/manual-foundations',
     tier: 2,
@@ -33,8 +32,8 @@ const TEASERS = [
     tag: 'Group · With a Friend',
     title: 'Group Manual Lessons',
     desc: 'Bring a friend and split the experience.',
-    price: 'From $90',
-    unit: '+ HST',
+    price: '$219',
+    unit: '/ 2.5 hours + HST',
     href: '/lessons/group',
     tier: 3,
   },
@@ -42,7 +41,7 @@ const TEASERS = [
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence',
     desc: 'City, highway, and rush-hour mastery — the flagship.',
-    price: '$400',
+    price: '$469',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
     tier: 4,

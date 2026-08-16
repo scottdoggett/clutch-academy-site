@@ -4,9 +4,9 @@
 // lesson page surfaces a relevant subset by id — so on-page copy and
 // structured data can't drift.
 //
-// PENDING (Phase 10): the "How many lessons" answer references lesson counts
-// only, but any future duration copy (60 -> 75 min) must be updated here on
-// the August 1 switch.
+// The August-1 switch (60 -> 75 min) needed no edits here: the answers talk in
+// lesson counts, not durations. If duration copy is ever added, it belongs in
+// this array — never forked into a page.
 export const FAQS = [
   {
     id: 'license',
@@ -41,7 +41,7 @@ export const FAQS = [
   {
     id: 'pay',
     q: 'How do I pay?',
-    a: 'Payment is securely collected at the time of your booking using Stripe. Arrangements can be made to also accept e-transfer, and PayPal.',
+    a: 'Payment is securely collected at the time of your booking using Stripe. All major credit and debit cards are accepted.',
   },
   {
     id: 'cancellation',

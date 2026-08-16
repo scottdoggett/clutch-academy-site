@@ -20,7 +20,7 @@ export default function Hero() {
           </h1>
           <p className="hero__subhead">
             One-on-one manual transmission lessons on real Toronto roads. Book
-            your first hour in under a minute.
+            your first lesson in under a minute.
           </p>
           <div className="hero__ctas">
             <BookButton source="hero" className="btn btn--primary">

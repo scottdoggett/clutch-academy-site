@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
-import TrustBlock from '../../components/lessons/TrustBlock'
 import headshot from '../../../public/headshot.jpeg'
 import './about.css'
 
@@ -107,30 +106,46 @@ export default function AboutPage() {
               The story behind Clutch Academy
             </h1>
 
-            {/* PENDING: origin-story wording below is drafted from the brand
-                positioning — have Sam confirm or personalize it in the
-                content review pass. */}
+            {/* Origin story supplied by Sam in the Site 2.0 review doc
+                (August 2026) — this is his own wording, not drafted copy.
+                Don't rewrite it without asking him. */}
             <p className="about-story__para">
-              Hey — I’m Sam. Clutch Academy exists because most people who
-              want to learn manual have nowhere good to learn it: no stick
-              shift in the family, no friend patient enough to lend you their
-              clutch. Just the curiosity, and no calm place to put it. So I
-              made teaching it my job.
+              A few years ago, I made one of the biggest decisions of my life:
+              I walked away from a career that looked great on paper but
+              didn’t feel right.
             </p>
             <p className="about-story__para">
-              If the idea of driving stick makes you nervous, you’re in good
-              company — most students arrive nervous. Stalling in traffic,
-              rolling back on a hill, grinding a gear: everyone worries about
-              the same things. That’s why every lesson here is calm, patient,
-              and judgment-free. Stalls aren’t failures — they’re the
-              curriculum.
+              I didn’t have all the answers. I tried different paths, moved
+              cities, worked different jobs, and spent a lot of time figuring
+              out what actually mattered to me. Through all of it, one thing
+              became clear: I wanted to build something that genuinely helped
+              people while letting me be myself every day.
+            </p>
+            <p className="about-story__para">That journey led to Clutch Academy.</p>
+            <p className="about-story__para">
+              I’ve always loved driving manual, but what surprised me even
+              more was how much I loved teaching it. There’s something
+              incredibly rewarding about watching someone go from nervous and
+              overwhelmed to confidently shifting gears on their own. Seeing
+              that moment when everything finally “clicks” is what makes this
+              business so fulfilling.
             </p>
             <p className="about-story__para">
-              You’ll learn on real Toronto roads — quiet streets first, busier
-              ones when you’re ready — and every lesson moves at your pace,
-              not a fixed script. The goal was never to get you through a
-              lesson. It’s to make you the person who doesn’t think twice
-              about driving a manual.
+              At Clutch Academy, my goal isn’t just to teach you how to drive
+              stick—it’s to create an environment where you feel comfortable
+              asking questions, making mistakes, and learning at your own
+              pace. Whether you’ve never touched a clutch before or just need
+              to build confidence, every lesson is patient, practical, and
+              completely judgment-free.
+            </p>
+            <p className="about-story__para">
+              Starting Clutch Academy was a leap of faith, but it’s become one
+              of the best decisions I’ve ever made. Every student I work with
+              reminds me why I took that leap in the first place.
+            </p>
+            <p className="about-story__para">
+              I look forward to helping you discover just how fun—and
+              rewarding—driving manual can be.
             </p>
 
             <BookButton source="about_page" className="btn btn--primary">
@@ -212,9 +227,6 @@ export default function AboutPage() {
       {/* PENDING: dedicated student testimonials from Sam (08 §7 — real
           quotes only, no invented reviews). When they land, they slot in
           here as a quote strip alongside the rating block. */}
-      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
-      <TrustBlock />
-
       {/* ---------- Route out to the package pages ---------- */}
       <section
         className="section about-next"
@@ -244,6 +256,7 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+
     </>
   )
 }

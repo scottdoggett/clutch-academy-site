@@ -14,7 +14,7 @@ function trackContact(method) {
 
 const CHANNELS = [
   {
-    label: 'Call',
+    label: 'Text or call',
     href: 'tel:+14372231153',
     text: '(437) 223-1153',
     method: 'phone',

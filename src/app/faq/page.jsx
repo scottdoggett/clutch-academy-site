@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
-import TrustBlock from '../../components/lessons/TrustBlock'
 import { FAQS } from '../../lib/faqs'
 import './faq.css'
 
@@ -71,9 +70,6 @@ export default function FaqPage() {
           </div>
         </div>
       </section>
-
-      {/* Full-bleed band — renders its own <section>, no inner wrapper. */}
-      <TrustBlock />
 
       <section className="section" aria-labelledby="faq-cta-heading">
         <div className="section__inner lesson-next">

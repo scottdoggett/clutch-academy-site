@@ -2,7 +2,6 @@ import Script from 'next/script'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
-import AnnouncementBanner from '../components/AnnouncementBanner'
 import ConsentBanner from '../components/ConsentBanner'
 import AnalyticsLoader from '../components/AnalyticsLoader'
 import './globals.css'
@@ -102,7 +101,6 @@ export default function RootLayout({ children }) {
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <AnnouncementBanner />
         <Nav />
         <main id="main">{children}</main>
         <Footer />

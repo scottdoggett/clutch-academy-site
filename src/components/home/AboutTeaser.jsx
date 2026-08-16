@@ -62,7 +62,7 @@ export default function AboutTeaser() {
               Book a Lesson
             </BookButton>
             <Link href="/about" className="about__more">
-              More about Sam →
+              More about the story behind Clutch Academy →
             </Link>
           </div>
         </div>
