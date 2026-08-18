@@ -38,10 +38,14 @@
   color: var(--chrome);
 }
 
+/* Vertical padding clears the 24px AA target minimum; the trail's own text was
+   16px tall. */
 .breadcrumbs__link {
   color: var(--chrome);
   text-decoration: none;
   text-underline-offset: 3px;
+  display: inline-block;
+  padding: 0.375rem 0;
 }
 
 .breadcrumbs__link:hover,

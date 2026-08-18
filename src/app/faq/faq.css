@@ -18,11 +18,12 @@
   outline-offset: 2px;
 }
 
+  /* Uncapped: fills the 1200px column so its edges line up with the heading
+     above it — see .hub-cards for the same correction. */
 .faq-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1rem, 3vw, 2.5rem);
-  max-width: 1100px;
 }
 
 .faq {
@@ -91,6 +92,7 @@
 
   .faq__question {
     padding: 0.625rem 0;
+    min-height: 44px;
   }
 
   .faq__question::after {

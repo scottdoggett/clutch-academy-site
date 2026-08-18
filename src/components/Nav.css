@@ -95,48 +95,102 @@
   outline-offset: 2px;
 }
 
+/* 44px tall, and 44px wide to a thumb — but only 44px tall to the layout.
+   The nav row at 390px is logo + toggle + Book Now with ~0px to spare, so
+   reserving 44px of real width here wrapped Book Now onto a second line and
+   doubled the bar's height. The overlay buys the horizontal reach for free. */
 .nav__toggle {
   display: none;
+  position: relative;
   background: transparent;
   border: none;
   color: var(--white);
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  padding: 0 0.375rem;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav__toggle::after {
+  content: '';
+  position: absolute;
+  inset: 0 -0.375rem;
 }
 
 @media (max-width: 767px) {
+  /* nowrap, and the open menu is taken out of flow below — together these keep
+     the bar exactly --nav-height tall. It used to wrap: at 375px and below the
+     row (logo 189 + toggle + Book Now) didn't fit, Book Now dropped to a second
+     line, and the bar grew to 113px while every page still reserved 64px for
+     it — so the fixed bar sat on top of the first heading. */
   .nav {
-    flex-wrap: wrap;
-    padding: 0.75rem 1rem;
+    flex-wrap: nowrap;
+    padding: 0.75rem 0.75rem;
+  }
+
+  /* The logo absorbs the squeeze; the two controls keep their size. */
+  .nav__brand {
+    min-width: 118px;
+    flex-shrink: 1;
+  }
+
+  /* An explicit preferred width matters: logo.svg is `width=100% height=100%`
+     with only a viewBox, so it has no intrinsic pixel size — `width: auto`
+     plus `max-width: 100%` collapsed it to 0. It renders at 189px where there
+     is room and scales down proportionally where there isn't. */
+  .nav__logo {
+    height: auto;
+    width: 189px;
+    max-width: 100%;
+    aspect-ratio: 755 / 96;
   }
 
   .nav__toggle {
-    display: block;
+    display: flex;
     order: 2;
+    flex-shrink: 0;
   }
 
   .nav__book {
     order: 3;
     margin-left: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.875rem;
+    min-height: 44px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
+  /* A dropdown panel rather than a wrapped row: out of flow, so opening the
+     menu can't change the bar's height, and opaque, because the translucent
+     bar over a display-size headline was close to unreadable. */
   .nav__menu {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     flex-direction: column;
     gap: 0.5rem;
-    width: 100%;
-    order: 4;
-    padding: 1rem 0 0.5rem;
+    width: auto;
+    margin: 0;
+    padding: 0.75rem 1rem 1rem;
+    background-color: #4a0510;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .nav__menu--open {
     display: flex;
   }
 
+  /* Block-level so the whole row is tappable, not just the width of the word:
+     an inline link left most of each menu row dead to a thumb. */
   .nav__link {
-    padding: 0.75rem 0;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
     font-size: 1rem;
   }
 }

@@ -150,6 +150,20 @@
     grid-template-columns: 1fr;
   }
 
+  /* Full-width 44px rows. These stacked links were 17px tall on a 25px pitch —
+     a legible list, but a row of near-misses for a thumb. The gap goes to zero
+     because the tap padding now supplies the rhythm. */
+  .footer__list,
+  .footer__list--two-col {
+    gap: 0;
+  }
+
+  .footer__list a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
   .footer__bottom {
     flex-direction: column;
     align-items: flex-start;

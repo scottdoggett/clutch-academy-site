@@ -56,6 +56,18 @@
   align-self: flex-start;
   max-width: 100%;
   overflow-wrap: anywhere;
+  position: relative;
+}
+
+/* These are the tap-to-call and tap-to-mail targets, and they were 29px tall.
+   An overlay grows the hit area to ~45px on touch screens; padding would have
+   worked too, but it would drag the underline away from the text. */
+@media (max-width: 767px) {
+  .contact-card__item a::after {
+    content: '';
+    position: absolute;
+    inset: -0.5rem 0;
+  }
 }
 
 .contact-card__item a:hover,

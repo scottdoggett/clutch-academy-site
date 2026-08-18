@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import BookButton from '../../components/BookButton'
 import './hub.css'
 
 export const metadata = {
@@ -161,7 +162,6 @@ export default function LessonsOverviewPage() {
         </div>
       </section>
 
-      {/* ---------- Trust ---------- */}
       {/* ---------- Help me choose ---------- */}
       <section
         className="section hub-choose"
@@ -187,6 +187,33 @@ export default function LessonsOverviewPage() {
         </div>
       </section>
 
+      {/* ---------- Closing CTA ---------- */}
+      {/* The hub's only Book button. Its predecessor lived in the intro hero
+          removed in August 2026, which left this page — a significant entry
+          point — with no booking CTA at all, against 01-brief.md. Every CTA
+          opens the same Calendly, so booking from the hub is not a shortcut
+          past choosing a package. New `source` tag rather than the retired
+          `lessons_overview`: that one labelled the intro-hero placement, and
+          conflating the two would muddy the GA4 series (05-analytics.md). */}
+      <section className="section" aria-labelledby="hub-next-heading">
+        <div className="section__inner lesson-next">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Ready to drive?</p>
+            <h2 id="hub-next-heading">Book your first lesson</h2>
+          </header>
+          <BookButton
+            source="lessons_overview_close"
+            className="btn btn--primary btn--xl"
+          >
+            Book a Lesson
+          </BookButton>
+          <p className="lesson-next__links">
+            Prefer to talk it through first?{' '}
+            <Link href="/contact">Get in touch</Link>, or{' '}
+            <Link href="/faq">read the FAQ</Link>.
+          </p>
+        </div>
+      </section>
     </>
   )
 }

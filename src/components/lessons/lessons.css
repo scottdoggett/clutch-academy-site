@@ -440,4 +440,11 @@
   .lesson-quotes {
     grid-template-columns: 1fr;
   }
+
+  /* Match the /faq accordion: a 44px row for a thumb. */
+  .lesson-faq__question {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
 }

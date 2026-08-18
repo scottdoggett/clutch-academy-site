@@ -47,8 +47,8 @@ export default function FaqPage() {
             </h1>
             <p className="section-header__lead">
               Everything you need to know before your first manual lesson.
-              Still unsure? <Link href="/contact">Get in touch</Link>and
-              we&apos;ll get back within 24 hours.
+              Still unsure? <Link href="/contact">Get in touch</Link>{' '}
+              and we&apos;ll get back within 24 hours.
             </p>
           </header>
 
