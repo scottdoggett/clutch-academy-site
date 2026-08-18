@@ -6,7 +6,10 @@
    is what has to clear the fixed nav. */
 .breadcrumbs {
   background-color: var(--red-primary);
-  padding: calc(var(--nav-height) + 0.875rem) 0 0;
+  /* Horizontal padding mirrors `.section` so this bar's `.section__inner`
+     lines up with the hero's. Without it the trail sat flush to the viewport
+     edge while the hero below started a full gutter in. */
+  padding: calc(var(--nav-height) + 0.875rem) clamp(1.25rem, 4vw, 4rem) 0;
 }
 
 /* ...and the hero then only needs its normal rhythm. Three classes so this
@@ -57,11 +60,14 @@
   font-weight: 600;
 }
 
-/* The hero below already carries the section's top padding, so the trail only
-   needs to clear the nav — keep it tight on phones. */
+/* Phones keep the nav clearance — the hero can't provide it, because the rule
+   above hands the hero a small padding-top whenever a trail precedes it. An
+   earlier `padding-top: 0.75rem` here dropped the clearance entirely and left
+   the trail and the hero eyebrow rendering underneath the fixed nav. Only the
+   breathing room below the nav tightens on small screens. */
 @media (max-width: 639px) {
   .breadcrumbs {
-    padding-top: 0.75rem;
+    padding-top: calc(var(--nav-height) + 0.625rem);
   }
 
   .breadcrumbs__list {

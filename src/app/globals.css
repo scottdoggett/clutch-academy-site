@@ -157,6 +157,12 @@ img {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  /* Distance from the section's padding edge to the centred column's left
+     edge. Blocks that cap themselves narrower than the column set
+     `margin-inline: var(--column-inset) auto` so they start on that same edge
+     instead of re-centring — otherwise a 900px block lands ~150px right of the
+     nav, the footer, and every full-width section on the page. */
+  --column-inset: max(0px, calc((100% - 1200px) / 2));
 }
 
 .section--first {
@@ -244,6 +250,7 @@ img {
   gap: 1rem;
   align-items: flex-start;
   max-width: 900px;
+  margin-inline: var(--column-inset) auto;
 }
 
 .lesson-next__links {

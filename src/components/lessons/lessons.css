@@ -15,6 +15,7 @@
   gap: 1rem;
   align-items: flex-start;
   max-width: 900px;
+  margin-inline: var(--column-inset) auto;
 }
 
 .lesson-hero__headline {
@@ -90,6 +91,7 @@
 /* ---------- Who it's for / content blocks ------------------------------- */
 .lesson-block__inner {
   max-width: 900px;
+  margin-inline: var(--column-inset) auto;
 }
 
 .lesson-block__list {
@@ -240,7 +242,6 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  max-width: 1100px;
 }
 
 .lesson-skills__item {
@@ -341,11 +342,12 @@
 }
 
 /* ---------- Real student quotes ----------------------------------------- */
+/* Uncapped so the grid fills its 1200px .section__inner and lines up with the
+   heading above it — see .hub-cards for the same correction. */
 .lesson-quotes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  max-width: 1100px;
 }
 
 .lesson-quote {
@@ -376,8 +378,9 @@
 }
 
 /* ---------- FAQ subset --------------------------------------------------- */
+/* Rules span the full section column; the answers stay readable via their own
+   65ch cap rather than a container cap that pushed the block off-centre. */
 .lesson-faq {
-  max-width: 900px;
   display: flex;
   flex-direction: column;
 }

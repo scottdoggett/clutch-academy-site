@@ -35,6 +35,7 @@
 /* ---------- Payment & cancellation ---------- */
 .contact-policies {
   max-width: 900px;
+  margin-inline: var(--column-inset) auto;
 }
 
 .contact-policies__list {

@@ -5,6 +5,7 @@
   gap: clamp(2rem, 4vw, 4rem);
   align-items: center;
   max-width: 1100px;
+  margin-inline: var(--column-inset) auto;
   /* Blend-mode children (the headshot) composite against this box. */
   isolation: isolate;
 }
@@ -111,6 +112,7 @@
 /* ---------- Why Learn Manual Driving ----------------------------------- */
 .about-manual__inner {
   max-width: 820px;
+  margin-inline: var(--column-inset) auto;
 }
 
 .about-manual__copy {
