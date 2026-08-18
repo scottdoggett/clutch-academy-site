@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** August 16, 2026.
+**Last updated:** August 18, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -13,6 +13,52 @@ accessibility and 100 SEO on every route. It is deployed to its own Vercel
 project for review while `main` keeps serving customers the original Vite site.
 The August-1 pricing switch has now been applied to both branches. What remains
 before cutover is verification and client sign-off, not building.
+
+## Recently completed — August 18, 2026
+
+A layout and mobile pass. Both entries under "Known bugs" are fixed, plus
+several defects that pass hadn't caught. No content decisions were made — the
+open questions below are untouched.
+
+- **One content column per page.** The skew described in the old "known bugs"
+  entry was half the story. Blocks capped *narrower* than the 1200px
+  `.section__inner` inherit its `margin: 0 auto` and re-centre, landing ~150px
+  right of the nav, the footer, and every full-width section on the same page —
+  so a page showed two competing left edges, which is what made it noticeable.
+  `.section__inner` now publishes `--column-inset` (the distance from the
+  section padding edge to the column's left edge) and every narrower block uses
+  `margin-inline: var(--column-inset) auto`. The blocks capped at 1100px inside
+  the column were uncapped. Measured at 320 / 390 / 1024 / 1280 / 1440 / 1713:
+  all 9 routes resolve to a single left edge.
+- **The mobile nav no longer wraps.** At 375px and below, the bar's row (logo
+  189px + toggle + Book Now) didn't fit; Book Now dropped to a second line and
+  the bar grew to 113px while every page still reserved `--nav-height` (64px),
+  so the fixed bar covered the first heading. 375 and 360 are the two most
+  common phone widths. The bar is `nowrap`, the open menu is an absolutely
+  positioned dropdown (opening it can't change the bar's height), and the logo
+  shrinks to absorb the remainder. Verified one row from 320 to 767px.
+- **The mobile menu panel is opaque.** It was inheriting the bar's 0.85 alpha,
+  and the hero's display-size headline read through it.
+- **Breadcrumbs were rendering under the fixed nav on phones.** The
+  `max-width: 639px` block replaced the bar's nav clearance with a flat
+  `0.75rem`, reasoning that the hero below carries it — but
+  `.breadcrumbs + .section--first` deliberately shrinks the hero's padding
+  *because* the trail is meant to do the clearing. The trail sat at y=12-33 and
+  the hero eyebrow at y=49-71, under a 64px nav. The bar also had no horizontal
+  padding, so it sat flush to the viewport edge.
+- **Touch targets.** Nav toggle (37px), nav Book Now (34px), footer links (17px
+  on a 25px pitch), FAQ rows (39px), contact tap-to-call/mail (29px), `/about`
+  "pick where to start" (27px) all now clear 44px; breadcrumbs sit at 28px, past
+  the 24px AA floor. Where width was scarce or padding would have detached an
+  underline from its text, the hit area grows via an overlay rather than
+  padding.
+- **`/manual-driving-lessons` has a closing Book CTA again** — see the retired
+  bug below. New `source` tag `lessons_overview_close`; the old
+  `lessons_overview` stays retired because it labelled the intro-hero placement
+  and conflating them would muddy the GA4 series.
+- **Homepage About stats** sat on three different baselines on phones, because
+  two of the three labels wrap and one doesn't.
+- **`/faq` lead** was missing a space: "Get in touch" ran into "and".
 
 ## Recently completed — August 16, 2026
 
@@ -78,37 +124,15 @@ Raised with the client, not yet answered:
 | Gear-shifter clip art as chooser bullets | Supplied as a black-on-white raster PNG; the section is brand red with cream text. Needs a vector, or a traced inline SVG recoloured. |
 | "Social logo in footer" | Instagram/Facebook glyphs, or the Clutch Academy brand mark? The phrasing points both ways. |
 
-## Known bugs — found, not yet fixed
+## Known bugs
 
-**Content blocks sit left of centre on wide screens.** Measured August 16, 2026
-at a 1713px viewport. `.section__inner` is `max-width: 1200px; margin: 0 auto`
-and centres correctly, but several children are capped narrower with `margin: 0`,
-so the leftover width all collects on the right instead of splitting:
-
-| Block | Where | Width in a 1200px column | Skew |
-|---|---|---|---|
-| `.hub-cards` | The four package cards on the hub | 1100px | 100px left of centre |
-| `.lesson-quotes` | Review quotes, all four package pages | 1100px | 100px |
-| `.lesson-faq` | FAQ block, all four package pages | 900px | 300px |
-
-Blocks whose parent `.section__inner` is itself capped at 900px (the package
-hero, "who it's for", the hub chooser) are centred correctly — so a page can
-show content on two different alignments, which is what makes it noticeable.
-
-Scales with viewport: zero below ~1230px, full effect above ~1330px. Invisible
-on a laptop, obvious on a large monitor.
-
-⚠️ **The fix is not simply `margin-inline: auto`.** That would centre the card
-grid but leave its left edge 50px right of the "Four ways to learn" heading
-above it — trading a subtle misalignment for a more visible one. The better fix
-is to drop the narrower `max-width` so each block fills the column its heading
-already uses. Awaiting a decision on scope.
-
-**`/manual-driving-lessons` has no booking CTA.** The hub's only Book button
-lived in the intro hero removed on August 16, 2026. Booking still works via the
-package pages and the site-wide nav button, and routing to package pages is
-arguably a comparison page's job — but `01-brief.md` states every page funnels
-to a Book CTA, and this is a significant entry point.
+None outstanding. Both entries that stood here on August 16 — the off-centre
+content blocks and the hub's missing booking CTA — were fixed on August 18; see
+above. The fix for the first one differs from what this file proposed: it
+recommended dropping the narrower `max-width` so each block fills its heading's
+column, which is right for the three blocks it listed but leaves the *other*
+narrowed blocks re-centring 150px away. Normalising every block onto the 1200px
+column the nav and footer already use fixes both halves.
 
 ## Pending assets
 

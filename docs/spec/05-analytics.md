@@ -63,6 +63,7 @@ Active source tags:
 | `packages_group_2hr` | `/lessons/group` option card |
 | `faq` | `/faq` |
 | `contact` | `/contact` |
+| `lessons_overview_close` | `/manual-driving-lessons` closing CTA |
 
 Two historical notes that matter for reading GA4 reports:
 
@@ -74,9 +75,10 @@ Two historical notes that matter for reading GA4 reports:
 - **`reverse` is retired.** It belonged to the old single-page site's Reverse
   section.
 - **`lessons_overview` is retired.** It belonged to the Book CTA in the
-  `/manual-driving-lessons` intro hero, removed in August 2026. ⚠️ That hub page
-  now has **no booking CTA of its own** — visitors book from a package page or
-  the site-wide nav button. Worth revisiting: it's a significant entry point.
+  `/manual-driving-lessons` intro hero, removed in August 2026. The hub got a
+  booking CTA back on August 18, at the foot of the page rather than the top —
+  it carries the new tag `lessons_overview_close` rather than reviving this one,
+  so the two placements stay distinguishable in reports.
 
 ### Contact intent
 
