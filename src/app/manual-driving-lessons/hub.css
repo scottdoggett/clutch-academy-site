@@ -136,7 +136,7 @@
 .hub-card__title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  font-size: clamp(1.5rem, 2.3vw, 2rem);
   line-height: 1.05;
   letter-spacing: var(--letter-tight);
   color: var(--white);
@@ -151,9 +151,61 @@
   line-height: 1.4;
 }
 
+/* ---------- "What's included" disclosure --------------------------------- */
+/* Same +-rotates-to-x idiom as the /faq accordion, so the site has one
+   disclosure affordance rather than two that look different. */
+/* Takes the free space, so the disclosure + price + CTA sit as one block
+   anchored to the card's bottom edge. Cards in a row stretch to the tallest,
+   and with the bullets folded away that slack has to go somewhere — as a gap
+   above a bottom-anchored action block it reads as breathing room, whereas
+   stranded between the toggle and the price it read as a hole. */
+.hub-card__more {
+  margin-top: auto;
+}
+
+.hub-card__more-toggle {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.hub-card__more-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.hub-card__more-toggle::after {
+  content: '+';
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.125rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform var(--transition-reduced) ease;
+}
+
+.hub-card__more[open] .hub-card__more-toggle::after {
+  transform: rotate(45deg);
+}
+
+.hub-card__more-toggle:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
 .hub-card__list {
   list-style: none;
-  padding: 0.25rem 0 0;
+  padding: 0 0 0.375rem;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -180,7 +232,7 @@
 }
 
 .hub-card__price {
-  margin: auto 0 0;
+  margin: 0;
   padding-top: 0.875rem;
   font-family: var(--font-display);
   font-weight: 800;
@@ -315,8 +367,20 @@
     line-height: 1.25;
   }
 
+  /* Deliberately the loudest thing in the card — with the bullets folded away,
+     the title carries the identification the bullets used to. */
   .hub-card__title {
-    font-size: clamp(0.9375rem, 3.9vw, 1.1875rem);
+    font-size: clamp(1.0625rem, 4.9vw, 1.5rem);
+    line-height: 1.02;
+  }
+
+  .hub-card__more-toggle {
+    font-size: clamp(0.5625rem, 2.3vw, 0.6875rem);
+    letter-spacing: 0.08em;
+  }
+
+  .hub-card__more-toggle::after {
+    font-size: 1rem;
   }
 
   .hub-card__who {
@@ -326,7 +390,7 @@
 
   .hub-card__list {
     gap: 0.3125rem;
-    padding-top: 0;
+    padding: 0 0 0.25rem;
   }
 
   .hub-card__list li {

@@ -59,6 +59,20 @@ open questions below are untouched.
 - **Homepage About stats** sat on three different baselines on phones, because
   two of the three labels wrap and one doesn't.
 - **`/faq` lead** was missing a space: "Get in touch" ran into "and".
+- **Package cards: 2x2 on phones, and less of them.** Both four-card sets (the
+  homepage teasers and the hub's) held a single column below 768px, so comparing
+  four prices meant scrolling past all four; they now keep the 2x2 grid down to
+  320px, with the card internals scaled by vw-with-clamp rather than fixed
+  sizes. The grid alone read as busy, so the hub card now leads with a much
+  larger title and folds its feature bullets behind a native `<details>`
+  ("What's included"), using the same +-rotates-to-x affordance as the `/faq`
+  accordion. No JS, and the bullet copy stays in the HTML for crawlers.
+  ⚠️ The disclosure applies at **every** width, not just phones — CSS alone
+  can't open a `<details>` on desktop and leave it closed on mobile, and the
+  alternative was a client component for a purely presentational concern. The
+  homepage teasers took the type change but no disclosure: their one-line
+  description is the only thing that could hide, and `01-brief.md` says the
+  homepage should route to the package pages rather than explain them inline.
 
 ## Recently completed — August 16, 2026
 

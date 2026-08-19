@@ -139,11 +139,21 @@ export default function LessonsOverviewPage() {
                 </div>
                 <h3 className="hub-card__title">{p.title}</h3>
                 <p className="hub-card__who">{p.who}</p>
-                <ul className="hub-card__list">
-                  {p.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
+                {/* The feature bullets are the bulk of the card's text and the
+                    reason the four-up grid read as a wall on a phone. Behind a
+                    native <details> the card leads with title and price, and
+                    the detail is one tap away. No JS, same disclosure pattern
+                    as the FAQ, and the copy stays in the HTML for crawlers. */}
+                <details className="hub-card__more">
+                  <summary className="hub-card__more-toggle">
+                    What&apos;s included
+                  </summary>
+                  <ul className="hub-card__list">
+                    {p.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </details>
                 <p className="hub-card__price">
                   {p.price}
                   <span className="hub-card__unit">{p.unit}</span>
