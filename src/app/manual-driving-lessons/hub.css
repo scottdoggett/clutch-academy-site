@@ -295,39 +295,79 @@
   margin-inline: var(--column-inset) auto;
 }
 
+/* Each row is a card: the situation, then the package it points to, then both
+   actions. Two-up so four cards don't turn the section into a long scroll. */
 .hub-choose__list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
 .hub-choose__item {
-  padding: 0.875rem 0.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1rem, 2vw, 1.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: border-color var(--transition-reduced) ease;
+}
+
+@media (hover: hover) {
+  .hub-choose__item:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.hub-choose__if {
+  margin: 0;
   color: var(--cream);
   font-size: 1.0625rem;
-  line-height: 1.55;
-  transition: background-color var(--transition-reduced) ease;
+  line-height: 1.45;
 }
 
-.hub-choose__item:hover {
-  background-color: rgba(0, 0, 0, 0.12);
+/* margin-top: auto pins the package box and the buttons below it to the card's
+   bottom, so the four cards' actions line up however long the situation runs. */
+.hub-choose__package {
+  margin: auto 0 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: var(--red-deep);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.15;
+  letter-spacing: var(--letter-tight);
+  color: var(--white);
 }
 
-.hub-choose__item:last-child {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+.hub-choose__actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.hub-choose__item a,
+.hub-choose__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  padding: 0.625rem 0.75rem;
+}
+
 .hub-choose__aside a {
   color: var(--white);
   font-weight: 600;
   text-underline-offset: 3px;
 }
 
-.hub-choose__item a:focus-visible,
 .hub-choose__aside a:focus-visible {
   outline: 2px solid var(--white);
   outline-offset: 2px;
@@ -352,6 +392,28 @@
    the long scroll it used to be. Sizes are tuned for a full-width card here,
    not the ~150px one the two-column version had. */
 @media (max-width: 767px) {
+  /* A card per situation is inherently taller than the one-line rows this
+     replaced, so the internals run tight on phones. */
+  .hub-choose__list {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  .hub-choose__item {
+    gap: 0.625rem;
+    padding: 0.875rem;
+  }
+
+  .hub-choose__if {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .hub-choose__package {
+    padding: 0.625rem 0.75rem;
+    font-size: 1.0625rem;
+  }
+
   .hub-cards {
     grid-template-columns: 1fr;
     gap: 0.75rem;

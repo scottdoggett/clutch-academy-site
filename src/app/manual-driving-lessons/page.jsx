@@ -73,27 +73,33 @@ const PACKAGES = [
   },
 ]
 
-// "Help me choose" one-liners — the hub's second internal-linking pass.
+// "Help me choose" — the hub's second internal-linking pass. Each row states a
+// situation, names the package it points to, and offers both actions.
+//
+// The package name isn't stored here: it's looked up from PACKAGES by href, so
+// a rename lands in one place instead of two. `source` tags the row's Book
+// button for attribution (05-analytics.md) — per-row, so the reports can show
+// which situation actually drives bookings.
 const CHOOSER = [
   {
     if: 'You’ve never touched a stick shift',
-    then: 'start with the Manual Foundations Package',
     href: '/lessons/manual-foundations',
+    source: 'lessons_overview_pick_3pack',
   },
   {
     if: 'You’ve driven manual before and need a refresher',
-    then: 'book an Individual Manual Lesson',
     href: '/lessons/individual',
+    source: 'lessons_overview_pick_single',
   },
   {
     if: 'You want downtown, highway, and rush-hour mastery',
-    then: 'go for Complete Manual Confidence',
     href: '/lessons/manual-confidence',
+    source: 'lessons_overview_pick_confidence_5pack',
   },
   {
     if: 'You’d rather learn with a friend',
-    then: 'try a Group Manual Lesson',
     href: '/lessons/group',
+    source: 'lessons_overview_pick_group',
   },
 ]
 
@@ -189,11 +195,29 @@ export default function LessonsOverviewPage() {
             <h2 id="hub-choose-heading">Pick by where you are today</h2>
           </header>
           <ul className="hub-choose__list">
-            {CHOOSER.map((c) => (
-              <li key={c.href} className="hub-choose__item">
-                {c.if} — <Link href={c.href}>{c.then}</Link>.
-              </li>
-            ))}
+            {CHOOSER.map((c) => {
+              const pkg = PACKAGES.find((p) => p.href === c.href)
+              return (
+                <li key={c.href} className="hub-choose__item">
+                  <p className="hub-choose__if">{c.if}</p>
+                  <p className="hub-choose__package">{pkg.title}</p>
+                  <div className="hub-choose__actions">
+                    <BookButton
+                      source={c.source}
+                      className="btn btn--primary hub-choose__btn"
+                    >
+                      Book Now
+                    </BookButton>
+                    <Link
+                      href={c.href}
+                      className="btn btn--secondary hub-choose__btn"
+                    >
+                      See More
+                    </Link>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
           <p className="hub-choose__aside">
             Still weighing it up? The <Link href="/faq">FAQ</Link> covers

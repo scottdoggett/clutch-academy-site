@@ -64,6 +64,10 @@ Active source tags:
 | `faq` | `/faq` |
 | `contact` | `/contact` |
 | `lessons_overview_close` | `/manual-driving-lessons` closing CTA |
+| `lessons_overview_pick_single` | Hub "Pick by where you are today" — refresher row |
+| `lessons_overview_pick_3pack` | Hub "Pick by where you are today" — never-driven-stick row |
+| `lessons_overview_pick_confidence_5pack` | Hub "Pick by where you are today" — mastery row |
+| `lessons_overview_pick_group` | Hub "Pick by where you are today" — with-a-friend row |
 
 Two historical notes that matter for reading GA4 reports:
 
@@ -79,6 +83,11 @@ Two historical notes that matter for reading GA4 reports:
   booking CTA back on August 18, at the foot of the page rather than the top —
   it carries the new tag `lessons_overview_close` rather than reviving this one,
   so the two placements stay distinguishable in reports.
+
+The four `lessons_overview_pick_*` tags are per-row on purpose: every Book
+button opens the same Calendly, so the only thing distinguishing them is which
+situation the visitor identified with. That's the question the chooser exists to
+answer, and one shared tag would throw it away.
 
 ### Contact intent
 
