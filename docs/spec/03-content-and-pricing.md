@@ -58,16 +58,23 @@ social proof up top; the detail lives on the package pages. The About teaser
 links out with "More about the story behind Clutch Academy".
 
 ### `/manual-driving-lessons` Lessons hub
-The comparison page and the internal-linking spine. An intro hero with the
-training car, all four packages as cards (Manual Foundations flagged *Most
-Popular*, Confidence *Best Value*), then a "Pick by where you are today"
-chooser that routes by situation rather than by price.
+The comparison page and the internal-linking spine. It opens **straight on the
+packages** — the intro hero with the training car was removed in August 2026, so
+"Four ways to learn" is the page's `<h1>`. Then: all four packages as cards
+(Manual Foundations flagged *Most Popular*, Confidence *Best Value*), a "Pick by
+where you are today" chooser that routes by situation rather than by price, and
+a closing Book CTA.
+
+The chooser is four cards, each stating a situation, naming the package it points
+to, and offering both Book Now and See More. It replaced four one-line sentences
+with the package name buried in them as an inline link (August 18, 2026).
 
 ### `/lessons/*` Package pages
 Each one: breadcrumbs → hero with price and Book CTA → who it's for → what's
-included → real Google review quotes → a five-question FAQ subset → next steps
-→ review strip. These are Ads destinations; they must stand alone for someone
-who has never seen the homepage.
+included → real Google review quotes → a five-question FAQ subset → next steps.
+These are Ads destinations; they must stand alone for someone who has never seen
+the homepage. (The review strip that used to close them was removed sitewide in
+August 2026 — see `02-architecture.md`.)
 
 ### `/about`
 Sam's origin story, **in his own words** — supplied in the Site 2.0 review doc,

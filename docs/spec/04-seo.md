@@ -74,6 +74,18 @@ Two things to hold onto:
 foundations, confidence. Group is not represented; adding it would be a small,
 correct improvement.
 
+## Collapsed content and crawlers
+
+The hub's package cards fold their feature bullets behind a `<details>` on
+phones (`02-architecture.md`). This is safe: `<details>` hides content
+visually, it does not remove it, so the bullets are in the served static HTML on
+every request and above 768px they aren't hidden at all. There is no
+cloaking and no second copy of the markup — the same element serves both.
+
+The same holds for the `/faq` accordion and the package pages' FAQ subsets,
+which have always been `<details>`, and whose copy also feeds the FAQPage
+schema.
+
 ## Crawler-facing files
 
 | File | Purpose |
@@ -107,10 +119,12 @@ headless Chrome against a local production server):
 **Not verified:** anything requiring the production domain, and real-device iOS
 Safari.
 
-Note that this QA predates the August 2026 content changes. The scores should
-hold — the changes were copy, ordering, and one new component — but a re-run
-before cutover is cheap insurance, especially for the breadcrumbs' effect on
-heading structure.
+⚠️ **This QA predates the August 2026 changes and is now materially stale.**
+The August 16 round was copy, ordering and one new component, but August 18
+reworked layout across the site: the shared content column, the mobile nav,
+touch targets, the package cards, and the hub's chooser. A re-run across all 9
+routes is a cutover requirement rather than cheap insurance — it is listed in
+the runbook in `06-deployment.md`.
 
 ## Future content
 

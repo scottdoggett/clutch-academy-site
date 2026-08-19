@@ -55,10 +55,13 @@ Each landing page carries its own Calendly source tag, so GA4
 `packages_group` (+ `packages_group_2hr` on the option card), `about_page`,
 `faq`, `contact`, plus the site-wide `nav`. Full map in `spec/05-analytics.md`.
 
-⚠️ `/manual-driving-lessons` has **no booking CTA of its own** since the intro
-hero was removed — its old `lessons_overview` tag is retired. If you point ads
-at that URL, conversions will attribute to whichever package page the visitor
-clicks into, not to the hub.
+`/manual-driving-lessons` books through five CTAs of its own: a closing
+`lessons_overview_close`, plus one per row of the "Pick by where you are today"
+chooser (`lessons_overview_pick_single`, `_3pack`, `_confidence_5pack`,
+`_group`). Ads pointed at that URL therefore attribute to the hub rather than
+leaking to whichever package page the visitor clicked into — which was the case
+between the intro hero's removal and August 18, 2026. The old `lessons_overview`
+tag stays retired; it labelled the removed hero's button.
 
 ## 3. Sitelink assets (account- or campaign-level)
 

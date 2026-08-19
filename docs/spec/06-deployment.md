@@ -14,7 +14,7 @@ right now, on purpose.
 | **Framework** | Vite (React 19 + GSAP), single-page | Next.js 16 App Router, multi-page |
 | **Build** | `vite build && node scripts/prerender.mjs` | `next build` |
 | **Config** | `vercel.json` | `next.config.mjs` |
-| **Domain** | `clutchacademy.ca` — the real one | Its own Vercel project URL |
+| **Domain** | `clutchacademy.ca` — the real one | Its own Vercel project URL — ⚠️ **not recorded anywhere in this repo**; find it in the Vercel dashboard as the project whose production branch is `overhaul`. Worth pasting here. |
 | **Audience** | Customers | Sam and anyone reviewing the rebuild |
 | **Purpose** | Keep the business running | Show the rebuild before committing to it |
 
@@ -93,7 +93,8 @@ What "go live with the rebuild" actually takes. Nothing here has been done yet.
    Calendly popup (the custom mobile host), consent accept and decline, and
    general layout.
 4. **Re-run Lighthouse** across all 9 routes. The last full pass predates the
-   August 2026 content changes.
+   August 2026 changes, including the August 18 layout rework — treat the
+   recorded scores in `04-seo.md` as stale, not as a baseline.
 5. **Decide the `aggregateRating` question** (`04-seo.md`) before it ships under
    the real domain.
 6. **Merge `overhaul` → `main`.** Expect a large diff: two frameworks.

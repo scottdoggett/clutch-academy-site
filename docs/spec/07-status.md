@@ -8,90 +8,98 @@ this file disagrees with another doc about current state, this file wins.
 ## In one paragraph
 
 The Next.js rebuild is **complete and unmerged**. All 9 routes carry real
-content, analytics and consent are wired, and the pre-launch QA pass scored 100
-accessibility and 100 SEO on every route. It is deployed to its own Vercel
-project for review while `main` keeps serving customers the original Vite site.
-The August-1 pricing switch has now been applied to both branches. What remains
-before cutover is verification and client sign-off, not building.
+content, analytics and consent are wired, and the August-1 pricing switch has
+been applied to both branches. It is deployed to its own Vercel project for
+review while `main` keeps serving customers the original Vite site. Two rounds
+of client review — August 16 (copy and structure) and August 18 (layout, mobile,
+package cards) — have been applied. What remains before cutover is verification
+and client sign-off, not building. The one caveat: **the July QA pass no longer
+reflects the build**, so re-running it is now a cutover requirement rather than
+a formality.
 
 ## Recently completed — August 18, 2026
 
-A layout and mobile pass. Both entries under "Known bugs" are fixed, plus
-several defects that pass hadn't caught. No content decisions were made — the
-open questions below are untouched.
+A layout, mobile and card-design pass, driven by review on a real phone. Both
+entries that stood under "Known bugs" are fixed, along with several defects
+neither this file nor the August 16 pass had caught. **No content decisions were
+made** — every open question below is untouched.
 
-- **One content column per page.** The skew described in the old "known bugs"
-  entry was half the story. Blocks capped *narrower* than the 1200px
-  `.section__inner` inherit its `margin: 0 auto` and re-centre, landing ~150px
-  right of the nav, the footer, and every full-width section on the same page —
-  so a page showed two competing left edges, which is what made it noticeable.
-  `.section__inner` now publishes `--column-inset` (the distance from the
-  section padding edge to the column's left edge) and every narrower block uses
-  `margin-inline: var(--column-inset) auto`. The blocks capped at 1100px inside
+### Layout
+
+- **One content column per page.** The old "known bugs" entry had half of it.
+  Blocks capped *narrower* than the 1200px `.section__inner` inherit its
+  `margin: 0 auto` and re-centre, landing ~150px right of the nav, the footer,
+  and every full-width section on the same page — two competing left edges per
+  page, which is what made the skew noticeable. `.section__inner` now publishes
+  `--column-inset` and every narrower block uses
+  `margin-inline: var(--column-inset) auto`; the blocks capped at 1100px inside
   the column were uncapped. Measured at 320 / 390 / 1024 / 1280 / 1440 / 1713:
-  all 9 routes resolve to a single left edge.
-- **The mobile nav no longer wraps.** At 375px and below, the bar's row (logo
-  189px + toggle + Book Now) didn't fit; Book Now dropped to a second line and
-  the bar grew to 113px while every page still reserved `--nav-height` (64px),
-  so the fixed bar covered the first heading. 375 and 360 are the two most
-  common phone widths. The bar is `nowrap`, the open menu is an absolutely
-  positioned dropdown (opening it can't change the bar's height), and the logo
-  shrinks to absorb the remainder. Verified one row from 320 to 767px.
-- **The mobile menu panel is opaque.** It was inheriting the bar's 0.85 alpha,
-  and the hero's display-size headline read through it.
-- **Breadcrumbs were rendering under the fixed nav on phones.** The
-  `max-width: 639px` block replaced the bar's nav clearance with a flat
-  `0.75rem`, reasoning that the hero below carries it — but
-  `.breadcrumbs + .section--first` deliberately shrinks the hero's padding
-  *because* the trail is meant to do the clearing. The trail sat at y=12-33 and
-  the hero eyebrow at y=49-71, under a 64px nav. The bar also had no horizontal
-  padding, so it sat flush to the viewport edge.
+  every route resolves to a single left edge.
+- **Breadcrumbs rendered under the fixed nav on phones.** The `max-width: 639px`
+  block replaced the bar's nav clearance with a flat `0.75rem`, on the reasoning
+  that the hero below carries it — but `.breadcrumbs + .section--first`
+  deliberately shrinks the hero's padding *because* the trail is meant to do the
+  clearing. The trail sat at y=12–33 and the hero eyebrow at y=49–71, under a
+  64px nav. The bar also had no horizontal padding, so it sat flush to the
+  viewport edge.
+
+### Mobile
+
+- **The nav bar no longer wraps.** At 375px and below the row (logo 189px +
+  toggle + Book Now) didn't fit; Book Now dropped to a second line and the bar
+  grew to 113px while every page still reserved `--nav-height` (64px), so the
+  fixed bar covered the first heading. 375 and 360 are the two most common phone
+  widths. The bar is `nowrap`, the open menu is an absolutely positioned
+  dropdown, and the logo shrinks to absorb the rest. One row from 320 to 767px.
+- **The menu panel is opaque.** It inherited the bar's 0.85 alpha and the hero's
+  display-size headline read straight through it.
+- **Vertical scrolling works over the reviews marquee.** `touch-action: pan-x`
+  declared horizontal panning to be the only gesture the element handles, so a
+  vertical drag starting on the reviews was swallowed and the page didn't move.
+  Measured before → after at 390px: 0px → 231px of page scroll, with the
+  horizontal swipe still working (210px of strip travel).
 - **Touch targets.** Nav toggle (37px), nav Book Now (34px), footer links (17px
-  on a 25px pitch), FAQ rows (39px), contact tap-to-call/mail (29px), `/about`
-  "pick where to start" (27px) all now clear 44px; breadcrumbs sit at 28px, past
-  the 24px AA floor. Where width was scarce or padding would have detached an
-  underline from its text, the hit area grows via an overlay rather than
-  padding.
-- **`/manual-driving-lessons` has a closing Book CTA again** — see the retired
-  bug below. New `source` tag `lessons_overview_close`; the old
-  `lessons_overview` stays retired because it labelled the intro-hero placement
-  and conflating them would muddy the GA4 series.
-- **Homepage About stats** sat on three different baselines on phones, because
-  two of the three labels wrap and one doesn't.
+  on a 25px pitch), FAQ rows (39px), contact tap-to-call/mail (29px) and
+  `/about`'s "pick where to start" (27px) all clear 44px now; breadcrumbs sit at
+  28px, past the 24px AA floor. Where width was scarce or padding would have
+  detached an underline from its text, the hit area grows via an overlay.
+- **Homepage About stats** sat on three different baselines, because two of the
+  three labels wrap and one doesn't.
+
+### Package cards
+
+Both four-card sets — the homepage teasers and the hub's — were a column of
+full-height cards below 768px, which made the packages band a long scroll. A 2×2
+grid was tried and **reverted** as too busy. The shape that stuck is one card per
+row, with each card much shorter:
+
+- The hub card leads with a larger title and folds its feature bullets behind a
+  native `<details>` ("What's included"), reusing the `/faq` accordion's
+  +-rotates-to-× affordance. No JS.
+- **The disclosure is phones-only.** Desktop was never the crowded case, so
+  above 768px the summary is hidden and the content forced visible. See
+  `02-architecture.md` for the mechanism and its one odd side effect.
+- **The whole card is the toggle** on phones — an overlay on the summary covers
+  the card. "See full details" is lifted above it and still navigates.
+- Price and CTA share a row (`__foot`); at desktop that wrapper is
+  `display: contents`, so the column layout is untouched.
+
+Grid height, original → now: **1673px → 1002px** at 390px and 1782px → 1096px at
+320px for the hub; 1039px → 792px and 1081px → 910px for the homepage.
+
+### Content structure
+
+- **`/manual-driving-lessons` has a closing Book CTA again.** It had none since
+  the intro hero was removed, against `01-brief.md`, and it's a significant entry
+  point. Tagged `lessons_overview_close`; the retired `lessons_overview` stays
+  retired because it labelled the intro-hero placement.
+- **The hub's chooser rows became cards.** Each states the situation, names the
+  package in its own box, and offers Book Now and See More. The package name is
+  looked up from `PACKAGES` by href so the two can't drift. Four new per-row
+  source tags (`lessons_overview_pick_*`) — every Book button opens the same
+  Calendly, so which row was clicked is the only thing distinguishing them, and
+  that's the question the section exists to answer.
 - **`/faq` lead** was missing a space: "Get in touch" ran into "and".
-- **Package cards rebuilt for phones.** Both four-card sets (the homepage
-  teasers and the hub's) were a single column of full-height cards below 768px,
-  which made the packages band a long scroll. They briefly went 2x2; that fitted
-  more on screen but read as busy, so the final shape is **back to one column,
-  with each card much shorter**:
-    - The hub card leads with a large title and folds its feature bullets behind
-      a native `<details>` ("What's included"), reusing the `/faq` accordion's
-      +-rotates-to-x affordance. No JS, and the bullet copy stays in the HTML
-      for crawlers.
-    - Price and CTA share a row (`__foot`), since a full-width card is wide and
-      short and stacking them cost a row per card. `display: contents` at
-      desktop leaves the column layout untouched. The row never wraps — the CTA
-      shrinks and wraps its own label instead, which is free at 44px tall.
-    - Padding, type and spacing tightened throughout.
-  Measured at 390px: the hub's grid went **1673px → 1002px** and the homepage's
-  **1039px → 792px**. At 320px, 1782px → 1096px and 1081px → 910px. 768px and up
-  is untouched.
-  The disclosure is **phones only** (≤767px). Desktop was never the busy case,
-  so it shows every bullet with no toggle: above 768px the `<summary>` is
-  hidden and the content forced visible with `::details-content
-  { content-visibility: visible }`, plus a child `display` override for engines
-  that predate that pseudo-element. One copy of the bullets in the markup, no
-  duplication. Note the side effect: at desktop the `<details>` is a closed
-  element with visible content and no exposed control — assistive tech sees
-  plain rendered content rather than a collapsed disclosure, which is the
-  intended reading, but it is an unusual construction worth knowing about.
-  On phones the **whole card** is the toggle — the summary carries an overlay
-  covering the card, so a tap anywhere flips it. The CTA is lifted above the
-  overlay with `z-index`, so "See full details" still navigates.
-  The homepage teasers took the layout and type changes but no disclosure: their
-  one-line description is the only thing that could hide, and `01-brief.md` says
-  the homepage should route to the package pages rather than explain them
-  inline.
 
 ## Recently completed — August 16, 2026
 
@@ -180,8 +188,13 @@ table.
 
 | Check | Status |
 |---|---|
-| Build + lint | ✅ Clean as of August 16, 2026 |
-| Lighthouse, all 9 routes | ✅ 100 a11y / 100 SEO / 100 BP — but **predates the August content changes** |
+| Build + lint | ✅ Clean as of August 18, 2026 |
+| Lighthouse, all 9 routes | ⚠️ 100 a11y / 100 SEO / 100 BP in July 2026, but **materially stale** — predates the August 18 layout rework. Re-run is a cutover requirement. |
+| Layout: one left edge per route | ✅ Measured at 320 / 390 / 1024 / 1280 / 1440 / 1713, August 18 |
+| Mobile nav on one row | ✅ Measured 320–767px, August 18 |
+| No horizontal overflow | ✅ All 9 routes at 390px; card grids 320–1440, August 18 |
+| Touch targets ≥44px | ✅ August 18 (see the note above for the documented exceptions) |
+| Card disclosure behaviour | ✅ Real clicks dispatched at each card region, plus `checkVisibility()` per breakpoint, August 18 |
 | Crawlability, canonicals, h1s | ✅ Verified July 2026 |
 | Internal links | ✅ All 200, July 2026 |
 | Consent Mode deny-first | ✅ Verified — no pixel URLs in served HTML |

@@ -106,7 +106,43 @@ review quotes → FAQ subset → next steps.
 `/manual-driving-lessons` opens **directly on the packages** — its heading
 "Four ways to learn" is the page's `<h1>`. The intro hero that used to carry a
 separate H1, a lead paragraph, the training-car photo, and the hub's only Book
-CTA was removed in August 2026 at the client's request.
+CTA was removed in August 2026 at the client's request. The page now closes with
+its own Book CTA (`lessons_overview_close`), added on August 18 because
+`01-brief.md` requires every page to funnel to one and this is a significant
+entry point.
+
+### Package cards
+
+Two four-card sets share a shape and a set of rules: the homepage teasers
+(`PackagesTeaser`) and the hub's cards (`hub.css`). Both are **one card per row
+below 768px** — a two-column grid was tried and reverted as too busy.
+
+The hub card carries more than the teaser (gear number, who-it's-for line,
+feature bullets), so on phones its bullets fold into a native `<details>`
+labelled "What's included":
+
+- **Phones only.** Above 768px the `<summary>` is hidden and the content is
+  forced visible — `::details-content { content-visibility: visible }`, plus a
+  child `display` override for engines predating that pseudo-element. Desktop
+  was never the crowded case. One copy of the bullets in the markup either way.
+- **The whole card is the toggle.** The summary carries an overlay covering the
+  card, so a tap anywhere flips it. The CTA is lifted above the overlay with
+  `z-index` so "See full details" still navigates.
+- Note the side effect: at desktop the `<details>` is a closed element with
+  visible content and no exposed control. Assistive tech sees plain rendered
+  content rather than a collapsed disclosure — the intended reading, since there
+  is no control left to mislabel, but an unusual construction.
+
+Both cards wrap price + CTA in a `__foot` element. On phones it's a row (a
+full-width card is wide and short, so stacking them wasted a row per card); at
+desktop it's `display: contents`, so the column layout is untouched. The row is
+deliberately `nowrap` — letting it wrap put the CTA on its own line and gave
+back the row the layout exists to save.
+
+The hub's "Pick by where you are today" chooser is four cards too: the
+situation, the package named in its own box, then Book Now and See More. The
+package name is looked up from the page's `PACKAGES` array by href rather than
+stored on the chooser entry, so the two can't drift.
 
 **There is no site-wide trust strip.** A `TrustBlock` band (Google rating +
 three trust points) used to close About, the hub, the FAQ, and all four package
@@ -139,6 +175,15 @@ Two contrast rules that are easy to get wrong on the brand red (`#C8102E`):
   `var(--chrome)`. White-alpha and opacity-faded text fail 4.5:1 on the
   saturated red even when the blend maths suggests otherwise.
 
+**`--column-inset` is how narrow blocks stay on the page's left edge.**
+`.section__inner` centres a 1200px column and publishes `--column-inset`, the
+distance from the section's padding edge to that column's left edge. Any block
+that caps itself narrower must use `margin-inline: var(--column-inset) auto` —
+otherwise it inherits `margin: 0 auto` and re-centres inside the column, landing
+~150px right of the nav, the footer, and every full-width section on the same
+page. The cap is a reading measure, not a centring device. Fixed August 18,
+2026; every route resolves to a single left edge from 320px to 1713px.
+
 `--announcement-height` is held at `0px`. It exists so a future notice strip can
 publish its own height into one token and have every `--nav-height` clearance
 follow; the August-1 banner that used it was removed once the switch shipped.
@@ -155,6 +200,21 @@ follow; the August-1 banner that used it was removed once the switch shipped.
 - **Nav active state is section-aware.** `/lessons/*` keeps the Lessons item
   underlined via prefix matching, while `aria-current="page"` stays exact — on a
   package page you are *in* the section but not *on* the hub page.
+- **Interactive targets are at least 44px.** Nav toggle and Book button, footer
+  links, FAQ rows, card CTAs and the disclosure toggle all clear it. Where width
+  is scarce or padding would drag an underline away from its text, grow the hit
+  area with an absolutely positioned overlay instead — see the nav toggle and
+  `ContactCard`. Inline links inside a sentence are exempt (WCAG 2.5.8), and
+  breadcrumbs sit at 28px, past the 24px AA floor.
+- **The mobile nav bar must stay one row.** It is `flex-wrap: nowrap`, the open
+  menu is an absolutely positioned dropdown, and the logo shrinks to absorb the
+  squeeze. A wrapped bar grows past `--nav-height`, which every page reserves as
+  fixed, so the bar lands on top of the first heading.
+- **Don't set `touch-action` on horizontal scrollers.** `pan-x` reads like "this
+  pans horizontally" but declares horizontal panning to be the *only* gesture
+  the element handles, so vertical drags over it are swallowed and the page
+  won't scroll. The default already locks the axis from the gesture's initial
+  direction. Removed from the reviews marquee on August 18, 2026.
 - **Pending inputs are comments, not omissions.** Use `{/* PENDING: ... */}` or
   `❓ BLOCKED`, and never invent content to fill the gap.
 - **iOS Safari is a first-class target.** `useCalendly` mounts an inline widget

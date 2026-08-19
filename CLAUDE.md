@@ -33,7 +33,7 @@ reviewed. **Work on `overhaul`. Never commit directly to `main`.**
 `docs/spec/archive/` holds the retired single-page spec and the rebuild's
 planning docs. **Don't work from anything in there.**
 
-## Current state (August 16, 2026)
+## Current state (August 18, 2026)
 
 - **All 9 routes are built with real content**: `/`, `/about`,
   `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
@@ -41,6 +41,11 @@ planning docs. **Don't work from anything in there.**
 - **Pricing is the post-August-1 offering** — $109 / 75 min, $299, $469,
   $219 / 2.5 hr, all + HST. Applied to `main` on July 31 and to `overhaul` on
   August 16. The dated announcement banner has been removed.
+- **Two rounds of client review are applied.** August 16 was copy and structure;
+  August 18 was layout, mobile and the package cards — see `07-status.md`.
+- **The July QA pass is stale.** It predates the August 18 layout rework, so
+  re-running Lighthouse across all 9 routes is a cutover requirement now, not a
+  formality.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 
@@ -73,6 +78,16 @@ planning docs. **Don't work from anything in there.**
   `#E4E4E4` for WCAG AA. **Muted text on the brand red must be solid
   `var(--cream)`**, not white-alpha or opacity-faded (alpha over the saturated
   red fails 4.5:1 even when it looks fine).
+- **One left edge per page.** `.section__inner` centres a 1200px column and
+  publishes `--column-inset`. Any block that caps itself narrower must use
+  `margin-inline: var(--column-inset) auto`, or it re-centres inside the column
+  and lands ~150px right of the nav and footer.
+- **Interactive targets are ≥44px**, and the mobile nav bar must stay one row —
+  it's `position: fixed` against a `--nav-height` every page reserves, so a
+  wrapped bar covers the first heading. Details in `02-architecture.md`.
+- **Package cards** are one per row below 768px, with the hub card's bullets
+  behind a phones-only `<details>` whose toggle is the whole card. Don't
+  reintroduce a 2-up grid there — it was tried and rejected as too busy.
 - **Respect `prefers-reduced-motion`** — the only JS motion is the reviews
   marquee, which is matchMedia-gated; keep any new motion gated the same way.
 - **Pending inputs** are `{/* PENDING: ... */}` / `❓ BLOCKED` comments —

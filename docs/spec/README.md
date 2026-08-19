@@ -2,7 +2,7 @@
 
 Specification for the Clutch Academy website, written for the developer and for
 AI coding agents working in this repo. Everything here describes the site **as
-it actually is** on the `overhaul` branch as of **August 16, 2026**.
+it actually is** on the `overhaul` branch as of **August 18, 2026**.
 
 Superseded material lives in `archive/` and should not be worked from.
 
