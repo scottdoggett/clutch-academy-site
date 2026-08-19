@@ -59,20 +59,30 @@ open questions below are untouched.
 - **Homepage About stats** sat on three different baselines on phones, because
   two of the three labels wrap and one doesn't.
 - **`/faq` lead** was missing a space: "Get in touch" ran into "and".
-- **Package cards: 2x2 on phones, and less of them.** Both four-card sets (the
-  homepage teasers and the hub's) held a single column below 768px, so comparing
-  four prices meant scrolling past all four; they now keep the 2x2 grid down to
-  320px, with the card internals scaled by vw-with-clamp rather than fixed
-  sizes. The grid alone read as busy, so the hub card now leads with a much
-  larger title and folds its feature bullets behind a native `<details>`
-  ("What's included"), using the same +-rotates-to-x affordance as the `/faq`
-  accordion. No JS, and the bullet copy stays in the HTML for crawlers.
+- **Package cards rebuilt for phones.** Both four-card sets (the homepage
+  teasers and the hub's) were a single column of full-height cards below 768px,
+  which made the packages band a long scroll. They briefly went 2x2; that fitted
+  more on screen but read as busy, so the final shape is **back to one column,
+  with each card much shorter**:
+    - The hub card leads with a large title and folds its feature bullets behind
+      a native `<details>` ("What's included"), reusing the `/faq` accordion's
+      +-rotates-to-x affordance. No JS, and the bullet copy stays in the HTML
+      for crawlers.
+    - Price and CTA share a row (`__foot`), since a full-width card is wide and
+      short and stacking them cost a row per card. `display: contents` at
+      desktop leaves the column layout untouched. The row never wraps — the CTA
+      shrinks and wraps its own label instead, which is free at 44px tall.
+    - Padding, type and spacing tightened throughout.
+  Measured at 390px: the hub's grid went **1673px → 1002px** and the homepage's
+  **1039px → 792px**. At 320px, 1782px → 1096px and 1081px → 910px. 768px and up
+  is untouched.
   ⚠️ The disclosure applies at **every** width, not just phones — CSS alone
   can't open a `<details>` on desktop and leave it closed on mobile, and the
   alternative was a client component for a purely presentational concern. The
-  homepage teasers took the type change but no disclosure: their one-line
-  description is the only thing that could hide, and `01-brief.md` says the
-  homepage should route to the package pages rather than explain them inline.
+  homepage teasers took the layout and type changes but no disclosure: their
+  one-line description is the only thing that could hide, and `01-brief.md` says
+  the homepage should route to the package pages rather than explain them
+  inline.
 
 ## Recently completed — August 16, 2026
 

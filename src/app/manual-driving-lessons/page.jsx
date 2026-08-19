@@ -154,18 +154,24 @@ export default function LessonsOverviewPage() {
                     ))}
                   </ul>
                 </details>
-                <p className="hub-card__price">
-                  {p.price}
-                  <span className="hub-card__unit">{p.unit}</span>
-                </p>
-                <Link
-                  href={p.href}
-                  className={`btn ${
-                    p.featured ? 'btn--primary' : 'btn--secondary'
-                  } hub-card__cta`}
-                >
-                  See full details
-                </Link>
+                {/* Price and CTA share a row on phones, where a full-width
+                    card is wide and short and stacking them wastes height.
+                    `display: contents` at desktop leaves the column layout
+                    untouched. */}
+                <div className="hub-card__foot">
+                  <p className="hub-card__price">
+                    {p.price}
+                    <span className="hub-card__unit">{p.unit}</span>
+                  </p>
+                  <Link
+                    href={p.href}
+                    className={`btn ${
+                      p.featured ? 'btn--primary' : 'btn--secondary'
+                    } hub-card__cta`}
+                  >
+                    See full details
+                  </Link>
+                </div>
               </article>
             ))}
           </div>

@@ -255,6 +255,12 @@
   color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
 }
 
+/* Transparent to the card's flex column at desktop — the price and the CTA
+   behave as the direct children they used to be. Only phones make it a row. */
+.hub-card__foot {
+  display: contents;
+}
+
 .hub-card__cta {
   margin-top: 0.875rem;
   text-align: center;
@@ -317,113 +323,112 @@
   }
 }
 
-/* Phones keep the 2x2 grid — see PackagesTeaser.css for the reasoning and the
-   same vw-with-clamp sizing approach. These cards carry more than the homepage
-   teasers (gear number, who-it's-for line, feature bullets), so everything
-   including the bullet list tightens rather than anything being dropped: this
-   is the comparison page, and the bullets are the comparison. */
+/* One card per row on phones. The four-up grid fitted more on screen but read
+   as a wall; a single column is scannable, and the disclosure plus the tighter
+   internals below keep each card short enough that the column doesn't turn into
+   the long scroll it used to be. Sizes are tuned for a full-width card here,
+   not the ~150px one the two-column version had. */
 @media (max-width: 767px) {
   .hub-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    /* Row gap is the larger of the two: the badges sit astride the card's top
-       edge, and a tight row let them land on the card above. */
-    gap: 1.125rem 0.5rem;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 
   .hub-card {
-    padding: clamp(0.75rem, 3vw, 1.125rem);
-    gap: 0.4375rem;
+    padding: 1rem 1.125rem;
+    gap: 0.375rem;
   }
 
   .hub-card__badge {
-    right: clamp(0.4rem, 1.6vw, 0.75rem);
-    font-size: clamp(0.5rem, 2.1vw, 0.625rem);
-    letter-spacing: 0.08em;
-    padding: 0.3rem 0.4rem;
+    right: 1rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.5rem;
   }
 
-  /* The tag stays beside the gear number and wraps within its own column.
-     Letting the row wrap instead dropped the tag below the number on the two
-     cards with longer tags and not the other two, so the four titles started
-     at different heights. */
   .hub-card__top {
-    align-items: flex-start;
-    gap: 0.4375rem;
-  }
-
-  .hub-card__top .hub-card__tag {
-    min-width: 0;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .hub-card__gear {
-    width: 1.25rem;
-    height: 1.25rem;
-    font-size: 0.6875rem;
+    width: 1.375rem;
+    height: 1.375rem;
+    font-size: 0.75rem;
   }
 
   .hub-card__tag {
-    font-size: clamp(0.5625rem, 2.3vw, 0.6875rem);
-    letter-spacing: 0.1em;
-    line-height: 1.25;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
   }
 
-  /* Deliberately the loudest thing in the card — with the bullets folded away,
-     the title carries the identification the bullets used to. */
   .hub-card__title {
-    font-size: clamp(1.0625rem, 4.9vw, 1.5rem);
-    line-height: 1.02;
-  }
-
-  .hub-card__more-toggle {
-    font-size: clamp(0.5625rem, 2.3vw, 0.6875rem);
-    letter-spacing: 0.08em;
-  }
-
-  .hub-card__more-toggle::after {
-    font-size: 1rem;
+    font-size: clamp(1.25rem, 5.6vw, 1.625rem);
+    line-height: 1.05;
   }
 
   .hub-card__who {
-    font-size: clamp(0.75rem, 3.1vw, 0.875rem);
-    line-height: 1.35;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  .hub-card__more-toggle {
+    min-height: 44px;
+    font-size: 0.6875rem;
   }
 
   .hub-card__list {
-    gap: 0.3125rem;
-    padding: 0 0 0.25rem;
+    padding: 0 0 0.5rem;
+    gap: 0.4375rem;
   }
 
   .hub-card__list li {
-    font-size: clamp(0.6875rem, 2.9vw, 0.8125rem);
-    line-height: 1.35;
-    padding-left: 0.6875rem;
+    font-size: 0.9375rem;
+    line-height: 1.4;
   }
 
-  .hub-card__list li::before {
-    width: 0.375rem;
-    top: 0.55em;
+  /* Price left, CTA right — a full-width card is wide and short, so stacking
+     them cost a whole row per card for no reason. Wraps back to two rows if
+     the pair ever can't fit. */
+  .hub-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* nowrap on purpose: letting the row wrap put the CTA on its own line and
+       gave back the row this layout saves. The CTA shrinks and wraps its own
+       label instead, which costs nothing — it is already 44px tall. */
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    margin-top: 0.125rem;
   }
 
+  /* Unit stacks under the number instead of sitting beside it: inline, the
+     price block was wide enough to push the CTA onto its own row, which cost
+     the row this layout exists to save. */
   .hub-card__price {
-    font-size: clamp(1.25rem, 5.4vw, 1.75rem);
-    padding-top: 0.5rem;
-    gap: 0.25rem;
+    padding-top: 0;
+    font-size: 1.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+    flex-shrink: 0;
   }
 
   .hub-card__unit {
-    font-size: 0.42em;
-    letter-spacing: 0.06em;
+    font-size: 0.4em;
   }
 
   .hub-card__cta {
-    margin-top: 0.625rem;
-    font-size: clamp(0.625rem, 2.5vw, 0.75rem);
-    letter-spacing: 0.06em;
-    padding: 0.625rem 0.5rem;
+    margin-top: 0;
+    flex: 1 1 auto;
+    min-width: 0;
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 1.2;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    padding: 0.625rem 1rem;
   }
 }
+

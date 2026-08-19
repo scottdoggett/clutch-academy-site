@@ -73,16 +73,19 @@ export default function PackagesTeaser() {
               <p className="teaser-card__tag">{t.tag}</p>
               <h3 className="teaser-card__title">{t.title}</h3>
               <p className="teaser-card__desc">{t.desc}</p>
-              <p className="teaser-card__price">
-                {t.price}
-                <span className="teaser-card__unit">{t.unit}</span>
-              </p>
-              <Link
-                href={t.href}
-                className={`btn ${t.featured ? 'btn--primary' : 'btn--secondary'} teaser-card__cta`}
-              >
-                See details &amp; book
-              </Link>
+              {/* See hub.css — price and CTA share a row on phones. */}
+              <div className="teaser-card__foot">
+                <p className="teaser-card__price">
+                  {t.price}
+                  <span className="teaser-card__unit">{t.unit}</span>
+                </p>
+                <Link
+                  href={t.href}
+                  className={`btn ${t.featured ? 'btn--primary' : 'btn--secondary'} teaser-card__cta`}
+                >
+                  See details &amp; book
+                </Link>
+              </div>
             </article>
           ))}
         </div>
