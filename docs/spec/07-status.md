@@ -76,10 +76,19 @@ open questions below are untouched.
   Measured at 390px: the hub's grid went **1673px → 1002px** and the homepage's
   **1039px → 792px**. At 320px, 1782px → 1096px and 1081px → 910px. 768px and up
   is untouched.
-  ⚠️ The disclosure applies at **every** width, not just phones — CSS alone
-  can't open a `<details>` on desktop and leave it closed on mobile, and the
-  alternative was a client component for a purely presentational concern. The
-  homepage teasers took the layout and type changes but no disclosure: their
+  The disclosure is **phones only** (≤767px). Desktop was never the busy case,
+  so it shows every bullet with no toggle: above 768px the `<summary>` is
+  hidden and the content forced visible with `::details-content
+  { content-visibility: visible }`, plus a child `display` override for engines
+  that predate that pseudo-element. One copy of the bullets in the markup, no
+  duplication. Note the side effect: at desktop the `<details>` is a closed
+  element with visible content and no exposed control — assistive tech sees
+  plain rendered content rather than a collapsed disclosure, which is the
+  intended reading, but it is an unusual construction worth knowing about.
+  On phones the **whole card** is the toggle — the summary carries an overlay
+  covering the card, so a tap anywhere flips it. The CTA is lifted above the
+  overlay with `z-index`, so "See full details" still navigates.
+  The homepage teasers took the layout and type changes but no disclosure: their
   one-line description is the only thing that could hide, and `01-brief.md` says
   the homepage should route to the package pages rather than explain them
   inline.
