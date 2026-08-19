@@ -16,7 +16,12 @@
   padding: 0.25rem 0 1rem;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  /* No `touch-action: pan-x` here. It reads like "this strip pans horizontally",
+     but it declares horizontal panning to be the *only* gesture the element
+     handles — so a vertical drag that began over the reviews was swallowed and
+     the page didn't scroll at all. Left at the default, the browser locks the
+     axis from the gesture's initial direction: a sideways drag scrolls the
+     strip, a vertical one scrolls the page. */
   /* Fade the edges so cards enter/exit gracefully instead of hard-clipping. */
   -webkit-mask-image: linear-gradient(
     to right,
