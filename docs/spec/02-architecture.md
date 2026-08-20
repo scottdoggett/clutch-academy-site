@@ -139,10 +139,18 @@ desktop it's `display: contents`, so the column layout is untouched. The row is
 deliberately `nowrap` — letting it wrap put the CTA on its own line and gave
 back the row the layout exists to save.
 
-The hub's "Pick by where you are today" chooser is four cards too: the
-situation, the package named in its own box, then Book Now and See More. The
-package name is looked up from the page's `PACKAGES` array by href rather than
-stored on the chooser entry, so the two can't drift.
+The hub's "Pick by where you are today" chooser is **not** cards. It's four
+plain sentences, each hanging off a gear-lever bullet, with the package it points
+to as the inline link. It was cards for two days in August 2026 — situation,
+package plaque, Book Now and See More — and read as far too heavy for what is a
+signpost. The package name is looked up from the page's `PACKAGES` array by href
+rather than stored on the chooser entry, so the two can't drift; the entry holds
+only the verb phrase that carries the name inside the sentence.
+
+The bullet is an inline SVG in the page's own 24x24 line-icon idiom, at
+`strokeWidth` 2 because it renders at 20px where the package-page icons render at
+24. A flat H shift-pattern was drawn first, to echo the gate motif the hero and
+the card chips use — at bullet size it read as the letter H.
 
 **There is no site-wide trust strip.** A `TrustBlock` band (Google rating +
 three trust points) used to close About, the hub, the FAQ, and all four package

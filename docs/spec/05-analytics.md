@@ -64,12 +64,8 @@ Active source tags:
 | `faq` | `/faq` |
 | `contact` | `/contact` |
 | `lessons_overview_close` | `/manual-driving-lessons` closing CTA |
-| `lessons_overview_pick_single` | Hub "Pick by where you are today" — refresher row |
-| `lessons_overview_pick_3pack` | Hub "Pick by where you are today" — never-driven-stick row |
-| `lessons_overview_pick_confidence_5pack` | Hub "Pick by where you are today" — mastery row |
-| `lessons_overview_pick_group` | Hub "Pick by where you are today" — with-a-friend row |
 
-Two historical notes that matter for reading GA4 reports:
+Historical notes that matter for reading GA4 reports:
 
 - **`packages_group_2hr` now labels a 2.5-hour session.** The tag was kept
   through the August-1 switch so the series stays continuous, matching the live
@@ -83,11 +79,18 @@ Two historical notes that matter for reading GA4 reports:
   booking CTA back on August 18, at the foot of the page rather than the top —
   it carries the new tag `lessons_overview_close` rather than reviving this one,
   so the two placements stay distinguishable in reports.
+- **The four `lessons_overview_pick_*` tags are retired.** They labelled a Book
+  button per row of the hub's "Pick by where you are today" chooser, which was
+  four cards for two days in August 2026. The chooser is plain text again and has
+  no Book buttons, so the tags fire nowhere. They were never live on the real
+  domain — the cards shipped on August 18 and came out on August 20, both on
+  `overhaul` — so there is no GA4 history to preserve. Don't revive the names for
+  a different placement.
 
-The four `lessons_overview_pick_*` tags are per-row on purpose: every Book
-button opens the same Calendly, so the only thing distinguishing them is which
-situation the visitor identified with. That's the question the chooser exists to
-answer, and one shared tag would throw it away.
+`/manual-driving-lessons` therefore books through exactly one CTA of its own,
+`lessons_overview_close`. Visitors who use the chooser navigate to a package page
+and book with that page's tag, which is the honest attribution: the chooser's job
+is routing, not closing.
 
 ### Contact intent
 

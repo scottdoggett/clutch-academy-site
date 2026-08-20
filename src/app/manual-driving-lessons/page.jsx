@@ -73,35 +73,60 @@ const PACKAGES = [
   },
 ]
 
-// "Help me choose" — the hub's second internal-linking pass. Each row states a
-// situation, names the package it points to, and offers both actions.
+// "Help me choose" — the hub's second internal-linking pass. Each entry states
+// a situation and points at the package that answers it.
 //
 // The package name isn't stored here: it's looked up from PACKAGES by href, so
-// a rename lands in one place instead of two. `source` tags the row's Book
-// button for attribution (05-analytics.md) — per-row, so the reports can show
-// which situation actually drives bookings.
+// a rename lands in one place instead of two. `lead` is only the verb phrase
+// that carries the name inside the sentence.
 const CHOOSER = [
   {
     if: 'You’ve never touched a stick shift',
+    lead: 'start with the',
     href: '/lessons/manual-foundations',
-    source: 'lessons_overview_pick_3pack',
   },
   {
     if: 'You’ve driven manual before and need a refresher',
+    lead: 'book an',
     href: '/lessons/individual',
-    source: 'lessons_overview_pick_single',
   },
   {
     if: 'You want downtown, highway, and rush-hour mastery',
+    lead: 'go for the',
     href: '/lessons/manual-confidence',
-    source: 'lessons_overview_pick_confidence_5pack',
   },
   {
     if: 'You’d rather learn with a friend',
+    lead: 'try',
     href: '/lessons/group',
-    source: 'lessons_overview_pick_group',
   },
 ]
+
+// The bullet: a gear lever standing in its gate — knob, shaft, and the slot it
+// sits in. Same 24x24 line-icon idiom as the package pages, at strokeWidth 2
+// rather than 1.75 because it renders at 20px where those render at 24 and the
+// thinner line goes wispy.
+//
+// A flat H shift-pattern was tried first, since the hero and the card chips
+// already use the gate as a motif. At bullet size it just read as the letter H.
+const GEAR_BULLET = (
+  <svg
+    className="hub-choose__bullet"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="12" cy="5" r="3" fill="currentColor" stroke="none" />
+    <path d="M12 8v5.5" />
+    <path d="M6 13.5h12" />
+    <path d="M6 13.5v4.5" />
+    <path d="M18 13.5v4.5" />
+  </svg>
+)
 
 export default function LessonsOverviewPage() {
   return (
@@ -199,22 +224,14 @@ export default function LessonsOverviewPage() {
               const pkg = PACKAGES.find((p) => p.href === c.href)
               return (
                 <li key={c.href} className="hub-choose__item">
-                  <p className="hub-choose__if">{c.if}</p>
-                  <p className="hub-choose__package">{pkg.title}</p>
-                  <div className="hub-choose__actions">
-                    <BookButton
-                      source={c.source}
-                      className="btn btn--primary hub-choose__btn"
-                    >
-                      Book Now
-                    </BookButton>
-                    <Link
-                      href={c.href}
-                      className="btn btn--secondary hub-choose__btn"
-                    >
-                      See More
+                  {GEAR_BULLET}
+                  <span>
+                    {c.if} —{' '}
+                    <Link href={c.href}>
+                      {c.lead} {pkg.title}
                     </Link>
-                  </div>
+                    .
+                  </span>
                 </li>
               )
             })}

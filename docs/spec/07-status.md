@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** August 18, 2026.
+**Last updated:** August 20, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -10,12 +10,33 @@ this file disagrees with another doc about current state, this file wins.
 The Next.js rebuild is **complete and unmerged**. All 9 routes carry real
 content, analytics and consent are wired, and the August-1 pricing switch has
 been applied to both branches. It is deployed to its own Vercel project for
-review while `main` keeps serving customers the original Vite site. Two rounds
-of client review — August 16 (copy and structure) and August 18 (layout, mobile,
-package cards) — have been applied. What remains before cutover is verification
-and client sign-off, not building. The one caveat: **the July QA pass no longer
-reflects the build**, so re-running it is now a cutover requirement rather than
-a formality.
+review while `main` keeps serving customers the original Vite site. Three rounds
+of client review — August 16 (copy and structure), August 18 (layout, mobile,
+package cards) and August 20 (the hub's chooser) — have been applied. What
+remains before cutover is verification and client sign-off, not building. The one
+caveat: **the July QA pass no longer reflects the build**, so re-running it is
+now a cutover requirement rather than a formality.
+
+## Recently completed — August 20, 2026
+
+- **The hub's chooser went back to plain text.** "Pick by where you are today"
+  was four cards for two days — situation, package plaque, Book Now and See More
+  each. For a signpost between the package cards above it and the closing Book
+  CTA below it, that was too much furniture: three stacked card treatments in a
+  row. It's four sentences again, each hanging off a **gear-lever bullet**, with
+  the package as the inline link.
+- **That bullet answers the "gear-shifter clip art" question** from the Site 2.0
+  review, which had been stuck on the client supplying black-on-white raster art
+  for a red section. It's an inline SVG in the same 24x24 line-icon idiom as the
+  package pages — knob, shaft, and the gate slot — so it inherits `currentColor`
+  and needs no asset. A flat H shift-pattern was drawn first, to echo the gate
+  motif the hero and card chips use; at 20px it read as the letter H.
+- **The four `lessons_overview_pick_*` source tags are retired** with the buttons
+  that carried them (`05-analytics.md`). They never reached the live domain. The
+  hub books through `lessons_overview_close` alone; the chooser routes to package
+  pages, which book under their own tags.
+- Section height, cards → text: **771px → 629px** at 320 and 729px → 557px at
+  390. No overflow at 320 / 390 / 1280.
 
 ## Recently completed — August 18, 2026
 
@@ -93,12 +114,11 @@ Grid height, original → now: **1673px → 1002px** at 390px and 1782px → 109
   the intro hero was removed, against `01-brief.md`, and it's a significant entry
   point. Tagged `lessons_overview_close`; the retired `lessons_overview` stays
   retired because it labelled the intro-hero placement.
-- **The hub's chooser rows became cards.** Each states the situation, names the
-  package in its own box, and offers Book Now and See More. The package name is
-  looked up from `PACKAGES` by href so the two can't drift. Four new per-row
-  source tags (`lessons_overview_pick_*`) — every Book button opens the same
-  Calendly, so which row was clicked is the only thing distinguishing them, and
-  that's the question the section exists to answer.
+- **The hub's chooser rows became cards.** ⚠️ **Reverted on August 20** — see
+  above. Each card stated the situation, named the package in its own box, and
+  offered Book Now and See More, with a per-row `lessons_overview_pick_*` source
+  tag. The lookup that kept the package name from drifting survived the revert;
+  the cards and the tags did not.
 - **`/faq` lead** was missing a space: "Get in touch" ran into "and".
 
 ## Recently completed — August 16, 2026
@@ -162,7 +182,6 @@ Raised with the client, not yet answered:
 | "Update cancellation policy" | The screenshot supplied is character-identical to the current text. No new wording was given. |
 | Move Payment & cancellation from Contact → FAQ | `/faq` already renders payment *and* cancellation answers from `faqs.js`. Moving the Contact block there duplicates them. Replace the FAQ entries, or add a distinct styled section? |
 | Highlight Complete Confidence "like Foundations" | Move the featured treatment from Foundations to Confidence, or feature both? |
-| Gear-shifter clip art as chooser bullets | Supplied as a black-on-white raster PNG; the section is brand red with cream text. Needs a vector, or a traced inline SVG recoloured. |
 | "Social logo in footer" | Instagram/Facebook glyphs, or the Clutch Academy brand mark? The phrasing points both ways. |
 
 ## Known bugs

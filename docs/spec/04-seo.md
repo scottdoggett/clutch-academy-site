@@ -122,9 +122,9 @@ Safari.
 ⚠️ **This QA predates the August 2026 changes and is now materially stale.**
 The August 16 round was copy, ordering and one new component, but August 18
 reworked layout across the site: the shared content column, the mobile nav,
-touch targets, the package cards, and the hub's chooser. A re-run across all 9
-routes is a cutover requirement rather than cheap insurance — it is listed in
-the runbook in `06-deployment.md`.
+touch targets, the package cards, and the hub's chooser — which changed again on
+August 20. A re-run across all 9 routes is a cutover requirement rather than
+cheap insurance — it is listed in the runbook in `06-deployment.md`.
 
 ## Future content
 

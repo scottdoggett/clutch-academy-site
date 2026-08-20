@@ -33,7 +33,7 @@ reviewed. **Work on `overhaul`. Never commit directly to `main`.**
 `docs/spec/archive/` holds the retired single-page spec and the rebuild's
 planning docs. **Don't work from anything in there.**
 
-## Current state (August 18, 2026)
+## Current state (August 20, 2026)
 
 - **All 9 routes are built with real content**: `/`, `/about`,
   `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
@@ -41,8 +41,9 @@ planning docs. **Don't work from anything in there.**
 - **Pricing is the post-August-1 offering** — $109 / 75 min, $299, $469,
   $219 / 2.5 hr, all + HST. Applied to `main` on July 31 and to `overhaul` on
   August 16. The dated announcement banner has been removed.
-- **Two rounds of client review are applied.** August 16 was copy and structure;
-  August 18 was layout, mobile and the package cards — see `07-status.md`.
+- **Three rounds of client review are applied.** August 16 was copy and
+  structure; August 18 was layout, mobile and the package cards; August 20 was
+  the hub's chooser — see `07-status.md`.
 - **The July QA pass is stale.** It predates the August 18 layout rework, so
   re-running Lighthouse across all 9 routes is a cutover requirement now, not a
   formality.
@@ -88,6 +89,11 @@ planning docs. **Don't work from anything in there.**
 - **Package cards** are one per row below 768px, with the hub card's bullets
   behind a phones-only `<details>` whose toggle is the whole card. Don't
   reintroduce a 2-up grid there — it was tried and rejected as too busy.
+- **The hub's "Pick by where you are today" chooser is plain text** — four
+  sentences on gear-lever bullets, package as the inline link. It was cards with
+  their own Book buttons for two days in August 2026 and was rejected as too much
+  furniture next to the package cards. Don't rebuild it as cards, and don't
+  revive the retired `lessons_overview_pick_*` source tags.
 - **Respect `prefers-reduced-motion`** — the only JS motion is the reviews
   marquee, which is matchMedia-gated; keep any new motion gated the same way.
 - **Pending inputs** are `{/* PENDING: ... */}` / `❓ BLOCKED` comments —

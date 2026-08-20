@@ -65,9 +65,10 @@ packages** — the intro hero with the training car was removed in August 2026, 
 where you are today" chooser that routes by situation rather than by price, and
 a closing Book CTA.
 
-The chooser is four cards, each stating a situation, naming the package it points
-to, and offering both Book Now and See More. It replaced four one-line sentences
-with the package name buried in them as an inline link (August 18, 2026).
+The chooser is four plain sentences on gear-lever bullets, each stating a
+situation and linking the package that answers it. It was briefly four cards with
+their own Book Now and See More buttons (August 18, 2026); that read as heavy for
+a signpost and was reverted to text on August 20.
 
 ### `/lessons/*` Package pages
 Each one: breadcrumbs → hero with price and Book CTA → who it's for → what's
