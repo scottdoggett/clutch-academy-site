@@ -21,7 +21,7 @@ export default function Packages({
         <article className="package-card package-card--red-1">
           <div className="package-card__info">
             <p className="package-card__tag">Private · 75 Minutes</p>
-            <h3>75min Individual Manual Lesson</h3>
+            <h3>Individual Manual Lesson</h3>
             <p className="package-card__desc">Best for refreshers.</p>
             <p className="package-card__price">
               <span className="package-card__currency">$</span>109
@@ -104,7 +104,7 @@ export default function Packages({
         <article className="package-card package-card--red-4">
           <div className="package-card__info">
             <p className="package-card__tag">Group · 2.5 Hours</p>
-            <h3>2.5hr Group Manual Lesson</h3>
+            <h3>Group Manual Lesson</h3>
             <p className="package-card__desc">
               Bring a friend. Split the experience.
             </p>
