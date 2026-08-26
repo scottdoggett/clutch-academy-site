@@ -4,12 +4,16 @@ import { trackLead as trackTiktokLead } from '../lib/tiktokPixel'
 // When clients provide separate event types per package, extend this hook to
 // accept a source-specific URL.
 //
+// `hide_gdpr_banner` suppresses Calendly's own cookie notice — we already
+// carry one (ConsentBanner), and two stacked banners inside the popup is
+// noise.
+//
 // `primary_color` is the accent Calendly uses for selectable dates,
 // time-slot buttons, and the confirm CTA. The original snippet from Sam
 // passed `ffffff`, which made those elements white-on-white inside the
 // popup — switching to the brand red so they're legible.
 export const CALENDLY_URL =
-  'https://calendly.com/clutchacademy-ibca?primary_color=c8102e'
+  'https://calendly.com/d/d3mm-v7p-mf9?hide_gdpr_banner=1&primary_color=c8102e'
 
 const WIDGET_JS = 'https://assets.calendly.com/assets/external/widget.js'
 const WIDGET_CSS = 'https://assets.calendly.com/assets/external/widget.css'
