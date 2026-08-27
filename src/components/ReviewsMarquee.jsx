@@ -1,6 +1,10 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import {
+  ScrollVelocityContainer,
+  ScrollVelocityRow,
+} from '@/components/ui/scroll-based-velocity'
 import './ReviewsMarquee.css'
 
 // Real quotes hand-copied from the Google reviews, manually maintained. When
@@ -83,99 +87,73 @@ const REVIEWS = [
   },
 ]
 
-// Two copies of the list back-to-back. The auto-scroll teleports back to 0
-// once it crosses the halfway point, so the loop is invisible — card 1 of
-// copy B sits exactly where card 1 of copy A used to be.
-const MARQUEE_SEQUENCE = [...REVIEWS, ...REVIEWS]
+// Percent of one copy's width travelled per second. The Magic UI row measures
+// its own content and derives px/s from that, so the loop takes the same time
+// on a phone as on a desktop instead of crawling on the narrow one. One copy is
+// ~7,100px at the desktop card width, which puts this at ~60px/s — a little
+// slower than the 72px/s the old scrollLeft loop ran at.
+const BASE_VELOCITY = 0.85
 
-// Pixels per frame at ~60fps.
-const SCROLL_SPEED = 1.2
-// How long to pause auto-advance after the user touches/swipes/scrolls.
-const RESUME_DELAY_MS = 2500
-
-// Auto-scrolling strip of review cards, used by the home "What Students Are
-// Saying" section. (It was also shared with the TrustBlock band until that was
-// removed sitewide in August 2026.) The only JS is the marquee auto-advance: a
-// progressive
-// enhancement over a natively scrollable list. Server-rendered HTML contains
-// every review; reduced-motion users get a static, swipeable strip.
+// The strip of review cards under the home "What Students Are Saying" heading.
+// Motion comes from Magic UI's scroll-based velocity row: it drifts on its own
+// and the page's own scroll speed drives it faster and flips its direction, so
+// the strip reacts to the reader rather than ignoring them. It is a transform,
+// not a scroll container — the strip can no longer be dragged sideways.
+//
+// Server-rendered HTML contains every review. Reduced motion gets a static,
+// swipeable strip instead: with nothing moving and no side-scrolling, the
+// reviews past the first two would otherwise be unreachable.
 export default function ReviewsMarquee() {
-  const marqueeRef = useRef(null)
-  const trackRef = useRef(null)
+  // Rendered on the server as the animated row and swapped after mount, so the
+  // markup the server sent always matches what React hydrates.
+  const [reduced, setReduced] = useState(false)
 
   useEffect(() => {
-    const marquee = marqueeRef.current
-    const track = trackRef.current
-    if (!marquee || !track) return
-
-    const reduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches
-    if (reduced) return
-
-    let raf
-    let paused = false
-    let resumeTimer
-
-    const tick = () => {
-      if (!paused) {
-        marquee.scrollLeft += SCROLL_SPEED
-        // Track holds 2 identical copies; scrollWidth/2 is the loop point.
-        const loopAt = track.scrollWidth / 2
-        if (marquee.scrollLeft >= loopAt) {
-          marquee.scrollLeft -= loopAt
-        }
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-
-    const pause = () => {
-      paused = true
-      clearTimeout(resumeTimer)
-      resumeTimer = setTimeout(() => {
-        paused = false
-      }, RESUME_DELAY_MS)
-    }
-
-    marquee.addEventListener('pointerdown', pause)
-    marquee.addEventListener('wheel', pause, { passive: true })
-    marquee.addEventListener('touchstart', pause, { passive: true })
-
-    return () => {
-      cancelAnimationFrame(raf)
-      clearTimeout(resumeTimer)
-      marquee.removeEventListener('pointerdown', pause)
-      marquee.removeEventListener('wheel', pause)
-      marquee.removeEventListener('touchstart', pause)
-    }
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReduced(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
   }, [])
 
+  // The row renders this several times over to fill the viewport, marking every
+  // copy after the first aria-hidden, so the list is spoken once.
+  const cards = (
+    <ul className="reviews__track">
+      {REVIEWS.map((r, i) => (
+        <li key={`${r.name}-${i}`} className="reviews__slide">
+          <article className="review-card">
+            <p className="review-card__quote">{r.quote}</p>
+            <footer className="review-card__meta">
+              <span className="review-card__name">— {r.name}</span>
+            </footer>
+          </article>
+        </li>
+      ))}
+    </ul>
+  )
+
+  if (reduced) {
+    return (
+      <div
+        className="reviews__marquee reviews__marquee--static"
+        aria-label="Student testimonials"
+        role="region"
+      >
+        {cards}
+      </div>
+    )
+  }
+
   return (
-    <div
-      ref={marqueeRef}
+    <ScrollVelocityContainer
       className="reviews__marquee"
       aria-label="Student testimonials"
       role="region"
     >
-      <ul ref={trackRef} className="reviews__track">
-        {MARQUEE_SEQUENCE.map((r, i) => (
-          // Composite key: the marquee is REVIEWS duplicated back-to-back,
-          // so name alone would collide between the two copies.
-          <li
-            key={`${r.name}-${i}`}
-            className="reviews__slide"
-            aria-hidden={i >= REVIEWS.length ? 'true' : undefined}
-          >
-            <article className="review-card">
-              <p className="review-card__quote">{r.quote}</p>
-              <footer className="review-card__meta">
-                <span className="review-card__name">— {r.name}</span>
-              </footer>
-            </article>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <ScrollVelocityRow baseVelocity={BASE_VELOCITY} direction={1}>
+        {cards}
+      </ScrollVelocityRow>
+    </ScrollVelocityContainer>
   )
 }

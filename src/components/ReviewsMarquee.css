@@ -1,7 +1,7 @@
-/* The marquee is a horizontally-scrollable viewport. JS auto-advances
-   scrollLeft and teleports back when it crosses scrollWidth/2 (the boundary
-   between the two duplicated copies). User can also swipe/drag to scroll;
-   auto-advance pauses for a few seconds after any user interaction. */
+/* The marquee viewport. The strip is driven by Magic UI's scroll-based
+   velocity row (src/components/ui/scroll-based-velocity.jsx), which translates
+   a transform rather than scrolling — so this is not a scroll container and
+   the cards deliberately can't be dragged sideways any more. */
 .reviews__marquee {
   position: relative;
   flex: 1;
@@ -9,19 +9,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: flex;
-  align-items: stretch;
   padding: 0.25rem 0 1rem;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  /* No `touch-action: pan-x` here. It reads like "this strip pans horizontally",
-     but it declares horizontal panning to be the *only* gesture the element
-     handles — so a vertical drag that began over the reviews was swallowed and
-     the page didn't scroll at all. Left at the default, the browser locks the
-     axis from the gesture's initial direction: a sideways drag scrolls the
-     strip, a vertical one scrolls the page. */
   /* Fade the edges so cards enter/exit gracefully instead of hard-clipping. */
   -webkit-mask-image: linear-gradient(
     to right,
@@ -39,16 +27,39 @@
   );
 }
 
-.reviews__marquee::-webkit-scrollbar {
+/* Reduced motion gets no marquee at all, so the strip goes back to being a
+   natively scrollable list. Without this the reviews past the first two would
+   be unreachable: nothing moves, and side-scrolling is gone everywhere else. */
+.reviews__marquee--static {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* No `touch-action: pan-x` here. It reads like "this strip pans horizontally",
+     but it declares horizontal panning to be the *only* gesture the element
+     handles — so a vertical drag that began over the reviews was swallowed and
+     the page didn't scroll at all. Left at the default, the browser locks the
+     axis from the gesture's initial direction: a sideways drag scrolls the
+     strip, a vertical one scrolls the page. */
+}
+
+.reviews__marquee--static::-webkit-scrollbar {
   display: none;
 }
 
 .reviews__track {
   list-style: none;
   margin: 0;
-  padding: 0 1rem;
+  /* Trailing gap only. The row stacks copies of this list flush against each
+     other, so symmetric padding would double the space at every seam. */
+  padding: 0 1rem 0 0;
   display: flex;
   gap: 1rem;
+  /* The row sets whitespace-nowrap for the single-line text it usually holds;
+     these cards are paragraphs and have to wrap. */
+  white-space: normal;
 }
 
 .reviews__slide {
@@ -110,9 +121,6 @@
 .review-card__name {
   color: var(--white);
 }
-
-/* Reduced motion: JS already skips the auto-advance loop; native scroll is
-   still allowed so the user can swipe through cards manually. */
 
 @media (max-width: 767px) {
   .reviews__slide {

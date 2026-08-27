@@ -1,5 +1,23 @@
+/* Tailwind v4, utilities only — deliberately WITHOUT preflight.
+   Tailwind is here for the Magic UI components in src/components/ui/, which
+   are written against its utility classes. Preflight is Tailwind's own global
+   reset; pulling it into a site that already has one (below) and 9 routes of
+   hand-written CSS would silently restyle every page. Importing the theme and
+   utilities layers on their own gives the components what they need and
+   touches nothing else.
+
+   Layer order matters too: everything below this block is unlayered, and
+   unlayered CSS outranks every @layer. The site's own styles therefore always
+   win over a Tailwind utility, never the other way round. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
 @import '../styles/tokens.css';
 @import '../styles/buttons.css';
+
+/* Where to look for class names. Relative to this file, so: all of src/. */
+@source '../';
 
 *,
 *::before,
