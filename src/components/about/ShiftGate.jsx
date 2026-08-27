@@ -13,20 +13,31 @@ import { useEffect, useRef } from 'react'
 //     plate band itself. The six regions below tile the whole gate instead, so
 //     the lever is always in whichever gear the pointer is in.
 //
+// With no pointer in the gate the lever drives itself, taking the next gear
+// every few seconds down the same routes and on the same curve, so the section
+// demonstrates what it does before anyone touches it.
+//
 // Motion-gated like the reviews marquee: with prefers-reduced-motion the lever
-// still follows the pointer, it just arrives instead of travelling.
+// still follows the pointer, it just arrives instead of travelling, and it
+// never cycles on its own — an unprompted animation on a loop is the exact
+// thing that setting asks for less of.
 
 // Average travel speed along the plate, px/s — this sets the duration, and the
 // easing redistributes it inside that. Long shifts take longer than short
 // ones, which is what keeps a flick from 1 to 2 from feeling sluggish.
-const SPEED = 1500
+// Was 1500, then 1200; eased down so the travel between gears is legible as
+// travel rather than a jump.
+const SPEED = 1000
 
 // Floor on a shift, ms. Without it the shortest move — one slot, no crossing —
 // is over before the eye registers a direction.
-const MIN_MS = 170
+const MIN_MS = 230
 
 // Distance in px under which two positions count as the same point.
 const EPS = 0.5
+
+// How long the lever rests in a gear before taking the next one, unattended.
+const IDLE_MS = 3000
 
 // Out of the detent, across the plane, into the next detent. Slow at both ends
 // and quick through the middle is what a hand does on a gear lever, and it is
@@ -190,6 +201,8 @@ export default function ShiftGate({ gears }) {
     // gate edge to edge — there is nowhere inside it that selects nothing.
     const onMove = (e) => {
       if (!geom.live) return
+      idle = false
+      stopIdle()
       const rect = gate.getBoundingClientRect()
       if (!rect.width) return
       const col = Math.min(
@@ -201,11 +214,72 @@ export default function ShiftGate({ gears }) {
       setTarget(col * 2 + row)
     }
 
-    const onLeave = () => setTarget(-1)
+    // Unattended, the lever works its way up through the gate — 1, 2, 3, 4, 5,
+    // R and round again — which is every route the pointer could ask for.
+    // Held off while a pointer is in the gate, while the section is off
+    // screen, and under reduced motion.
+    let idleTimer = 0
+    let idle = true
+    let onScreen = false
+
+    const stopIdle = () => {
+      clearTimeout(idleTimer)
+      idleTimer = 0
+    }
+
+    const scheduleIdle = () => {
+      stopIdle()
+      if (!idle || !onScreen || !geom.live || reduced.matches) return
+      idleTimer = setTimeout(() => {
+        setTarget(target < 0 ? 0 : (target + 1) % items.length)
+        scheduleIdle()
+      }, IDLE_MS)
+    }
+
+    const onEnter = () => {
+      idle = false
+      stopIdle()
+    }
+
+    // Leaving hands the lever back to the cycle rather than parking it in
+    // neutral: it carries on from the gear it's in.
+    const onLeave = () => {
+      idle = true
+      scheduleIdle()
+    }
 
     measure()
+
+    // Start in first, not neutral. The section then arrives already showing a
+    // reason instead of sitting blank for three seconds, and the idle cycle
+    // carries on from there — 1, 2, 3 and round. Snapped rather than driven,
+    // so there's no entrance animation to sit through.
+    if (geom.live) {
+      target = 0
+      items[0]?.classList.add(
+        'about-why__item--active',
+        'about-why__item--seated',
+      )
+      const first = targetPoint()
+      cur.x = first.x
+      cur.y = first.y
+      paint()
+    }
+
     gate.addEventListener('pointermove', onMove, { passive: true })
+    gate.addEventListener('pointerenter', onEnter)
     gate.addEventListener('pointerleave', onLeave)
+
+    // Nothing to demonstrate to someone who isn't looking at it.
+    const io = new IntersectionObserver(
+      (entries) => {
+        onScreen = entries.some((entry) => entry.isIntersecting)
+        if (onScreen) scheduleIdle()
+        else stopIdle()
+      },
+      { threshold: 0.25 },
+    )
+    io.observe(gate)
 
     // Observing the gate, not the plate: the plate is the thing that goes
     // display:none at the breakpoint, and a non-rendered element is exactly
@@ -214,12 +288,16 @@ export default function ShiftGate({ gears }) {
       measure()
       if (geom.live) run()
       else setTarget(-1)
+      scheduleIdle()
     })
     ro.observe(gate)
 
     return () => {
       gate.removeEventListener('pointermove', onMove)
+      gate.removeEventListener('pointerenter', onEnter)
       gate.removeEventListener('pointerleave', onLeave)
+      stopIdle()
+      io.disconnect()
       ro.disconnect()
       if (raf) cancelAnimationFrame(raf)
       items.forEach((el) =>

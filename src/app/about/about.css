@@ -47,10 +47,22 @@
    six <li>. Columns are gapless (each item pads itself) so the slot centres
    land on exactly 1/6, 3/6 and 5/6 of the plate width, and the band row sits
    between two 1fr rows, which keeps it dead centre whatever the copy does. */
-/* Three lines of display type breaking wherever they land looked accidental;
-   balanced, the heading sets its own two lines. Scoped to this section — the
-   rest of the site's headings are left-aligned and don't have the problem. */
+/* Two lines, "Why Students Choose" over "Clutch Academy". The shared header's
+   60ch cap is measured in the body font and lands at ~534px, which broke the
+   heading over three lines; lifting the cap entirely ran it onto one very wide
+   one. So: no cap on the header, and a cap on the heading itself.
+
+   18ch is 792px in this face (ch is a wide 44px at 64px Jakarta 800), which
+   sits between "Why Students Choose" at 666px and "Why Students Choose Clutch"
+   at 875px — the break can only fall where we want it, with or without
+   balance. Both sides scale with the font, so it holds at every size.
+   Scoped to this section: it's the only centred heading on the site. */
+.about-why .section-header {
+  max-width: none;
+}
+
 .about-why .section-header h2 {
+  max-width: 18ch;
   text-wrap: balance;
 }
 
@@ -67,7 +79,7 @@
      Centred rather than pinned to the column inset — the gate and its heading
      are the one symmetric object on the page, so the shared left edge is
      deliberately given up here (Scott, August 2026). */
-  max-width: 940px;
+  max-width: 1100px;
   margin-inline: auto;
 }
 
@@ -144,8 +156,15 @@
    solid token to clear 4.5:1 (tokens.css). `balance` is doing real work on a
    centred two-line block — without it these break 6 words / 1 word. */
 .about-why__line {
+  /* Padding and a transparent border sit here at rest, not just when the gear
+     is selected: the plate has to appear without moving the copy a pixel, and
+     the rows are 1fr, so anything that changes size reflows the whole gate.
+     The measure is 26ch plus that padding, since box-sizing is border-box. */
   margin: 0;
-  max-width: 26ch;
+  max-width: calc(26ch + 1.75rem);
+  padding: 0.625rem 0.875rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
   color: var(--cream);
   font-size: clamp(1rem, 1.25vw, 1.125rem);
   line-height: 1.4;
@@ -234,9 +253,14 @@
     transform: scale(1.12);
   }
 
+  /* The selected reason sits on a plate — the same deep red and hairline the
+     page's cards use, so it reads as part of the set rather than a new idea. */
   .about-why__item--active .about-why__line {
     color: var(--white);
-    transform: scale(1.05);
+    background-color: var(--red-deep);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.55);
+    transform: scale(1.04);
   }
 
   /* Engaged: the circle fills, the number reverses out of it, and the lever —
@@ -271,6 +295,9 @@
   .about-why__line {
     transition:
       transform var(--gate-settle),
+      background-color 160ms ease,
+      border-color 160ms ease,
+      box-shadow 160ms ease,
       color 160ms ease;
   }
 }
@@ -399,20 +426,20 @@
 
 /* ---------- Responsive -------------------------------------------------- */
 /* Below 900px three columns of copy get too narrow to hold a line, so the gate
-   comes apart into its three slots, stacked. Each pair of gears keeps its own
-   slot line with the neutral plane crossing it, so it stays recognisably the
-   same object — unrolled to fit a phone rather than thrown away. Nothing here
-   answers to hover: there's no lever to move, and ShiftGate stops tracking the
-   pointer at this width. */
+   comes apart into the same left-margin-bullet list the hub chooser uses: gear
+   number in the margin, sentence beside it. The plate has nothing left to
+   describe, and nothing here answers to hover — there's no lever to move, and
+   ShiftGate stops tracking the pointer at this width.
+
+   Slot lines joining each pair, with the neutral plane crossing them, were
+   tried in August 2026 and rejected: unrolled onto a phone the gate read as
+   diagram furniture around what is really just a list. */
 @media (max-width: 899px) {
   .about-why__gears {
     --m-chip: 2.125rem;
-    --m-gap: 0.75rem;
-    /* The chip's centre, measured down from the top of its row. */
-    --m-chip-mid: calc(0.1em + var(--m-chip) / 2);
     display: flex;
     flex-direction: column;
-    gap: var(--m-gap);
+    gap: 0.875rem;
   }
 
   .about-why__plate {
@@ -421,40 +448,11 @@
 
   .about-why__item:nth-child(odd),
   .about-why__item:nth-child(even) {
-    position: relative;
     flex-direction: row;
     align-items: flex-start;
     gap: 0.75rem;
     padding-inline: 0;
     text-align: left;
-  }
-
-  /* One slot per pair, chip centre to chip centre, with the plane crossing it
-     halfway. Both lines are backgrounds on a single box the width of the chip
-     column, which puts the crossing at the slot's true midpoint however tall
-     the copy makes the two rows. */
-  .about-why__item:nth-child(odd)::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: var(--m-chip-mid);
-    bottom: calc(-1 * (var(--m-gap) + var(--m-chip-mid)));
-    width: var(--m-chip);
-    background-image:
-      linear-gradient(var(--gate-line), var(--gate-line)),
-      linear-gradient(var(--gate-line), var(--gate-line));
-    background-size:
-      var(--gate-stroke) 100%,
-      100% var(--gate-stroke);
-    background-position:
-      center top,
-      left center;
-    background-repeat: no-repeat;
-  }
-
-  /* Three groups of two, not six of one — the space is what says "slot". */
-  .about-why__item:nth-child(even):not(:last-child) {
-    margin-bottom: 1.5rem;
   }
 
   .about-why__chip {
@@ -465,8 +463,12 @@
     margin-top: 0.1em;
   }
 
+  /* No plate on a phone — nothing to select — so the padding that reserves
+     room for it goes too, and the copy sits flush against its gear number. */
   .about-why__line {
     max-width: 46ch;
+    padding: 0;
+    border: 0;
   }
 }
 
