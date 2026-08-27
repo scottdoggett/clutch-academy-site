@@ -9,9 +9,15 @@
   padding: 0;
 }
 
-/* In-page anchors glide instead of jumping — motion-gated. */
+/* The homepage's "See Packages" anchor glides instead of jumping — motion-
+   gated, and scoped to that one target rather than set on <html> outright.
+   As a blanket rule it animated every route change too: Next 16 no longer
+   forces scroll-behavior to auto during navigation the way 15 did, so a new
+   page slid up from wherever the last one was scrolled to instead of simply
+   starting at the top. It also made the skip link glide, which is the last
+   thing a keyboard user wants from a skip link. */
 @media (prefers-reduced-motion: no-preference) {
-  html {
+  html:has(#packages:target) {
     scroll-behavior: smooth;
   }
 }
