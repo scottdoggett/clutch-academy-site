@@ -38,42 +38,241 @@
   max-width: 58ch;
 }
 
-/* ---------- Why Students Choose (icon grid) ---------------------------- */
-.about-why__grid {
+/* ---------- Why Students Choose (the shift gate) ----------------------- */
+/* Six reasons on the six positions of a five-speed gate. Replaced the brief's
+   3×2 grid of checkmark boxes in August 2026 — it was the third bordered-box
+   grid on the page and nothing about it said manual transmission.
+
+   The plate is absolutely positioned over the list, which is a plain grid of
+   six <li>. Columns are gapless (each item pads itself) so the slot centres
+   land on exactly 1/6, 3/6 and 5/6 of the plate width, and the band row sits
+   between two 1fr rows, which keeps it dead centre whatever the copy does. */
+/* Three lines of display type breaking wherever they land looked accidental;
+   balanced, the heading sets its own two lines. Scoped to this section — the
+   rest of the site's headings are left-aligned and don't have the problem. */
+.about-why .section-header h2 {
+  text-wrap: balance;
+}
+
+.about-why__gate {
+  --gate-band: clamp(64px, 8vw, 104px);
+  --gate-line: rgba(255, 255, 255, 0.55);
+  --gate-stroke: 3px;
+  /* One curve for every gear-state change, so the chip, its number and its
+     line all arrive together. Overshoots slightly — the detent. */
+  --gate-settle: 260ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  position: relative;
+  /* Capped narrower than the 1200 column: across the full width the rail
+     stretches into a long horizontal rule and stops reading as a gate.
+     Centred rather than pinned to the column inset — the gate and its heading
+     are the one symmetric object on the page, so the shared left edge is
+     deliberately given up here (Scott, August 2026). */
+  max-width: 940px;
+  margin-inline: auto;
+}
+
+.about-why__gears {
   list-style: none;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-rows: 1fr var(--gate-band) 1fr;
 }
 
 .about-why__item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.875rem;
-  padding: clamp(1rem, 2vw, 1.375rem);
-  background-color: var(--red-deep);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding-inline: clamp(0.5rem, 2vw, 1.5rem);
+  text-align: center;
+}
+
+/* Odd items take the up-gates (1, 3, 5) and sit above the plate; even items
+   take the down-gates (2, 4, R). column-reverse hangs the chip against the
+   plate on the top row without reordering the DOM — reading order stays
+   1, 2, 3, 4, 5, R. */
+.about-why__item:nth-child(odd) {
+  grid-row: 1;
+  flex-direction: column-reverse;
+}
+
+.about-why__item:nth-child(even) {
+  grid-row: 3;
+}
+
+.about-why__item:nth-child(-n + 2) {
+  grid-column: 1;
+}
+
+.about-why__item:nth-child(n + 3):nth-child(-n + 4) {
+  grid-column: 2;
+}
+
+.about-why__item:nth-child(n + 5) {
+  grid-column: 3;
+}
+
+/* Same chip as the hub's package cards, so the two gear indexes read as one
+   system. Solid red fill and a stacking order above the plate: the lever
+   travels all the way to the centre of the chip and the number hides it. */
+.about-why__chip {
+  flex: none;
+  position: relative;
+  z-index: 1;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: var(--gate-stroke) solid var(--gate-line);
+  border-radius: 50%;
+  background-color: var(--red-primary);
+  display: grid;
+  place-items: center;
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(0.9375rem, 1.3vw, 1.0625rem);
-  line-height: 1.3;
+  font-weight: 800;
+  font-size: 1.375rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  /* The gear numbers are an index, not prose: lining figures of one width keep
+     1 from sitting narrower in its circle than 5. */
+  font-variant-numeric: lining-nums tabular-nums;
   color: var(--white);
 }
 
-.about-why__check {
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
+/* Solid --cream, not a faded white: muted text on the brand red has to be a
+   solid token to clear 4.5:1 (tokens.css). `balance` is doing real work on a
+   centred two-line block — without it these break 6 words / 1 word. */
+.about-why__line {
+  margin: 0;
+  max-width: 26ch;
+  color: var(--cream);
+  font-size: clamp(1rem, 1.25vw, 1.125rem);
+  line-height: 1.4;
+  letter-spacing: -0.006em;
+  text-wrap: balance;
+}
+
+.about-why__plate {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: var(--gate-band);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* The neutral plane, running centre-of-first-slot to centre-of-last. */
+.about-why__plate::before {
+  content: '';
+  position: absolute;
+  left: 16.6667%;
+  right: 16.6667%;
+  top: 50%;
+  margin-top: calc(var(--gate-stroke) / -2);
+  height: var(--gate-stroke);
+  background-color: var(--gate-line);
+}
+
+.about-why__slot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--gate-stroke);
+  margin-left: calc(var(--gate-stroke) / -2);
+  background-color: var(--gate-line);
+}
+
+.about-why__slot--1 {
+  left: 16.6667%;
+}
+
+.about-why__slot--2 {
+  left: 50%;
+}
+
+.about-why__slot--3 {
+  left: 83.3333%;
+}
+
+/* The lever, resting in neutral on the 3/4 plane. The red ring is the page
+   ground again, punching a hole in the rail so the knob reads as sitting on
+   top of the plate rather than threaded onto it. */
+.about-why__knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.375rem;
+  height: 1.375rem;
+  /* ShiftGate.jsx drives these two, in px, as an offset from neutral. Unset —
+     no JS, or a touch device — they resolve to 0 and the lever sits in
+     neutral, which is exactly where a static gate wants it. */
+  transform: translate(-50%, -50%)
+    translate(var(--knob-dx, 0px), var(--knob-dy, 0px));
   border-radius: 50%;
   background-color: var(--white);
-  color: var(--red-primary);
-  font-weight: 800;
-  font-size: 1rem;
+  box-shadow:
+    0 0 0 5px var(--red-primary),
+    0 0 0 calc(5px + var(--gate-stroke)) var(--gate-line);
+}
+
+/* ---------- Selected and engaged --------------------------------------- */
+/* Gate widths only. Below the breakpoint there is no lever and no pointer
+   tracking, so nothing here can fire — scoping it keeps that a fact of the
+   stylesheet rather than a promise the JS has to keep.
+
+   Two states, and the difference between them is the point: --active is the
+   gear the pointer has asked for, --seated is the gear the lever has actually
+   reached. ShiftGate.jsx sets the first on the pointer and the second on
+   arrival, so the number lights up on the beat the lever lands. */
+@media (min-width: 900px) {
+  /* Grown with transform, never font-size: the rows are 1fr each, so resizing
+     type here would reflow the whole gate every time the pointer moved. The
+     chip scales about its own centre, which is where the lever is aiming. */
+  .about-why__item--active .about-why__chip {
+    border-color: var(--white);
+    transform: scale(1.12);
+  }
+
+  .about-why__item--active .about-why__line {
+    color: var(--white);
+    transform: scale(1.05);
+  }
+
+  /* Engaged: the circle fills, the number reverses out of it, and the lever —
+     already parked underneath — is gone from view. */
+  .about-why__item--seated .about-why__chip {
+    background-color: var(--white);
+    border-color: var(--white);
+    color: var(--red-primary);
+    transform: scale(1.16);
+  }
+
+  /* The line grows away from the plate, so the chip stays put while the copy
+     moves — the other way round and the lever's target would drift. */
+  .about-why__item:nth-child(odd) .about-why__line {
+    transform-origin: center bottom;
+  }
+
+  .about-why__item:nth-child(even) .about-why__line {
+    transform-origin: center top;
+  }
+}
+
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .about-why__chip {
+    transition:
+      transform var(--gate-settle),
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .about-why__line {
+    transition:
+      transform var(--gate-settle),
+      color 160ms ease;
+  }
 }
 
 /* ---------- What Lessons Are Really Like (fears) ----------------------- */
@@ -199,9 +398,75 @@
 }
 
 /* ---------- Responsive -------------------------------------------------- */
-@media (max-width: 1023px) {
-  .about-why__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Below 900px three columns of copy get too narrow to hold a line, so the gate
+   comes apart into its three slots, stacked. Each pair of gears keeps its own
+   slot line with the neutral plane crossing it, so it stays recognisably the
+   same object — unrolled to fit a phone rather than thrown away. Nothing here
+   answers to hover: there's no lever to move, and ShiftGate stops tracking the
+   pointer at this width. */
+@media (max-width: 899px) {
+  .about-why__gears {
+    --m-chip: 2.125rem;
+    --m-gap: 0.75rem;
+    /* The chip's centre, measured down from the top of its row. */
+    --m-chip-mid: calc(0.1em + var(--m-chip) / 2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--m-gap);
+  }
+
+  .about-why__plate {
+    display: none;
+  }
+
+  .about-why__item:nth-child(odd),
+  .about-why__item:nth-child(even) {
+    position: relative;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-inline: 0;
+    text-align: left;
+  }
+
+  /* One slot per pair, chip centre to chip centre, with the plane crossing it
+     halfway. Both lines are backgrounds on a single box the width of the chip
+     column, which puts the crossing at the slot's true midpoint however tall
+     the copy makes the two rows. */
+  .about-why__item:nth-child(odd)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: var(--m-chip-mid);
+    bottom: calc(-1 * (var(--m-gap) + var(--m-chip-mid)));
+    width: var(--m-chip);
+    background-image:
+      linear-gradient(var(--gate-line), var(--gate-line)),
+      linear-gradient(var(--gate-line), var(--gate-line));
+    background-size:
+      var(--gate-stroke) 100%,
+      100% var(--gate-stroke);
+    background-position:
+      center top,
+      left center;
+    background-repeat: no-repeat;
+  }
+
+  /* Three groups of two, not six of one — the space is what says "slot". */
+  .about-why__item:nth-child(even):not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+
+  .about-why__chip {
+    width: var(--m-chip);
+    height: var(--m-chip);
+    border-width: 2px;
+    font-size: 0.9375rem;
+    margin-top: 0.1em;
+  }
+
+  .about-why__line {
+    max-width: 46ch;
   }
 }
 
@@ -216,7 +481,6 @@
     margin: 0 auto;
   }
 
-  .about-why__grid,
   .about-fears__grid,
   .about-next__list {
     grid-template-columns: 1fr;

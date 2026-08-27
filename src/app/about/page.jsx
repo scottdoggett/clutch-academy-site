@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
+import ShiftGate from '../../components/about/ShiftGate'
 import headshot from '../../../public/headshot.jpeg'
 import './about.css'
 
@@ -11,15 +12,30 @@ export const metadata = {
   alternates: { canonical: '/about' },
 }
 
-// Icon grid items — verbatim from the July 2026 brief ("Why Students Choose
-// Clutch Academy", simple icon grid with checkmarks).
-const WHY_ITEMS = [
-  'Calm, patient instruction',
-  'One-on-one lessons',
-  'Real Toronto roads',
-  'Learn at your own pace',
-  'Online booking & secure payment',
-  'Hundreds of successful lessons taught',
+// Six reasons laid out on a five-speed gate — 1 through 5 and R, one line per
+// position. The July 2026 brief asked for these as a simple icon grid with
+// checkmarks; that shipped as a 3×2 of bordered boxes and read as the third
+// boxed grid on the page, saying nothing about manual driving. Each label from
+// the brief is kept beside its rewrite below.
+//
+// PENDING: Sam to approve the rewritten lines. Nothing here is a new claim —
+// each one restates a brief label in the voice the rest of the page already
+// uses — but the wording is ours, not his.
+const GEARS = [
+  // "Calm, patient instruction"
+  { gear: '1', line: 'No sighing. No raised voice. No clock-watching.' },
+  // "Learn at your own pace"
+  { gear: '2', line: 'Stall it thirty times. Nobody is counting.' },
+  // "One-on-one lessons"
+  { gear: '3', line: 'Just you and Sam. Nobody in the back seat waiting a turn.' },
+  // "Online booking & secure payment"
+  // Non-breaking space: "1 a.m." is one token and must not break across
+  // lines, which at this measure it otherwise does.
+  { gear: '4', line: 'Book and pay online — at 1\u00A0a.m., if that’s when you decide.' },
+  // "Real Toronto roads"
+  { gear: '5', line: 'Downtown traffic and real hills, not an empty parking lot.' },
+  // "Hundreds of successful lessons taught"
+  { gear: 'R', line: 'Hundreds of lessons taught. Every driver started where you are.' },
 ]
 
 // Common student fears and how they're overcome (brief: "What Lessons Are
@@ -162,18 +178,11 @@ export default function AboutPage() {
       >
         <div className="section__inner">
           <header className="section-header section-header--center">
+            <p className="section-header__eyebrow">Six reasons, one per gear</p>
             <h2 id="why-choose-heading">Why Students Choose Clutch Academy</h2>
           </header>
-          <ul className="about-why__grid">
-            {WHY_ITEMS.map((item) => (
-              <li key={item} className="about-why__item">
-                <span className="about-why__check" aria-hidden="true">
-                  ✓
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
+
+          <ShiftGate gears={GEARS} />
         </div>
       </section>
 
