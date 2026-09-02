@@ -1,7 +1,10 @@
 /* The marquee viewport. The strip is driven by Magic UI's scroll-based
    velocity row (src/components/ui/scroll-based-velocity.jsx), which translates
-   a transform rather than scrolling — so this is not a scroll container and
-   the cards deliberately can't be dragged sideways any more. */
+   a transform rather than scrolling. It's still draggable — the row's own
+   `draggable` prop moves the transform from pointer and horizontal-wheel
+   events, and sets touch-action there so a vertical swipe still scrolls the
+   page. Nothing here should reintroduce overflow: a real scroll container
+   would fight the transform for the same gesture. */
 .reviews__marquee {
   position: relative;
   flex: 1;

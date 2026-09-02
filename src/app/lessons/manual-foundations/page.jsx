@@ -117,7 +117,7 @@ export default function ManualFoundationsPage() {
             ))}
           </ol>
           <p className="lesson-block__note">
-            Every lesson is one-on-one in a manual 2015 Volkswagen Golf, on
+            Every lesson is one-on-one in a manual hatchback, on
             real Toronto roads. A valid G2 or G licence is required.
           </p>
         </div>

@@ -89,6 +89,7 @@ function ScrollVelocityRowImpl({
   className,
   velocityFactor,
   scrollReactivity = true,
+  draggable = false,
   ...props
 }) {
   const containerRef = useRef(null)
@@ -103,6 +104,7 @@ function ScrollVelocityRowImpl({
   const isInViewRef = useRef(true)
   const isPageVisibleRef = useRef(true)
   const prefersReducedMotionRef = useRef(false)
+  const isDraggingRef = useRef(false)
 
   useEffect(() => {
     const container = containerRef.current
@@ -163,6 +165,77 @@ function ScrollVelocityRowImpl({
     }
   }, [children, unitWidth])
 
+  // Local addition: hand control back to the pointer.
+  //
+  // The row is a transform, not a scroll container, so there is nothing for a
+  // browser to scroll — but baseX is just a number, and a drag can move it the
+  // same way the animation frame does. Everything downstream (the wrap, the
+  // copies) already works for any value, so the strip loops under a drag in
+  // either direction for free.
+  //
+  // The drift is suspended for the length of a drag and picks straight back up
+  // on release, so letting go hands over to a strip that is already moving
+  // rather than stopping dead.
+  useEffect(() => {
+    if (!draggable) return
+    const container = containerRef.current
+    if (!container) return
+
+    let dragging = false
+    let activePointer = null
+    let lastX = 0
+
+    const onPointerDown = (e) => {
+      // Left button only; other buttons are for the browser's menus.
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      dragging = true
+      isDraggingRef.current = true
+      activePointer = e.pointerId
+      lastX = e.clientX
+      container.setPointerCapture?.(e.pointerId)
+    }
+
+    const onPointerMove = (e) => {
+      if (!dragging || e.pointerId !== activePointer) return
+      // Drag right, content follows right: baseX runs the other way, since the
+      // transform below is its negation.
+      baseX.set(baseX.get() - (e.clientX - lastX))
+      lastX = e.clientX
+    }
+
+    const endDrag = () => {
+      if (!dragging) return
+      dragging = false
+      isDraggingRef.current = false
+      if (activePointer !== null) {
+        container.releasePointerCapture?.(activePointer)
+        activePointer = null
+      }
+    }
+
+    // Trackpads and horizontal wheels. Vertical intent is left alone — it has
+    // to reach the page, both to scroll it and to drive the velocity boost.
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+      baseX.set(baseX.get() + e.deltaX)
+    }
+
+    container.addEventListener('pointerdown', onPointerDown)
+    container.addEventListener('pointermove', onPointerMove)
+    container.addEventListener('pointerup', endDrag)
+    container.addEventListener('pointercancel', endDrag)
+    container.addEventListener('wheel', onWheel, { passive: false })
+
+    return () => {
+      container.removeEventListener('pointerdown', onPointerDown)
+      container.removeEventListener('pointermove', onPointerMove)
+      container.removeEventListener('pointerup', endDrag)
+      container.removeEventListener('pointercancel', endDrag)
+      container.removeEventListener('wheel', onWheel)
+    }
+  }, [draggable, baseX])
+
   const x = useTransform([baseX, unitWidth], ([v, bw]) => {
     const width = Number(bw) || 1
     const offset = Number(v) || 0
@@ -171,6 +244,8 @@ function ScrollVelocityRowImpl({
 
   useAnimationFrame((_, delta) => {
     if (!isInViewRef.current || !isPageVisibleRef.current) return
+    // The pointer owns baseX for the length of a drag.
+    if (isDraggingRef.current) return
     const dt = delta / 1000
     const vf = scrollReactivity ? velocityFactor.get() : 0
     const absVf = Math.min(VELOCITY_CAP, Math.abs(vf))
@@ -192,7 +267,14 @@ function ScrollVelocityRowImpl({
   return (
     <div
       ref={containerRef}
-      className={cn('w-full overflow-hidden whitespace-nowrap', className)}
+      className={cn(
+        'w-full overflow-hidden whitespace-nowrap',
+        // touch-pan-y, not pan-x: it hands vertical panning to the browser and
+        // keeps horizontal for us. pan-x would claim horizontal as the ONLY
+        // gesture and swallow a vertical drag that began over the strip.
+        draggable && 'cursor-grab touch-pan-y active:cursor-grabbing',
+        className,
+      )}
       {...props}
     >
       <motion.div

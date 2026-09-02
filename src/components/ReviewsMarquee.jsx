@@ -95,10 +95,11 @@ const REVIEWS = [
 const BASE_VELOCITY = 0.85
 
 // The strip of review cards under the home "What Students Are Saying" heading.
-// Motion comes from Magic UI's scroll-based velocity row: it drifts on its own
-// and the page's own scroll speed drives it faster and flips its direction, so
-// the strip reacts to the reader rather than ignoring them. It is a transform,
-// not a scroll container — the strip can no longer be dragged sideways.
+// Motion comes from Magic UI's scroll-based velocity row, and three things
+// drive it at once: it drifts on its own, the page's scroll speed pushes it
+// faster and flips its direction, and a drag or a sideways trackpad swipe
+// moves it by hand. The drift stands aside for the length of a drag and
+// resumes on release.
 //
 // Server-rendered HTML contains every review. Reduced motion gets a static,
 // swipeable strip instead: with nothing moving and no side-scrolling, the
@@ -151,7 +152,7 @@ export default function ReviewsMarquee() {
       aria-label="Student testimonials"
       role="region"
     >
-      <ScrollVelocityRow baseVelocity={BASE_VELOCITY} direction={1}>
+      <ScrollVelocityRow baseVelocity={BASE_VELOCITY} direction={1} draggable>
         {cards}
       </ScrollVelocityRow>
     </ScrollVelocityContainer>

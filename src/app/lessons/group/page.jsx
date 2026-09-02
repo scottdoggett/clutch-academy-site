@@ -135,7 +135,7 @@ export default function GroupLessonsPage() {
             <li>Great for first-timers who want the moral support</li>
           </ul>
           <p className="lesson-block__note">
-            Taught in a manual 2015 Volkswagen Golf on real Toronto roads.
+            Taught in a manual hatchback on real Toronto roads.
             Every driver needs a valid G2 or G licence.
           </p>
         </div>

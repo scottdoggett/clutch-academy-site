@@ -25,13 +25,14 @@ import { useEffect, useRef } from 'react'
 // Average travel speed along the plate, px/s — this sets the duration, and the
 // easing redistributes it inside that. Long shifts take longer than short
 // ones, which is what keeps a flick from 1 to 2 from feeling sluggish.
-// Was 1500, then 1200; eased down so the travel between gears is legible as
-// travel rather than a jump.
-const SPEED = 1000
+// Was 1500, then 1200, then 1000; eased down so the travel between gears is
+// legible as travel rather than a jump.
+const SPEED = 800
 
 // Floor on a shift, ms. Without it the shortest move — one slot, no crossing —
-// is over before the eye registers a direction.
-const MIN_MS = 230
+// is over before the eye registers a direction. This, not SPEED, is what
+// governs the in-slot hops: 1 to 2 is only ~148px, well under the floor.
+const MIN_MS = 300
 
 // Distance in px under which two positions count as the same point.
 const EPS = 0.5

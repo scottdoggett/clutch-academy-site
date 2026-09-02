@@ -10,7 +10,7 @@ in Toronto, Ontario. One instructor — **Sam Anthony**, founder and lead
 instructor — teaching already-licensed drivers to operate a manual car, on real
 roads, one-on-one.
 
-Lessons are taught in a manual 2015 Volkswagen Golf. A valid **G2 or G licence
+Lessons are taught in a manual hatchback. A valid **G2 or G licence
 is required** for every lesson; Clutch Academy is not an MTO beginner-driver
 school and does not teach unlicensed learners.
 

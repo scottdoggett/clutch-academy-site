@@ -54,7 +54,7 @@ export const FAQS = [
   {
     id: 'car',
     q: 'What car will I be learning on?',
-    a: "You'll learn in a 2015 Volkswagen Golf with a manual transmission — a great car for learning thanks to its smooth clutch and forgiving feel.",
+    a: "You'll learn in a manual-transmission hatchback — a great car for learning thanks to its smooth clutch and forgiving feel.",
   },
   {
     id: 'gift',

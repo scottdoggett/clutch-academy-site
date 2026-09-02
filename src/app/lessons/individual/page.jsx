@@ -169,7 +169,7 @@ export default function IndividualLessonPage() {
             <li>Personalized feedback on exactly what to practice next</li>
           </ul>
           <p className="lesson-block__note">
-            Taught in a manual 2015 Volkswagen Golf. A valid G2 or G licence
+            Taught in a manual hatchback. A valid G2 or G licence
             is required.
           </p>
         </div>
