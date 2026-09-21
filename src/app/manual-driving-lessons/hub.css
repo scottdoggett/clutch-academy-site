@@ -1,9 +1,8 @@
 /* ---------- Packages band ----------------------------------------------- */
 /* Now the page's opening section — the intro hero above it was removed in
-   August 2026 so /manual-driving-lessons lands straight on the packages. */
-.hub-packages {
-  background-color: color-mix(in srgb, var(--red-deep) 45%, var(--red-primary));
-}
+   August 2026 so /manual-driving-lessons lands straight on the packages.
+   No background of its own: it sits on the page's --red-primary, the same
+   ground every other page's opening section stands on. */
 
 /* Page-scoped type correction: the global section h2 (4rem) overwhelms a
    hub page; keep headings editorial, not billboard. */
