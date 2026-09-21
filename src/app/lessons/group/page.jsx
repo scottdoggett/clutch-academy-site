@@ -7,7 +7,7 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Group Manual Driving Lessons in Toronto | Clutch Academy',
   description:
-    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 2.5 hours, $219 + HST. Book online.',
+    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 2.5 hours, $220 + HST. Book online.',
   alternates: { canonical: '/lessons/group' },
 }
 
@@ -16,7 +16,7 @@ export const metadata = {
 //
 // ❓ BLOCKED (Phase 0, still open): the post-August-1 group format —
 //    the brief mentioned both 1-hour and 2.5-hour options, but the new pricing
-//    lists ONLY a 2.5-hour group at $219 + HST, and that is what the live site
+//    lists ONLY a 2.5-hour group at $220 + HST, and that is what the live site
 //    shipped on August 1 (308317c). This page now matches the live offering.
 //    If Sam wants a shorter option back, it is an addition, not a revert.
 // ❓ BLOCKED: whether group pricing is per person or per pair — copy below
@@ -29,7 +29,7 @@ const OPTIONS = [
   {
     title: '2.5-Hour Group Lesson',
     desc: 'Bring a friend and split the experience — plenty of seat time each, at a fun, low-pressure pace.',
-    price: '$219',
+    price: '$220',
     unit: '/ 2.5 hours + HST',
     source: 'packages_group_2hr',
     cta: 'Book 2.5-Hour Group',
@@ -85,7 +85,7 @@ export default function GroupLessonsPage() {
             nervous about. Bringing a friend makes that even easier.
           </p>
           <p className="lesson-hero__price">
-            $219
+            $220
             <span className="lesson-hero__price-unit">/ 2.5 hours + HST</span>
           </p>
           <BookButton source="packages_group" className="btn btn--primary">

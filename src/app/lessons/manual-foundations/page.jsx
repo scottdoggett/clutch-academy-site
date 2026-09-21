@@ -7,12 +7,12 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Manual Foundations Package — 3 Lessons | Clutch Academy',
   description:
-    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $299 + HST.',
+    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $300 + HST.',
   alternates: { canonical: '/lessons/manual-foundations' },
 }
 
 // Keyword target (08 §4): "learn to drive manual Toronto" (beginners).
-// Pricing is the post-August-1 offering: $299 + HST, three 75-minute lessons.
+// Pricing is the post-August-1 offering: $300 + HST, three 75-minute lessons.
 
 // The three-lesson progression, from the brief. Descriptions elaborate only
 // with language already established on the site (HowItWorks first-lesson
@@ -85,9 +85,9 @@ export default function ManualFoundationsPage() {
             nervous about.
           </p>
           <p className="lesson-hero__price">
-            $299
+            $300
             <span className="lesson-hero__price-unit">
-              / 3 lessons + HST · save $28 vs. three singles
+              / 3 lessons + HST · save $30 vs. three singles
             </span>
           </p>
           <BookButton source="packages_3pack" className="btn btn--primary">

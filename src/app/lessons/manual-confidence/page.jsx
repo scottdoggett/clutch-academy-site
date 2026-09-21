@@ -7,13 +7,13 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Complete Manual Confidence Package — 5 Lessons | Clutch Academy',
   description:
-    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $469 + HST.',
+    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $470 + HST.',
   alternates: { canonical: '/lessons/manual-confidence' },
 }
 
 // Keyword target (08 §4): "highway + city manual lessons Toronto"
 // (supporting: highway lessons, hill starts, city driving).
-// Pricing is the post-August-1 offering: $469 + HST, five 75-minute lessons.
+// Pricing is the post-August-1 offering: $470 + HST, five 75-minute lessons.
 
 // The six skills, verbatim from the brief. Descriptions add only light,
 // generic framing — no invented curriculum detail or route specifics.
@@ -97,9 +97,9 @@ export default function ManualConfidencePage() {
             guarantee.
           </p>
           <p className="lesson-hero__price">
-            $469
+            $470
             <span className="lesson-hero__price-unit">
-              / 5 lessons + HST · save $76 vs. five singles
+              / 5 lessons + HST · save $80 vs. five singles
             </span>
           </p>
           <BookButton

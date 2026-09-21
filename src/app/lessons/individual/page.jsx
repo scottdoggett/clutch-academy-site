@@ -7,12 +7,12 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Individual Manual Driving Lesson in Toronto | Clutch Academy',
   description:
-    'One-on-one manual driving refresher in Toronto, or a first introduction to stick shift. Real roads, patient instruction, $109 + HST. Book online.',
+    'One-on-one manual driving refresher in Toronto, or a first introduction to stick shift. Real roads, patient instruction, $110 + HST. Book online.',
   alternates: { canonical: '/lessons/individual' },
 }
 
 // Keyword target (08 §4): "manual driving refresher Toronto".
-// Pricing is the post-August-1 offering: 75 min · $109 + HST.
+// Pricing is the post-August-1 offering: 75 min · $110 + HST.
 const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 
 // "Who it's for" scenarios — the same four situations the old bullet list
@@ -112,7 +112,7 @@ export default function IndividualLessonPage() {
             nervous about.
           </p>
           <p className="lesson-hero__price">
-            $109
+            $110
             <span className="lesson-hero__price-unit">/ 75 min + HST</span>
           </p>
           <BookButton source="packages_single" className="btn btn--primary">
