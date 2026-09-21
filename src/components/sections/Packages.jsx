@@ -24,7 +24,7 @@ export default function Packages({
             <h3>Individual Manual Lesson</h3>
             <p className="package-card__desc">Best for refreshers.</p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>109
+              <span className="package-card__currency">$</span>110
               <span className="package-card__unit">/ 75 min</span>
             </p>
           </div>
@@ -44,7 +44,7 @@ export default function Packages({
         </article>
 
         <article className="package-card package-card--featured package-card--red-2">
-          <span className="package-card__badge">Save $28</span>
+          <span className="package-card__badge">Save $30</span>
           <div className="package-card__info">
             <p className="package-card__tag">Private · 3 Lessons</p>
             <h3>Manual Foundations Package</h3>
@@ -52,7 +52,7 @@ export default function Packages({
               Full progression to road-confident.
             </p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>299
+              <span className="package-card__currency">$</span>300
               <span className="package-card__unit">/ 3 lessons</span>
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function Packages({
               Master manual driving in real-world conditions.
             </p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>469
+              <span className="package-card__currency">$</span>470
               <span className="package-card__unit">/ 5 lessons</span>
             </p>
           </div>
@@ -109,13 +109,13 @@ export default function Packages({
               Bring a friend. Split the experience.
             </p>
             <p className="package-card__price">
-              <span className="package-card__currency">$</span>219
+              <span className="package-card__currency">$</span>220
               <span className="package-card__unit">/ 2.5 hours</span>
             </p>
           </div>
 
           <div className="package-card__details">
-            {/* PENDING: GROUP 2.5HR INCLUSIONS + confirm whether $219 is per-person or per-pair */}
+            {/* PENDING: GROUP 2.5HR INCLUSIONS + confirm whether $220 is per-person or per-pair */}
             <ul className="package-card__list">
               <li>Learn with a friend</li>
               <li>Two-and-a-half-hour group session</li>
