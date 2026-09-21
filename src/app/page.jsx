@@ -142,7 +142,7 @@ const SCHEMA_GRAPH = {
       '@id': 'https://clutchacademy.ca/#offer-confidence-5pack',
       name: 'Complete Confidence Package (5 Lessons)',
       description:
-        'Five 75-minute lessons covering downtown driving, highway merging, hill starts, and rush-hour practice, with a confidence guarantee.',
+        'Five 75-minute lessons covering downtown driving, highway merging, hill starts, and rush-hour practice.',
       price: '470.00',
       priceCurrency: 'CAD',
       category: 'Driving lesson package',

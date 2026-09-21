@@ -88,13 +88,9 @@ export default function ManualConfidencePage() {
             the city can throw at a clutch — downtown, merging, rush hour,
             hills, and parking — with coaching tailored to you the whole way.
           </p>
-          {/* PENDING: "confidence guarantee" — terms still to come from Sam
-              (08 §7); the live site's card mentions it, so it stays until
-              the wording is finalized or the client drops it. */}
           <p className="lesson-hero__lead">
             This is the package for finishing the job: not just moving the
-            car, but genuine confidence anywhere — backed by the confidence
-            guarantee.
+            car, but genuine confidence anywhere.
           </p>
           <p className="lesson-hero__price">
             $470

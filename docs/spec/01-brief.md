@@ -112,5 +112,6 @@ reduced-motion-friendly delivery.
 declined); referral/promo codes.
 
 **Delivered by the client, still outstanding:** final brand assets, real lesson
-photography, dedicated testimonials, package inclusions, cancellation wording,
-and the confidence-guarantee terms. All tracked in `07-status.md`.
+photography, dedicated testimonials, package inclusions, and cancellation
+wording. All tracked in `07-status.md`. The confidence guarantee was dropped
+from the rebuild rather than written — see `07-status.md` #4.
