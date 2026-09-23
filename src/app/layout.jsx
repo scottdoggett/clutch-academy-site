@@ -4,6 +4,8 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import ConsentBanner from '../components/ConsentBanner'
 import AnalyticsLoader from '../components/AnalyticsLoader'
+import SiteMotion from '../components/motion/SiteMotion'
+import { MOTION_PREPAINT } from '../lib/motionPrepaint'
 import './globals.css'
 
 const jakarta = Plus_Jakarta_Sans({
@@ -91,8 +93,18 @@ gtag('config', 'AW-18196514948')
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-CA" className={`${jakarta.variable} ${inter.variable}`}>
+    // suppressHydrationWarning: the motion pre-paint script sets data-motion
+    // on <html> before React hydrates (src/lib/motionPrepaint.js). It only
+    // silences attribute mismatches on this one element, not its children.
+    <html
+      lang="en-CA"
+      className={`${jakarta.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
       <body>
+        {/* First in <body>, so a page's hero is in its motion starting states
+            before first paint (docs/spec/08-motion.md §The hero). */}
+        <script dangerouslySetInnerHTML={{ __html: MOTION_PREPAINT }} />
         <script dangerouslySetInnerHTML={{ __html: GTAG_CONSENT_INIT }} />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-5E5GEN5N59"
@@ -106,6 +118,7 @@ export default function RootLayout({ children }) {
         <Footer />
         <ConsentBanner />
         <AnalyticsLoader />
+        <SiteMotion />
       </body>
     </html>
   )

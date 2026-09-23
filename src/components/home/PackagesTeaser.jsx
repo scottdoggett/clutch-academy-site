@@ -54,14 +54,22 @@ export default function PackagesTeaser() {
     <section className="section section--light" id="packages" aria-labelledby="packages-heading">
       <div className="section__inner">
         <header className="section-header section-header--center">
-          <p className="section-header__eyebrow">Packages & Pricing</p>
-          <h2 id="packages-heading">Straightforward pricing</h2>
-          <p className="section-header__lead">
+          <p className="section-header__eyebrow" data-anim="rise">
+            Packages & Pricing
+          </p>
+          <h2 id="packages-heading" data-anim="headline">
+            Straightforward pricing
+          </h2>
+          <p
+            className="section-header__lead"
+            data-anim="rise"
+            data-anim-delay="0.3"
+          >
             Go solo or bring a friend. You pay by card when you book.
           </p>
         </header>
 
-        <div className="teasers">
+        <div className="teasers" data-anim="stagger" data-anim-delay="0.35">
           {TEASERS.map((t) => (
             <article
               key={t.href}
@@ -90,7 +98,7 @@ export default function PackagesTeaser() {
           ))}
         </div>
 
-        <p className="teasers__hub-link">
+        <p className="teasers__hub-link" data-anim="rise" data-anim-delay="0.8">
           <Link href="/manual-driving-lessons">
             Compare every lesson option →
           </Link>

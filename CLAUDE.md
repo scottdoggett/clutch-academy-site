@@ -53,8 +53,13 @@ planning docs. **Don't work from anything in there.**
 ## Stack & architecture
 
 - **Next.js App Router** (`src/app/`), fully static (`next build` prerenders
-  every route). No prerender scripts, no GSAP, no `window.__PRERENDER__` — that
-  world is gone.
+  every route). No prerender scripts, no `window.__PRERENDER__` — that world is
+  gone.
+- **GSAP** (re-added September 2026 for homepage animation) is set up in
+  `src/lib/gsap.js`: import `gsap` / `ScrollTrigger` / `useGSAP` from there, not
+  the packages, and wrap every animation in `gsap.matchMedia(MOTION_OK)`.
+  **Read `docs/spec/08-motion.md` before animating anything** — it sets the
+  rules, the six allowed animation types, and the timing values.
 - **Shared shell** in `src/app/layout.jsx`: fonts via `next/font` (Plus Jakarta
   Sans + Inter), metadata defaults, inline Consent Mode v2 bootstrap
   (deny-first) + gtag.js, skip link, Nav, Footer, ConsentBanner, AnalyticsLoader.
@@ -94,8 +99,10 @@ planning docs. **Don't work from anything in there.**
   their own Book buttons for two days in August 2026 and was rejected as too much
   furniture next to the package cards. Don't rebuild it as cards, and don't
   revive the retired `lessons_overview_pick_*` source tags.
-- **Respect `prefers-reduced-motion`** — the only JS motion is the reviews
-  marquee, which is matchMedia-gated; keep any new motion gated the same way.
+- **Respect `prefers-reduced-motion`** — the reviews marquee is matchMedia-gated,
+  and every GSAP animation goes under `gsap.matchMedia(MOTION_OK)` so reduced
+  motion gets the final static state. Never hide content in CSS for a JS
+  entrance to reveal.
 - **Pending inputs** are `{/* PENDING: ... */}` / `❓ BLOCKED` comments —
   `grep -rn "PENDING\|BLOCKED" src/ public/` lists all outstanding client
   inputs. Never invent content that conflicts with the brand: no invented

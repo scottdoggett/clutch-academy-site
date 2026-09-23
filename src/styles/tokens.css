@@ -55,13 +55,9 @@
   /* Total fixed-header clearance: nav bar plus any announcement strip. */
   --nav-height: calc(var(--nav-bar-height) + var(--announcement-height));
 
-  /* Transitions */
-  --transition-same-column: 0.8s;
-  --transition-h-crossing: 1.2s;
-  --transition-reverse-beat1: 0.6s;
-  --transition-reverse-beat2: 0.8s;
-
-  /* Reduced motion crossfade */
+  /* Hover, focus and press feedback (CSS transitions). Scripted motion —
+     entrances, the hero — takes its values from src/lib/motion.js instead
+     (docs/spec/08-motion.md §Values). */
   --transition-reduced: 150ms;
 }
 

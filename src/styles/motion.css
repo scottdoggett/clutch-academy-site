@@ -1,0 +1,43 @@
+/* Motion system CSS — see docs/spec/08-motion.md and src/lib/motion.js.
+   Only two jobs: frames for the photo types, and the hero's pre-paint
+   starting states. Nothing else on the site hides content in CSS. */
+
+/* Settle and Drift move the image inside its frame; the frame clips, so the
+   box never changes size. */
+[data-anim='settle'],
+[data-anim='drift'] {
+  overflow: hidden;
+}
+
+/* Draw grows a line from its left edge. Set here rather than by GSAP so no
+   inline transform-origin is left on the element afterwards. */
+[data-anim='draw'] {
+  transform-origin: left center;
+}
+
+/* The hero's starting states, applied before first paint on a first load
+   (html[data-motion="ok"] comes from MOTION_PREPAINT). SiteMotion sets
+   data-motion-ready in the same frame it starts the hero timeline, which
+   switches these off. The headline and photo are LCP candidates, so they're
+   offset but never transparent. */
+html[data-motion='ok']:not([data-motion-ready]) [data-hero='eyebrow'],
+html[data-motion='ok']:not([data-motion-ready]) [data-hero='sub'],
+html[data-motion='ok']:not([data-motion-ready]) [data-hero='ctas'],
+html[data-motion='ok']:not([data-motion-ready]) [data-hero='caption'] {
+  opacity: 0;
+  animation: motion-failsafe 0s linear 1.5s forwards;
+}
+
+html[data-motion='ok']:not([data-motion-ready]) [data-hero='headline'] {
+  transform: translateY(24px);
+  animation: motion-failsafe 0s linear 1.5s forwards;
+}
+
+/* Failsafe: if the script never takes over (blocked, slow, broken), the hero
+   snaps to its final state at 1.5s instead of staying hidden. */
+@keyframes motion-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

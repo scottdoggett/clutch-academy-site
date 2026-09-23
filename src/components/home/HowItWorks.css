@@ -12,11 +12,15 @@
   margin-bottom: clamp(1rem, 2vw, 1.75rem);
 }
 
+.steps__divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
 .steps {
   list-style: none;
   padding: clamp(0.75rem, 1.5vw, 1.25rem) 0 0;
   margin: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;

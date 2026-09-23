@@ -33,19 +33,36 @@ export default function HowItWorks() {
       <div className="section__inner">
         <div className="how-it-works__top">
           <header className="section-header how-it-works__header">
-            <p className="section-header__eyebrow">The Process</p>
-            <h2 id="how-heading">How It Works</h2>
-            <p className="section-header__lead">
+            <p className="section-header__eyebrow" data-anim="rise">
+              The Process
+            </p>
+            <h2 id="how-heading" data-anim="headline">
+              How It Works
+            </h2>
+            <p
+              className="section-header__lead"
+              data-anim="rise"
+              data-anim-delay="0.3"
+            >
               Four steps, and you only have to think about the first two.
             </p>
           </header>
 
           <section className="first-lesson" aria-labelledby="first-lesson-heading">
-            <div className="first-lesson__heading">
+            <div
+              className="first-lesson__heading"
+              data-anim="rise"
+              data-anim-delay="0.2"
+            >
               <p className="section-header__eyebrow">Your first lesson</p>
               <h3 id="first-lesson-heading">What to Expect</h3>
             </div>
-            <ul className="first-lesson__copy">
+            <ul
+              className="first-lesson__copy"
+              data-anim="stagger"
+              data-anim-stagger="tight"
+              data-anim-delay="0.3"
+            >
               <li className="first-lesson__body">
                 We start somewhere quiet, so you get a feel for the clutch before
                 there's traffic around you.
@@ -65,7 +82,9 @@ export default function HowItWorks() {
           </section>
         </div>
 
-        <ol className="steps">
+        {/* The steps' top border, as its own element so it can Draw in. */}
+        <div className="steps__divider" data-anim="draw" />
+        <ol className="steps" data-anim="stagger" data-anim-delay="0.2">
           {STEPS.map((s, i) => (
             <li key={s.n} className="steps__item">
               <div className="steps__header">
@@ -73,7 +92,12 @@ export default function HowItWorks() {
                   {String(s.n).padStart(2, '0')}
                 </span>
                 {i < STEPS.length - 1 && (
-                  <span className="steps__rule" aria-hidden="true" />
+                  <span
+                    className="steps__rule"
+                    aria-hidden="true"
+                    data-anim="draw"
+                    data-anim-delay={(0.45 + i * 0.1).toFixed(2)}
+                  />
                 )}
               </div>
               <h3 className="steps__title">{s.title}</h3>

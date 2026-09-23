@@ -18,6 +18,20 @@
   height: auto;
 }
 
+/* The frame takes the photo's border and corners and clips it, so the Settle
+   scale stays inside the box. The photo keeps its tint, minus the edge
+   styling the frame now owns. */
+.about__frame {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
+.about__frame .about__photo {
+  border: 0;
+  border-radius: 0;
+}
+
 .about__text {
   display: flex;
   flex-direction: column;

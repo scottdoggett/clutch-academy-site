@@ -1,6 +1,12 @@
 /* Home reviews section footer. The beige band and its red header type come
    from `.section--light` in globals.css; the marquee itself (and the
    review-card styles) live in src/components/ReviewsMarquee.css. */
+/* The footer's top border, as its own element so it can Draw in. */
+.reviews__rule {
+  height: 1px;
+  background-color: rgba(200, 16, 46, 0.15);
+}
+
 .reviews__footer {
   display: flex;
   align-items: center;
@@ -8,7 +14,6 @@
   gap: 1rem;
   flex-wrap: wrap;
   padding-top: 1rem;
-  border-top: 1px solid rgba(200, 16, 46, 0.15);
   flex-shrink: 0;
 }
 

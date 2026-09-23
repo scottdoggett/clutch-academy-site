@@ -42,6 +42,7 @@ Unless you are specifically fixing the live site, **work on `overhaul`.**
 | `05-analytics.md` | Consent Mode, GA4 / Ads / Meta / TikTok, conversion tracking, CTA source tags |
 | `06-deployment.md` | The two Vercel projects, branch model, config, launch runbook |
 | `07-status.md` | What's done, what isn't, and every open question needing a human |
+| `08-motion.md` | Animation rules, the six motion types, timing values, and the homepage motion map |
 | `../google-ads-mapping.md` | Account-side Google Ads work still to apply |
 | `../seo.md` | Long-form SEO reference and maintenance guide |
 | `archive/` | The retired single-page spec and the rebuild's own planning docs |

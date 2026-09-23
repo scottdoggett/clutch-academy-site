@@ -61,14 +61,21 @@
   min-height: 0;
 }
 
+/* The frame owns the border and rounded corners and clips the photo, so the
+   hero timeline's settle scale stays inside the box. */
+.hero__frame {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
 .hero__photo {
   width: 100%;
   height: auto;
   max-height: min(72vh, 640px);
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
   display: block;
 }
 

@@ -12,16 +12,29 @@ export default function Reviews() {
     <section className="section section--light" id="reviews" aria-labelledby="reviews-heading">
       <div className="section__inner">
         <header className="section-header">
-          <p className="section-header__eyebrow">Student Stories</p>
-          <h2 id="reviews-heading">What Students Are Saying</h2>
-          <p className="section-header__lead">
+          <p className="section-header__eyebrow" data-anim="rise">
+            Student Stories
+          </p>
+          <h2 id="reviews-heading" data-anim="headline">
+            What Students Are Saying
+          </h2>
+          <p
+            className="section-header__lead"
+            data-anim="rise"
+            data-anim-delay="0.3"
+          >
             Toronto drivers who learned stick with Sam, in their own words.
           </p>
         </header>
 
-        <ReviewsMarquee />
+        {/* The strip arrives as one block: it's already moving, so its cards
+            never stagger (docs/spec/08-motion.md rule 3). */}
+        <div data-anim="rise" data-anim-delay="0.4">
+          <ReviewsMarquee />
+        </div>
 
-        <div className="reviews__footer">
+        <div className="reviews__rule" data-anim="draw" data-anim-delay="0.5" />
+        <div className="reviews__footer" data-anim="rise" data-anim-delay="0.6">
           {/* Stars/count derive from the shared numbers module so the badge
               can never disagree with the homepage aggregateRating schema. */}
           <div className="reviews__badge">
