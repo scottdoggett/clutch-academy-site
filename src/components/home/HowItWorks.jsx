@@ -4,22 +4,22 @@ const STEPS = [
   {
     n: 1,
     title: 'Pick a package',
-    desc: 'Choose the single lesson or 3-pack that fits your goals.',
+    desc: 'One lesson, a pack of three or five, or a group lesson with a friend.',
   },
   {
     n: 2,
-    title: 'Book on Calendly',
-    desc: 'Select a time that works for you in seconds.',
+    title: 'Book a time',
+    desc: 'Choose a time and a meeting spot on Calendly, and pay by card.',
   },
   {
     n: 3,
-    title: 'Meet at the lesson',
-    desc: "Show up ready to drive — we'll handle the rest.",
+    title: 'Show up',
+    desc: 'Bring your G2 or G license and wear thin-soled shoes. We bring the car.',
   },
   {
     n: 4,
-    title: 'Drive with confidence',
-    desc: 'One-on-one coaching tailored to your pace.',
+    title: 'Drive it yourself',
+    desc: 'Sam sits beside you and coaches at whatever pace you need.',
   },
 ]
 
@@ -36,7 +36,7 @@ export default function HowItWorks() {
             <p className="section-header__eyebrow">The Process</p>
             <h2 id="how-heading">How It Works</h2>
             <p className="section-header__lead">
-              From picking a package to leaving with confidence.
+              Four steps, and you only have to think about the first two.
             </p>
           </header>
 
@@ -47,20 +47,19 @@ export default function HowItWorks() {
             </div>
             <ul className="first-lesson__copy">
               <li className="first-lesson__body">
-                Your first lesson is all about getting comfortable and building
-                confidence.
+                We start somewhere quiet, so you get a feel for the clutch before
+                there's traffic around you.
               </li>
               <li className="first-lesson__body">
-                We’ll start with the basics — clutch control, finding the bite
-                point, and smooth takeoffs.
+                You find the bite point and practise pulling away until it stops
+                feeling like a guess.
               </li>
               <li className="first-lesson__body">
-                You’ll learn to start, stop, shift, and handle common
-                situations like hills, all at your pace.
+                Then stopping, shifting and hill starts, at whatever speed suits
+                you.
               </li>
               <li className="first-lesson__body">
-                By the end, you won’t just understand manual — you’ll be
-                driving it.
+                By the end of the lesson you're changing gears on your own.
               </li>
             </ul>
           </section>

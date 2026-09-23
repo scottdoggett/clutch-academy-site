@@ -32,14 +32,14 @@ export default function AboutTeaser() {
             sizes="280px"
           />
 
-          <p className="about__bio">Hey, I’m Sam — I run Clutch Academy.</p>
+          <p className="about__bio">Hey, I'm Sam, and I run Clutch Academy.</p>
           <p className="about__bio">
-            I’ll teach you manual step by step, at your pace, on real Toronto
-            roads.
+            I teach manual one step at a time, on real Toronto roads, at the pace
+            you set.
           </p>
           <p className="about__bio">
-            We’ll take the pressure off, just build your confidence and have
-            fun doing it.
+            Everyone stalls while they're learning. Nobody's grading you, so we
+            keep it relaxed, and most people end up having fun.
           </p>
 
           <dl className="about__stats">
@@ -48,7 +48,7 @@ export default function AboutTeaser() {
               <dd>1-on-1</dd>
             </div>
             <div className="about__stat">
-              <dt>Territory</dt>
+              <dt>Area</dt>
               <dd>Toronto</dd>
             </div>
             <div className="about__stat">
@@ -62,7 +62,7 @@ export default function AboutTeaser() {
               Book a Lesson
             </BookButton>
             <Link href="/about" className="about__more">
-              More about the story behind Clutch Academy →
+              How Clutch Academy started →
             </Link>
           </div>
         </div>

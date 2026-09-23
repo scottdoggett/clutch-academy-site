@@ -5,6 +5,10 @@
   --red-dark: #4A0510;
   --white: #FFFFFF;
   --cream: #FDF8F2;
+  /* Ground for the light sections (.section--light) — warmer than white.
+     Red text on it: --red-primary 4.99:1, --red-deep 8.3:1, --red-dark
+     13.5:1, all AA. Don't go darker without re-checking --red-primary. */
+  --beige: #FBE9DF;
   /* Lifted from #D9D9D9 for WCAG AA: 4.64:1 on --red-primary (the old value
      measured 4.18:1, failing small-text contrast on eyebrows/labels). */
   --chrome: #E4E4E4;

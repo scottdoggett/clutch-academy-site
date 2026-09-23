@@ -3,20 +3,19 @@ import ReviewsMarquee from '../ReviewsMarquee'
 import googleReviews from '../../lib/googleReviews'
 
 // Home "What Students Are Saying" section: header + the shared review
-// marquee + the Google-rating footer. The one white band on the homepage —
-// Reviews.css flips its type and button to red. Review quotes live in
+// marquee + the Google-rating footer. A beige band (`section--light` in
+// globals.css flips its header type and button to red). Review quotes live in
 // src/components/ReviewsMarquee.jsx; rating/count numbers in
 // src/lib/googleReviews.js.
 export default function Reviews() {
   return (
-    <section className="section reviews" id="reviews" aria-labelledby="reviews-heading">
+    <section className="section section--light" id="reviews" aria-labelledby="reviews-heading">
       <div className="section__inner">
         <header className="section-header">
           <p className="section-header__eyebrow">Student Stories</p>
           <h2 id="reviews-heading">What Students Are Saying</h2>
           <p className="section-header__lead">
-            Real reviews from drivers who got behind the stick with Clutch
-            Academy.
+            Toronto drivers who learned stick with Sam, in their own words.
           </p>
         </header>
 
@@ -37,7 +36,7 @@ export default function Reviews() {
           </div>
           <a
             href={googleReviews.url}
-            className="btn btn--secondary"
+            className="btn btn--secondary btn--on-light"
             target="_blank"
             rel="noopener noreferrer"
           >

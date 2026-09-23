@@ -12,7 +12,7 @@ const TEASERS = [
   {
     tag: 'Private · Single',
     title: 'Individual Manual Lesson',
-    desc: 'Best for refreshers or a first introduction to stick.',
+    desc: 'One 75-minute lesson. Good for a first try or a refresher.',
     price: '$110',
     unit: '/ 75 min + HST',
     href: '/lessons/individual',
@@ -21,7 +21,7 @@ const TEASERS = [
   {
     tag: 'Private · 3 Lessons',
     title: 'Manual Foundations',
-    desc: 'Full progression from clutch control to road-confident.',
+    desc: 'Three lessons, which is what most beginners need to feel confident.',
     price: '$300',
     unit: '/ 3 lessons + HST',
     href: '/lessons/manual-foundations',
@@ -31,7 +31,7 @@ const TEASERS = [
   {
     tag: 'Group · With a Friend',
     title: 'Group Manual Lessons',
-    desc: 'Bring a friend and split the experience.',
+    desc: 'Two and a half hours with a friend, taking turns at the wheel.',
     price: '$220',
     unit: '/ 2.5 hours + HST',
     href: '/lessons/group',
@@ -40,7 +40,7 @@ const TEASERS = [
   {
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence',
-    desc: 'City, highway, and rush-hour mastery — the flagship.',
+    desc: 'Five lessons covering downtown, highway merging, hills and rush hour.',
     price: '$470',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
@@ -51,13 +51,13 @@ const TEASERS = [
 
 export default function PackagesTeaser() {
   return (
-    <section className="section" id="packages" aria-labelledby="packages-heading">
+    <section className="section section--light" id="packages" aria-labelledby="packages-heading">
       <div className="section__inner">
         <header className="section-header section-header--center">
           <p className="section-header__eyebrow">Packages & Pricing</p>
-          <h2 id="packages-heading">Simple, straightforward pricing</h2>
+          <h2 id="packages-heading">Straightforward pricing</h2>
           <p className="section-header__lead">
-            Solo or with a friend. Pay securely at booking.
+            Go solo or bring a friend. You pay by card when you book.
           </p>
         </header>
 
@@ -92,7 +92,7 @@ export default function PackagesTeaser() {
 
         <p className="teasers__hub-link">
           <Link href="/manual-driving-lessons">
-            Compare all lesson options →
+            Compare every lesson option →
           </Link>
         </p>
       </div>

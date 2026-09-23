@@ -16,11 +16,11 @@ export default function Hero() {
         <div className="hero__copy">
           <p className="hero__eyebrow">Toronto · Manual Transmission Lessons</p>
           <h1 id="hero-heading" className="hero__headline">
-            Finally learn manual, without the stress.
+            Learn to drive manual without the stress.
           </h1>
           <p className="hero__subhead">
-            One-on-one manual transmission lessons on real Toronto roads. Book
-            your first lesson in under a minute.
+            One-on-one lessons in a manual hatchback on real Toronto roads. You
+            pick the time and the meeting spot when you book.
           </p>
           <div className="hero__ctas">
             <BookButton source="hero" className="btn btn--primary">
@@ -41,7 +41,7 @@ export default function Hero() {
             sizes="(max-width: 1023px) 90vw, 45vw"
           />
           <div className="hero__caption">
-            Real roads, real confidence. Stick shift lessons across Toronto.
+            We start on quiet streets and work up to real traffic.
           </div>
         </div>
       </div>

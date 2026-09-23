@@ -1,27 +1,6 @@
-/* Home reviews section — the one white band on the homepage, so everything
-   the site-wide styles paint white or cream is flipped to red here. The
-   marquee itself (and the review-card styles) live in
-   src/components/ReviewsMarquee.css.
-
-   Contrast on --white: --red-primary 5.9:1, --red-deep 9.4:1, --red-dark
-   15:1, so every red here clears AA for small text. */
-.reviews {
-  background-color: var(--white);
-  color: var(--red-primary);
-}
-
-.reviews .section-header__eyebrow {
-  color: var(--red-deep);
-}
-
-.reviews .section-header h2 {
-  color: var(--red-primary);
-}
-
-.reviews .section-header__lead {
-  color: var(--red-dark);
-}
-
+/* Home reviews section footer. The beige band and its red header type come
+   from `.section--light` in globals.css; the marquee itself (and the
+   review-card styles) live in src/components/ReviewsMarquee.css. */
 .reviews__footer {
   display: flex;
   align-items: center;
@@ -52,22 +31,6 @@
   font-size: var(--text-body-lg);
   letter-spacing: 0.1em;
   color: var(--star-gold);
-}
-
-/* The shared secondary button is white-on-red; on this band it inverts. The
-   focus ring has to change too — the default white one vanishes on white. */
-.reviews .btn--secondary {
-  color: var(--red-primary);
-  border-color: var(--red-primary);
-}
-
-.reviews .btn--secondary:hover {
-  background-color: var(--red-primary);
-  color: var(--white);
-}
-
-.reviews .btn:focus-visible {
-  outline-color: var(--red-primary);
 }
 
 @media (max-width: 767px) {

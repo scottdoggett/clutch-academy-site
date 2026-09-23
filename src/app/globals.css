@@ -242,6 +242,58 @@ img {
   }
 }
 
+/* ---------- Light sections ------------------------------------------------
+   A beige band for breaking up the red, used on the homepage's reviews and
+   pricing sections. It flips everything the shared styles paint white or
+   cream: header type, the secondary button, and the focus ring (a white one
+   vanishes on a light ground). Contrast figures are on the --beige token. */
+.section--light {
+  background-color: var(--beige);
+  color: var(--red-primary);
+}
+
+.section--light .section-header__eyebrow {
+  color: var(--red-deep);
+}
+
+.section--light .section-header h2 {
+  color: var(--red-primary);
+}
+
+.section--light .section-header__lead {
+  color: var(--red-dark);
+}
+
+/* A button sitting on the light ground itself: solid brand red with white
+   type, the red-band buttons turned inside out, so the section's biggest
+   block of colour is the call to action. Hover sinks to --red-deep, the
+   package cards' red. A button inside a red card on this band doesn't carry
+   the modifier and keeps the default white-on-red treatment.
+
+   The inner white line is two inset shadows: a red rim in the button's own
+   fill (--btn-fill, so it follows the hover) and a thin white ring just
+   inside it. Shadows rather than a second border, so the button keeps the
+   exact size of every other .btn. */
+.section--light .btn--on-light {
+  --btn-fill: var(--red-primary);
+  background-color: var(--btn-fill);
+  border-color: var(--btn-fill);
+  color: var(--white);
+  box-shadow:
+    inset 0 0 0 2px var(--btn-fill),
+    inset 0 0 0 3.5px var(--white),
+    0 10px 24px -14px rgba(74, 5, 16, 0.6);
+}
+
+.section--light .btn--on-light:hover {
+  --btn-fill: var(--red-deep);
+  color: var(--white);
+}
+
+.section--light .btn--on-light:focus-visible {
+  outline-color: var(--red-primary);
+}
+
 /* Stub-page hero for the Phase 3 route placeholders (About, FAQ, packages…);
    each gets replaced as Phases 5-7 land its real content. Clears the fixed
    nav via --nav-height. */
