@@ -3,12 +3,13 @@ import ReviewsMarquee from '../ReviewsMarquee'
 import googleReviews from '../../lib/googleReviews'
 
 // Home "What Students Are Saying" section: header + the shared review
-// marquee + the Google-rating footer. Review quotes live in
+// marquee + the Google-rating footer. The one white band on the homepage —
+// Reviews.css flips its type and button to red. Review quotes live in
 // src/components/ReviewsMarquee.jsx; rating/count numbers in
 // src/lib/googleReviews.js.
 export default function Reviews() {
   return (
-    <section className="section" id="reviews" aria-labelledby="reviews-heading">
+    <section className="section reviews" id="reviews" aria-labelledby="reviews-heading">
       <div className="section__inner">
         <header className="section-header">
           <p className="section-header__eyebrow">Student Stories</p>

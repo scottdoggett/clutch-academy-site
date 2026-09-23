@@ -1,10 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import {
-  ScrollVelocityContainer,
-  ScrollVelocityRow,
-} from '@/components/ui/scroll-based-velocity'
+import { ScrollVelocityRow } from '@/components/ui/scroll-based-velocity'
 import './ReviewsMarquee.css'
 
 // Real quotes hand-copied from the Google reviews, manually maintained. When
@@ -95,11 +92,12 @@ const REVIEWS = [
 const BASE_VELOCITY = 0.85
 
 // The strip of review cards under the home "What Students Are Saying" heading.
-// Motion comes from Magic UI's scroll-based velocity row, and three things
-// drive it at once: it drifts on its own, the page's scroll speed pushes it
-// faster and flips its direction, and a drag or a sideways trackpad swipe
-// moves it by hand. The drift stands aside for the length of a drag and
-// resumes on release.
+// Motion comes from Magic UI's scroll-based velocity row with its scroll
+// reactivity switched off, so the strip drifts at one constant speed in one
+// direction however the page is scrolled. A drag, a touch swipe, or a sideways
+// trackpad swipe still moves it by hand; the drift stands aside for the length
+// of a drag and resumes on release. A vertical swipe that starts on the strip
+// still scrolls the page (the row sets touch-action: pan-y).
 //
 // Server-rendered HTML contains every review. Reduced motion gets a static,
 // swipeable strip instead: with nothing moving and no side-scrolling, the
@@ -124,9 +122,19 @@ export default function ReviewsMarquee() {
       {REVIEWS.map((r, i) => (
         <li key={`${r.name}-${i}`} className="reviews__slide">
           <article className="review-card">
+            {/* Every review on the profile is five stars (googleReviews.js
+                holds the 5.0 rating), so the row is fixed rather than
+                per-review data. Decorative: the section badge speaks the
+                rating once. */}
+            <p className="review-card__stars" aria-hidden="true">
+              ★★★★★
+            </p>
             <p className="review-card__quote">{r.quote}</p>
             <footer className="review-card__meta">
-              <span className="review-card__name">— {r.name}</span>
+              <span className="review-card__avatar" aria-hidden="true">
+                {r.name.charAt(0)}
+              </span>
+              <span className="review-card__name">{r.name}</span>
             </footer>
           </article>
         </li>
@@ -147,14 +155,16 @@ export default function ReviewsMarquee() {
   }
 
   return (
-    <ScrollVelocityContainer
+    <ScrollVelocityRow
       className="reviews__marquee"
       aria-label="Student testimonials"
       role="region"
+      baseVelocity={BASE_VELOCITY}
+      direction={1}
+      scrollReactivity={false}
+      draggable
     >
-      <ScrollVelocityRow baseVelocity={BASE_VELOCITY} direction={1} draggable>
-        {cards}
-      </ScrollVelocityRow>
-    </ScrollVelocityContainer>
+      {cards}
+    </ScrollVelocityRow>
   )
 }

@@ -26,6 +26,10 @@ import { cn } from '@/lib/utils'
 // treats reduced motion as "no motion at all", so ReviewsMarquee.jsx renders a
 // static strip instead of this component rather than the component trying to
 // stop itself. See CLAUDE.md.
+//
+// As of September 2026 the reviews strip runs with scrollReactivity={false}:
+// a constant drift, no page-scroll boost. The tuning below only matters to a
+// row that leaves reactivity on — the drag/wheel handling still applies.
 
 // --- Local tuning, the only change from the registry source --------------
 // Upstream: the boost tops out at 5 (so 6x the base speed) and only gets there
