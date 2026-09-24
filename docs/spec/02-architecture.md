@@ -23,6 +23,7 @@ npm run dev      # dev server
 npm run build    # static production build
 npm run start    # serve the production build locally
 npm run lint     # eslint over the project
+npm test         # node:test suites (the hero's road maps and graph)
 ```
 
 `next build` prerenders all 11 entries (9 routes + 404 + global error). There is
@@ -83,6 +84,10 @@ src/
 │   │                           # static swipeable list under reduced motion
 │   ├── home/                   # Hero, Reviews, HowItWorks, PackagesTeaser,
 │   │                           # AboutTeaser — homepage sections
+│   ├── hero/                   # The homepage hero's city (hero-drive.md):
+│   │                           # road maps in layouts/, graph.js, layout.js,
+│   │                           # the server-rendered RoadLayer, HeroStage
+│   │                           # (client), and their node:test suites
 │   ├── motion/
 │   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
 │   └── lessons/

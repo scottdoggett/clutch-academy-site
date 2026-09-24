@@ -51,6 +51,10 @@ planning docs. **Don't work from anything in there.**
 - **The July QA pass is stale.** It predates the August 18 layout rework and the
   September motion work, so re-running Lighthouse across all 9 routes is a
   cutover requirement now, not a formality.
+- **The homepage hero is being rebuilt** as a top-down city with traffic and a
+  drivable manual car. Spec: `docs/spec/hero-drive.md`, which works in seven
+  phases and stops for review after each. Phases 1–2 (spec, road maps) are
+  done; the code is in `src/components/hero/`, tested with `npm test`.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 

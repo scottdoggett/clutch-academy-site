@@ -14,10 +14,38 @@ review while `main` keeps serving customers the original Vite site. Three rounds
 of client review — August 16 (copy and structure), August 18 (layout, mobile,
 package cards) and August 20 (the hub's chooser) — have been applied, and in
 September the homepage got a redesign pass: beige light sections, rewritten
-copy, and GSAP motion. What remains before cutover is verification and client
-sign-off, not building. The one caveat: **the July QA pass no longer reflects
+copy, and GSAP motion. One piece is still being built: **the homepage hero is
+being rebuilt as a small city with traffic and a car you can drive**
+(`hero-drive.md`), in seven phases, of which two are done. Everything else that
+remains before cutover is verification and client sign-off. The other caveat: **the July QA pass no longer reflects
 the build**, so re-running it is now a cutover requirement rather than a
 formality.
+
+## In progress — the hero rebuild (from September 24, 2026)
+
+The homepage hero becomes a top-down city on the brand red: white roads,
+blue traffic that stops at every junction, and one black car a visitor can
+drive with a real manual gearbox. The copy and both CTAs stay as they are, in
+HTML. The spec is `hero-drive.md`; it was reviewed and every recommendation
+accepted on September 24.
+
+- **Phase 1, the spec:** ✅ done.
+- **Phase 2, the roads:** ✅ done, and revised after review the same day.
+  From 768px the copy keeps to the left half of the hero and a fixed downtown
+  map fills the right. The headline comes down to fit, 72px at 1920px instead
+  of 96px. On phones the hero fills the first screen: the copy, a size smaller
+  with the two buttons on one row, then a street band that takes the rest,
+  343px tall at 390×844 and never under 240px. The roads are server-rendered
+  positioned elements, so they're there with no JavaScript; centre ticks end
+  in whole ticks at every junction, and every road into a cross or a T has a
+  thin black zebra crossing. The phone map is drawn zoomed out, every road
+  size at 0.6, so the blocks have room. A client check hides any road that comes within 48px of the
+  copy; at all 32 measured sizes nothing needs hiding. 31 tests (`npm test`).
+- **Phases 3–7:** traffic, the drivable car, the gearbox and HUD, collisions
+  with tyre marks and smoke, then phones, reduced motion, lazy loading and
+  performance.
+- The first prototype of this feature, a different design that was never
+  mounted, is kept on the local branch `prototype/hero-drive-v0`.
 
 ## Recently completed — September 2026 (homepage)
 
@@ -236,6 +264,9 @@ table.
 | Check | Status |
 |---|---|
 | Build + lint | ✅ Clean as of September 24, 2026 |
+| Hero road maps (`npm test`) | ✅ 31 tests: both maps connected, no dead ends, no U-turns, whole ticks only, crossings in place, nothing within 48px of the copy at 32 recorded sizes (September 24) |
+| Hero roads in Chrome | ✅ 360, 390, 768, 1280, 1440, 1920px; every road piece within 0.007px of its tested geometry (September 24) |
+| Hero roads in Safari | Not checked, but no longer a known risk: the SVG dash-length concern went with the SVG. Covered by the pre-launch real-device pass. |
 | Lighthouse, all 9 routes | ⚠️ 100 a11y / 100 SEO / 100 BP in July 2026, but **materially stale** — predates the August 18 layout rework. Re-run is a cutover requirement. |
 | Layout: one left edge per route | ✅ Measured at 320 / 390 / 1024 / 1280 / 1440 / 1713, August 18 |
 | Mobile nav on one row | ✅ Measured 320–767px, August 18 |

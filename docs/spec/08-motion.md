@@ -143,7 +143,8 @@ from one thing to the next, the way the step rules already imply.
 For photos. The image fades in while scaling from `1.06 → 1` inside its own
 frame (the frame gets `overflow: hidden`, so the box never changes size),
 `DUR_SLOW`, `EASE_IN`. The photo arrives and comes to rest. Used for Sam's
-headshot, the hero photo (with the LCP limits below), and lesson-page photos.
+headshot and lesson-page photos. The homepage hero had a photo with Settle
+until September 24, 2026.
 
 ### 6. Drift — `data-anim="drift"`
 
@@ -171,14 +172,19 @@ disappears, then animates in).
 - **A failsafe CSS animation forces the final state after 1.5s**, so if GSAP
   never loads (blocked script, slow network) the hero still appears. This and
   rule 1 are why nothing else on the site hides content in CSS.
-- **The LCP element never starts invisible.** The hero photo is the likely
-  Largest Contentful Paint on desktop and the `h1` on phones. Both stay at
-  full opacity. The photo gets Settle's scale without the fade. The `h1`
-  rises 24px, transform only, with no mask, since a mask clips it out of
-  view. Check with Lighthouse before and after.
-- **Order:** eyebrow, then `h1`, then the line under it, then the buttons,
-  with the photo starting alongside the `h1`. One `gsap.timeline()`,
-  `DUR_BASE` pieces overlapping by about half. Done in 1.2s.
+- **The LCP element never starts invisible.** Since the September 24 hero
+  rebuild there's no photo, so the `h1` is the Largest Contentful Paint at
+  every width. It stays at full opacity and rises 24px, transform only, with
+  no mask, since a mask clips it out of view. Check with Lighthouse before and
+  after.
+- **Order:** eyebrow, then `h1`, then the line under it, then the buttons.
+  One `gsap.timeline()`, `DUR_BASE` pieces overlapping by about half. Done in
+  1.2s. `playHero()` still handles a photo and caption if a hero ever has
+  them again.
+- **The city behind the copy** (`hero-drive.md`) doesn't take part. The roads
+  are server-rendered and simply there at first paint. From Phase 3
+  the traffic fades in once, after this timeline has finished, so only one
+  thing moves at a time (rule 3).
 
 ## Homepage map
 
