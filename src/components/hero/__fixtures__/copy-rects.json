@@ -1,0 +1,43 @@
+{
+  "about": "Where the hero's copy block (.hero__copy) lands, measured in Chrome on the dev server after fonts loaded. hero is [width, height]; copy, and on phones the street band, are [left, top, right, bottom] relative to the hero, all CSS px. The layout tests check every road against these. Re-record whenever the hero's copy or CSS changes: see record.md.",
+  "recorded": "2026-09-24",
+  "required": {
+    "widths": [1280, 1440, 1920],
+    "minViewportHeight": 680,
+    "note": "At these widths, from this viewport height up, no road may come within the clearance of the copy, so nothing is ever hidden. 680 is the viewport a 1280x800 laptop screen leaves once the browser's own toolbars are drawn."
+  },
+  "sizes": [
+    { "viewport": [320, 568], "hero": [320, 720], "copy": [20, 88, 300, 432], "band": [0, 480, 320, 720] },
+    { "viewport": [360, 640], "hero": [360, 694], "copy": [20, 88, 340, 406], "band": [0, 454, 360, 694] },
+    { "viewport": [360, 740], "hero": [360, 694], "copy": [20, 88, 340, 406], "band": [0, 454, 360, 694] },
+    { "viewport": [375, 667], "hero": [375, 673], "copy": [20, 88, 355, 385], "band": [0, 433, 375, 673] },
+    { "viewport": [390, 844], "hero": [390, 780], "copy": [20, 88, 370, 389], "band": [0, 437, 390, 780] },
+    { "viewport": [412, 915], "hero": [412, 851], "copy": [20, 88, 392, 396], "band": [0, 444, 412, 851] },
+    { "viewport": [430, 932], "hero": [430, 868], "copy": [20, 88, 410, 401], "band": [0, 449, 430, 868] },
+    { "viewport": [600, 960], "hero": [600, 896], "copy": [24, 88, 576, 346], "band": [0, 394, 600, 896] },
+    { "viewport": [768, 1024], "hero": [768, 960], "copy": [31, 325, 384, 684] },
+    { "viewport": [820, 1180], "hero": [820, 1116], "copy": [33, 413, 410, 750] },
+    { "viewport": [834, 1194], "hero": [834, 1130], "copy": [33, 419, 417, 758] },
+    { "viewport": [900, 700], "hero": [900, 636], "copy": [36, 201, 450, 481] },
+    { "viewport": [1000, 700], "hero": [1000, 636], "copy": [40, 196, 500, 484] },
+    { "viewport": [1024, 768], "hero": [1024, 704], "copy": [41, 229, 512, 519] },
+    { "viewport": [1024, 1366], "hero": [1024, 1302], "copy": [41, 528, 512, 818] },
+    { "viewport": [1180, 820], "hero": [1180, 756], "copy": [47, 259, 590, 537] },
+    { "viewport": [1280, 600], "hero": [1280, 536], "copy": [51, 143, 640, 429] },
+    { "viewport": [1280, 680], "hero": [1280, 616], "copy": [51, 183, 640, 469] },
+    { "viewport": [1280, 720], "hero": [1280, 656], "copy": [51, 203, 640, 489] },
+    { "viewport": [1280, 800], "hero": [1280, 736], "copy": [51, 243, 640, 529] },
+    { "viewport": [1366, 660], "hero": [1366, 596], "copy": [83, 167, 683, 461] },
+    { "viewport": [1366, 768], "hero": [1366, 704], "copy": [83, 221, 683, 515] },
+    { "viewport": [1440, 780], "hero": [1440, 716], "copy": [120, 224, 720, 524] },
+    { "viewport": [1440, 900], "hero": [1440, 836], "copy": [120, 284, 720, 584] },
+    { "viewport": [1536, 730], "hero": [1536, 666], "copy": [168, 163, 768, 535] },
+    { "viewport": [1536, 864], "hero": [1536, 800], "copy": [168, 230, 768, 602] },
+    { "viewport": [1600, 900], "hero": [1600, 836], "copy": [200, 244, 800, 624] },
+    { "viewport": [1920, 950], "hero": [1920, 886], "copy": [360, 267, 960, 651] },
+    { "viewport": [1920, 1080], "hero": [1920, 1016], "copy": [360, 332, 960, 716] },
+    { "viewport": [1920, 1200], "hero": [1920, 1136], "copy": [360, 392, 960, 776] },
+    { "viewport": [2560, 1300], "hero": [2560, 1236], "copy": [680, 442, 1280, 826] },
+    { "viewport": [2560, 1440], "hero": [2560, 1376], "copy": [680, 512, 1280, 896] }
+  ]
+}

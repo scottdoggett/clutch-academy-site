@@ -1,24 +1,35 @@
 /* Fill most of the first viewport without pinning: a tall-but-natural block
-   that scrolls away normally. */
+   that scrolls away normally.
+
+   The hero is a stack of layers (docs/spec/hero-drive.md §Layers): the roads
+   under the copy, the copy, then the cars and the driving controls over it.
+   isolation keeps their z-indexes inside the hero, and clip keeps the roads
+   and cars from spilling into the next section without making the hero a
+   scroll container. */
 .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
   display: flex;
   min-height: calc(100vh - var(--nav-height));
   min-height: calc(100svh - var(--nav-height));
 }
 
-.hero__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 4vw, 4rem);
-  align-items: stretch;
+/* One column of copy, centred vertically in the hero. The cap is a reading
+   width; nothing centres the block, so it stays on the column's left edge. */
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero__copy {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 1rem;
-  min-height: 0;
+  max-width: 700px;
 }
 
 .hero__eyebrow {
@@ -52,73 +63,89 @@
   gap: 0.75rem;
 }
 
-.hero__visual {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  justify-content: center;
-  align-items: flex-end;
-  min-height: 0;
+/* ---------- Roads (src/components/hero/RoadLayer.jsx) -------------------
+   Two maps are in the HTML and CSS shows one. The same media query picks the
+   map for the traffic in JS, so the two never disagree. */
+.hero__roads {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* The frame owns the border and rounded corners and clips the photo, so the
-   hero timeline's settle scale stays inside the box. */
-.hero__frame {
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+.hero__roads--wide,
+.hero__streets {
+  display: none;
 }
 
-.hero__photo {
-  width: 100%;
-  height: auto;
-  max-height: min(72vh, 640px);
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  display: block;
-}
-
-.hero__caption {
-  font-size: var(--text-small);
-  color: var(--cream);
-  /* 0.9 keeps AA contrast on the brand red; 0.75 dipped below 4.5:1. */
-  opacity: 0.9;
-  font-style: italic;
-  text-align: right;
-}
-
-@media (max-width: 1023px) {
-  .hero__grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+/* Tablets and up: the copy keeps to the left half of the hero and the city
+   fills the right half. The column is centred, so half of it ends exactly on
+   the hero's centre line at every width. The headline comes down to suit. */
+@media (min-width: 768px) {
+  .hero__roads--wide {
+    display: block;
   }
 
-  .hero__visual {
-    align-items: stretch;
+  .hero__copy {
+    max-width: 50%;
   }
 
-  .hero__caption {
-    text-align: left;
+  /* Two lines up to about 1500px, three above. The 36px floor keeps it to
+     two lines in a 768px tablet's 353px half-column. */
+  .hero__headline {
+    font-size: clamp(2.25rem, 4.4vw, 4.5rem);
   }
 }
 
+/* Phones: the copy is as wide as the screen, so the roads get a band of
+   their own under it. The hero still fills the first screen, and the band
+   takes whatever height the copy leaves, never less than --hero-band-min.
+   It's full-bleed and flush with the hero's bottom, and its top margin is
+   the roads' 48px clearance from the headline block, so no road can come
+   closer to the copy at any size.
+
+   The copy is a size smaller than on tablets and the buttons share a row,
+   which is what leaves the band room for a proper street grid. */
 @media (max-width: 767px) {
   .hero {
-    min-height: 0;
+    --hero-band-min: 240px;
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+
+  .hero__streets {
+    display: block;
+    position: relative;
+    flex: 1 0 var(--hero-band-min);
+    margin: 48px calc(-1 * var(--section-pad-x)) 0;
+  }
+
+  .hero__copy {
+    gap: 0.75rem;
+  }
+
+  .hero__eyebrow {
+    font-size: 0.75rem;
   }
 
   .hero__headline {
-    font-size: clamp(2.75rem, 13vw, 4.5rem);
+    font-size: clamp(2.25rem, 10.5vw, 3.25rem);
   }
 
   .hero__subhead {
-    font-size: clamp(1.0625rem, 4.5vw, 1.25rem);
+    font-size: 1rem;
   }
 
-  /* Keep mobile above-the-fold lean: copy + CTAs, no photo (matches the
-     pre-overhaul behavior). */
-  .hero__visual {
-    display: none;
+  .hero__ctas {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+
+  .hero__ctas .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 0.5rem;
+    font-size: 0.8125rem;
+    text-align: center;
   }
 }

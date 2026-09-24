@@ -1,15 +1,23 @@
-import Image from 'next/image'
 import BookButton from '../BookButton'
-import heroPhoto from '../../../public/hero-section.jpeg'
+import RoadLayer from '../hero/RoadLayer'
+import HeroStage from '../hero/HeroStage'
+import { LAYOUTS } from '../hero/layouts'
 import './Hero.css'
 
-// Homepage hero, ported from the gear-1 Home section: same copy and layout,
-// minus the pinning, scroll-hint microcopy, and GSAP scroll handoff. "See
-// Packages" is now a native same-page anchor to the teaser grid.
+// Homepage hero: a city seen from above behind the copy, with traffic and a
+// car you can drive (docs/spec/hero-drive.md). The copy is plain HTML and
+// stays readable and clickable whatever the city is doing. "See Packages" is
+// a native same-page anchor to the teaser grid.
+//
+// Layers, bottom to top: the roads (one road layer per map, server-rendered;
+// CSS shows the one that fits), the copy, then HeroStage for everything
+// that moves. From 768px the copy keeps to the left half and the wide map
+// fills the hero; on phones the roads get their own band under the CTAs.
+//
+// No photo since September 2026: the headline is the LCP element.
 //
 // Motion: the data-hero attributes are the hero timeline in src/lib/motion.js
-// (docs/spec/08-motion.md §The hero). The photo sits in a frame so its settle
-// scale is clipped and the box never changes size.
+// (docs/spec/08-motion.md §The hero).
 export default function Hero() {
   return (
     <section
@@ -17,11 +25,14 @@ export default function Hero() {
       aria-labelledby="hero-heading"
       data-hero-root
     >
-      <div className="section__inner hero__grid">
+      <RoadLayer layout={LAYOUTS.wide} className="hero__roads hero__roads--wide" />
+      <div className="section__inner hero__inner">
         <div className="hero__copy">
-          <p className="hero__eyebrow" data-hero="eyebrow">Toronto · Manual Transmission Lessons</p>
+          <p className="hero__eyebrow" data-hero="eyebrow">
+            Toronto · Manual Transmission Lessons
+          </p>
           <h1 id="hero-heading" className="hero__headline" data-hero="headline">
-            Learn to drive manual without the stress.
+            Finally learn manual, without the stress
           </h1>
           <p className="hero__subhead" data-hero="sub">
             One-on-one lessons in a manual hatchback on real Toronto roads. You
@@ -36,22 +47,11 @@ export default function Hero() {
             </a>
           </div>
         </div>
-
-        <div className="hero__visual">
-          <div className="hero__frame" data-hero="photo">
-            <Image
-              className="hero__photo"
-              src={heroPhoto}
-              alt="Clutch Academy instructor with the training car"
-              priority
-              sizes="(max-width: 1023px) 90vw, 45vw"
-            />
-          </div>
-          <div className="hero__caption" data-hero="caption">
-            We start on quiet streets and work up to real traffic.
-          </div>
-        </div>
       </div>
+      <div className="hero__streets" aria-hidden="true">
+        <RoadLayer layout={LAYOUTS.compact} className="hero__roads" />
+      </div>
+      <HeroStage />
     </section>
   )
 }

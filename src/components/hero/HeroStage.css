@@ -1,0 +1,9 @@
+/* The layer over the copy (docs/spec/hero-drive.md §Layers): the car canvas
+   and the driving controls, from Phase 3 on. It never takes clicks itself,
+   so the CTAs underneath stay clickable. */
+.hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}

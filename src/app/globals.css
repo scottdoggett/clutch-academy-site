@@ -157,7 +157,11 @@ img {
    Replaces the gear-section wrappers: plain blocks in document flow with
    consistent padding. Only the first section clears the fixed nav. */
 .section {
-  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 4rem);
+  /* Named so a full-bleed child can cancel them exactly (the hero's street
+     band on phones). */
+  --section-pad-y: clamp(2.5rem, 6vw, 5rem);
+  --section-pad-x: clamp(1.25rem, 4vw, 4rem);
+  padding: var(--section-pad-y) var(--section-pad-x);
 }
 
 .section__inner {

@@ -1,0 +1,116 @@
+/* The road layer (RoadLayer.jsx). Every piece is placed at a fraction of the
+   layer's box plus a px offset, from the custom properties RoadLayer sets on
+   it, so a 40px road is 40px and a crossing sits 3px clear of its junction
+   at any size. */
+.roads {
+  overflow: hidden;
+}
+
+.roads > span {
+  position: absolute;
+  left: calc(var(--x, 0) * 100% + var(--dx, 0) * 1px);
+  top: calc(var(--y, 0) * 100% + var(--dy, 0) * 1px);
+  width: calc(var(--w, 0) * 100% + var(--dw, 0) * 1px);
+  height: calc(var(--h, 0) * 100% + var(--dh, 0) * 1px);
+}
+
+.roads__band,
+.roads__box {
+  background-color: var(--white);
+}
+
+/* The centre ticks run from one junction's crossing (or box) to the next.
+   Each tile is one tick with half a gap either side, and `space` fits only
+   whole tiles and spreads them evenly, so no tick is ever cut short at
+   either end. The ticks are drawn on ::before so that a run too short for
+   one whole tick, which happens between two crossings on the shortest
+   blocks, can drop them: the strip is a size container and the query
+   hides its ::before.
+
+   Container queries can't read a custom property, but they measure em
+   against the container's own font size. So the strip's font size is one
+   tile, and the query is "narrower than 1em", which follows the map's zoom
+   with no number repeated here. Nothing in the strip is text. */
+.roads__tick {
+  container-type: size;
+  --tile: calc(var(--tick-len) + var(--tick-gap));
+  --lead: calc(var(--tick-gap) / 2);
+  font-size: var(--tile);
+}
+
+.roads__tick::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.roads__tick--h::before {
+  background-image: linear-gradient(
+    to right,
+    transparent var(--lead),
+    var(--black) var(--lead) calc(var(--lead) + var(--tick-len)),
+    transparent calc(var(--lead) + var(--tick-len))
+  );
+  background-size: var(--tile) 100%;
+  background-repeat: space no-repeat;
+}
+
+.roads__tick--v::before {
+  background-image: linear-gradient(
+    to bottom,
+    transparent var(--lead),
+    var(--black) var(--lead) calc(var(--lead) + var(--tick-len)),
+    transparent calc(var(--lead) + var(--tick-len))
+  );
+  background-size: 100% var(--tile);
+  background-repeat: no-repeat space;
+}
+
+@container (width < 1em) {
+  .roads__tick--h::before {
+    display: none;
+  }
+}
+
+@container (height < 1em) {
+  .roads__tick--v::before {
+    display: none;
+  }
+}
+
+/* Zebra crossings: black stripes across the road, each running the way the
+   road does. A tile is one stripe with half the space either side, so the
+   stripes sit clear of the road's edges. */
+.roads__walk {
+  --walk-tile: calc(var(--stripe) + var(--stripe-space));
+  --walk-lead: calc(var(--stripe-space) / 2);
+}
+
+/* On an east-west road: horizontal stripes, stacked north to south. */
+.roads__walk--h {
+  background-image: linear-gradient(
+    to bottom,
+    transparent var(--walk-lead),
+    var(--black) var(--walk-lead) calc(var(--walk-lead) + var(--stripe)),
+    transparent calc(var(--walk-lead) + var(--stripe))
+  );
+  background-size: 100% var(--walk-tile);
+  background-repeat: no-repeat space;
+}
+
+/* On a north-south road: vertical stripes, side by side. */
+.roads__walk--v {
+  background-image: linear-gradient(
+    to right,
+    transparent var(--walk-lead),
+    var(--black) var(--walk-lead) calc(var(--walk-lead) + var(--stripe)),
+    transparent calc(var(--walk-lead) + var(--stripe))
+  );
+  background-size: var(--walk-tile) 100%;
+  background-repeat: space no-repeat;
+}
+
+/* Set by HeroStage when the headline check hides a segment. */
+.roads [data-hidden] {
+  display: none;
+}
