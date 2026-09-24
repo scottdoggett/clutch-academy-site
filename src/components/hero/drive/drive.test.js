@@ -86,8 +86,9 @@ test('fast enough, hard steering drifts; the drift holds without spinning, and c
   }
 })
 
-// A drive on the wide map, the driver standing in for the engine.
-function scene({ width = 1440, height = 716, seed = CONFIG.world.seed } = {}) {
+// A drive on the wide map, the driver standing in for the engine. page:
+// walls for the whole page, or the hero's own.
+function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, page = null } = {}) {
   const graph = buildGraph(wide, { width, height })
   const sim = createTraffic(graph, wide, { count: carCount(wide, width, height), seed })
   let controlled = 0
@@ -96,7 +97,7 @@ function scene({ width = 1440, height = 716, seed = CONFIG.world.seed } = {}) {
     k: K,
     box: { width, height },
     top: NAV,
-    hero: null,
+    page,
     onControl: () => controlled++,
   })
   return { sim, driver, car: sim.cars.find((c) => c.black), width, height, controlled: () => controlled }
@@ -252,4 +253,38 @@ test('in manual the driver shifts with the clutch and grinds without; M hands ov
   for (let i = 0; i < 2 / DT; i++) s.driver.step(DT, true)
   assert.equal(t.mode, 'auto')
   assert.notEqual(t.state, 'stalled')
+})
+
+test('on the whole page the car drives out of the hero and down; stopped there, it leaves by the side and comes back', () => {
+  const page = { x0: 0, y0: 0, x1: 1440, y1: 4000 }
+  const s = scene({ page })
+  s.driver.step(DT, true)
+  assert.equal(s.driver.state, 'driving')
+  // Turn down the page and drive until well below the hero.
+  const want = s.driver.controls.want
+  let secs = 0
+  while (s.car.y < s.height + 400 && secs < 30) {
+    const err = Math.atan2(Math.sin(Math.PI / 2 - s.car.a), Math.cos(Math.PI / 2 - s.car.a))
+    want.steer = Math.max(-1, Math.min(1, err * 2))
+    want.throttle = 0.6
+    s.driver.step(DT, true)
+    secs += DT
+    assert.ok(s.car.x > page.x0 && s.car.x < page.x1 && s.car.y > page.y0 && s.car.y < page.y1, 'out through a wall')
+    assert.deepEqual(touching(s).map((c) => c.id), [], 'drove into a traffic car')
+  }
+  assert.ok(s.car.y >= s.height + 400, `only got ${(s.car.y - s.height).toFixed(0)}px below the hero`)
+  // Stopped down there and let go: off the side, then back in traffic.
+  want.throttle = 0
+  s.driver.release()
+  assert.equal(s.driver.state, 'leaving')
+  let t = 0
+  while (s.driver.state !== 'done' && t < CONFIG.recovery.leaveMax + 1) {
+    s.driver.step(DT, true)
+    t += DT
+  }
+  assert.equal(s.driver.state, 'done')
+  assert.ok(t < CONFIG.recovery.leaveMax, `took ${t.toFixed(1)}s to leave, the safety net`)
+  assert.ok(!s.car.driven)
+  for (let i = 0; i < 20 / DT && !s.car.active; i++) s.sim.step(DT)
+  assert.ok(s.car.active, 'never came back in')
 })

@@ -16,6 +16,12 @@
 // imports itself, so the ambient chunk stays free of planck. While there's
 // a driver, its step replaces the traffic's own, and the loop runs even
 // under reduced motion, since driving is something the visitor chose.
+//
+// The car can be driven over the whole page (§Driving the whole page). For
+// the length of a drive the canvas moves out of the hero into the driving
+// layer, fixed over the window, and the page scrolls to follow the car.
+// The loop keeps running with the hero off screen, and the canvas goes
+// back into the hero once the car is back in traffic.
 
 import { CONFIG } from '../config.js'
 import { buildGraph } from '../graph.js'
@@ -76,17 +82,141 @@ export function createEngine({ hero, host }) {
   let disposed = false
   let debug = null
   let driver = null
+  // 'hero', the canvas over the hero; or 'page', over the window, while a
+  // drive lasts.
+  let view = 'hero'
+  let layer = null
+  let scrollTo = 0 // where the follow wants the page, px, unrounded
+  let scrolled = 0 // where the page was left after the last write
+  // The window and the hero's place on the page, measured each frame while
+  // the canvas is over the window.
+  const win = { width: 0, height: 0, top: 0, max: 0, left: 0, heroAt: 0, pageHeight: 0 }
 
-  const draw = () => sim && renderer.draw(sim.cars, driver?.ring, !playing)
+  function measure() {
+    const doc = document.documentElement
+    const h = hero.getBoundingClientRect()
+    const nav = document.querySelector('.nav')
+    win.width = doc.clientWidth
+    win.height = doc.clientHeight
+    win.top = nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0
+    win.max = Math.max(0, doc.scrollHeight - doc.clientHeight)
+    win.pageHeight = doc.scrollHeight
+    win.left = h.left
+    win.heroAt = h.top + window.scrollY // the hero's top, page px
+  }
 
-  const running = () => (playing || driver) && onScreen && !document.hidden && !disposed && !renderer.lost
+  // The walls for the whole page, in the hero's px: its sides, the page's
+  // top (under the nav when it's scrolled to the top) and its bottom.
+  const pageWalls = () => ({
+    x0: -win.left,
+    y0: win.top - win.heroAt,
+    x1: win.width - win.left,
+    y1: win.pageHeight - win.heroAt,
+  })
+
+  // What the follow needs: the window, with the page at `scrollTo`.
+  const windowNow = () => ({
+    heroTop: win.heroAt - scrollTo,
+    top: win.top,
+    bottom: win.height,
+    scroll: scrollTo,
+    max: win.max,
+    still: !playing,
+  })
+
+  function draw() {
+    if (!sim) return
+    if (view === 'page' && map) {
+      // Where the hero is in the window, from where the page really is.
+      const x = win.left + map.box.x
+      const y = win.heroAt - scrolled + map.box.y
+      renderer.view(x, y, {
+        x0: Math.max(0, x),
+        y0: Math.max(0, y),
+        x1: Math.min(win.width, x + map.box.width),
+        y1: Math.min(win.height, y + map.box.height),
+      })
+    }
+    renderer.draw(sim.cars, driver?.ring, !playing)
+  }
+
+  // Driving goes on with the hero off screen: the car can be anywhere.
+  const running = () => (driver || (playing && onScreen)) && !document.hidden && !disposed && !renderer.lost
 
   // One fixed step of everything: the driver's, which steps the traffic
-  // itself when it may move, or the traffic's alone.
+  // itself when it may move, or the traffic's alone. While driving, the
+  // follow decides where the page should be scrolled to.
   function tick() {
     if (!driver) return sim.step(step)
     driver.step(step, playing)
+    if (view === 'page') scrollTo = driver.follow(step, windowNow())
     if (driver.state === 'done') endDrive()
+  }
+
+  // Before a frame's steps: the window measured, and the page's walls kept
+  // up with it. If the page isn't where it was left, the visitor scrolled it
+  // (wheel, trackpad, scrollbar): that wins, and the follow holds off.
+  function beforeSteps() {
+    if (view !== 'page') return
+    measure()
+    driver?.setPage(pageWalls())
+    const now = window.scrollY
+    if (Math.abs(now - scrolled) > 1.5) {
+      scrollTo = scrolled = now
+      driver?.holdFollow()
+    }
+  }
+
+  // After them: the page scrolled to where the follow wants it.
+  function afterSteps() {
+    if (view !== 'page' || Math.abs(scrollTo - scrolled) < 0.01) return
+    window.scrollTo({ top: scrollTo, behavior: 'instant' })
+    scrolled = window.scrollY
+  }
+
+  // The canvas over the window, in the driving layer, for a drive.
+  function toPage() {
+    view = 'page'
+    layer.appendChild(canvas)
+    Object.assign(canvas.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
+    measure()
+    scrollTo = scrolled = window.scrollY
+    sized = ''
+    renderer.resize(win.width, win.height)
+    window.addEventListener('resize', onResize)
+  }
+
+  // And back over the hero once the drive is over.
+  function toHero() {
+    view = 'hero'
+    window.removeEventListener('resize', onResize)
+    host.prepend(canvas)
+    renderer.view(0, 0, null)
+    if (map) place(map.box)
+    draw()
+  }
+
+  function onResize() {
+    measure()
+    renderer.resize(win.width, win.height)
+    driver?.setPage(pageWalls())
+    draw()
+  }
+
+  // The canvas over the layout's box, in the hero. Resizing clears it, so
+  // only when the size has changed.
+  let sized = ''
+  function place(box) {
+    Object.assign(canvas.style, {
+      left: `${box.x}px`,
+      top: `${box.y}px`,
+      width: `${box.width}px`,
+      height: `${box.height}px`,
+    })
+    const next = `${box.width}×${box.height}`
+    if (next === sized) return
+    sized = next
+    renderer.resize(box.width, box.height)
   }
 
   // Where the top wall goes: the bottom of the fixed nav, in hero px.
@@ -107,6 +237,7 @@ export function createEngine({ hero, host }) {
     onEnd?.()
     onEnd = null
     window.removeEventListener('scroll', onScroll)
+    if (view === 'page') toHero()
     sync()
   }
 
@@ -116,10 +247,12 @@ export function createEngine({ hero, host }) {
     // No catching up after a pause or a slow frame: at most maxSteps steps.
     spare += last ? Math.min((now - last) / 1000, step * maxSteps) : 0
     last = now
+    beforeSteps()
     for (let n = 0; spare >= step && n < maxSteps; n++) {
       tick()
       spare -= step
     }
+    afterSteps()
     draw()
     if (driver) onFrame?.(driver.telemetry)
     raf = requestAnimationFrame(frame)
@@ -161,12 +294,8 @@ export function createEngine({ hero, host }) {
     // hero, CSS px. hidden: segments the headline check has taken out.
     setMap({ name, box, hidden = [] }) {
       if (disposed || box.width <= 0 || box.height <= 0) return
-      Object.assign(canvas.style, {
-        left: `${box.x}px`,
-        top: `${box.y}px`,
-        width: `${box.width}px`,
-        height: `${box.height}px`,
-      })
+      // Mid-drive the canvas is over the window, and stays there.
+      if (view === 'hero') place(box)
       const key = hidden.join()
       const same = map && map.name === name
       if (same && map.box.width === box.width && map.box.height === box.height && map.key === key) {
@@ -177,7 +306,6 @@ export function createEngine({ hero, host }) {
       const graph = buildGraph(layout, { width: box.width, height: box.height, hidden })
       const count = carCount(layout, box.width, box.height)
       map = { name, layout, box, key, graph, count }
-      renderer.resize(box.width, box.height)
       // A new map starts over from the seeded start; the same map at a new
       // size keeps every car on its lane, as far along it. Driving ends if
       // the map changes (there's no driving on the phone map), and carries
@@ -214,17 +342,22 @@ export function createEngine({ hero, host }) {
     // the caller ends the drive with stopDrive(). onEnd: the car is back in
     // traffic, or the drive was cut short (the map changed). onFrame: called
     // with the driver's telemetry after every frame drawn, for the gear
-    // display. mode: the gearbox's, 'auto' or 'manual'.
-    startDrive(makeDriver, { mode, onControl, onExit, onEnd: ended, onFrame: frameHook }) {
-      if (disposed || !sim || map?.name !== 'wide' || driver) return false
+    // display. mode: the gearbox's, 'auto' or 'manual'. area: the driving
+    // layer, fixed over the window, where the canvas goes for the drive and
+    // the keys are heard.
+    startDrive(makeDriver, { mode, area, onControl, onExit, onEnd: ended, onFrame: frameHook }) {
+      if (disposed || !sim || map?.name !== 'wide' || driver || !area) return false
       onEnd = ended
       onFrame = frameHook
+      layer = area
+      toPage()
       driver = makeDriver({
         sim,
         k: sim.units.pxPerM,
         box: map.box,
         top: navTop(),
-        hero,
+        page: pageWalls(),
+        area,
         mode,
         onControl,
         onExit,
@@ -268,7 +401,9 @@ export function createEngine({ hero, host }) {
   if (process.env.NODE_ENV !== 'production') {
     debug = {
       step(seconds = 1) {
+        beforeSteps()
         for (let t = 0; t < seconds && sim; t += step) tick()
+        afterSteps()
         draw()
         if (driver) onFrame?.(driver.telemetry)
         return sim?.time

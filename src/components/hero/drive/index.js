@@ -1,6 +1,6 @@
 // The drive chunk (docs/spec/hero-drive.md §Play mode, §Driving and
 // physics): planck.js, the black car under a visitor's control, the walls
-// around the hero, and the traffic as kinematic bodies it can run into.
+// around the page, and the traffic as kinematic bodies it can run into.
 // HeroStage loads it when the Drive button is hovered, focused or pressed,
 // so phones and touch screens, which have no Drive button, never do.
 //
@@ -8,15 +8,18 @@
 // takes the place of the traffic's own. Physics is in metres; the traffic
 // and the drawing are in px, and k converts.
 //
-// A drive goes waiting → driving → returning → done:
+// A drive goes waiting → driving → returning or leaving → done:
 // - waiting: Drive was pressed while the black car was outside the hero.
 //   It comes in at a way in, and control starts once it's fully inside.
-// - driving: the visitor's.
-// - returning: driving ended, and the car makes its own way to the
-//   nearest lane (§Recovery), then blends into traffic.
+// - driving: the visitor's, anywhere on the page (§Driving the whole page).
+// - returning: driving ended in the hero, and the car makes its own way to
+//   the nearest lane (§Recovery), then blends into traffic.
+// - leaving: driving ended further down the page, away from the roads. The
+//   car drives off the nearer side and comes back in at a way in.
 
 import { Box, Chain, World } from 'planck'
 import { CONFIG } from '../config.js'
+import { createFollow } from './follow.js'
 import { createInput } from './input.js'
 import { createControls, createPlayer } from './player.js'
 
@@ -25,10 +28,13 @@ const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 
 // sim: the traffic (engine/traffic.js). k: px per metre. box: the hero's
 // { width, height }, px. top: px from the hero's top to the bottom of the
-// fixed nav, which is the top wall. hero: the hero element, where keys are
-// heard. mode: the gearbox's to start with, 'auto' or 'manual'. onControl:
-// the car is now the visitor's. onExit: Esc, or focus leaving the hero.
-export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.defaultMode, onControl, onExit }) {
+// fixed nav, above which the hero is out of sight. page: the walls,
+// { x0, y0, x1, y1 } in the hero's px, the whole page; without it (the
+// tests) the walls are the hero's edges with the top one at `top`. area:
+// the element keys are heard on, the driving layer. mode: the gearbox's to
+// start with, 'auto' or 'manual'. onControl: the car is now the visitor's.
+// onExit: Esc, or focus leaving the driving layer.
+export function createDriver({ sim, k, box, top, page = null, area, mode = CONFIG.gearbox.defaultMode, onControl, onExit }) {
   const u = sim.units
   const world = new World({ gravity: { x: 0, y: 0 } })
   const car = sim.cars.find((c) => c.black)
@@ -48,9 +54,9 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
     player?.box.setMode(next, player.pose().v)
   }
 
-  // No hero (the headless tests): no keyboard, and the test sets controls.
-  let input = hero
-    ? createInput(hero, {
+  // No area (the headless tests): no keyboard, and the test sets controls.
+  let input = area
+    ? createInput(area, {
         controls,
         onExit,
         onShift: shift,
@@ -62,7 +68,10 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
   let state = 'waiting'
   let player = null
   let walls = null
-  let rect = null
+  let hero = null // the hero's box in sight, { x0, y0, x1, y1 }: where traffic is
+  let bounds = page // the walls; the hero's box when there's no page
+  let leaving = null // { side, t }: -1 off the left, +1 off the right
+  const follow = createFollow()
   let ring = null // { t }: seconds since control started
   let target = null // where a returning car is heading, from sim.landing()
   let retarget = 0
@@ -72,21 +81,35 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
   const kin = new Map() // traffic car → its kinematic body
 
   // ---------- Walls ---------------------------------------------------------
-  // The hero's edges, with the top one at the bottom of the fixed nav so the
-  // car can't hide under it. Only dynamic bodies touch them, so the traffic
-  // drives through to its ways in and out.
-  function build(b, t) {
-    rect = { x0: 0, y0: t, x1: b.width, y1: b.height }
+  // The page's edges. The top one is the page's top, just under the nav when
+  // it's scrolled to the top, and further down the page the follow keeps the
+  // car below the nav instead (follow.js). Only dynamic bodies touch them,
+  // so the traffic drives through to its ways in and out.
+  function build() {
     if (walls) world.destroyBody(walls)
+    walls = null
+    if (leaving) return
+    const r = bounds ?? hero
     walls = world.createBody({ type: 'static' })
     const m = (x, y) => ({ x: x / k, y: y / k })
-    walls.createFixture(new Chain([m(0, t), m(b.width, t), m(b.width, b.height), m(0, b.height)], true), {
+    walls.createFixture(new Chain([m(r.x0, r.y0), m(r.x1, r.y0), m(r.x1, r.y1), m(r.x0, r.y1)], true), {
       restitution: CONFIG.player.wallRestitution,
       friction: 0.1,
     })
   }
 
-  // Is a car's whole body inside the walls?
+  // The car back inside the walls, if they've moved in on it.
+  function keepIn() {
+    if (!player || !walls) return
+    const r = bounds ?? hero
+    const at = player.body.getPosition()
+    const reach = u.length / 2 + 1
+    const x = clamp(at.x * k, r.x0 + reach, r.x1 - reach) / k
+    const y = clamp(at.y * k, r.y0 + reach, r.y1 - reach) / k
+    if (x !== at.x || y !== at.y) player.body.setTransform({ x, y }, player.body.getAngle())
+  }
+
+  // Is a car's whole body inside the hero, below the nav?
   function inside(p) {
     const c = Math.cos(p.a)
     const s = Math.sin(p.a)
@@ -98,7 +121,7 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
     ]) {
       const x = p.x + (c * l * u.length - s * w * u.width) / 2
       const y = p.y + (s * l * u.length + c * w * u.width) / 2
-      if (x < rect.x0 + 1 || x > rect.x1 - 1 || y < rect.y0 + 1 || y > rect.y1 - 1) return false
+      if (x < hero.x0 + 1 || x > hero.x1 - 1 || y < hero.y0 + 1 || y > hero.y1 - 1) return false
     }
     return true
   }
@@ -107,11 +130,13 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
   // Each traffic car is a kinematic body whose velocity is set every step so
   // it arrives exactly where the traffic code has put it. Teleporting them
   // instead would break planck's contacts. A car that jumped (it came back
-  // in at a way in) is moved outright.
+  // in at a way in) is moved outright. Only cars in the hero are solid: past
+  // its edges they're out of sight, and the car mustn't hit what it can't
+  // see.
   function syncTraffic(dt) {
     for (const c of sim.cars) {
       let b = kin.get(c)
-      if (!c.active || c.driven) {
+      if (!c.active || c.driven || c.x < 0 || c.x > hero.x1 || c.y < 0 || c.y > hero.y1) {
         if (b) {
           world.destroyBody(b)
           kin.delete(c)
@@ -370,6 +395,48 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
     }
   }
 
+  // ---------- Leaving by the side -------------------------------------------------
+  // Driving ended away from the roads, somewhere down the page. Driving all
+  // the way back up would take a minute and scroll nothing, so the car turns
+  // for the nearer side, the way it's already facing if it's roughly
+  // across the page, and drives off. The walls go so it can. Out of sight,
+  // it comes back in at a way in, as a car that went off an edge does.
+
+  function startLeaving() {
+    const ang = player.body.getAngle()
+    const across = Math.cos(ang)
+    const side = Math.abs(across) > 0.3 ? Math.sign(across) : car.x < (bounds ?? hero).x1 / 2 ? -1 : 1
+    leaving = { side, t: 0 }
+    build()
+  }
+
+  function leave(dt) {
+    leaving.t += dt
+    const body = player.body
+    const vel = body.getLinearVelocity()
+    const ang = body.getAngle()
+    const aimA = leaving.side > 0 ? 0 : Math.PI
+    // Along its heading, speeding up or slowing to the leaving speed, and
+    // turning for the side as it goes.
+    const now = vel.x * Math.cos(ang) + vel.y * Math.sin(ang)
+    const want = rc.leaveKmh / 3.6
+    const speed = now + clamp(want - now, -CONFIG.player.brake * dt, CONFIG.player.traction * dt)
+    body.setLinearVelocity({ x: Math.cos(ang) * speed, y: Math.sin(ang) * speed })
+    body.setAngularVelocity(clamp(wrap(aimA - ang) * 3, -2.5, 2.5) * clamp(Math.abs(speed) / 4, 0, 1))
+  }
+
+  // Gone: off the side, or given up. It comes back in at a way in, or under
+  // reduced motion, where nothing would bring it, it's parked on a street.
+  function done(moving) {
+    player.dispose()
+    player = null
+    leaving = null
+    if (!moving) sim.seatInside(car)
+    else sim.sendOff(car)
+    state = 'done'
+    sim.setBodies([])
+  }
+
   // ---------- The step --------------------------------------------------------
 
   // moving: whether the traffic moves. Under reduced motion it stands still,
@@ -382,6 +449,7 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
     syncTraffic(dt)
     if (state === 'driving') player.step(dt, controls.now)
     else if (state === 'returning') autopilot(dt)
+    else if (state === 'leaving') leave(dt)
     world.step(dt, 8, 3)
     if (player) {
       player.pose(pose)
@@ -408,21 +476,18 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
       tryRejoin()
       // Pinned against a wall, or no lane with room: off at an edge, and
       // straight back in, rather than stuck.
-      if (state === 'returning' && (sinceLanded > rc.giveUp || returning > rc.giveUpMax)) {
-        player.dispose()
-        player = null
-        // Under reduced motion nothing would bring it back in; park it.
-        if (!moving) sim.seatInside(car)
-        else sim.sendOff(car)
-        state = 'done'
-        sim.setBodies([])
-      }
+      if (state === 'returning' && (sinceLanded > rc.giveUp || returning > rc.giveUpMax)) done(moving)
+    }
+    if (state === 'leaving') {
+      const right = (bounds ?? hero).x1
+      if (car.x < -u.length || car.x > right + u.length || leaving.t > rc.leaveMax) done(moving)
     }
     if (blend) applyBlend(dt)
     if (ring) ring.t += dt
   }
 
-  build(box, top)
+  hero = { x0: 0, y0: top, x1: box.width, y1: box.height }
+  build()
 
   return {
     step,
@@ -442,7 +507,8 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
     },
 
     // Driving is over: Esc, the ×, or focus gone. The keys stop counting
-    // and the car finds its own way back.
+    // and the car finds its own way back: into traffic from the hero, or
+    // off the side from anywhere further down the page.
     release() {
       input?.dispose()
       input = null
@@ -452,6 +518,11 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
         sim.setBodies([])
       }
       if (state !== 'driving') return
+      if (car.x < hero.x0 || car.x > hero.x1 || car.y < hero.y0 || car.y > hero.y1 + u.length) {
+        state = 'leaving'
+        startLeaving()
+        return
+      }
       state = 'returning'
       returning = 0
       target = null
@@ -466,24 +537,59 @@ export function createDriver({ sim, k, box, top, hero, mode = CONFIG.gearbox.def
       input?.clear()
     },
 
-    // The hero changed size: new walls, and the car keeps its place in
-    // proportion, inside them.
+    // The page scrolls with the car near the bottom or top of the window
+    // (follow.js): the page's scroll to go to after this step. view: the
+    // window, measured by the engine: heroTop, px from the window's top to
+    // the hero's; top, the nav's bottom; bottom, the window's height;
+    // scroll and max, the page's; still, reduced motion.
+    follow(dt, view) {
+      if (state !== 'driving' || !player) return view.scroll
+      return follow.step(dt, {
+        y: car.y + view.heroTop,
+        vy: player.body.getLinearVelocity().y * k,
+        reach: u.length / 2,
+        top: view.top,
+        bottom: view.bottom,
+        scroll: view.scroll,
+        max: view.max,
+        still: view.still,
+      })
+    },
+
+    // The visitor scrolled the page themselves.
+    holdFollow() {
+      follow.hold()
+    },
+
+    // The hero changed size: new walls if they're the hero's, and the car
+    // kept inside them.
     resize(next, nextTop) {
-      const sx = next.width / (rect.x1 || 1)
-      const sy = next.height / (rect.y1 || 1)
-      build(next, nextTop)
+      hero = { x0: 0, y0: nextTop, x1: next.width, y1: next.height }
       clearTraffic()
-      if (player) {
-        const at = player.body.getPosition()
-        const x = clamp(at.x * sx * k, rect.x0 + u.length, rect.x1 - u.length) / k
-        const y = clamp(at.y * sy * k, rect.y0 + u.length, rect.y1 - u.length) / k
-        player.body.setTransform({ x, y }, player.body.getAngle())
+      if (!bounds) {
+        build()
+        keepIn()
       }
     },
 
-    // The nav's bottom moved relative to the hero: the page scrolled.
+    // The page changed size, or its walls: { x0, y0, x1, y1 }, hero px.
+    setPage(next) {
+      const same = bounds && ['x0', 'y0', 'x1', 'y1'].every((key) => Math.abs(next[key] - bounds[key]) < 0.5)
+      if (same) return
+      bounds = next
+      build()
+      keepIn()
+    },
+
+    // The nav's bottom moved relative to the hero: the page scrolled. With
+    // no page (the tests), that's the top wall too.
     setTop(nextTop) {
-      if (Math.abs(nextTop - rect.y0) > 0.5) build({ width: rect.x1, height: rect.y1 }, nextTop)
+      if (Math.abs(nextTop - hero.y0) < 0.5) return
+      hero.y0 = nextTop
+      if (!bounds) {
+        build()
+        keepIn()
+      }
     },
 
     dispose() {

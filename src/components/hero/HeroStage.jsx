@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { gsap, MOTION_OK } from '@/lib/gsap'
 import { DUR_BASE, DUR_QUICK, EASE_IN, HERO_SETTLED } from '@/lib/motion'
 import { CONFIG } from './config.js'
@@ -114,8 +115,11 @@ function whenSettled(hero, fn) {
 // 3. Drive (§Play mode). A pill in the bottom-right corner, once the cars
 //    are showing, on screens with a keyboard and the wide map. Hovering or
 //    focusing it starts loading the drive chunk (planck.js and the car);
-//    pressing it hands the black car over. Focus goes to the driving panel,
-//    and comes back to the pill when driving ends with Esc or the ×.
+//    pressing it hands the black car over. The car can go anywhere on the
+//    page (§Driving the whole page), so the canvas and the gear display
+//    move into the driving layer, fixed over the window, for the drive.
+//    Focus goes to the gear display, and comes back to the pill when
+//    driving ends with Esc or the ×.
 export default function HeroStage() {
   const ref = useRef(null)
   const engineRef = useRef(null)
@@ -125,6 +129,11 @@ export default function HeroStage() {
   const refocus = useRef(false)
   const chunk = useRef(null)
   const pillFaded = useRef(false)
+  // The driving layer: fixed over the window, over the page and under the
+  // nav, made on the first press and kept. The canvas moves into it for a
+  // drive, and the gear display renders into it.
+  const [layer, setLayer] = useState(null)
+  const layerRef = useRef(null)
   // The cars are on screen: faded in, or parked under reduced motion.
   const [shown, setShown] = useState(false)
   // A keyboard, and the wide map. Read on the client only; the server never
@@ -304,14 +313,13 @@ export default function HeroStage() {
     return chunk.current
   }
 
-  // Driving ends: Esc, the ×, or focus leaving the hero. Focus goes back to
-  // the pill only if it was still in the hero; tabbing away keeps it where it
-  // went.
+  // Driving ends: Esc, the ×, or focus leaving the driving layer. Focus goes
+  // back to the pill only if it was still on the gear display; tabbing away
+  // keeps it where it went.
   // Only refs and state setters inside, so one copy does for the component's
   // whole life, including as the driver's onExit.
   const exit = useCallback(() => {
-    const hero = ref.current?.parentElement
-    refocus.current = !!hero?.contains(document.activeElement)
+    refocus.current = !!layerRef.current?.contains(document.activeElement)
     engineRef.current?.stopDrive()
     clearTimeout(hintTimer.current)
     hintFade.current?.revert()
@@ -428,8 +436,16 @@ export default function HeroStage() {
     const gearbox = savedMode()
     seen.current = { hud: null, grinds: 0, limits: 0, flicker: false }
     setHud({ gear: 'N', mode: gearbox, clutch: false, off: false })
+    if (!layerRef.current) {
+      const el = document.createElement('div')
+      el.className = 'drive-layer'
+      document.body.appendChild(el)
+      layerRef.current = el
+      setLayer(el)
+    }
     const ok = engine.startDrive(drive.createDriver, {
       mode: gearbox,
+      area: layerRef.current,
       onFrame,
       onControl: () => setMode('driving'),
       onExit: exit,
@@ -440,10 +456,14 @@ export default function HeroStage() {
 
   // Driving starts: focus to the panel, in the same commit that swaps the
   // pill for it. The pill had focus, and a later effect would be too late:
-  // its removal reads as focus leaving the hero, which ends the drive.
+  // its removal reads as focus leaving, which ends the drive. The panel is
+  // fixed to the window, and the page mustn't jump to either of them.
   useLayoutEffect(() => {
-    if (mode === 'driving') hudRef.current?.focus()
+    if (mode === 'driving') hudRef.current?.focus({ preventScroll: true })
   }, [mode])
+
+  // The layer goes with the component.
+  useEffect(() => () => layerRef.current?.remove(), [])
 
   // Then the controls hint for a few seconds. It goes in a tick after the
   // panel so the live region is already there and a screen reader
@@ -463,27 +483,33 @@ export default function HeroStage() {
         mm.revert()
       }
     }
+    // Back to the pill, without scrolling the page back up to it from
+    // wherever the drive ended.
     if (mode === 'idle' && refocus.current) {
       refocus.current = false
-      driveRef.current?.focus()
+      driveRef.current?.focus({ preventScroll: true })
     }
   }, [mode, flashHint])
 
   return (
     <div ref={ref} className="hero__stage">
       {pill && <DriveButton ref={driveRef} onPress={start} onPrefetch={prefetch} busy={mode === 'starting'} />}
-      {mode === 'driving' && Hud && (
-        <Hud
-          ref={hudRef}
-          {...hud}
-          grinding={grinding}
-          hint={hint}
-          rev={revRef}
-          redline={redlineRef}
-          onToggleMode={toggleMode}
-          onExit={exit}
-        />
-      )}
+      {mode === 'driving' &&
+        Hud &&
+        layer &&
+        createPortal(
+          <Hud
+            ref={hudRef}
+            {...hud}
+            grinding={grinding}
+            hint={hint}
+            rev={revRef}
+            redline={redlineRef}
+            onToggleMode={toggleMode}
+            onExit={exit}
+          />,
+          layer,
+        )}
     </div>
   )
 }

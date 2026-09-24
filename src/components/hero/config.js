@@ -173,6 +173,23 @@ export const CONFIG = {
     // the landing because a car can end a drive a long way from any road.
     giveUp: 8, // s
     giveUpMax: 20, // s
+    // Driving ended somewhere down the page, away from the roads: the car
+    // turns for the nearer side and drives off it at this speed, then comes
+    // back in at a way in. leaveMax is the safety net if it never gets there.
+    leaveKmh: 60,
+    leaveMax: 6, // s
+  },
+
+  // The page following the car while it's driven (§Driving the whole
+  // page). Near the bottom or top of the window the page scrolls with it,
+  // and keeps going for a moment after the car slows.
+  follow: {
+    zone: 0.2, // of the window below the nav, at each end, where it follows
+    push: 360, // px/s more at the very edge of the window, on top of the car's own speed
+    rise: 0.15, // s: how fast the scroll picks up
+    coast: 0.8, // s: how slowly it dies away, the momentum
+    edge: 8, // px: however fast the car, it never gets closer than this to either end
+    hold: 0.5, // s it leaves the page alone after the visitor scrolls it
   },
 
   render: {

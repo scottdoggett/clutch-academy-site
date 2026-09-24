@@ -71,3 +71,16 @@
   height: 18px;
   flex-shrink: 0;
 }
+
+/* ---------- The driving layer ---------------------------------------------
+   While someone drives (docs/spec/hero-drive.md §Driving the whole page),
+   the car canvas and the gear display move here: fixed over the window,
+   over every section of the page and under the nav (z-index 100), so the
+   car can go anywhere and the gear display stays in the corner as the page
+   scrolls. Like the stage, it never takes clicks itself. */
+.drive-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}

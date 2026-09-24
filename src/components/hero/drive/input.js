@@ -1,8 +1,8 @@
 // The keyboard while driving (docs/spec/hero-drive.md §Keys, §Focus).
 //
-// Keys only count while focus is inside the hero, which is what makes
-// single-letter controls acceptable under WCAG 2.1.4: they're heard on the
-// hero, not the window. W throttle, S brake (in R they swap), A and D or ←
+// Keys only count while focus is on the gear display, in the driving layer,
+// which is what makes single-letter controls acceptable under WCAG 2.1.4:
+// they're heard there, not on the window. W throttle, S brake (in R they swap), A and D or ←
 // and → steer, ↑ and ↓ shift up and down a gear, either Shift is the clutch
 // while held, M switches between the automatic and the manual box, Esc
 // exits. A shift or a switch happens once per press; key repeat is ignored.
@@ -13,15 +13,15 @@ const SWALLOW = new Set(['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft'
 
 const keyOf = (e) => e.key.toLowerCase()
 
-// Clicks on these move focus as they normally would. Anywhere else in the
-// hero, a click leaves focus where it is, so clicking the "game" to focus
-// it doesn't end the game.
+// Clicks on these move focus as they normally would, and so end the drive.
+// Anywhere else on the page, which is all the "game" now, a click leaves
+// focus where it is, so clicking it to focus it doesn't end the game.
 const CONTROL = 'a[href], button, input, select, textarea, iframe, [tabindex]:not([tabindex="-1"])'
 
-// hero: the hero section. controls: from createControls() in player.js.
-// onExit: Esc, or focus leaving the hero. onShift(±1): ↑ or ↓.
-// onToggleMode: M.
-export function createInput(hero, { controls, onExit, onShift, onToggleMode }) {
+// area: the driving layer, which holds the gear display. controls: from
+// createControls() in player.js. onExit: Esc, or focus leaving the layer.
+// onShift(±1): ↑ or ↓. onToggleMode: M.
+export function createInput(area, { controls, onExit, onShift, onToggleMode }) {
   const held = new Set()
 
   function apply() {
@@ -64,14 +64,14 @@ export function createInput(hero, { controls, onExit, onShift, onToggleMode }) {
     controls.clear()
   }
 
-  // Focus leaving the hero ends the drive: tabbing away, clicking the nav,
-  // the Calendly popup's iframe taking focus. The window itself losing
-  // focus (another app) doesn't; that only clears the keys.
+  // Focus leaving the layer ends the drive: tabbing away, clicking the nav
+  // or a button, the Calendly popup's iframe taking focus. The window
+  // itself losing focus (another app) doesn't; that only clears the keys.
   function focusout(e) {
-    if (e.relatedTarget && hero.contains(e.relatedTarget)) return
+    if (e.relatedTarget && area.contains(e.relatedTarget)) return
     setTimeout(() => {
       if (!document.hasFocus()) return
-      if (!hero.contains(document.activeElement)) onExit()
+      if (!area.contains(document.activeElement)) onExit()
     }, 0)
   }
 
@@ -80,21 +80,21 @@ export function createInput(hero, { controls, onExit, onShift, onToggleMode }) {
     e.preventDefault()
   }
 
-  hero.addEventListener('keydown', down)
+  area.addEventListener('keydown', down)
   window.addEventListener('keyup', up)
   window.addEventListener('blur', clear)
-  hero.addEventListener('focusout', focusout)
-  hero.addEventListener('mousedown', mousedown)
+  area.addEventListener('focusout', focusout)
+  document.addEventListener('mousedown', mousedown)
 
   return {
     clear,
     dispose() {
       clear()
-      hero.removeEventListener('keydown', down)
+      area.removeEventListener('keydown', down)
       window.removeEventListener('keyup', up)
       window.removeEventListener('blur', clear)
-      hero.removeEventListener('focusout', focusout)
-      hero.removeEventListener('mousedown', mousedown)
+      area.removeEventListener('focusout', focusout)
+      document.removeEventListener('mousedown', mousedown)
     },
   }
 }

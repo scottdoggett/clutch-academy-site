@@ -1,11 +1,16 @@
 // The car canvas (docs/spec/hero-drive.md §Car look, §Layers): three.js with
 // an orthographic camera at one unit per CSS px, looking straight down, and
-// every car drawn by one instanced quad in a single draw call. The fragment
-// shader shapes each car: a rounded body, a windscreen and a rear window,
-// and two headlights, with its own anti-aliased edges, so it stays crisp
-// at any pixel ratio with no images.
+// the traffic drawn by one instanced quad in a single draw call, the black
+// car by another. The fragment shader shapes each car: a rounded body, a
+// windscreen and a rear window, and two headlights, with its own
+// anti-aliased edges, so it stays crisp at any pixel ratio with no images.
 //
 // The simulation keeps DOM orientation, y down. The camera draws it at -y.
+//
+// Normally the canvas covers the hero. While someone drives, it covers the
+// window instead (§Driving the whole page): the camera follows the hero as
+// the page scrolls, the traffic is clipped to the hero, and the black car
+// can be drawn anywhere.
 
 import {
   BufferAttribute,
@@ -124,24 +129,41 @@ export function createRenderer(canvas, colors) {
   const camera = new OrthographicCamera(0, 1, 0, -1, -1, 1)
 
   const max = CONFIG.traffic.max
-  const geometry = new InstancedBufferGeometry()
   // One quad, -0.5 to 0.5, as two triangles. They're wound clockwise
   // because drawing at -y mirrors them, and three.js culls back faces.
-  geometry.setAttribute(
-    'position',
-    new BufferAttribute(new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]), 3),
-  )
-  geometry.setIndex([0, 2, 1, 0, 3, 2])
-  const attr = (name) => {
-    const a = new InstancedBufferAttribute(new Float32Array(max * 3), 3)
-    a.setUsage(DynamicDrawUsage)
-    geometry.setAttribute(name, a)
-    return a
+  const quad = new BufferAttribute(new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]), 3)
+  const corners = [0, 2, 1, 0, 3, 2]
+
+  // Instances of the car quad, up to n of them: the traffic's, and the
+  // black car's on its own so it can be drawn outside the hero.
+  function cars(n) {
+    const geometry = new InstancedBufferGeometry()
+    geometry.setAttribute('position', quad)
+    geometry.setIndex(corners)
+    const attr = (name) => {
+      const a = new InstancedBufferAttribute(new Float32Array(n * 3), 3)
+      a.setUsage(DynamicDrawUsage)
+      geometry.setAttribute(name, a)
+      return a
+    }
+    const set = { geometry, pose: attr('pose'), body: attr('body'), glass: attr('glass'), n: 0 }
+    geometry.instanceCount = 0
+    return set
   }
-  const pose = attr('pose')
-  const body = attr('body')
-  const glass = attr('glass')
-  geometry.instanceCount = 0
+  const traffic = cars(max)
+  const black = cars(1)
+
+  function put(set, car, c) {
+    const i = set.n++
+    set.pose.setXYZ(i, car.x, car.y, car.a)
+    set.body.setXYZ(i, c.body[0], c.body[1], c.body[2])
+    set.glass.setXYZ(i, c.glass[0], c.glass[1], c.glass[2])
+  }
+
+  function finish(set) {
+    set.geometry.instanceCount = set.n
+    set.pose.needsUpdate = set.body.needsUpdate = set.glass.needsUpdate = true
+  }
 
   const material = new ShaderMaterial({
     vertexShader,
@@ -156,14 +178,18 @@ export function createRenderer(canvas, colors) {
     depthWrite: false,
   })
 
-  const mesh = new Mesh(geometry, material)
+  const mesh = new Mesh(traffic.geometry, material)
   mesh.frustumCulled = false
   scene.add(mesh)
+  const blackMesh = new Mesh(black.geometry, material)
+  blackMesh.frustumCulled = false
+  blackMesh.renderOrder = 1
+  scene.add(blackMesh)
 
   // The takeover ring, over the cars. Its own quad, one more draw call.
   const ringGeometry = new InstancedBufferGeometry()
-  ringGeometry.setAttribute('position', geometry.getAttribute('position'))
-  ringGeometry.setIndex(geometry.getIndex())
+  ringGeometry.setAttribute('position', quad)
+  ringGeometry.setIndex(corners)
   ringGeometry.instanceCount = 1
   const ringStyle = CONFIG.render.ring
   const ringMaterial = new ShaderMaterial({
@@ -180,7 +206,7 @@ export function createRenderer(canvas, colors) {
   })
   const ringMesh = new Mesh(ringGeometry, ringMaterial)
   ringMesh.frustumCulled = false
-  ringMesh.renderOrder = 1
+  ringMesh.renderOrder = 2
   ringMesh.visible = false
   scene.add(ringMesh)
 
@@ -191,14 +217,38 @@ export function createRenderer(canvas, colors) {
   }
   canvas.addEventListener('webglcontextlost', onLost)
 
+  let size = { width: 1, height: 1 }
+  // Where the simulation's origin (the hero's top left) is on the canvas,
+  // CSS px, and the box the traffic is clipped to, or null for none.
+  let origin = { x: 0, y: 0 }
+  let clip = null
+
+  function place() {
+    camera.left = -origin.x
+    camera.right = size.width - origin.x
+    camera.top = origin.y
+    camera.bottom = origin.y - size.height
+    camera.updateProjectionMatrix()
+  }
+
   return {
-    // The box the cars are drawn in, CSS px.
+    // The canvas's size, CSS px.
     resize(width, height) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, CONFIG.render.maxDpr))
       renderer.setSize(width, height, false)
-      camera.right = width
-      camera.bottom = -height
-      camera.updateProjectionMatrix()
+      size = { width, height }
+      place()
+    },
+
+    // x, y: where the hero's top left is on the canvas, CSS px. box: the
+    // traffic's clip, { x0, y0, x1, y1 } on the canvas, or null when the
+    // canvas is the hero and its own edges clip.
+    view(x, y, box = null) {
+      if (x !== origin.x || y !== origin.y) {
+        origin = { x, y }
+        place()
+      }
+      clip = box
     },
 
     // The car's size on this map, px.
@@ -209,7 +259,7 @@ export function createRenderer(canvas, colors) {
     // ring: { x, y, t } from the driver while the takeover ring shows, t in
     // seconds. still: reduced motion, where it holds its size and doesn't
     // fade, then goes.
-    draw(cars, ring, still = false) {
+    draw(all, ring, still = false) {
       if (lost) return
       ringMesh.visible = !!ring
       if (ring) {
@@ -219,18 +269,39 @@ export function createRenderer(canvas, colors) {
         ringMaterial.uniforms.ring.value = [ring.x, ring.y, r]
         ringMaterial.uniforms.color.value[3] = still ? 0.9 : 0.9 * (1 - e)
       }
-      let n = 0
-      for (const car of cars) {
-        if (!car.active || n >= max) continue
-        const c = car.black ? colors.black : colors.traffic
-        pose.setXYZ(n, car.x, car.y, car.a)
-        body.setXYZ(n, c.body[0], c.body[1], c.body[2])
-        glass.setXYZ(n, c.glass[0], c.glass[1], c.glass[2])
-        n++
+      traffic.n = black.n = 0
+      for (const car of all) {
+        if (!car.active) continue
+        if (car.black) put(black, car, colors.black)
+        else if (traffic.n < max) put(traffic, car, colors.traffic)
       }
-      geometry.instanceCount = n
-      pose.needsUpdate = body.needsUpdate = glass.needsUpdate = true
+      finish(traffic)
+      finish(black)
+      if (!clip) {
+        renderer.render(scene, camera)
+        return
+      }
+      // Over the window: the traffic only inside the hero, then the black
+      // car and the ring wherever they are. A scissored clear would only
+      // clear the scissor box, so the whole canvas is cleared first.
+      const ringOn = ringMesh.visible
+      renderer.autoClear = false
+      renderer.clear()
+      blackMesh.visible = ringMesh.visible = false
+      const w = Math.max(0, clip.x1 - clip.x0)
+      const h = Math.max(0, clip.y1 - clip.y0)
+      if (w && h) {
+        renderer.setScissorTest(true)
+        renderer.setScissor(clip.x0, size.height - clip.y1, w, h)
+        renderer.render(scene, camera)
+        renderer.setScissorTest(false)
+      }
+      mesh.visible = false
+      blackMesh.visible = true
+      ringMesh.visible = ringOn
       renderer.render(scene, camera)
+      mesh.visible = true
+      renderer.autoClear = true
     },
 
     get lost() {
@@ -239,7 +310,8 @@ export function createRenderer(canvas, colors) {
 
     dispose() {
       canvas.removeEventListener('webglcontextlost', onLost)
-      geometry.dispose()
+      traffic.geometry.dispose()
+      black.geometry.dispose()
       material.dispose()
       ringGeometry.dispose()
       ringMaterial.dispose()
