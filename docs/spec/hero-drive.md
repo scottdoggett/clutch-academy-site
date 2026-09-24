@@ -35,10 +35,10 @@ Written September 24, 2026, at the end of Phase 2, for whoever builds Phase 3.
   `npm test` runs 31 tests, all passing. Lint and build are clean.
 - `three@0.186` is installed but not imported anywhere yet. planck.js isn't
   installed; it comes in Phase 4.
-- The first prototype of this feature, a different design, is on the local
-  branch `prototype/hero-drive-v0`. It isn't pushed. Worth a look for its
-  keyboard guards, observer wiring and instanced tyre-mark shader, nothing
-  else.
+- The first prototype of this feature, a different design, is gone: saved
+  to a local branch and then deleted, never pushed (§Where this started).
+  Everything worth keeping from it is either in `graph.js` or described in
+  this spec.
 - Nothing is open (§Decisions). No assets are pending.
 
 ### What's next: Phase 3, ambient traffic
@@ -208,10 +208,13 @@ Three uncommitted things were in the tree when this spec was written.
    procedurally around the measured copy on every resize, road widths that
    scaled, a hand-rolled physics solver instead of planck.js, a five-speed box
    with an automatic clutch, a red player car, a handbrake on Space. ✅ Saved
-   as one commit on the local branch **`prototype/hero-drive-v0`** (not
-   pushed) and deleted from `overhaul` on September 24. Its arc-length Bézier
-   turns live on in `graph.js`. Its keyboard guards, observer wiring and
-   instanced tyre-mark shader are worth reading again in Phases 3–6.
+   as one commit on a local branch, `prototype/hero-drive-v0`, and deleted
+   from `overhaul` on September 24. The branch was never pushed, and Scott
+   had it deleted at the end of the same day, so the prototype no longer
+   exists. Its arc-length Bézier turns live on in `graph.js`. The rest of
+   what it did well is written into this spec: keyboard guards (§Keys),
+   observer wiring (§Pausing, §Resize) and an instanced tyre-mark shader
+   (§Tyre marks).
 2. **`Hero.jsx` and `Hero.css` edits** that dropped the photo. ✅ Kept. With no
    photo, the `h1` is the LCP element at every width.
 3. **`three@^0.186.0` in `package.json`.** ✅ Kept. planck.js 1.5.0 gets added
@@ -1258,7 +1261,7 @@ The first draft's open questions, as answered in review.
    cap from 1024px, and the street band on tablets, after tablets looked out of
    step with both the wider and narrower views.
 4. **The prototype:** saved to `prototype/hero-drive-v0`, deleted from
-   `overhaul`.
+   `overhaul`. At the end of the day the branch was deleted too.
 5. **The Drive pill:** my call, as long as its label passes AA.
 6. **Reverse:** in R, S drives backwards and W brakes.
 7. **Stall loop:** wait for a clutch press or a gear change at a standstill in

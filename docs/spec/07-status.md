@@ -53,7 +53,8 @@ accepted on September 24.
   marks and smoke, then phones and touch, save-data, WebGL-failure handling,
   performance and the bundle report.
 - The first prototype of this feature, a different design that was never
-  mounted, is kept on the local branch `prototype/hero-drive-v0`, not pushed.
+  mounted, was kept on a local branch for the day and then deleted. It was
+  never pushed; `hero-drive.md` §Where this started records what it was.
 
 ## Recently completed — September 2026 (homepage)
 
