@@ -101,8 +101,17 @@ accepted on September 24.
   bar with the redline, a clutch lamp, and the switch. Automatic is the
   default until a visitor picks; that's a question for Scott. 69 tests,
   lint and build clean.
-- **Phases 3 to 5 are committed** on `overhaul`, September 24, but not
-  pushed, so the review deployment still shows Phase 2.
+- **Phases 3 to 5 and the whole-page drive are committed and pushed** to
+  `origin/overhaul`, September 24, so the review deployment has them.
+- **After Phase 5, the whole page:** at Scott's request the black car can
+  now be driven over every section of the homepage, down to the footer.
+  Near the bottom or top of the window the page scrolls after it, with
+  momentum, so it carries on for a moment after the car slows. The visitor's
+  own scroll always wins. A drive that ends below the hero ends with the car
+  driving off the side and coming back in at a way in. This is an exception
+  to `08-motion.md` rule 6 (no scroll-jacking), which now says so. Built
+  September 24; Scott tried it and liked it. 77 tests, lint and build
+  clean.
 - **Phases 6 and 7, still to build:** collisions, with knocked cars, tyre
   marks and smoke, then save-data, WebGL-failure handling, performance and
   the bundle report. Phase 7's phones and touch part was done early, in

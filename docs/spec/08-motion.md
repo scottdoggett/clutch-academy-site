@@ -46,7 +46,13 @@ site takes its cue from that.
 6. **No scroll-jacking.** No pinning, no scrubbed content, no ScrollSmoother,
    no custom scroll. The page scrolls the way the device's own scrolling
    does. iOS Safari is a first-class target and this is where it breaks
-   first.
+   first. The one exception is driving the hero's black car
+   (`hero-drive.md` §Driving the whole page): while a visitor drives, the
+   page follows the car near the top and bottom of the window. It happens
+   only during a drive the visitor started, which only desktop-class screens
+   with a keyboard offer, so never on iOS Safari, and the visitor's own
+   scroll always wins. Scott asked for it on September 24, 2026, knowing
+   this rule.
 7. **No new loops.** The reviews marquee, the shift gate's idle cycle and
    the homepage hero's traffic are the site's only ambient motion. The
    traffic (`hero-drive.md`) was signed off with the hero brief on September
@@ -213,6 +219,10 @@ disappears, then animates in).
   - The rev bar and the takeover ring aren't GSAP. The engine draws them
     every frame. Under reduced motion the ring doesn't grow; it shows at
     full size for its second.
+  - The page following the car (rule 6's exception) isn't GSAP either. It
+    has momentum: it keeps going for a moment after the car slows. Under
+    reduced motion there's none, and the page moves only as far as the car
+    does.
 
 ## Homepage map
 

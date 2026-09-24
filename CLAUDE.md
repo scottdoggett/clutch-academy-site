@@ -62,9 +62,12 @@ planning docs. **Don't work from anything in there.**
   built and its roads approved; Phase 4 (a drivable black car, planck.js) is
   built and retuned. **Phase 5 (a manual and an automatic gearbox with a
   switch, and the gear display) is built and waiting for Scott's review.**
-  Phases 3 to 5 are committed but not pushed. The code is in
+  Since then the car can be driven over the whole page, with the page
+  scrolling after it (spec §Driving the whole page); Scott tried it and
+  liked it. Phases 3 to 5 and the whole-page drive are committed and pushed
+  to `origin/overhaul`. The code is in
   `src/components/hero/`, the traffic in its lazy `engine/` chunk and the
-  driving in its lazy `drive/` chunk, tested with `npm test` (69 tests). The
+  driving in its lazy `drive/` chunk, tested with `npm test` (77 tests). The
   spec's §Handoff says where it is, what changed from the spec, and what's
   next (Phase 6, knocks, recovery, tyre marks and smoke).
 - **Not yet merged or deployed to the real domain.** Remaining work is

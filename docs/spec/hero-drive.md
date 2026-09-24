@@ -15,8 +15,11 @@ and their tests. **Phase 3, ambient traffic, is built and its roads
 reviewed and approved. Phase 4, the Drive button and a drivable black car,
 is built and was retuned after Scott's first drive. Phase 5, the gearbox
 (manual and automatic, with a switch between them) and the gear display,
-is built and waiting for review.** Phases 3 to 5 are committed but not
-pushed yet. If you're picking this up, read §Handoff first.
+is built and waiting for review.** Since then the car can be driven over
+the whole page, with the page scrolling after it (§Driving the whole page),
+which Scott tried and liked. Phases 3 to 5 and the whole-page drive are
+committed and pushed to `origin/overhaul`. If you're picking this up, read
+§Handoff first.
 
 Legend as in `README.md`: ✅ decided, 🟡 recommended, ❓ open, 📎 pending asset.
 Anything the brief states outright is ✅. What was 🟡 in the draft is now ✅
@@ -45,16 +48,22 @@ after Scott's review.
   Scott's review in the dev server. He asked for the automatic to stay
   alongside the manual, with a way to switch (§Decisions 19). Don't start
   Phase 6 until he says so.
-- Phases 3 to 5 are committed on `overhaul` but not pushed. Scott pushes
-  himself; the HTTPS push command is below.
+- **After Phase 5, the whole page.** Scott asked for the car to drive over
+  the entire site, with the page scrolling after it near the bottom of the
+  window, with momentum (§Decisions 20). It's built, and Scott tried it and
+  liked it (§Driving the whole page, and §After Phase 5 below).
+- Phases 3 to 5 and the whole-page drive are committed and pushed to
+  `origin/overhaul`, September 24, so the review deployment has them.
+  Scott usually pushes himself; the HTTPS push command, for when he asks
+  for a push from here, is below.
 - What exists: `src/components/hero/`, which holds `config.js`, `graph.js`,
   `layout.js`, `layouts/wide.json` and `compact.json`, `RoadLayer.jsx`,
   `HeroStage.jsx`, `DriveButton.jsx`, `Hud.jsx` and `Hud.css`,
   `GearGate.jsx` and `gate.js`, `ControlsHint.jsx`, `engine/` (`traffic.js`,
   `render.js`, `index.js`), `drive/` (`player.js`, `gearbox.js`, `input.js`,
-  `index.js`), the tests and the fixture. The hero markup and CSS are in
-  `src/components/home/Hero.jsx` and `Hero.css`. `npm test` runs 69 tests,
-  all passing. Lint and build are clean.
+  `follow.js`, `index.js`), the tests and the fixture. The hero markup and
+  CSS are in `src/components/home/Hero.jsx` and `Hero.css`. `npm test` runs
+  77 tests, all passing. Lint and build are clean.
 - planck.js 1.5.0 is installed, and only `drive/` imports it.
 - The first prototype of this feature, a different design, is gone: saved
   to a local branch and then deleted, never pushed (§Where this started).
@@ -278,6 +287,46 @@ the "Driving" panel has grown into a gear display.
 3. **An arcade engine**: `torqueScale` 5.5 on a 200 Nm curve, a traction cap,
    lighter drag (above).
 
+### After Phase 5: the whole page
+
+Scott asked for the car to drive over the whole website, and for the page to
+scroll with it smoothly near the bottom of the screen, with velocity and
+momentum, "so even if the car slows down the page keeps scrolling a bit".
+§Driving the whole page has the design; in short:
+
+- The canvas and the gear display move into a fixed `.drive-layer` over the
+  window for the length of a drive, under the nav. The traffic stays
+  clipped to the hero; the black car is drawn anywhere.
+- The walls are the page's edges, down to the footer.
+- `drive/follow.js` scrolls the page for a car heading into the bottom or
+  top fifth of the window, with momentum, and never lets the car leave the
+  window. The visitor's own scroll wins.
+- A drive that ends away from the roads ends with the car driving off the
+  nearer side and coming back in at a way in.
+- Focus returns to the pill without scrolling the page back up.
+
+**Changed from what was asked, for review:**
+
+1. **The top follows too.** He asked for the bottom. Without the top, the
+   only way back up the page would be the scroll wheel.
+2. **A car standing near the bottom doesn't scroll the page.** It can be
+   there when Drive is pressed, and the page moving on its own looked like a
+   bug. Only a car heading for the edge moves it.
+3. **Leaving by the side.** Driving back up the page to the roads would
+   take a minute.
+
+**Checked:** 7 follow tests and a drive down the page that ends off the side
+(§Tests). In Chrome, in the iframe harness at 1440×900: the canvas and the
+display move into the layer and focus lands on the display; driving down the
+page at about 125 km/h, the page kept pace with the car at the zone's edge,
+2,500px down; braking to a stop, the page carried on about 60px after the
+car stopped; the black car drawn over the pricing cards; Esc sent it off the
+right side in 5s at the old 45 km/h (now 60), the canvas went back into the
+hero, and focus went back to the pill with the page left where it was. Once,
+straight after a reload, the page jumped 378px between two steps with
+nothing driving it; it didn't happen again, and the follow treated it as the
+visitor's own scroll, as it should. Probably ScrollTrigger in the hidden tab.
+
 ### Open questions
 
 1. **Which gearbox mode first?** Automatic, until a visitor picks. It's the
@@ -291,14 +340,20 @@ the "Driving" panel has grown into a gear display.
 3. **The feel of the manual box.** Checked by numbers and tests, not by hand,
    since the automation tab can't run the loop. The automatic was tuned to
    match the Phase 4 drive Scott liked.
-4. Settled, for the record: the side street's short blocks (§Decisions 17).
+4. **The black car on the darkest cards.** Over the pricing cards' deep red
+   it's hard to see. Fine over the hero, the beige bands and the photos.
+   A light outline would fix it if it bothers him.
+5. **The follow's feel**: the zone (a fifth of the window), the push and the
+   coast are in `CONFIG.follow`, tuned by numbers, not by hand.
+6. Settled, for the record: the side street's short blocks (§Decisions 17).
    In windows about 600 to 730px tall, a car stopped beside it still sits on
    the zebra crossing, and those blocks have no centre ticks.
 
 ### What's next
 
-1. Scott's review of Phase 5 in the dev server, and any revisions. Record
-   each one in §Decisions and in the section it changes.
+1. Scott's review of Phase 5 in the dev server, and any revisions. He has
+   tried the whole-page drive and liked it. Record each one in §Decisions and in the section it
+   changes.
 2. Then Phase 6: kinematic-to-dynamic knocks, recovery for knocked cars,
    the anti-cascade rule, tyre marks and smoke (§Traffic as physical bodies,
    §Recovery, §Tyre marks, §Smoke). The gearbox's events (stall, over-rev,
@@ -495,6 +550,12 @@ and the working tree is what's been on screen during review. The eyebrow,
   never faded white. ✅ Its look was my call (§Entry). Built in Phase 4 with a
   solid `--chrome` label and icon, 4.64:1, and full white on hover and
   focus, so it stays quiet without fading below AA.
+- **`08-motion.md` rule 6, no scroll-jacking.** Driving the whole page
+  scrolls the page for the visitor (§Decisions 20), which the rule bans. I
+  raised it before building, and Scott asked for it anyway. ✅ Rule 6 now
+  carries the exception: only during a drive the visitor started, which
+  only desktop-class screens with a keyboard offer (never iOS Safari, the
+  rule's worry), and the visitor's own scroll always wins.
 - **The `frontend-design` plugin** is installed as of September 24. ✅ Used
   for the Drive button and controls hint in Phase 4 and the gear display in
   Phase 5.
@@ -561,6 +622,10 @@ exactly.
 
 - ✅ `.hero` has `position: relative; isolation: isolate; overflow: clip`, so
   the layers stack inside it and nothing leaks into the next section.
+- ✅ While someone drives, the car canvas and the HUD move out of the hero
+  into the driving layer, `.drive-layer`, fixed over the window at z 90
+  (§Driving the whole page). The hero's isolation would otherwise keep the
+  car under every later section.
 - The fixed nav at z 100, the consent banner at z 1100 and the Calendly popup
   all stay above the hero. The nav is 85% opaque, so roads and cars under it show
   through faintly. That's fine.
@@ -1128,6 +1193,11 @@ effect let the pill's removal read as focus leaving the hero, which ended the
 drive at once. When driving ends, focus goes back to the pill only if it was
 still in the hero; tabbing away leaves it where it went.
 
+✅ Changed with §Decisions 20: the HUD is in the driving layer now, so keys
+are heard there and focus leaving the layer ends the drive. A click anywhere
+on the page that isn't a control keeps focus, since the whole page is the
+game. Focus goes to the HUD and back to the pill with `preventScroll`.
+
 ### Exit
 
 ✅ Esc, or a small × beside the gear indicator.
@@ -1143,12 +1213,73 @@ still in the hero; tabbing away leaves it where it went.
 revised one in §Recovery. And the HUD doesn't fade out yet: it unmounts as
 focus goes back to the pill, and the pill comes back at once.
 
+✅ Since §Decisions 20, a drive that ends below the hero ends with the car
+driving off the nearer side instead (§Driving the whole page).
+
 ### Pausing
 
 ✅ Pause the simulation when the hero scrolls out of view, and when the tab is
 hidden. 🟡 Paused means the animation loop stops, not that it runs and skips
 work. Resuming clears held keys and restarts the clock, so there's no jump.
-✅ Built in Phase 3 for the traffic and Phase 4 for driving.
+✅ Built in Phase 3 for the traffic and Phase 4 for driving. Since §Decisions
+20 the loop keeps running during a drive with the hero off screen.
+
+## Driving the whole page
+
+✅ **Added after Phase 5, September 24, at Scott's request** (§Decisions 20).
+The black car isn't kept in the hero. A visitor can drive it over every
+section of the homepage, down to the footer, and the page scrolls after it.
+
+- **The layer.** For the length of a drive, the car canvas and the HUD move
+  into `.drive-layer`, fixed over the window at z-index 90: over every
+  section, under the nav (100) and the consent banner (1100). The canvas
+  covers the window, and the camera follows the hero as the page scrolls.
+  The traffic is clipped to the hero with a scissor, so cars leaving by a
+  portal still vanish at its edge. The black car has its own instanced mesh
+  and is drawn anywhere, one more draw call. When the car is back in
+  traffic, the canvas goes back into the hero.
+- **Walls.** The page's edges: its sides, its top (the nav's bottom when it's
+  scrolled to the top) and the bottom of the footer. Only traffic cars inside
+  the hero are solid. Past its edges they're out of sight, and the car
+  mustn't hit what it can't see.
+- **The follow** (`drive/follow.js`, pure and tested). In the bottom fifth
+  of the window below the nav, a car heading down moves the page. The scroll
+  wants the car's own speed plus a push that grows the deeper it is into
+  the zone, 360 px/s at the very edge, so the car rides at the zone's edge.
+  The push comes in with the car's speed, full from 30 px/s. The scroll
+  picks up over about 0.15s and dies away over about 0.8s, so when the car
+  slows or stops the page carries on for a moment. A car that stops dead
+  from 120 km/h leaves the page gliding about 150px further; braking
+  normally, less. The same at the top, for a car heading up.
+- **A car standing near the bottom doesn't move the page.** It can be there
+  when Drive is pressed. Only a car heading for an edge does.
+- **The car never leaves the window.** However fast it goes, the page keeps
+  it at least 8px from either end. The page stops at its own ends.
+- **The visitor's own scroll wins.** A wheel, trackpad or scrollbar scroll
+  holds the follow off for 0.5s, and a car scrolled out of view is left
+  alone until it's back in view.
+- **Reduced motion:** no momentum. The page moves with the car only as far
+  as the car moves into the zone, and stops when it does.
+- **Focus.** Keys are heard on the layer, where the HUD is. Tabbing away, or
+  clicking a link or button anywhere on the page, ends the drive, and the
+  link or button works. A click anywhere else keeps focus. Focus moves to
+  the HUD and back to the pill with `preventScroll`, so ending a drive at the
+  footer doesn't jump the page back to the hero.
+- **Ending a drive away from the roads.** From the hero, the car finds its
+  way back as before (§Recovery). From further down the page, that would be
+  a minute's drive back up with nothing following it. So it turns for the
+  nearer side, the way it's already facing if it's roughly across the page,
+  drives off at 60 km/h with the walls gone, and comes back in at a way in.
+  Under reduced motion it's parked on a street instead. The safety net is
+  6s.
+- **The loop** keeps running with the hero off screen, as long as there's a
+  driver.
+- **The engine does the DOM, the driver the logic.** Each frame the engine
+  measures the window and the hero's place on the page, hands the driver
+  new walls if the page has changed size, and treats any scroll it didn't
+  make as the visitor's. The driver runs the follow each step, and the
+  engine writes the result with `scrollTo({ behavior: 'instant' })`, since
+  `globals.css` smooth-scrolls to `#packages`.
 
 ## Driving and physics
 
@@ -1218,6 +1349,10 @@ bottom of the fixed nav, not the hero's top edge, so the car can't hide under
 the nav. Traffic passes through the walls to reach its portals, since walls only
 touch dynamic bodies. ✅ Built in Phase 4. The top wall moves as the page
 scrolls, since the nav is fixed and the hero isn't.
+
+✅ Changed with §Decisions 20: the walls are the page's edges, from the top
+of the page to the bottom of the footer, and they don't move. The follow
+keeps the car below the nav instead (§Driving the whole page).
 
 ### Traffic as physical bodies
 
@@ -1467,6 +1602,9 @@ lines and a white, red-ringed knob on the hero red. Everything above, plus:
 - **Loading:** the display loads with the drive chunk, on the pill's hover or
   focus, and is held in state once loaded rather than `React.lazy`, which
   suspends on its first render and would miss the focus handover.
+- **Since §Decisions 20** it renders into the driving layer through a
+  portal, so it sits in the window's bottom-right corner and stays there as
+  the page scrolls.
 
 ## Tyre marks
 
@@ -1675,9 +1813,10 @@ src/components/hero/
 ### Config, starting values
 
 🟡 All tunable. The shape matters more than the numbers. `world`, `car`,
-`roads`, `layout`, `traffic`, `player`, `recovery` and `render` exist in
-`config.js` today, with the values below; the other sections are still to
-add, each with its phase.
+`roads`, `layout`, `traffic`, `player`, `gearbox`, `recovery`, `follow` and
+`render` exist in `config.js` today, with the values below; the other
+sections are still to add, each with its phase. Driving the whole page
+added `follow` and `recovery.leaveKmh` and `leaveMax`.
 Road sizes are the wide map's; `roadsFor(layout)` scales them by
 `layout.zoom`. Phase 3 added three traffic values the first draft didn't
 have: `lineGap`, the px between a stopped car's nose and the crossing;
@@ -1722,8 +1861,10 @@ export const CONFIG = {
               defaultMode: 'auto' },
   recovery: { rejoinKmh: 10, approachKmh: 30, lead: [1, 1.5], near: 1, nearDeg: 20,
               blend: 0.5, maxTurnDeg: 120, giveUp: 8, giveUpMax: 20,
+              leaveKmh: 60, leaveMax: 6,
               // Phase 6: settleSpeed: 0.5, settleSpin: 0.3, settleMax: 2, nudgeAbove: 1
             },
+  follow:   { zone: 0.2, push: 360, rise: 0.15, coast: 0.8, edge: 8, hold: 0.5 },
   marks:    { pool: 6000, width: 1.5, every: 3, fade: 10, slip: 1.5, brakeAbove: 0.8 },
   smoke:    { pool: 160, life: 1, from: 6, to: 22, alpha: 0.5 },
   render:   { maxDpr: 2, glass: { traffic: 0.55, black: 0.3 },
@@ -1739,9 +1880,10 @@ read the layout JSON with `readFileSync` rather than an import, which avoids
 import-attribute differences between Node and the Next bundler. They lint
 clean under the existing `eslint.config.js`.
 
-**Phase 5: 69 tests, all passing.** `graph.test.js` has 13,
-`layout.test.js` 20, `engine/traffic.test.js` 12, `drive/drive.test.js` 10,
-`drive/gearbox.test.js` 12 and `gate.test.js` 2. The whole run takes about 3s, the traffic and drive tests in parallel.
+**77 tests, all passing,** after the whole-page drive. `graph.test.js` has
+13, `layout.test.js` 20, `engine/traffic.test.js` 12, `drive/drive.test.js`
+11, `drive/gearbox.test.js` 12, `drive/follow.test.js` 7 and `gate.test.js`
+2. The whole run takes about 3s, the traffic and drive tests in parallel.
 
 ✅ Required by the brief:
 
@@ -1840,6 +1982,18 @@ Added, each checking something the brief requires:
   down through the gears, selects R on S at a standstill and never stalls
   or grinds; switching modes keeps the gear, the automatic ignores the
   lever, and a stall is simply over in the automatic.
+- **The page following the car** (`drive/follow.test.js`, the window as
+  numbers): in the middle of the window, or standing near the bottom, the
+  page stays put; driving down at 100, 200 and 345 px/s it follows from the
+  zone, keeps pace, and never lets the car within 8px of the bottom; when
+  the car stops the page carries on more than 40px in half a second, then
+  stops; driving up, it follows at the top and never lets the car under the
+  nav; it stops at both ends of the page; a visitor's own scroll holds it
+  off, and a car below the window is left alone; under reduced motion it
+  moves only with the car. And in `drive/drive.test.js`, on the whole
+  page's walls the car drives 400px below the hero without touching traffic
+  or leaving the walls, and stopped there it leaves by the side inside the
+  safety net and comes back in at a way in.
 - **The knob's route** (`gate.test.js`): between any two gears, every leg
   runs along a slot or the neutral plane, never across the gate, and ends in
   the right slot; a change mid-travel sets off from where the knob has got
@@ -1862,7 +2016,7 @@ iframes and prints the new `sizes` array.
 | 2 | ✅ Done, commits `8bd1a72` and `f922e2e`. Layout JSON for both layouts, `graph.js`, `layout.js`, `RoadLayer.jsx` server-rendered, the half-width copy and the phone street band, resize, the headline check, `npm test` with layout and graph tests, the fixture, prototype folder dealt with, `08-motion.md` §The hero updated | ✅ Built September 24, then revised the same day: the road layer rebuilt so ticks end cleanly, zebra crossings at every junction (then thinned), and a bigger, less regular phone map under smaller phone type, then drawn zoomed out. 31 tests pass, lint and build clean, checked in Chrome at 360, 390, 768 and 1440px. |
 | 3 | **Built September 24; roads reviewed and approved (§Decisions 14 to 17).** `engine/`: renderer, cars, traffic, reservations, Ts and corners, turns, portals, respawn, stopping behind the crossings, fade-in, pause and resume, seeded start, on both maps. Pulled forward from Phase 7: the parked frame under reduced motion, and lazy loading. See §Handoff. | Headless traffic test passes. In Chrome at 390, 768, 1440 and 1920px: cars follow lanes, stop behind crossings, take junctions one at a time, respawn, never overlap; parked under reduced motion. `08-motion.md` rules 7 and 8 updated. All done, except that reduced motion was checked through `park()` rather than by toggling the setting (§Handoff). 42 tests, lint and build clean. |
 | 4 | **Built September 24; retuned after Scott's first drive (§Decisions 18).** Drive button, `drive/` with planck, walls, player forces, input and focus, driving over text, exit and rejoin, controls hint, takeover ring. See §Handoff. | Keyboard-only run-through: enter, drive, Tab away, Esc, focus back on Drive. Done in Chrome (§Handoff, Phase 4 as built). Retuned after Scott's first drive (§Decisions 18). 54 tests, lint and build clean. |
-| 5 | **Built September 24, waiting for review.** `gearbox.js` and tests, in manual and automatic with a switch (§Decisions 19), then the HUD. See §Handoff. | Gearbox tests pass (12). The HUD checked in the browser in both modes; Scott's review next. 69 tests, lint and build clean. |
+| 5 | **Built September 24, waiting for review.** `gearbox.js` and tests, in manual and automatic with a switch (§Decisions 19), then the HUD. Then, at Scott's request, the car driving the whole page (§Decisions 20). See §Handoff. | Gearbox tests pass (12). The HUD checked in the browser in both modes; the whole-page drive checked in the browser, and Scott liked it; his review of the rest next. 77 tests, lint and build clean. |
 | 6 | Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks, smoke | A chain of knocks through a full 16-car hero clears on its own within 15s |
 | 7 | Phones and touch (Drive hidden; done early, in Phase 4), finishing reduced motion and lazy loading, save-data, WebGL-failure handling, disposal, performance pass, bundle report (sizes so far in §Loading and performance) | 60fps with 16 cars, a full mark pool and smoke on a mid-range laptop. Reduced-motion and no-JS checks from `08-motion.md` pass. Chunk sizes reported. |
 
@@ -1941,8 +2095,18 @@ Starting Phase 5:
     display means something in both; the switch is a button on the display
     and the M key, and the choice is remembered (§Phase 5 as built).
 
-The Safari question about SVG dash lengths went away with the SVG. Two
-questions from building Phase 3 are open, in §Handoff.
+After Phase 5:
+
+20. **The whole page.** Scott wanted the car able to drive over the entire
+    website, with the page scrolling after it smoothly when the car is near
+    the bottom of the screen, "with some velocity and momentum, so even if
+    the car slows down the page keeps scrolling a bit". I pointed out that
+    `08-motion.md` rule 6 bans scroll-jacking; he asked for it anyway. Built
+    as §Driving the whole page, with the top followed too, and rule 6 given
+    the exception. He tried it and called it amazing.
+
+The Safari question about SVG dash lengths went away with the SVG. The
+questions still open are in §Handoff, §Open questions.
 
 📎 No pending assets. The icon and the HUD are drawn in code.
 
@@ -1961,3 +2125,5 @@ questions from building Phase 3 are open, in §Handoff.
   4), and the gear display's motion (Phase 5).
 - ✅ `02-architecture.md`: planck and `drive/` (Phase 4), the gearbox and the
   gear display (Phase 5).
+- ✅ `08-motion.md` rule 6: the exception for driving the whole page, and
+  §The hero: the follow under reduced motion (§Decisions 20).
