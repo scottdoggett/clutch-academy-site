@@ -1,7 +1,7 @@
 {
   "name": "compact",
   "media": "(max-width: 767px)",
-  "about": "The phone map, normalised to the street band under the CTAs (Hero.css .hero__streets), not the whole hero. The band starts 48px below the CTAs and nothing crosses its top edge, so the headline clearance holds by construction. It has to work from a 320x240 band to a 767x430 one. A main road runs across the top and another across the lower right; four streets come down at uneven spacing, two of them stopping at a junction rather than running through, so the grid jogs. Side streets: a short one on the left, and one that becomes a main road where it crosses the lower road.",
+  "about": "The phone map, normalised to the street band under the CTAs (Hero.css .hero__streets), not the whole hero. The band starts 48px below the CTAs and nothing crosses its top edge, so the headline clearance holds by construction. The band is always 240px tall, from a 320px phone to a 767px one. A main road runs across the top and another across the lower right; three streets come down at uneven spacing, and the third is a side street that becomes a main road where it crosses the lower road, so the grid jogs. On September 24 review found the map too busy, and two roads came out: a fourth street down at x 0.87, and a short side street across the left block.",
   "nodes": [
     { "id": "l1", "x": -0.1, "y": 0.16 },
     { "id": "r1", "x": 1.1, "y": 0.16 },
@@ -13,21 +13,15 @@
     { "id": "a", "x": 0.13, "y": 0.16 },
     { "id": "b", "x": 0.43, "y": 0.16 },
     { "id": "s", "x": 0.64, "y": 0.16 },
-    { "id": "c", "x": 0.87, "y": 0.16 },
-    { "id": "d", "x": 0.13, "y": 0.46 },
-    { "id": "e", "x": 0.43, "y": 0.46 },
     { "id": "f", "x": 0.43, "y": 0.74 },
-    { "id": "g", "x": 0.64, "y": 0.74 },
-    { "id": "h", "x": 0.87, "y": 0.74 }
+    { "id": "g", "x": 0.64, "y": 0.74 }
   ],
   "roads": [
-    { "id": "h1", "kind": "main", "nodes": ["l1", "a", "b", "s", "c", "r1"] },
-    { "id": "h2", "kind": "main", "nodes": ["f", "g", "h", "r2"] },
-    { "id": "v1", "kind": "main", "nodes": ["a", "d", "p1"] },
-    { "id": "v2", "kind": "main", "nodes": ["b", "e", "f", "p2"] },
-    { "id": "v3", "kind": "main", "nodes": ["c", "h"] },
+    { "id": "h1", "kind": "main", "nodes": ["l1", "a", "b", "s", "r1"] },
+    { "id": "h2", "kind": "main", "nodes": ["f", "g", "r2"] },
+    { "id": "v1", "kind": "main", "nodes": ["a", "p1"] },
+    { "id": "v2", "kind": "main", "nodes": ["b", "f", "p2"] },
     { "id": "v4", "kind": "main", "nodes": ["g", "p4"] },
-    { "id": "ss1", "kind": "side", "nodes": ["d", "e"] },
     { "id": "ss2", "kind": "side", "nodes": ["s", "g"] }
   ]
 }

@@ -10,7 +10,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { CONFIG } from './config.js'
 import { buildGraph, checkGraph, roadsFor, segmentsOf } from './graph.js'
-import { hideRule, offenders, pieceRect, resolveClearance, roadPieces } from './layout.js'
+import { hideRule, laneMinimum, offenders, pieceRect, resolveClearance, resolveMap, roadPieces } from './layout.js'
 
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const wide = read('./layouts/wide.json')
@@ -58,8 +58,8 @@ test('on phones, the street band starts 48px under the copy and fills the hero t
   }
 })
 
-test('side streets are 60% of a main road', () => {
-  assert.equal(CONFIG.roads.side, Math.round(CONFIG.roads.main * 0.6))
+test('every road is the same width, side streets included', () => {
+  assert.equal(CONFIG.roads.side, CONFIG.roads.main)
 })
 
 test('both maps work at every recorded size', () => {
@@ -190,8 +190,9 @@ test('the wide map is a merged grid, not graph paper', (t) => {
   t.diagnostic(`${gone} of ${total} base segments removed (${Math.round(share * 100)}%)`)
   assert.ok(share >= 0.2 && share <= 0.3)
 
-  // And there are side streets cutting through the blocks.
-  assert.ok(wide.roads.filter((r) => r.kind === 'side').length >= 3)
+  // And a side street cutting through the blocks. There were three until
+  // September 24, when review found the map too busy.
+  assert.ok(wide.roads.filter((r) => r.kind === 'side').length >= 1)
 })
 
 test('the road layer has a road and ticks for every segment, a box for every junction, a crossing on every road into a cross or T', () => {
@@ -255,7 +256,7 @@ test('each crossing spans its road, sits just clear of the junction, and has who
       const stripes = roads[kind] / (stripe + space)
       assert.ok(Math.abs(stripes - Math.round(stripes)) < 1e-9, `${layout.name} ${kind} road takes ${stripes} stripes`)
     }
-    const size = layout === wide ? { width: 1440, height: 836 } : { width: 390, height: 343 }
+    const size = layout === wide ? { width: 1440, height: 836 } : { width: 390, height: 240 }
     const graph = buildGraph(layout, size)
     for (const w of roadPieces(layout).walks) {
       const r = pieceRect(w, size.width, size.height)
@@ -271,11 +272,11 @@ test('each crossing spans its road, sits just clear of the junction, and has who
   }
 })
 
-test('the stripes are thin: a quarter of each stripe tile, a main road takes 5, a side street 3', () => {
+test('the stripes are thin: a quarter of each stripe tile, and a road takes 5', () => {
   const { stripe, space } = CONFIG.roads.crosswalk
   assert.equal(stripe / (stripe + space), 0.25)
   assert.equal(CONFIG.roads.main / (stripe + space), 5)
-  assert.equal(CONFIG.roads.side / (stripe + space), 3)
+  assert.equal(CONFIG.roads.side / (stripe + space), 5)
 })
 
 test('phones draw the same map zoomed out: every road size scaled, the clearance not', () => {
@@ -290,10 +291,11 @@ test('phones draw the same map zoomed out: every road size scaled, the clearance
   assert.equal(r.clearance, CONFIG.roads.clearance)
   // The drawing and the graph both use the zoomed sizes.
   const { bands } = roadPieces(compact)
-  const widths = new Set(bands.map((p) => Math.max(p.w[1], p.h[1])))
-  assert.deepEqual([...widths].sort((a, b) => a - b), [r.side, r.main])
-  const g = buildGraph(compact, { width: 390, height: 343 })
-  assert.deepEqual([...new Set(g.segments.map((sg) => sg.width))].sort((a, b) => a - b), [r.side, r.main])
+  const sizes = (list) => [...new Set(list)].sort((a, b) => a - b)
+  const widths = sizes(bands.map((p) => Math.max(p.w[1], p.h[1])))
+  assert.deepEqual(widths, sizes([r.side, r.main]))
+  const g = buildGraph(compact, { width: 390, height: 240 })
+  assert.deepEqual(sizes(g.segments.map((sg) => sg.width)), sizes([r.side, r.main]))
 })
 
 test('the CSS that hides a too-short run of ticks follows the zoom instead of a fixed size', () => {
@@ -318,4 +320,30 @@ test('hiding a T\'s stem takes its crossings and its box with it', () => {
   // Everything elsewhere stays.
   assert.ok(!hidden({ kind: 'band', seg: 'h1.0' }))
   for (const p of at('walk', 'c11')) assert.ok(!hidden(p))
+})
+
+test('at every recorded size, every lane already has room for a car, so the room rule hides nothing', () => {
+  for (const s of wideSizes) {
+    const { hidden, tight } = resolveMap(wide, { width: s.hero[0], height: s.hero[1], copy: copyOf(s) })
+    assert.deepEqual(hidden, [], s.viewport.join('×'))
+    assert.deepEqual(tight, [], s.viewport.join('×'))
+  }
+  for (const b of boxes.filter((x) => x.layout === compact)) {
+    assert.deepEqual(resolveMap(compact, b).hidden, [], b.label)
+  }
+})
+
+test('in a window too short for the whole map, the room rule hides roads until every lane holds a car', (t) => {
+  const report = []
+  for (const s of rects.short.sizes) {
+    const size = { width: s.hero[0], height: s.hero[1] }
+    const full = buildGraph(wide, size)
+    assert.ok(full.lanes.some((l) => l.path.len < laneMinimum(wide)), `${s.viewport.join('×')} isn't short`)
+    const { hidden, tight, graph } = resolveMap(wide, { ...size, copy: copyOf(s) })
+    assert.deepEqual(tight, [], s.viewport.join('×'))
+    assert.deepEqual(checkGraph(graph, wide), [], s.viewport.join('×'))
+    for (const lane of graph.lanes) assert.ok(lane.path.len >= laneMinimum(wide), `${s.viewport.join('×')}: ${lane.id}`)
+    report.push(`${s.viewport.join('×')}: hidden [${hidden.join(', ')}]`)
+  }
+  t.diagnostic(report.join('\n'))
 })

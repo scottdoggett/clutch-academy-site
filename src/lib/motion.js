@@ -229,6 +229,8 @@ export function applyMotion(root, { small = false, desktop = false } = {}) {
 // transparent: the headline only travels, the photo only scales. The CTAs
 // fade on opacity alone (not autoAlpha), so they stay clickable the whole
 // time (rule 10).
+//
+// When it finishes, the hero is marked settled (settleHero below).
 export function playHero(root, { small = false } = {}) {
   const q = (name) => root.querySelector(`[data-hero="${name}"]`)
   const rise = small ? RISE_SMALL : RISE
@@ -239,7 +241,10 @@ export function playHero(root, { small = false } = {}) {
   const photo = q('photo')?.querySelector('img')
   const caption = q('caption')
 
-  const tl = gsap.timeline({ defaults: { ease: EASE_IN, duration: DUR_BASE } })
+  const tl = gsap.timeline({
+    defaults: { ease: EASE_IN, duration: DUR_BASE },
+    onComplete: () => settleHero(root),
+  })
   if (eyebrow)
     tl.fromTo(eyebrow, { autoAlpha: 0, y: rise }, { autoAlpha: 1, y: 0, duration: DUR_QUICK }, 0)
   if (headline) tl.fromTo(headline, { y: rise }, { y: 0, duration: DUR_SLOW }, 0.1)
@@ -254,4 +259,15 @@ export function playHero(root, { small = false } = {}) {
     )
   if (caption) tl.fromTo(caption, { autoAlpha: 0 }, { autoAlpha: 1 }, 0.55)
   return tl
+}
+
+// The hero's entrance is over, or was never going to play. The hero's
+// traffic (src/components/hero/HeroStage.jsx) waits for this before it
+// fades in, so only one thing moves at a time (rule 3). The attribute is
+// for a listener that arrives after the event.
+export const HERO_SETTLED = 'hero:settled'
+
+export function settleHero(root) {
+  root.setAttribute('data-hero-settled', '')
+  root.dispatchEvent(new Event(HERO_SETTLED))
 }

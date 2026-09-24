@@ -53,15 +53,24 @@ export function segmentsOf(layout) {
 
 // ---------- Paths ------------------------------------------------------
 // Anything a car can follow: a length, and a pose at any distance along it.
+// at() fills `out` when it's given one, so the traffic loop can reuse the
+// same object every step instead of allocating.
+
+const pose = (out, x, y, a) => {
+  out.x = x
+  out.y = y
+  out.a = a
+  return out
+}
 
 function line(p, q) {
   const len = Math.hypot(q.x - p.x, q.y - p.y)
   const a = Math.atan2(q.y - p.y, q.x - p.x)
   return {
     len,
-    at(s) {
+    at(s, out = {}) {
       const t = len ? clamp(s / len, 0, 1) : 0
-      return { x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, a }
+      return pose(out, p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t, a)
     },
   }
 }
@@ -70,33 +79,28 @@ function line(p, q) {
 // meet, walked by arc length so a car's speed along it is its real speed.
 const SAMPLES = 16
 function bend(p0, p1, p2) {
-  const pt = (t) => {
-    const u = 1 - t
-    return {
-      x: u * u * p0.x + 2 * u * t * p1.x + t * t * p2.x,
-      y: u * u * p0.y + 2 * u * t * p1.y + t * t * p2.y,
-    }
-  }
+  const bx = (t, u) => u * u * p0.x + 2 * u * t * p1.x + t * t * p2.x
+  const by = (t, u) => u * u * p0.y + 2 * u * t * p1.y + t * t * p2.y
   const cum = [0]
   let prev = p0
   for (let i = 1; i <= SAMPLES; i++) {
-    const q = pt(i / SAMPLES)
+    const t = i / SAMPLES
+    const q = { x: bx(t, 1 - t), y: by(t, 1 - t) }
     cum.push(cum[i - 1] + Math.hypot(q.x - prev.x, q.y - prev.y))
     prev = q
   }
   const len = cum[SAMPLES]
   return {
     len,
-    at(s) {
+    at(s, out = {}) {
       s = clamp(s, 0, len)
       let i = 1
       while (i < SAMPLES && cum[i] < s) i++
       const t = (i - 1 + (s - cum[i - 1]) / (cum[i] - cum[i - 1] || 1)) / SAMPLES
       const u = 1 - t
-      const { x, y } = pt(t)
       const dx = 2 * u * (p1.x - p0.x) + 2 * t * (p2.x - p1.x)
       const dy = 2 * u * (p1.y - p0.y) + 2 * t * (p2.y - p1.y)
-      return { x, y, a: Math.atan2(dy, dx) }
+      return pose(out, bx(t, u), by(t, u), Math.atan2(dy, dx))
     },
   }
 }
@@ -166,8 +170,9 @@ export function buildGraph(layout, { width = 1, height = 1, hidden = [], roads =
 
   // What each node is, from the roads still meeting there, and the box a
   // car has to cross to get through it. The box is as wide as the road
-  // crossing it in each direction, so a side street T-ing into a main road
-  // makes a 24×40 box, not a 40×40 one.
+  // crossing it in each direction, so a narrower road T-ing into a wider
+  // one makes a box only as wide as the narrow road. Since every road is
+  // one width (config.js), in practice every box is square.
   for (const n of nodes.values()) {
     const arms = Object.keys(n.arms)
     const wide = (ds) => Math.max(0, ...ds.map((d) => n.arms[d]?.width ?? 0))

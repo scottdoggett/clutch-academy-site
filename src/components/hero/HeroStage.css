@@ -7,3 +7,67 @@
   z-index: 2;
   pointer-events: none;
 }
+
+/* The traffic (engine/render.js). The engine places it over the layout's
+   box: the whole hero on the wide map, the street band on phones. */
+.hero__cars {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* ---------- The Drive pill (DriveButton.jsx) -------------------------------
+   Quiet on purpose: it mustn't compete with Book a Lesson. A hero-red fill,
+   so over a white road it still reads as a pill; a solid --chrome label,
+   since faded white on the red fails contrast (tokens.css); full white on
+   hover and focus. Sentence case, unlike the CTAs, for the same reason. */
+.drive {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 36px;
+  padding: 0 1rem 0 0.75rem;
+  border: 1px solid rgb(228 228 228 / 0.45);
+  border-radius: 999px;
+  background-color: var(--red-primary);
+  color: var(--chrome);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color var(--transition-reduced) ease,
+    border-color var(--transition-reduced) ease;
+}
+
+/* A 44px hit area around the 36px pill. */
+.drive::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+.drive:hover,
+.drive:focus-visible {
+  color: var(--white);
+  border-color: var(--white);
+}
+
+.drive:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+.drive[aria-busy='true'] {
+  cursor: progress;
+}
+
+.drive__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}

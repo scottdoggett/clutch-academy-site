@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
-import { CONDITIONS, applyMotion, playHero } from '@/lib/motion'
+import { CONDITIONS, applyMotion, playHero, settleHero } from '@/lib/motion'
 
 // The one motion runtime (docs/spec/08-motion.md §Implementation), mounted
 // once in layout.jsx. Finds every [data-anim] in <main> and applies its type,
@@ -29,13 +29,14 @@ export default function SiteMotion() {
 
         // The hero plays on load. If the page took longer than the CSS
         // failsafe (1.5s) to hydrate, the hero is already showing — leave it
-        // rather than hide it again and replay.
+        // rather than hide it again and replay, and say it's settled.
         const hero = main.querySelector('[data-hero-root]')
         const late =
           document.documentElement.dataset.motion === 'ok' &&
           !document.documentElement.hasAttribute('data-motion-ready') &&
           performance.now() > 1500
         if (hero && !late) playHero(hero, opts)
+        else if (hero) settleHero(hero)
 
         // next/font can change line heights after first measure.
         document.fonts?.ready.then(() => ScrollTrigger.refresh())

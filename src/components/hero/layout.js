@@ -61,6 +61,57 @@ export function resolveClearance(layout, { width, height, copy, clearance = CONF
   return { hidden, blocked, graph }
 }
 
+// ---------- Room for a car -----------------------------------------------
+// In a short window, like a laptop browser shrunk down or a phone on its
+// side (both over 768px wide, so both get this map), the blocks get so
+// short that a lane can't hold a car. The crossings at either end run into
+// each other, and the traffic jams: a car let into a lane shorter than
+// itself stops with its tail in the junction behind and holds it for good.
+//
+// So a second runtime rule runs after the headline check. While any lane is
+// too short, it hides one road, and only if the map still passes every
+// check in checkGraph() without it and has fewer short lanes: first a side
+// street meeting a short lane, since hiding it turns its junctions into
+// plain straight road, then the short segment itself. At every size the
+// tests record from 600px of window height up, nothing is hidden.
+
+// The shortest a lane may be: a car and the clearance it keeps from the
+// junction behind (CONFIG.traffic.boxClear), at the map's zoom.
+export function laneMinimum(layout) {
+  return (CONFIG.car.length + CONFIG.traffic.boxClear) * CONFIG.world.pxPerM * roadsFor(layout).zoom
+}
+
+const byId = (p, q) => (p.id < q.id ? -1 : p.id > q.id ? 1 : 0)
+
+// Both runtime rules. copy is the headline block in the layout's box, or
+// nothing where the map can't come near it (the phone band). tight lists
+// any lane still too short once nothing more can safely go.
+export function resolveMap(layout, { width, height, copy, clearance }) {
+  const first = copy ? resolveClearance(layout, { width, height, copy, clearance }) : null
+  let hidden = first?.hidden ?? []
+  let graph = first?.graph ?? buildGraph(layout, { width, height })
+  const min = laneMinimum(layout)
+  const shortOf = (g) => g.lanes.filter((l) => l.path.len < min)
+  let short = shortOf(graph)
+  while (short.length) {
+    const segs = [...new Set(short.map((l) => l.seg))].sort(byId)
+    const ends = new Set(segs.flatMap((sg) => [sg.a, sg.b]))
+    const sides = graph.segments.filter((sg) => !sg.hidden && sg.kind === 'side' && (ends.has(sg.a) || ends.has(sg.b)))
+    let next = null
+    for (const sg of [...sides.sort(byId), ...segs]) {
+      const trial = [...hidden, sg.id]
+      const g = buildGraph(layout, { width, height, hidden: trial })
+      if (checkGraph(g, layout).length || shortOf(g).length >= short.length) continue
+      next = { hidden: trial, graph: g }
+      break
+    }
+    if (!next) break
+    ;({ hidden, graph } = next)
+    short = shortOf(graph)
+  }
+  return { hidden, blocked: first?.blocked ?? [], tight: short.map((l) => l.id), graph }
+}
+
 // ---------- Drawing ------------------------------------------------------
 // The road layer (RoadLayer.jsx) is plain positioned elements, each placed at
 // a fraction of its box plus a pixel offset, e.g. left: calc(59.5% - 20px).

@@ -20,6 +20,11 @@ fonts change. When that happens:
 Keep the size list in step with the fixture. The required sizes are the
 1280, 1440 and 1920px rows at 680px of viewport height and up.
 
+`short.sizes` holds windows too short for the whole wide map, which the
+runtime rules thin out: 844×390, 932×430 and 1100×520. Measure them with
+the same script, with only those three in `sizes`, and paste the rows into
+`short.sizes` instead.
+
 ```js
 document.body.innerHTML = ''
 window.__rows = []

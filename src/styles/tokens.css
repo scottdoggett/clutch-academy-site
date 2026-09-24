@@ -13,6 +13,10 @@
      measured 4.18:1, failing small-text contrast on eyebrows/labels). */
   --chrome: #E4E4E4;
   --black: #0A0A0A;
+  /* The homepage hero's traffic (docs/spec/hero-drive.md §Car look). It's
+     close to the red in lightness, so it separates by hue, and reads on the
+     white roads. The hero engine reads it at start; this is the only copy. */
+  --car-traffic: #2457C5;
 
   /* Google-rating badge (home reviews section). Star gold is Google's own
      review-star colour; both star tones are decorative (aria-hidden).

@@ -1,5 +1,5 @@
 /* Fill most of the first viewport without pinning: a tall-but-natural block
-   that scrolls away normally.
+   that scrolls away normally. Phones are the exception, below.
 
    The hero is a stack of layers (docs/spec/hero-drive.md §Layers): the roads
    under the copy, the copy, then the cars and the driving controls over it.
@@ -98,25 +98,27 @@
 }
 
 /* Phones: the copy is as wide as the screen, so the roads get a band of
-   their own under it. The hero still fills the first screen, and the band
-   takes whatever height the copy leaves, never less than --hero-band-min.
-   It's full-bleed and flush with the hero's bottom, and its top margin is
-   the roads' 48px clearance from the headline block, so no road can come
-   closer to the copy at any size.
+   their own under it, always --hero-band tall. The hero is just the copy and
+   the band, not the whole first screen: on a tall phone a band that grew to
+   fill the screen read as too long (September 24 review). The band is
+   full-bleed and flush with the hero's bottom, and its top margin is the
+   roads' 48px clearance from the headline block, so no road can come closer
+   to the copy at any size.
 
    The copy is a size smaller than on tablets and the buttons share a row,
    which is what leaves the band room for a proper street grid. */
 @media (max-width: 767px) {
   .hero {
-    --hero-band-min: 240px;
+    --hero-band: 240px;
     flex-direction: column;
+    min-height: 0;
     padding-bottom: 0;
   }
 
   .hero__streets {
     display: block;
     position: relative;
-    flex: 1 0 var(--hero-band-min);
+    flex: 0 0 var(--hero-band);
     margin: 48px calc(-1 * var(--section-pad-x)) 0;
   }
 

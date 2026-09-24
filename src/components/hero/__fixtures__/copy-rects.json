@@ -6,15 +6,23 @@
     "minViewportHeight": 680,
     "note": "At these widths, from this viewport height up, no road may come within the clearance of the copy, so nothing is ever hidden. 680 is the viewport a 1280x800 laptop screen leaves once the browser's own toolbars are drawn."
   },
+  "short": {
+    "note": "Windows too short for the whole wide map: a phone on its side, which is over 768px wide, and a shrunk laptop browser. The runtime rules in layout.js hide roads here, so these are kept apart from sizes, where the full map has to fit. Measured the same way.",
+    "sizes": [
+      { "viewport": [844, 390], "hero": [844, 488], "copy": [34, 98, 422, 437] },
+      { "viewport": [932, 430], "hero": [932, 440], "copy": [37, 101, 466, 384] },
+      { "viewport": [1100, 520], "hero": [1100, 456], "copy": [44, 113, 550, 385] }
+    ]
+  },
   "sizes": [
     { "viewport": [320, 568], "hero": [320, 720], "copy": [20, 88, 300, 432], "band": [0, 480, 320, 720] },
     { "viewport": [360, 640], "hero": [360, 694], "copy": [20, 88, 340, 406], "band": [0, 454, 360, 694] },
     { "viewport": [360, 740], "hero": [360, 694], "copy": [20, 88, 340, 406], "band": [0, 454, 360, 694] },
     { "viewport": [375, 667], "hero": [375, 673], "copy": [20, 88, 355, 385], "band": [0, 433, 375, 673] },
-    { "viewport": [390, 844], "hero": [390, 780], "copy": [20, 88, 370, 389], "band": [0, 437, 390, 780] },
-    { "viewport": [412, 915], "hero": [412, 851], "copy": [20, 88, 392, 396], "band": [0, 444, 412, 851] },
-    { "viewport": [430, 932], "hero": [430, 868], "copy": [20, 88, 410, 401], "band": [0, 449, 430, 868] },
-    { "viewport": [600, 960], "hero": [600, 896], "copy": [24, 88, 576, 346], "band": [0, 394, 600, 896] },
+    { "viewport": [390, 844], "hero": [390, 677], "copy": [20, 88, 370, 389], "band": [0, 437, 390, 677] },
+    { "viewport": [412, 915], "hero": [412, 684], "copy": [20, 88, 392, 396], "band": [0, 444, 412, 684] },
+    { "viewport": [430, 932], "hero": [430, 689], "copy": [20, 88, 410, 401], "band": [0, 449, 430, 689] },
+    { "viewport": [600, 960], "hero": [600, 634], "copy": [24, 88, 576, 346], "band": [0, 394, 600, 634] },
     { "viewport": [768, 1024], "hero": [768, 960], "copy": [31, 325, 384, 684] },
     { "viewport": [820, 1180], "hero": [820, 1116], "copy": [33, 413, 410, 750] },
     { "viewport": [834, 1194], "hero": [834, 1130], "copy": [33, 419, 417, 758] },

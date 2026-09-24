@@ -4,6 +4,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import { CONFIG } from './config.js'
 import { buildGraph, checkGraph } from './graph.js'
 
 const load = (name) => JSON.parse(readFileSync(new URL(`./layouts/${name}.json`, import.meta.url), 'utf8'))
@@ -112,10 +113,10 @@ test('a T gives the stem left or right, and the through road straight or one tur
   assert.deepEqual(west.moves.map((m) => m.turn).sort(), ['left', 'straight'])
 })
 
-test("a T's box is as wide as the side street and as tall as the main road", () => {
+test("a T's box is as wide as its stem and as tall as the road it meets", () => {
   const c = buildGraph(TEE, size).nodes.find((n) => n.id === 'c')
-  assert.equal(c.box.x1 - c.box.x0, 24)
-  assert.equal(c.box.y1 - c.box.y0, 40)
+  assert.equal(c.box.x1 - c.box.x0, CONFIG.roads.side)
+  assert.equal(c.box.y1 - c.box.y0, CONFIG.roads.main)
 })
 
 test('every turn leaves its lane and joins the next one smoothly', () => {

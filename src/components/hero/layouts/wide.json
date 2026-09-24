@@ -1,7 +1,7 @@
 {
   "name": "wide",
   "media": "(min-width: 768px)",
-  "about": "The map for tablets and up, normalised to the hero (docs/spec/hero-drive.md §Road layout). The copy keeps to the left half, so downtown is everything east of x 0.595, framed by a main road across the top at y 0.13 and one across the bottom at y 0.93. Nothing enters `reserve` and no junction sits in it, so the headline check can always hide a segment cleanly. Six of the base grid's 22 interior main-road segments are gone (27%): V2 between H2 and H3 and between H4 and H5, V3 between H4 and H5, H2 and H3 between V2 and V3, and H4 between V1 and V2, which is a side street instead.",
+  "about": "The map for tablets and up, normalised to the hero (docs/spec/hero-drive.md §Road layout). The copy keeps to the left half, so downtown is everything east of x 0.595, framed by a main road across the top at y 0.13 and one across the bottom at y 0.93. Nothing enters `reserve` and no junction sits in it, so the headline check can always hide a segment cleanly. Six of the base grid's 22 interior main-road segments are gone (27%): V2 between H2 and H3 and between H4 and H5, V3 between H4 and H5, H2 and H3 between V2 and V3, and H4 between V1 and V2. One side street crosses the merged middle block. On September 24 review found the map too busy, and four roads came out: the side street that stood in for H4, the side street down the bottom block, V2 below the bottom road, and one of the two streets off the bottom road left of the copy. Then, in the same review, the middle of the three short roads off V3 to the right edge came out, at y 0.55, and every road became one width.",
   "baseGrid": {
     "xs": [0.595, 0.74, 0.895],
     "ys": [0.13, 0.3, 0.55, 0.715, 0.93]
@@ -14,16 +14,13 @@
     { "id": "kt", "x": 0.29, "y": -0.06 },
     { "id": "r1", "x": 1.04, "y": 0.13 },
     { "id": "r2", "x": 1.04, "y": 0.3 },
-    { "id": "r3", "x": 1.04, "y": 0.55 },
     { "id": "r4", "x": 1.04, "y": 0.715 },
     { "id": "r5", "x": 1.04, "y": 0.93 },
     { "id": "l1", "x": -0.04, "y": 0.13 },
     { "id": "l5", "x": -0.04, "y": 0.93 },
     { "id": "b1", "x": 0.595, "y": 1.06 },
-    { "id": "b2", "x": 0.74, "y": 1.06 },
     { "id": "b3", "x": 0.895, "y": 1.06 },
     { "id": "sb1", "x": 0.17, "y": 1.06 },
-    { "id": "sb2", "x": 0.38, "y": 1.06 },
 
     { "id": "k1", "x": 0.29, "y": 0.13 },
     { "id": "c11", "x": 0.595, "y": 0.13 },
@@ -39,18 +36,11 @@
 
     { "id": "c13", "x": 0.595, "y": 0.55 },
     { "id": "c23", "x": 0.74, "y": 0.55 },
-    { "id": "c33", "x": 0.895, "y": 0.55 },
-
-    { "id": "c14", "x": 0.595, "y": 0.715 },
     { "id": "c24", "x": 0.74, "y": 0.715 },
-    { "id": "e1", "x": 0.8175, "y": 0.715 },
     { "id": "c34", "x": 0.895, "y": 0.715 },
 
     { "id": "s1", "x": 0.17, "y": 0.93 },
-    { "id": "s2", "x": 0.38, "y": 0.93 },
     { "id": "c15", "x": 0.595, "y": 0.93 },
-    { "id": "c25", "x": 0.74, "y": 0.93 },
-    { "id": "e2", "x": 0.8175, "y": 0.93 },
     { "id": "c35", "x": 0.895, "y": 0.93 }
   ],
   "roads": [
@@ -58,23 +48,18 @@
     { "id": "h2w", "kind": "main", "nodes": ["c12", "c22"] },
     { "id": "h2e", "kind": "main", "nodes": ["c32", "r2"] },
     { "id": "h3w", "kind": "main", "nodes": ["c13", "c23"] },
-    { "id": "h3e", "kind": "main", "nodes": ["c33", "r3"] },
-    { "id": "h4", "kind": "main", "nodes": ["c24", "e1", "c34", "r4"] },
-    { "id": "h5", "kind": "main", "nodes": ["l5", "s1", "s2", "c15", "c25", "e2", "c35", "r5"] },
+    { "id": "h4", "kind": "main", "nodes": ["c24", "c34", "r4"] },
+    { "id": "h5", "kind": "main", "nodes": ["l5", "s1", "c15", "c35", "r5"] },
 
-    { "id": "v1", "kind": "main", "nodes": ["t1", "c11", "c12", "j1", "c13", "c14", "c15", "b1"] },
+    { "id": "v1", "kind": "main", "nodes": ["t1", "c11", "c12", "j1", "c13", "c15", "b1"] },
     { "id": "v2n", "kind": "main", "nodes": ["t2", "c21", "c22"] },
     { "id": "v2m", "kind": "main", "nodes": ["c23", "c24"] },
-    { "id": "v2s", "kind": "main", "nodes": ["c25", "b2"] },
-    { "id": "v3n", "kind": "main", "nodes": ["t3", "c31", "c32", "j3", "c33", "c34"] },
+    { "id": "v3n", "kind": "main", "nodes": ["t3", "c31", "c32", "j3", "c34"] },
     { "id": "v3s", "kind": "main", "nodes": ["c35", "b3"] },
 
     { "id": "k", "kind": "main", "nodes": ["kt", "k1"] },
     { "id": "st1", "kind": "main", "nodes": ["s1", "sb1"] },
-    { "id": "st2", "kind": "main", "nodes": ["s2", "sb2"] },
 
-    { "id": "ss1", "kind": "side", "nodes": ["j1", "j3"] },
-    { "id": "ss3", "kind": "side", "nodes": ["e1", "e2"] },
-    { "id": "ss4", "kind": "side", "nodes": ["c14", "c24"] }
+    { "id": "ss1", "kind": "side", "nodes": ["j1", "j3"] }
   ]
 }
