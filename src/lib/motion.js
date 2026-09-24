@@ -24,7 +24,10 @@ export const STAGGER_BASE = 0.1
 export const STAGGER_CAP = 0.5
 export const RISE = 24
 export const RISE_SMALL = 16 // below 768px
-export const START = 'top 85%'
+// As soon as an element's top is 5% into the viewport. Any later and a fast
+// scroll (or a short phone screen) outruns it: the reader is already looking
+// at the space where the content will be.
+export const START = 'top 95%'
 export const DRIFT = 40 // total px of travel, split either side of rest
 
 // The breakpoint conditions every run of the system is built under. SiteMotion
@@ -37,10 +40,43 @@ export const CONDITIONS = {
 
 const CLEAR = 'opacity,visibility,transform'
 
-// Scroll trigger for a one-shot reveal (rule 2: reveal once).
-const trigger = (el) => ({ scrollTrigger: { trigger: el, start: START, once: true } })
-
 const delayOf = (el) => Number(el.dataset.animDelay) || 0
+
+// When each section's first animation fired, in ticker seconds.
+const sectionStart = new WeakMap()
+
+// data-anim-delay is measured from the moment the element's *section* started
+// animating, not from when the element itself reached the line. So when a
+// whole section enters together (a tall desktop viewport, a jump to an
+// anchor) its pieces still come in in order, but an element scrolled to
+// later (every element on a phone, where they arrive one at a time) starts
+// the moment it's seen instead of waiting out a delay it no longer needs.
+function waitFor(el) {
+  const section = el.closest('section') || el
+  const now = gsap.ticker.time
+  if (!sectionStart.has(section)) sectionStart.set(section, now)
+  return Math.max(0, sectionStart.get(section) + delayOf(el) - now)
+}
+
+// Plays `play(wait)` once, the first time el reaches START (rule 2: reveal
+// once). Returns the trigger.
+const whenSeen = (el, play) =>
+  ScrollTrigger.create({
+    trigger: el,
+    start: START,
+    once: true,
+    onEnter: () => play(waitFor(el)),
+  })
+
+// A from() tween waiting for its trigger. immediateRender is explicit because
+// a paused from() otherwise leaves the element in its finished state until it
+// plays, so content would show, vanish when seen, then animate back in.
+const HELD = { paused: true, immediateRender: true }
+
+// Start a HELD tween when its element is seen. restart(true) honours the
+// delay just set.
+const revealOnSee = (el, tween) =>
+  whenSeen(el, (wait) => tween.delay(wait).restart(true))
 
 // Per-item stagger, shrunk so a long group never takes longer than the cap.
 const staggerFor = (count, each) =>
@@ -49,15 +85,15 @@ const staggerFor = (count, each) =>
 // ---------- Types (08 §Animation types) ---------------------------------
 
 function rise(el, { small }) {
-  gsap.from(el, {
+  const tween = gsap.from(el, {
     autoAlpha: 0,
     y: small ? RISE_SMALL : RISE,
     duration: DUR_BASE,
     ease: EASE_IN,
-    delay: delayOf(el),
     clearProps: CLEAR,
-    ...trigger(el),
+    ...HELD,
   })
+  revealOnSee(el, tween)
 }
 
 function stagger(el, { small }) {
@@ -74,7 +110,6 @@ function stagger(el, { small }) {
     duration: DUR_BASE,
     ease: EASE_IN,
     stagger: each,
-    delay: delayOf(el),
     clearProps: CLEAR,
     overwrite: true,
   }
@@ -85,11 +120,12 @@ function stagger(el, { small }) {
   ScrollTrigger.batch(items, {
     start: START,
     once: true,
-    onEnter: (batch) => gsap.to(batch, shown),
+    onEnter: (batch) => gsap.to(batch, { ...shown, delay: waitFor(el) }),
   })
 }
 
 function headline(el) {
+  let seen
   SplitText.create(el, {
     type: 'lines',
     mask: 'lines',
@@ -99,16 +135,19 @@ function headline(el) {
       // so descenders (the g in "Saying") would be cut off mid-animation.
       // The padding makes room; the negative margin gives the space back.
       gsap.set(self.masks, { paddingBottom: '0.14em', marginBottom: '-0.14em' })
-      return gsap.from(self.lines, {
+      const tween = gsap.from(self.lines, {
         yPercent: 110,
         duration: DUR_SLOW,
         ease: EASE_IN,
         stagger: STAGGER_TIGHT,
-        delay: delayOf(el),
-        ...trigger(el),
+        ...HELD,
         // Hand back the original markup once the heading has landed.
         onComplete: () => self.revert(),
       })
+      // autoSplit re-runs this on resize; one trigger per split, not a pile.
+      seen?.kill()
+      seen = revealOnSee(el, tween)
+      return tween
     },
   })
 }
@@ -119,14 +158,14 @@ function draw(el) {
   // clearProps: 'transform' leaves that behind, so this clears everything.
   // Safe because a drawn line is a bare decorative element with no inline
   // styles of its own.
-  gsap.from(el, {
+  const tween = gsap.from(el, {
     scaleX: 0,
     duration: DUR_SLOW,
     ease: EASE_SHIFT,
-    delay: delayOf(el),
     clearProps: 'all',
-    ...trigger(el),
+    ...HELD,
   })
+  revealOnSee(el, tween)
 }
 
 function settle(el) {
@@ -134,15 +173,15 @@ function settle(el) {
   // data-anim-lcp: the page's Largest Contentful Paint never starts
   // invisible (08 §The hero), so it gets the scale without the fade.
   const lcp = el.dataset.animLcp !== undefined
-  gsap.from(img, {
+  const tween = gsap.from(img, {
     scale: 1.06,
     ...(lcp ? {} : { autoAlpha: 0 }),
     duration: DUR_SLOW,
     ease: EASE_IN,
-    delay: delayOf(el),
     clearProps: CLEAR,
-    ...trigger(el),
+    ...HELD,
   })
+  revealOnSee(el, tween)
 }
 
 function drift(el, { desktop }) {

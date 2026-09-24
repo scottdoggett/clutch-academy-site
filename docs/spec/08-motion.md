@@ -81,7 +81,7 @@ These are constants in `src/lib/motion.js`, so no component invents its own.
 | `STAGGER_BASE` | `0.1` | Cards, steps, stats. |
 | `STAGGER_CAP` | `0.5` | Maximum total stagger for any group. With more items, the per-item stagger shrinks. |
 | `RISE` | `24` (px) | Default travel. `16` below 768px. |
-| `START` | `top 85%` | Default ScrollTrigger start. |
+| `START` | `top 95%` | ScrollTrigger start: as soon as an element's top is 5% into view. `top 85%` was tried first and was too late: on a phone, readers scrolled into blank space before anything appeared. |
 
 Banned eases: `back`, `elastic`, `bounce`, and anything with overshoot. Linear
 is only for the marquee.
@@ -196,6 +196,14 @@ Order within a section comes from `data-anim-delay` (seconds): the eyebrow and
 heading start together, the lead follows at 0.3, and whatever comes after the
 header starts at 0.35–0.4. Look at an existing section before picking new
 numbers.
+
+A delay counts from when the element's **section** started animating, not
+from when the element itself was seen. When a section enters all at once (a
+tall desktop screen, a jump to `#packages`), its pieces come in in order. When
+an element is scrolled to later, which is how every element arrives on a
+phone, its delay has already elapsed and it starts the moment it's seen. The
+first version counted from the element, and on phones every delay became dead
+time on top of a late trigger.
 
 ## Implementation
 
