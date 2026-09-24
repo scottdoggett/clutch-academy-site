@@ -55,11 +55,18 @@ planning docs. **Don't work from anything in there.**
   September motion work, so re-running Lighthouse across all 9 routes is a
   cutover requirement now, not a formality.
 - **The homepage hero is being rebuilt** as a top-down city with traffic and a
-  drivable manual car. Spec: `docs/spec/hero-drive.md`, which works in seven
-  phases and stops for review after each. Phases 1–2 (spec, road maps) are
-  done, committed (`8bd1a72`, `f922e2e`) and pushed to `origin/overhaul`. The
-  code is in `src/components/hero/`, tested with `npm test` (31 tests). **Next:
-  Phase 3, ambient traffic.** The plan is in the spec's §Handoff.
+  drivable car, with a manual or an automatic gearbox. Spec:
+  `docs/spec/hero-drive.md`, which works in seven phases and stops for review
+  after each. Phases 1–2 (spec, road maps) are done, committed (`8bd1a72`,
+  `f922e2e`) and pushed to `origin/overhaul`. Phase 3 (ambient traffic) is
+  built and its roads approved; Phase 4 (a drivable black car, planck.js) is
+  built and retuned. **Phase 5 (a manual and an automatic gearbox with a
+  switch, and the gear display) is built and waiting for Scott's review.**
+  Phases 3 to 5 are committed but not pushed. The code is in
+  `src/components/hero/`, the traffic in its lazy `engine/` chunk and the
+  driving in its lazy `drive/` chunk, tested with `npm test` (69 tests). The
+  spec's §Handoff says where it is, what changed from the spec, and what's
+  next (Phase 6, knocks, recovery, tyre marks and smoke).
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 
@@ -73,6 +80,12 @@ planning docs. **Don't work from anything in there.**
   the packages, and wrap every animation in `gsap.matchMedia(MOTION_OK)`.
   **Read `docs/spec/08-motion.md` before animating anything** — it sets the
   rules, the six allowed animation types, and the timing values.
+- **The homepage hero's city** (`src/components/hero/`) draws its traffic with
+  three.js (WebGL2) and drives the black car with planck.js. Both load lazily
+  in their own chunks, the traffic once the page is idle and the driving on
+  the Drive pill's hover or focus, so neither is in the first load. The
+  simulation modules are pure (no three.js, no DOM) and tested with
+  `npm test`. `hero-drive.md` is the spec.
 - **Shared shell** in `src/app/layout.jsx`: fonts via `next/font` (Plus Jakarta
   Sans + Inter), metadata defaults, inline Consent Mode v2 bootstrap
   (deny-first) + gtag.js, skip link, Nav, Footer, ConsentBanner, AnalyticsLoader.
@@ -163,4 +176,7 @@ and retry.
   `requestAnimationFrame` and ResizeObserver never fire there. The homepage
   hero's entrance stalls halfway, with the subhead and buttons invisible. It's
   a tab quirk, not a site bug. `hero-drive.md` §Handoff has the iframe harness that
-  works around it.
+  works around it, and the development-only `window.__heroEngine.step()` that
+  moves the traffic by hand there. Keys sent by the extension also stop
+  arriving after the tab has sat a while; the same section says how to drive
+  by script instead.

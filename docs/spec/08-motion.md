@@ -47,13 +47,17 @@ site takes its cue from that.
    no custom scroll. The page scrolls the way the device's own scrolling
    does. iOS Safari is a first-class target and this is where it breaks
    first.
-7. **No new loops.** The reviews marquee and the shift gate's idle cycle are
-   the site's only ambient motion. Anything else that repeats on its own
-   needs sign-off first.
+7. **No new loops.** The reviews marquee, the shift gate's idle cycle and
+   the homepage hero's traffic are the site's only ambient motion. The
+   traffic (`hero-drive.md`) was signed off with the hero brief on September
+   24, 2026. Anything else that repeats on its own needs sign-off first.
 8. **Reduced motion means none.** Everything goes inside
    `gsap.matchMedia().add(MOTION_OK, …)`. With `prefers-reduced-motion:
    reduce`, the handler never runs and the page is simply there. No
-   fade-instead-of-slide fallbacks.
+   fade-instead-of-slide fallbacks. Motion that starts itself never runs, so
+   the hero's traffic is drawn parked. Motion a visitor starts on purpose
+   still works: the hero's Drive button (`hero-drive.md`, from Phase 4), like
+   the About page's shift gate following a pointer.
 9. **Never animate a number's value.** Prices, step numbers and stats don't
    count up. A price flickering through other prices reads as uncertain, and
    the brand promises transparent pricing (01 §Positioning).
@@ -182,9 +186,33 @@ disappears, then animates in).
   1.2s. `playHero()` still handles a photo and caption if a hero ever has
   them again.
 - **The city behind the copy** (`hero-drive.md`) doesn't take part. The roads
-  are server-rendered and simply there at first paint. From Phase 3
-  the traffic fades in once, after this timeline has finished, so only one
-  thing moves at a time (rule 3).
+  are server-rendered and simply there at first paint. The traffic fades in
+  once, over `DUR_BASE`, after this timeline has finished, so only one thing
+  moves at a time (rule 3). The timeline's `onComplete` calls `settleHero()`
+  in `motion.js`, which marks the hero root `data-hero-settled` and
+  dispatches `hero:settled`. SiteMotion calls it too when it skips a late
+  hero. `HeroStage.jsx` waits for either, with the same 1.5s failsafe the CSS
+  uses. Under reduced motion the cars are there from the start, parked. The
+  Drive pill fades in with them, in the same moment.
+- **Driving the black car** (`hero-drive.md` §HUD, built in Phases 4 and 5)
+  is motion a visitor starts, so it still works under reduced motion (rule
+  8). Its GSAP moments are all under `MOTION_OK`:
+  - When driving starts, the gear display rises 8px and fades in over
+    `DUR_QUICK` on `EASE_IN`. It fades on opacity, not `autoAlpha`, because
+    it already has focus. Under reduced motion it's simply there.
+  - The controls hint fades out over `DUR_BASE` after 4s. Under reduced
+    motion it goes at 4s without the fade.
+  - The knob travels the gear display's H-pattern on `EASE_SHIFT` by the
+    shift gate's rule: back to neutral, across, into the slot. Under reduced
+    motion it's in the new gear at once.
+  - A grind shakes the gear display sideways for 0.3s (keyframes, each on
+    `power2.out`), and the numeral turns black for 0.4s. It's the site's one
+    shake, and it's allowed because a grind is a mistake. §The idea keeps
+    jolts out everywhere else for the same reason. Under reduced motion the
+    black numeral does the job alone.
+  - The rev bar and the takeover ring aren't GSAP. The engine draws them
+    every frame. Under reduced motion the ring doesn't grow; it shows at
+    full size for its second.
 
 ## Homepage map
 

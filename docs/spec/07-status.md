@@ -16,7 +16,10 @@ package cards) and August 20 (the hub's chooser) — have been applied, and in
 September the homepage got a redesign pass: beige light sections, rewritten
 copy, and GSAP motion. One piece is still being built: **the homepage hero is
 being rebuilt as a small city with traffic and a car you can drive**
-(`hero-drive.md`), in seven phases, of which two are done. Everything else that
+(`hero-drive.md`), in seven phases. Two are done; the third (the traffic)
+is built with its roads approved; the fourth (a car you can drive) is built
+and retuned; and the fifth (the gearbox and gear display) is built and
+waiting for review. Everything else that
 remains before cutover is verification and client sign-off. The other caveat: **the July QA pass no longer reflects
 the build**, so re-running it is now a cutover requirement rather than a
 formality.
@@ -33,9 +36,9 @@ accepted on September 24.
 - **Phase 2, the roads:** ✅ done, and revised after review the same day.
   From 768px the copy keeps to the left half of the hero and a fixed downtown
   map fills the right. The headline comes down to fit, 72px at 1920px instead
-  of 96px. On phones the hero fills the first screen: the copy, a size smaller
-  with the two buttons on one row, then a street band that takes the rest,
-  343px tall at 390×844 and never under 240px. The roads are server-rendered
+  of 96px. On phones the hero is the copy, a size smaller with the two
+  buttons on one row, then a street band 240px tall (fixed at that in the
+  Phase 3 review; it used to grow to fill the first screen). The roads are server-rendered
   positioned elements, so they're there with no JavaScript; centre ticks end
   in whole ticks at every junction, and every road into a cross or a T has a
   thin black zebra crossing. The phone map is drawn zoomed out, every road
@@ -43,15 +46,68 @@ accepted on September 24.
   comes within 48px of the copy; at all 32 measured sizes nothing needs
   hiding. 31 tests (`npm test`). Committed as `8bd1a72` and `f922e2e`, and
   pushed to `origin/overhaul`, so it's on the review deployment.
-- **Phase 3, ambient traffic: next.** Blue cars driving both maps, stopping
-  behind the crossings and taking each junction in turn. It also pulls two
-  items forward from Phase 7, the parked frame under reduced motion and lazy
-  loading, so traffic never lands in a state that breaks the reduced-motion
-  rule. The step-by-step plan, how Scott reviews each phase, and the traps from
-  Phase 2 are in `hero-drive.md` §Handoff.
-- **Phases 4–7:** the drivable car, the gearbox and HUD, collisions with tyre
-  marks and smoke, then phones and touch, save-data, WebGL-failure handling,
-  performance and the bundle report.
+- **Phase 3, ambient traffic:** built September 24. Blue cars drive both maps: they keep their lanes and
+  their distance, stop just behind each zebra crossing, take every cross and
+  T one at a time, and leave by the edges to come back in elsewhere. The
+  black car drives with them until Phase 4 makes it drivable. It's three.js,
+  loaded as its own 136KB chunk once the page is idle, and the homepage's
+  first-load JS grew 1.2KB. Under reduced motion the cars are drawn parked
+  and never move; `08-motion.md` rules 7 and 8 now say so. A headless test
+  drives five simulated minutes on three sizes and checks that no two cars
+  ever touch and nothing jams. 42 tests, lint and build clean. Two questions
+  are open for Scott, in `hero-drive.md` §Handoff: whether the black car
+  belongs on phones, where it can't be driven, and the few short blocks
+  where a stopped car sits on the crossing.
+- **First Phase 3 revision, the same day:** both maps read as slightly too
+  busy, so four roads came out of the desktop map and two out of the phone
+  map. All were side streets or short stubs, so the desktop grid still has
+  the brief's 20 to 30% of its roads removed. Scott reviews the roads next,
+  and the car logic after that.
+- **Second revision, the same day:** every road is now one width, 40px on
+  desktop and 24px on phones, where side streets used to be 60% of that.
+  One more short road came off the desktop map's right edge. The wider side
+  street leaves the blocks beside it too short in windows under about 730px
+  tall, and at 1280×600 the traffic can jam there; `hero-drive.md` §Handoff
+  has the options.
+- **Third revision:** the phone street band is always 240px, its smallest
+  height, so the hero on a tall phone no longer stretches to fill the
+  screen.
+- **Roads approved.** The side street stays. The traffic now copes with its
+  short blocks, and a new runtime rule hides it in windows too short for it,
+  including phones on their side.
+- **Phase 4, the drivable car:** built September 24. On a desktop-class screen a small Drive pill sits in
+  the hero's bottom-right corner. Press it and the black car is yours with
+  WASD or the arrows until Esc or the ×; it drives anywhere in the hero,
+  over the headline too, bounces off the edges and off traffic, and traffic
+  stops for it. When you stop, it drives itself back into traffic. Physics is
+  planck.js, loaded only when the pill is hovered or pressed, as a 49KB
+  chunk. Until Phase 5, a stand-in automatic drove it.
+  Pressing Drive sends one GA4 event, `hero_drive` (`05-analytics.md`).
+  Keyboard and focus rules follow the spec, checked in Chrome. 54 tests, lint
+  and build clean. A few recovery values were changed from the spec after
+  testing; `hero-drive.md` §Handoff lists them for review.
+- **First Phase 4 revision, the same day:** after Scott's test drive it felt
+  slow and clunky. It's retuned: 0 to 100 km/h in 1.8s, top speed about 205
+  km/h, a quarter turn in about 0.9s, and a drift above 45 km/h that holds
+  without spinning.
+- **Phase 5, the gearbox and gear display:** built September 24, waiting
+  for Scott's review. A real six-speed box with a clutch,
+  in two modes: manual (↑ and ↓ shift, Shift is the clutch; it grinds,
+  stalls and over-revs like a real one) and automatic (it shifts itself and
+  feels like the Phase 4 car Scott liked). A button on the display, or M,
+  switches between them, and the choice is remembered. The "Driving" panel
+  became a gear display in the About page's shift-gate style: an H-pattern
+  with a knob that travels through neutral, the gear as a big numeral, a rev
+  bar with the redline, a clutch lamp, and the switch. Automatic is the
+  default until a visitor picks; that's a question for Scott. 69 tests,
+  lint and build clean.
+- **Phases 3 to 5 are committed** on `overhaul`, September 24, but not
+  pushed, so the review deployment still shows Phase 2.
+- **Phases 6 and 7, still to build:** collisions, with knocked cars, tyre
+  marks and smoke, then save-data, WebGL-failure handling, performance and
+  the bundle report. Phase 7's phones and touch part was done early, in
+  Phase 4: Drive isn't offered there. Phase 6 waits on Scott's review of
+  Phase 5.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.

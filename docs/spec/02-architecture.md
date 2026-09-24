@@ -13,12 +13,17 @@ How the `overhaul` build is put together. For the deployed shape of things
 - **GSAP** (`gsap` + `@gsap/react`) for scripted motion, added September 2026.
   How it's used is `08-motion.md`.
 - **three.js**, added September 24, 2026 for the homepage hero's traffic
-  (`hero-drive.md`). It isn't imported yet; Phase 3 of the hero rebuild loads
-  it lazily, as its own chunk. planck.js joins it in Phase 4.
+  (`hero-drive.md`). Only `src/components/hero/engine/` imports it, and
+  `HeroStage` loads that lazily once the page is idle, so it's a chunk of its
+  own, about 138KB gzipped, off the critical path.
+- **planck.js** 1.5.0, added September 24, 2026 for driving the hero's black
+  car. Only `src/components/hero/drive/` imports it, loaded when the Drive
+  button is hovered, focused or pressed, as its own 49KB chunk. Phones and
+  touch screens never load it.
 - **Tests run on Node's built-in `node:test`** (`npm test`), not a framework.
   They cover the hero's pure modules. No routing library, no state library.
-  The dependency list is deliberately short, six packages: Next, React, React
-  DOM, the two GSAP packages and three. Tailwind, `motion` and the Magic UI
+  The dependency list is deliberately short, seven packages: Next, React,
+  React DOM, the two GSAP packages, three and planck. Tailwind, `motion` and the Magic UI
   scroll-velocity row were added for the reviews strip and removed again in
   September 2026, when the strip was rebuilt on GSAP.
 
@@ -27,7 +32,7 @@ npm run dev      # dev server
 npm run build    # static production build
 npm run start    # serve the production build locally
 npm run lint     # eslint over the project
-npm test         # node:test suites (the hero's road maps and graph)
+npm test         # node:test suites (the hero's road maps, graph, traffic and driving)
 ```
 
 `next build` prerenders all 11 entries (9 routes + 404 + global error). There is
@@ -91,7 +96,12 @@ src/
 │   ├── hero/                   # The homepage hero's city (hero-drive.md):
 │   │                           # road maps in layouts/, graph.js, layout.js,
 │   │                           # the server-rendered RoadLayer, HeroStage
-│   │                           # (client), and their node:test suites
+│   │                           # (client), engine/ (the lazy traffic chunk:
+│   │                           # traffic.js, render.js, the loop), drive/
+│   │                           # (the lazy planck chunk: the drivable car,
+│   │                           # its gearbox, keys, the return to traffic),
+│   │                           # the Drive button and the gear display, and
+│   │                           # their node:test suites
 │   ├── motion/
 │   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
 │   └── lessons/

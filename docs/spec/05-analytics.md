@@ -97,6 +97,16 @@ is routing, not closing.
 `ContactCard` fires per-channel intent events to Meta and TikTok when someone
 uses a contact method (phone, email, Instagram, Facebook).
 
+### `hero_drive` (GA4)
+
+Fired once each time a visitor presses the homepage hero's Drive button
+(`src/components/hero/HeroStage.jsx`, `docs/spec/hero-drive.md`), through
+the same consent-gated `window.gtag` as every other event. No parameters,
+and nothing else from play mode is tracked: not how long they drove, not
+how they stopped. Only desktop-class screens see the button (768px up, with
+a fine pointer that can hover). Added September 24, 2026, as decided in the
+hero-drive review (its §Decisions 8).
+
 ## Conversion tracking — `public/booked.html`
 
 Calendly redirects here after a completed booking. It is a **self-contained
