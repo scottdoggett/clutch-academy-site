@@ -39,13 +39,21 @@ accepted on September 24.
   positioned elements, so they're there with no JavaScript; centre ticks end
   in whole ticks at every junction, and every road into a cross or a T has a
   thin black zebra crossing. The phone map is drawn zoomed out, every road
-  size at 0.6, so the blocks have room. A client check hides any road that comes within 48px of the
-  copy; at all 32 measured sizes nothing needs hiding. 31 tests (`npm test`).
-- **Phases 3–7:** traffic, the drivable car, the gearbox and HUD, collisions
-  with tyre marks and smoke, then phones, reduced motion, lazy loading and
-  performance.
+  size at 0.6, so the blocks have room. A client check hides any road that
+  comes within 48px of the copy; at all 32 measured sizes nothing needs
+  hiding. 31 tests (`npm test`). Committed as `8bd1a72` and `f922e2e`, and
+  pushed to `origin/overhaul`, so it's on the review deployment.
+- **Phase 3, ambient traffic: next.** Blue cars driving both maps, stopping
+  behind the crossings and taking each junction in turn. It also pulls two
+  items forward from Phase 7, the parked frame under reduced motion and lazy
+  loading, so traffic never lands in a state that breaks the reduced-motion
+  rule. The step-by-step plan, how Scott reviews each phase, and the traps from
+  Phase 2 are in `hero-drive.md` §Handoff.
+- **Phases 4–7:** the drivable car, the gearbox and HUD, collisions with tyre
+  marks and smoke, then phones and touch, save-data, WebGL-failure handling,
+  performance and the bundle report.
 - The first prototype of this feature, a different design that was never
-  mounted, is kept on the local branch `prototype/hero-drive-v0`.
+  mounted, is kept on the local branch `prototype/hero-drive-v0`, not pushed.
 
 ## Recently completed — September 2026 (homepage)
 

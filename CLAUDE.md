@@ -29,6 +29,9 @@ reviewed. **Work on `overhaul`. Never commit directly to `main`.**
    question. Read it before doing anything.
 2. `docs/spec/README.md` — the index and the routing table for the rest.
 3. `docs/spec/06-deployment.md` — the two-project setup, config, cutover runbook.
+4. **Working on the homepage hero?** `docs/spec/hero-drive.md` §Handoff says
+   exactly where the rebuild is, what to build next, how Scott reviews it, and
+   what bit last time. Read it before touching `src/components/hero/`.
 
 `docs/spec/archive/` holds the retired single-page spec and the rebuild's
 planning docs. **Don't work from anything in there.**
@@ -54,7 +57,9 @@ planning docs. **Don't work from anything in there.**
 - **The homepage hero is being rebuilt** as a top-down city with traffic and a
   drivable manual car. Spec: `docs/spec/hero-drive.md`, which works in seven
   phases and stops for review after each. Phases 1–2 (spec, road maps) are
-  done; the code is in `src/components/hero/`, tested with `npm test`.
+  done, committed (`8bd1a72`, `f922e2e`) and pushed to `origin/overhaul`. The
+  code is in `src/components/hero/`, tested with `npm test` (31 tests). **Next:
+  Phase 3, ambient traffic.** The plan is in the spec's §Handoff.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 
@@ -146,3 +151,16 @@ edits to `eslint.config.js` (legitimate changes go through its documented escape
 hatch), and a **GateGuard hook** requires stating "facts" before the first Bash
 call of a session and before destructive commands. Present the facts it asks for
 and retry.
+
+- **Commit only when asked; Scott pushes himself** unless he asks for a push
+  in that session. Pushing over SSH fails from this Mac (its key isn't on
+  GitHub); the GitHub CLI is logged in, and the one-off HTTPS push command is
+  in `hero-drive.md` §Handoff.
+- **The dev server is usually already running** on :3000 from Scott's own
+  session. Reuse it rather than starting another. `npm run build` is safe
+  alongside it, because dev builds into `.next/dev`.
+- **Browser checks through the Chrome extension run in a hidden tab**, so
+  `requestAnimationFrame` and ResizeObserver never fire there. The homepage
+  hero's entrance stalls halfway, with the subhead and buttons invisible. It's
+  a tab quirk, not a site bug. `hero-drive.md` §Handoff has the iframe harness that
+  works around it.

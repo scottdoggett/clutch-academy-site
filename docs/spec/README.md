@@ -2,7 +2,7 @@
 
 Specification for the Clutch Academy website, written for the developer and for
 AI coding agents working in this repo. Everything here describes the site **as
-it actually is** on the `overhaul` branch as of **August 18, 2026**.
+it actually is** on the `overhaul` branch as of **September 24, 2026**.
 
 Superseded material lives in `archive/` and should not be worked from.
 
@@ -43,7 +43,7 @@ Unless you are specifically fixing the live site, **work on `overhaul`.**
 | `06-deployment.md` | The two Vercel projects, branch model, config, launch runbook |
 | `07-status.md` | What's done, what isn't, and every open question needing a human |
 | `08-motion.md` | Animation rules, the six motion types, timing values, and the homepage motion map |
-| `hero-drive.md` | The homepage hero rebuild: road maps, traffic, the drivable car and its gearbox, in seven phases |
+| `hero-drive.md` | The homepage hero rebuild: road maps, traffic, the drivable car and its gearbox, in seven phases. Its §Handoff says where the rebuild is and what's next. |
 | `../google-ads-mapping.md` | Account-side Google Ads work still to apply |
 | `../seo.md` | Long-form SEO reference and maintenance guide |
 | `archive/` | The retired single-page spec and the rebuild's own planning docs |

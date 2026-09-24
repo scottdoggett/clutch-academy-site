@@ -8,14 +8,196 @@ new.
 
 ✅ **Reviewed and approved**, September 24, 2026. Every recommendation in the
 first draft was accepted, and the open questions were answered the same day
-(§Decisions). **Phase 2 is built**: the road layouts, the road graph, the
-server-rendered road layer, the headline check, and their tests. Phases 3–7
-are still to come.
+(§Decisions). **Phases 1 and 2 are done, committed and pushed**: the road
+layouts, the road graph, the server-rendered road layer, the headline check,
+and their tests. **Next is Phase 3, ambient traffic.** If you're picking this
+up, read §Handoff first.
 
 Legend as in `README.md`: ✅ decided, 🟡 recommended, ❓ open, 📎 pending asset.
 Anything the brief states outright is ✅. What was 🟡 in the draft is now ✅
 unless it's marked otherwise. Where the brief conflicts with the code, the
 measurements, or another doc, it's flagged rather than silently resolved.
+
+## Handoff
+
+Written September 24, 2026, at the end of Phase 2, for whoever builds Phase 3.
+
+### Where it is
+
+- **Phase 1** (this spec) and **Phase 2** (the roads) are done. Commits
+  `8bd1a72` (code) and `f922e2e` (docs) are on `overhaul` and were pushed to
+  `origin/overhaul` the same day, which deploys to the review Vercel project,
+  not the live site. The working tree was clean after them.
+- What exists: `src/components/hero/`, which holds `config.js`, `graph.js`,
+  `layout.js`, `layouts/wide.json` and `compact.json`, `RoadLayer.jsx`,
+  `HeroStage.jsx` (the headline check only), the tests and the fixture. The
+  hero markup and CSS are in `src/components/home/Hero.jsx` and `Hero.css`.
+  `npm test` runs 31 tests, all passing. Lint and build are clean.
+- `three@0.186` is installed but not imported anywhere yet. planck.js isn't
+  installed; it comes in Phase 4.
+- The first prototype of this feature, a different design, is on the local
+  branch `prototype/hero-drive-v0`. It isn't pushed. Worth a look for its
+  keyboard guards, observer wiring and instanced tyre-mark shader, nothing
+  else.
+- Nothing is open (§Decisions). No assets are pending.
+
+### What's next: Phase 3, ambient traffic
+
+Blue cars driving the road graph on both maps: following lanes, stopping
+behind the zebra crossings, taking turns through each cross and T one at a
+time, turning on smooth arcs, leaving by portals and respawning, and never
+overlapping. The black car drives as ordinary traffic; Phase 4 makes it
+drivable. Read §Ambient traffic, §Car look, §Layers, §Loading and performance
+and §Phones, touch and reduced motion before starting.
+
+🟡 Suggested order:
+
+1. **Config and token.** Add the `traffic` section to `config.js` (values in
+   §Config, starting values) and `--car-traffic` to `tokens.css`.
+2. **`engine/traffic.js`, pure.** It takes a graph from `buildGraph()` and
+   exposes `step(dt)` and the car poses. Lanes, moves, turn paths, junction
+   boxes and `node.stop` are all on the graph already. Two things the graph
+   doesn't do for you:
+   - **Where to stop.** `lane.p1` is at the junction box's edge, but a zebra
+     crossing sits in front of it. Stop at `lane.p1` minus
+     `roadsFor(layout).crosswalk.gap + depth`, minus about 1px, and only where
+     `lane.to.stop` is true.
+   - **Scale.** Physical values are SI. Convert at
+     `CONFIG.world.pxPerM * roadsFor(layout).zoom` px per metre, so phone cars
+     are 0.6 size and cover 0.6 as many px per second.
+
+   Use a seeded PRNG (mulberry32 is enough) with `CONFIG.world.seed`.
+3. **`traffic.test.js`, headless.** Five simulated minutes at three sizes, for
+   example wide 1440×716, wide 768×960 and compact 390×343, with the fixed
+   seed. Assert that no two cars ever overlap (oriented-box test), the count
+   stays constant apart from a pending respawn, and every car moves at least
+   once every 15s.
+4. **`engine/render.js`.** A three.js orthographic camera at 1 unit = 1 CSS px,
+   drawing at −y. One instanced quad for all cars, shaded as a rounded body
+   with glass and headlights in the fragment shader, and a colour per
+   instance. Transparent canvas, DPR capped at 2, `antialias: false`,
+   `powerPreference: 'low-power'`.
+5. **`engine/index.js`.** The loop, at a fixed 1/120s step. Pause when the
+   hero is off screen (IntersectionObserver) or the tab is hidden. Rescale on
+   a debounced ResizeObserver, with each car keeping its lane and fraction.
+   Dispose everything, then `forceContextLoss()`.
+6. **Mount from `HeroStage`.** Dynamic `import('./engine')` after the `load`
+   event and an idle moment, only if WebGL works. On the wide map the canvas
+   covers the hero; on phones it covers `.hero__streets` only. The cars fade
+   in once, after the hero timeline has finished. Nothing signals that yet.
+   `SiteMotion.jsx` sets `data-motion-ready` on `<html>` in the frame the
+   timeline starts, and the timeline takes 1.2s. 🟡 Have `playHero()` in
+   `src/lib/motion.js` dispatch an event from its timeline's `onComplete`, and
+   treat the hero as already settled if that attribute was set more than 1.2s
+   ago, under reduced motion, or when `SiteMotion` skipped a late hero. Watch
+   both the layout query and `prefers-reduced-motion`, and switch maps if the
+   layout query flips. Take the headline check's hidden segments into the
+   traffic graph as well: `resolveClearance()` returns the graph with them
+   removed.
+7. **Docs.** `08-motion.md` rules 7 and 8 get the hero traffic and the Drive
+   opt-in. Then this spec's Phase 3 row, `07-status.md`, and CLAUDE.md's
+   current state.
+
+🟡 **Pull two Phase 7 items forward.** Traffic that moves under
+`prefers-reduced-motion` would break a non-negotiable rule the moment it
+lands. So Phase 3 has to draw one parked frame and no loop under reduced
+motion (§Phones, touch and reduced motion), and it has to load lazily from
+the start. Phase 7 keeps save-data, WebGL-failure polish, the performance
+pass and the bundle report.
+
+**Done when:** the headless test passes. In Chrome at 390, 768, 1440 and
+1920px, cars follow lanes, stop behind the crossings, take turns at
+junctions one at a time, respawn at the edges and never overlap; under
+reduced motion they're parked. `npm test`, lint and build are clean. Then
+stop and report (below).
+
+### How Scott works
+
+- **One phase at a time.** Stop after each phase, summarise what changed, and
+  wait. He reviews in the running dev server and usually sends a round of
+  visual revisions before moving on. Phase 2 had four: the tablet layout, the
+  ticks and stop lines, the phone text and map, and the crossing stripes and
+  phone zoom. Record each revision in §Decisions and in the section it
+  changes, including what was tried and replaced.
+- **Change only what he asks for.** When a revision says "don't change
+  anything except X", take it literally.
+- **Commit only when asked.** He pushes himself. He asked for one push on
+  September 24 and then said he'd push later, so don't push unless he asks in
+  that session.
+- **Plain writing** in docs and messages: the `unslop` skill's rules, with no
+  em dashes and few parentheses.
+- **UI work** for the Drive button, controls hint and HUD uses the
+  `frontend-design` plugin, which is installed.
+
+### Checking it in a browser
+
+Visual checks were done in Chrome through the extension, against Scott's dev
+server on :3000. Load any page but the homepage (`/privacy`), clear its body,
+and put the homepage in iframes at the sizes you want to see:
+
+```js
+const mk = (w, h, x, y, s) => {
+  const wrap = document.createElement('div')
+  wrap.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${w * s}px;height:${h * s}px;overflow:hidden`
+  const f = document.createElement('iframe')
+  f.src = '/'
+  f.style.cssText = `width:${w}px;height:${h}px;border:0;transform:scale(${s});transform-origin:0 0`
+  f.onload = () => {
+    const st = f.contentDocument.createElement('style')
+    st.textContent = '[data-hero],[data-hero] > *{opacity:1!important;visibility:visible!important;transform:none!important} [class*=consent]{display:none!important} nextjs-portal{display:none!important}'
+    f.contentDocument.head.appendChild(st)
+  }
+  wrap.appendChild(f)
+  document.body.appendChild(wrap)
+  return f
+}
+document.body.innerHTML = ''
+mk(1440, 780, 0, 0, 0.5)
+```
+
+Traps:
+
+- **The automation tab is hidden** (`document.hidden` is true). So
+  `requestAnimationFrame` never fires, the hero's entrance stalls halfway with
+  the subhead and buttons invisible, and ResizeObserver callbacks don't run.
+  The injected style above forces the entrance's end state. The traffic loop
+  won't run there either: 🟡 give the engine a development-only hook, such as
+  `window.__heroEngine.step(seconds)`, to advance and draw the simulation by
+  hand for screenshots. The headless test is the real check on the
+  simulation. A stalled entrance is a tab quirk, not a site bug.
+- **The automation viewport can be small** (500×667 on September 24), and
+  screenshots can be device-scaled. View one frame at a time, and measure
+  with `getBoundingClientRect()`, not `offsetWidth`, which rounds.
+- **Long measurement scripts** can pass the tool's 45s limit. Start them
+  unawaited, store results on `window`, and read them in a second call.
+
+### Things that bit, and conventions to keep
+
+- **Road sizes always come from `roadsFor(layout)`**, never `CONFIG.roads`
+  directly, because the phone map is zoomed to 0.6. The same goes for car
+  size and px speeds in Phase 3.
+- **The pure modules** (`graph.js`, `layout.js`, `config.js`, and
+  `traffic.js` and `gearbox.js` to come) import each other with `.js`
+  extensions and take layouts as arguments. Tests read JSON with
+  `readFileSync`. Keep it that way, or Node's test runner breaks.
+- **ESLint knows only browser globals.** `process` fails. Watch for local
+  names shadowing imports: a local `wide` shadowed the imported map once, and
+  only lint caught it.
+- **Any change to the hero's copy, CSS or fonts** means re-recording
+  `__fixtures__/copy-rects.json` (`__fixtures__/record.md`), then running
+  `npm test`.
+- **Road markup is in the page twice**, once as HTML and once in Next's
+  hydration payload. Keep pieces lean; zero offsets are already left out.
+- **Tick runs** are CSS `background-repeat: space` on a `::before`, hidden by
+  a container query `(width < 1em)` whose em is the strip's own font size,
+  set to one tile. That's how the threshold follows the zoom without a number
+  in the CSS.
+- **The dev server** is usually already running on :3000 from Scott's own
+  session. Reuse it. `npm run build` is safe alongside it, because dev builds
+  into `.next/dev`.
+- **Pushing over SSH fails**: this Mac's key isn't registered on GitHub. The
+  GitHub CLI is logged in, so if Scott asks for a push, this works without
+  changing any config: `git -c remote.origin.pushurl=https://github.com/scottdoggett/clutch-academy-site.git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin overhaul`.
 
 ## Where this started
 
@@ -428,15 +610,17 @@ three.js:
 - A car that leaves by a portal despawns and respawns at a random portal
   entry, so the count stays constant.
 - Car count is one per 90,000px² of the layout's box, clamped to 6–16. The
-  density constant lives in config.
+  density constant lives in config. The layout's box is the hero on the wide
+  map and the street band on phones.
 
 🟡 How that works in practice:
 
 | | |
 |---|---|
-| Speeds | Cruise 36–44 km/h per car, which is 60–73px/s. Turns at 15 km/h. Accelerate at 2.5 m/s², brake at 3.5 m/s², emergency up to 8 m/s². |
-| Following | 1.2s time gap plus 1.5m, so about 9px bumper to bumper when stopped. |
-| Stopping | A full stop at the box edge, 0.4s dwell, then join the queue. |
+| Scale | Everything physical is in metres and converts at `CONFIG.world.pxPerM × roadsFor(layout).zoom` px per metre: 6 on the wide map, 3.6 on phones. So phone cars are 0.6 size and cover 0.6 as many px per second, like the phone roads. |
+| Speeds | Cruise 36–44 km/h per car, which is 60–73px/s on the wide map. Turns at 15 km/h. Accelerate at 2.5 m/s², brake at 3.5 m/s², emergency up to 8 m/s². |
+| Following | 1.2s time gap plus 1.5m, so about 9px bumper to bumper when stopped on the wide map. |
+| Stopping | Only at crosses and Ts (`lane.to.stop`); corners and straight runs flow. A full stop just behind the zebra crossing, not at the box edge: `lane.p1` is at the box edge, so the stop point is `crosswalk.gap + crosswalk.depth` (from `roadsFor(layout)`) plus about 1px back from it. 0.4s dwell, then join the queue. |
 | Reservation | A car enters when all three are true: the box is empty and unreserved, its chosen exit lane has room for its full length beyond the box, and it's first in arrival order. It holds the box until its rear clears. The second condition is "don't block the box", and it's what stops gridlock across neighbouring junctions. |
 | Gridlock guard | A car that has waited 6s because its exit has no room picks another valid exit. |
 | Spawning | Into a portal entry lane with at least two car lengths free. If none has room, try again next frame. |
@@ -930,7 +1114,7 @@ src/components/hero/
     input.js          keyboard, focus, preventDefault
     gearbox.js        engine and gearbox model                                   (pure)
   __fixtures__/
-    copy-rects.json   where the copy lands at 27 sizes
+    copy-rects.json   where the copy lands at 32 sizes, and the phone band
     record.md         how to re-record it
   graph.test.js
   layout.test.js
@@ -939,7 +1123,8 @@ src/components/hero/
 - ✅ `Hero.jsx` stays in `src/components/home/` next to the other homepage
   sections. It renders both `RoadLayer`s and `HeroStage` inside the section.
 - ✅ Built so far: `config.js` (world, car, roads and layout sections only; the
-  rest arrive with their phases), `layouts/`, `graph.js`, `layout.js`,
+  rest arrive with their phases; `layout` holds `wideQuery`, `resizeDebounce`
+  and the per-map `zoom`), `layouts/`, `graph.js`, `layout.js`,
   `RoadLayer`, `HeroStage` and the tests. The pure modules import each other
   with `.js` extensions, which Node needs and the bundler accepts.
 - ✅ GSAP comes from `src/lib/gsap.js`, and motion values from `src/lib/motion.js`.
@@ -948,12 +1133,18 @@ src/components/hero/
 
 ### Config, starting values
 
-🟡 All tunable. The shape matters more than the numbers.
+🟡 All tunable. The shape matters more than the numbers. `world`, `car`,
+`roads` and `layout` exist in `config.js` today, with the values below; the
+other sections are still to add, each with its phase. Road sizes are the
+wide map's; `roadsFor(layout)` scales them by `layout.zoom`.
 
 ```js
 export const CONFIG = {
   world:    { pxPerM: 6, step: 1 / 120, maxSteps: 8, seed: 20260924 },
-  roads:    { main: 40, side: 24, tick: { width: 2, length: 8, gap: 10 }, clearance: 48 },
+  roads:    { main: 40, side: 24, tick: { width: 2, length: 8, gap: 10 },
+              crosswalk: { gap: 3, depth: 10, stripe: 2, space: 6 }, clearance: 48 },
+  layout:   { wideQuery: '(min-width: 768px)', resizeDebounce: 150,
+              zoom: { wide: 1, compact: 0.6 } },
   traffic:  { pxPerCar: 90_000, min: 6, max: 16, compactMin: 4,
               cruiseKmh: [36, 44], turnKmh: 15, accel: 2.5, decel: 3.5, maxDecel: 8,
               headway: 1.2, stopGap: 1.5, dwell: 0.4, reroute: 6 },
@@ -1046,12 +1237,12 @@ iframes and prints the new `sizes` array.
 | # | Delivers | Done when |
 |---|---|---|
 | 1 | This file | ✅ Reviewed September 24 |
-| 2 | Layout JSON for both layouts, `graph.js`, `layout.js`, `RoadLayer.jsx` server-rendered, the half-width copy and the phone street band, resize, the headline check, `npm test` with layout and graph tests, the fixture, prototype folder dealt with, `08-motion.md` §The hero updated | ✅ Built September 24, then revised the same day: the road layer rebuilt so ticks end cleanly, zebra crossings at every junction (then thinned), and a bigger, less regular phone map under smaller phone type, then drawn zoomed out. 31 tests pass, lint and build clean, checked in Chrome at 360, 390, 768 and 1440px. |
-| 3 | `engine/`: renderer, cars, traffic, reservations, Ts and corners, turns, portals, respawn, fade-in, pause and resume, seeded start | Headless traffic test passes. No overlaps seen on screen. `08-motion.md` rule 7 updated. |
+| 2 | ✅ Done, commits `8bd1a72` and `f922e2e`. Layout JSON for both layouts, `graph.js`, `layout.js`, `RoadLayer.jsx` server-rendered, the half-width copy and the phone street band, resize, the headline check, `npm test` with layout and graph tests, the fixture, prototype folder dealt with, `08-motion.md` §The hero updated | ✅ Built September 24, then revised the same day: the road layer rebuilt so ticks end cleanly, zebra crossings at every junction (then thinned), and a bigger, less regular phone map under smaller phone type, then drawn zoomed out. 31 tests pass, lint and build clean, checked in Chrome at 360, 390, 768 and 1440px. |
+| 3 | **Next.** `engine/`: renderer, cars, traffic, reservations, Ts and corners, turns, portals, respawn, stopping behind the crossings, fade-in, pause and resume, seeded start, on both maps. Pulled forward from Phase 7: the parked frame under reduced motion, and lazy loading. See §Handoff. | Headless traffic test passes. In Chrome at 390, 768, 1440 and 1920px: cars follow lanes, stop behind crossings, take junctions one at a time, respawn, never overlap; parked under reduced motion. `08-motion.md` rules 7 and 8 updated. |
 | 4 | Drive button, `drive/` with planck, walls, player forces, input and focus, driving over text, exit and rejoin, controls hint, takeover ring | Keyboard-only run-through: enter, drive, Tab away, Esc, focus back on Drive |
 | 5 | `gearbox.js` and tests, then the HUD | Gearbox tests pass. The HUD reviewed in the browser. |
 | 6 | Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks, smoke | A chain of knocks through a full 16-car hero clears on its own within 15s |
-| 7 | Phones, touch, reduced motion, lazy loading, save-data, disposal, performance pass, bundle report | 60fps with 16 cars, a full mark pool and smoke on a mid-range laptop. Reduced-motion and no-JS checks from `08-motion.md` pass. Chunk sizes reported. |
+| 7 | Phones and touch (Drive hidden), finishing reduced motion and lazy loading, save-data, WebGL-failure handling, disposal, performance pass, bundle report | 60fps with 16 cars, a full mark pool and smoke on a mid-range laptop. Reduced-motion and no-JS checks from `08-motion.md` pass. Chunk sizes reported. |
 
 Phase 4 and 5 UI work uses the `frontend-design` plugin.
 

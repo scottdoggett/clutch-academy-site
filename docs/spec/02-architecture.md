@@ -12,11 +12,15 @@ How the `overhaul` build is put together. For the deployed shape of things
 - **ESLint 9** with `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
 - **GSAP** (`gsap` + `@gsap/react`) for scripted motion, added September 2026.
   How it's used is `08-motion.md`.
-- **No test framework, no routing library, no state library.** The dependency
-  list is deliberately five packages long: Next, React, React DOM and the two
-  GSAP packages. Tailwind, `motion` and the Magic UI scroll-velocity row were
-  added for the reviews strip and removed again in September 2026, when the
-  strip was rebuilt on GSAP.
+- **three.js**, added September 24, 2026 for the homepage hero's traffic
+  (`hero-drive.md`). It isn't imported yet; Phase 3 of the hero rebuild loads
+  it lazily, as its own chunk. planck.js joins it in Phase 4.
+- **Tests run on Node's built-in `node:test`** (`npm test`), not a framework.
+  They cover the hero's pure modules. No routing library, no state library.
+  The dependency list is deliberately short, six packages: Next, React, React
+  DOM, the two GSAP packages and three. Tailwind, `motion` and the Magic UI
+  scroll-velocity row were added for the reviews strip and removed again in
+  September 2026, when the strip was rebuilt on GSAP.
 
 ```
 npm run dev      # dev server
