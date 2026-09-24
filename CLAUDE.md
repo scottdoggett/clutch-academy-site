@@ -33,20 +33,24 @@ reviewed. **Work on `overhaul`. Never commit directly to `main`.**
 `docs/spec/archive/` holds the retired single-page spec and the rebuild's
 planning docs. **Don't work from anything in there.**
 
-## Current state (August 20, 2026)
+## Current state (September 24, 2026)
 
 - **All 9 routes are built with real content**: `/`, `/about`,
   `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
   `/faq`, `/contact`, plus a custom 404.
-- **Pricing is the post-August-1 offering** — $109 / 75 min, $299, $469,
-  $219 / 2.5 hr, all + HST. Applied to `main` on July 31 and to `overhaul` on
-  August 16. The dated announcement banner has been removed.
+- **Pricing is the post-August-1 offering, rounded up to the nearest $10 on
+  September 21** — $110 / 75 min, $300, $470, $220 / 2.5 hr, all + HST. On
+  both branches. The dated announcement banner has been removed.
 - **Three rounds of client review are applied.** August 16 was copy and
   structure; August 18 was layout, mobile and the package cards; August 20 was
   the hub's chooser — see `07-status.md`.
-- **The July QA pass is stale.** It predates the August 18 layout rework, so
-  re-running Lighthouse across all 9 routes is a cutover requirement now, not a
-  formality.
+- **September: a homepage redesign pass.** Reviews and pricing sit on beige
+  `.section--light` bands, the homepage copy was rewritten, and the homepage is
+  animated with GSAP under `docs/spec/08-motion.md`. Other routes haven't had
+  their motion pass yet.
+- **The July QA pass is stale.** It predates the August 18 layout rework and the
+  September motion work, so re-running Lighthouse across all 9 routes is a
+  cutover requirement now, not a formality.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 
@@ -84,6 +88,11 @@ planning docs. **Don't work from anything in there.**
   `#E4E4E4` for WCAG AA. **Muted text on the brand red must be solid
   `var(--cream)`**, not white-alpha or opacity-faded (alpha over the saturated
   red fails 4.5:1 even when it looks fine).
+- **Light sections** are `.section--light` (globals.css): a `--beige`
+  (`#FBE9DF`) band that flips header type to red. A button sitting on the beige
+  itself adds `btn--on-light` (solid red, inner white ring); buttons inside red
+  cards on the band don't. Red on `--beige` clears AA at 4.99:1, so don't darken
+  the beige without re-checking.
 - **One left edge per page.** `.section__inner` centres a 1200px column and
   publishes `--column-inset`. Any block that caps itself narrower must use
   `margin-inline: var(--column-inset) auto`, or it re-centres inside the column

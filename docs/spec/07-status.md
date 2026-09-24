@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** August 20, 2026.
+**Last updated:** September 24, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -12,10 +12,36 @@ content, analytics and consent are wired, and the August-1 pricing switch has
 been applied to both branches. It is deployed to its own Vercel project for
 review while `main` keeps serving customers the original Vite site. Three rounds
 of client review — August 16 (copy and structure), August 18 (layout, mobile,
-package cards) and August 20 (the hub's chooser) — have been applied. What
-remains before cutover is verification and client sign-off, not building. The one
-caveat: **the July QA pass no longer reflects the build**, so re-running it is
-now a cutover requirement rather than a formality.
+package cards) and August 20 (the hub's chooser) — have been applied, and in
+September the homepage got a redesign pass: beige light sections, rewritten
+copy, and GSAP motion. What remains before cutover is verification and client
+sign-off, not building. The one caveat: **the July QA pass no longer reflects
+the build**, so re-running it is now a cutover requirement rather than a
+formality.
+
+## Recently completed — September 2026 (homepage)
+
+- **Prices rounded up to the nearest $10** (Sept 21): $110 / $300 / $470 /
+  $220 + HST, on both branches, including the Offer schema and the conversion
+  values in `booked.html`. The savings lines follow: $30 and $80.
+- **Beige light sections.** "What Students Are Saying" and pricing sit on
+  `.section--light` (`--beige`, `#FBE9DF`) with red header type, alternating
+  with the red sections. The Google-reviews button there is solid red with an
+  inner white ring (`btn--on-light`). See `02-architecture.md` §Styling.
+- **Review cards redesigned** (cream cards, red top rule, gold stars, the
+  reviewer's initial), and the strip no longer reacts to page scroll: it
+  drifts at one speed, and drag, touch swipe and sideways trackpad swipe still
+  move it. It was rebuilt on GSAP (Sept 24), and Tailwind, `motion` and the
+  Magic UI row were removed with it.
+- **Homepage copy rewritten** in plainer language, keeping the original title
+  casing. How It Works step 1 used to say "the single lesson or 3-pack" and now
+  names all four packages. Review quotes, package names and prices are
+  unchanged.
+- **GSAP motion on the homepage** under the new `08-motion.md`: a hero
+  timeline on load, and scroll reveals (Rise, Stagger, Headline, Draw, Settle)
+  on every other section. The first version started too late on phones;
+  triggers now fire at `top 95%`, and delays count from the section's start
+  (see `08-motion.md` §Homepage map).
 
 ## Recently completed — August 20, 2026
 
@@ -172,6 +198,8 @@ These are the actual blockers. Most need Sam.
 | 8 | **Fonts now actually render** | Site-wide | Plus Jakarta Sans + Inter were referenced but never loaded on the old site — it silently fell back to system fonts. `next/font` loads them, so the rebuild *looks different*. Per the tokens' clear intent, but nobody has confirmed it with Sam. |
 | 9 | **Search Console verification token** | `src/app/layout.jsx` | Stubbed `PENDING`. Sam-side. |
 | 10 | **Slug keyword audit** | Routes | 🟡 Slugs were never deliberately audited. Cheap to change now, expensive once Ads final URLs point at them. |
+| 11 | **New line in Sam's voice** | `src/components/home/AboutTeaser.jsx` | "Everyone stalls while they're learning. Nobody's grading you, so we keep it relaxed, and most people end up having fun." Written in the September copy pass; Sam hasn't approved it. |
+| 12 | **Homepage meta description lags the copy** | `src/app/page.jsx` (`metadata`) | The on-page copy was rewritten in September; the description and OG/Twitter text weren't. Its facts are still right; the wording is the old voice. |
 
 ### From the Site 2.0 review doc — still needing clarification
 
@@ -207,7 +235,7 @@ table.
 
 | Check | Status |
 |---|---|
-| Build + lint | ✅ Clean as of August 18, 2026 |
+| Build + lint | ✅ Clean as of September 24, 2026 |
 | Lighthouse, all 9 routes | ⚠️ 100 a11y / 100 SEO / 100 BP in July 2026, but **materially stale** — predates the August 18 layout rework. Re-run is a cutover requirement. |
 | Layout: one left edge per route | ✅ Measured at 320 / 390 / 1024 / 1280 / 1440 / 1713, August 18 |
 | Mobile nav on one row | ✅ Measured 320–767px, August 18 |
@@ -219,9 +247,12 @@ table.
 | Consent Mode deny-first | ✅ Verified — no pixel URLs in served HTML |
 | `booked.html` conversion scripts | ✅ Syntax-checked; dedup guard intact |
 | Host redirects | ✅ Verified locally via Host header |
+| Homepage motion, desktop Chrome | ✅ Every section reveals and ends fully visible; no inline styles left behind; late-scrolled elements start without waiting (Sept 24) |
+| Reviews strip, desktop | ✅ Drift, mouse drag, sideways wheel, and vertical page scroll over the strip (Sept 24) |
+| **Homepage motion on a phone, and under reduced motion** | ❌ Not checked. The touch swipe on the reviews strip and the timing on small screens need a real device. |
 | **Real-device iOS Safari** | ❌ **Never done since the migration.** Pre-launch requirement. |
 | **Production domain behaviour** | ❌ Not testable until cutover |
-| **Re-run of QA after August changes** | ❌ Not done |
+| **Re-run of QA after August and September changes** | ❌ Not done. Include Lighthouse LCP/CLS on `/`: GSAP now loads on every route. |
 
 ## Known repo quirks
 

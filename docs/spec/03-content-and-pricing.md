@@ -3,22 +3,24 @@
 What each page says, what the packages cost, and the rules that keep copy from
 drifting.
 
-## Pricing — current, effective August 1, 2026
+## Pricing — current, effective August 1, 2026, rounded September 21
 
-All prices **+ HST**. Keep that explicit on every price display.
+All prices **+ HST**. Keep that explicit on every price display. On September
+21, 2026 every price was rounded up to the nearest $10 ($109 → $110, $299 →
+$300, $469 → $470, $219 → $220) on both branches.
 
 | Package | Duration | Price | Route |
 |---|---|---|---|
-| Individual Manual Lesson | 75 min | **$109** | `/lessons/individual` |
-| Manual Foundations (3 lessons) | 3 × 75 min | **$299** | `/lessons/manual-foundations` |
-| Complete Manual Confidence (5 lessons) | 5 × 75 min | **$469** | `/lessons/manual-confidence` |
-| Group Manual Lesson | 2.5 hr | **$219** | `/lessons/group` |
+| Individual Manual Lesson | 75 min | **$110** | `/lessons/individual` |
+| Manual Foundations (3 lessons) | 3 × 75 min | **$300** | `/lessons/manual-foundations` |
+| Complete Manual Confidence (5 lessons) | 5 × 75 min | **$470** | `/lessons/manual-confidence` |
+| Group Manual Lesson | 2.5 hr | **$220** | `/lessons/group` |
 
 **Savings maths**, shown on the package pages — recompute these if the
 individual rate ever changes:
 
-- Foundations: 3 × $109 = $327, less $299 → **save $28**
-- Confidence: 5 × $109 = $545, less $469 → **save $76**
+- Foundations: 3 × $110 = $330, less $300 → **save $30**
+- Confidence: 5 × $110 = $550, less $470 → **save $80**
 
 ### History, so the diff makes sense
 

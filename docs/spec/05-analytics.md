@@ -118,14 +118,14 @@ Calendly's `event_type_name` parameter:
 
 | Match | Value |
 |---|---|
-| `group`, `2.5`, `two and a half`, `150` | $219 |
-| `confidence`, `highway`, `five`, `\b5\b` | $469 |
-| `3`, `three`, `pack` | $299 |
-| anything else / missing | $109 (`DEFAULT_VALUE`) |
+| `group`, `2.5`, `two and a half`, `150` | $220 |
+| `confidence`, `highway`, `five`, `\b5\b` | $470 |
+| `3`, `three`, `pack` | $300 |
+| anything else / missing | $110 (`DEFAULT_VALUE`) |
 
 ⚠️ **Rule order is load-bearing.** Group is tested first because `"2.5"`
-satisfies the five-pack's `\b5\b` pattern — reversed, a $219 group booking
-reports $469.
+satisfies the five-pack's `\b5\b` pattern — reversed, a $220 group booking
+reports $470.
 
 **De-duplication:** a booking id is built from start time + event name + invitee
 name and stored, so refreshing or revisiting the confirmation URL doesn't

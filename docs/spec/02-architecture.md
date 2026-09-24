@@ -10,8 +10,13 @@ How the `overhaul` build is put together. For the deployed shape of things
 - **Plain CSS** — one stylesheet per component or route, plus design tokens.
   No Tailwind, no CSS-in-JS, no preprocessor.
 - **ESLint 9** with `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
-- **No test framework, no routing library, no state library, no animation
-  library.** The dependency list is deliberately three packages long.
+- **GSAP** (`gsap` + `@gsap/react`) for scripted motion, added September 2026.
+  How it's used is `08-motion.md`.
+- **No test framework, no routing library, no state library.** The dependency
+  list is deliberately five packages long: Next, React, React DOM and the two
+  GSAP packages. Tailwind, `motion` and the Magic UI scroll-velocity row were
+  added for the reviews strip and removed again in September 2026, when the
+  strip was rebuilt on GSAP.
 
 ```
 npm run dev      # dev server
@@ -52,9 +57,11 @@ conversion page) and **`/privacy`** (`privacy.html`).
 src/
 ├── app/
 │   ├── layout.jsx              # Shared shell: fonts, metadata defaults,
-│   │                           # consent bootstrap + gtag, skip link,
-│   │                           # Nav, Footer, ConsentBanner, AnalyticsLoader
-│   ├── globals.css             # Base elements, .section / .section__inner
+│   │                           # motion pre-paint script, consent
+│   │                           # bootstrap + gtag, skip link, Nav, Footer,
+│   │                           # ConsentBanner, AnalyticsLoader, SiteMotion
+│   ├── globals.css             # Base elements, .section / .section__inner,
+│   │                           # .section--light (the beige band)
 │   ├── page.jsx                # Homepage + DrivingSchool/Offer/Person JSON-LD
 │   ├── not-found.jsx
 │   ├── about/                  # page.jsx + about.css
@@ -72,9 +79,12 @@ src/
 │   ├── ContactCard.jsx         # Channels with per-channel intent tracking
 │   ├── ConsentBanner.jsx       # Consent Mode v2 accept/decline
 │   ├── AnalyticsLoader.jsx     # Loads pixels only after consent
-│   ├── ReviewsMarquee.jsx      # Google-review marquee (progressive enhancement)
+│   ├── ReviewsMarquee.jsx      # Google-review strip: GSAP drift + drag/swipe,
+│   │                           # static swipeable list under reduced motion
 │   ├── home/                   # Hero, Reviews, HowItWorks, PackagesTeaser,
 │   │                           # AboutTeaser — homepage sections
+│   ├── motion/
+│   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
 │   └── lessons/
 │       ├── LessonFaq.jsx       # Renders an FAQ subset by id
 │       └── lessons.css         # Shared package-page styles
@@ -87,11 +97,15 @@ src/
 │   ├── googleReviews.js        # Rating, review count, profile URL
 │   ├── consent.js              # Consent storage key + helpers
 │   ├── metaPixel.js
-│   └── tiktokPixel.js
+│   ├── tiktokPixel.js
+│   ├── gsap.js                 # GSAP + plugin registration, MOTION_OK
+│   ├── motion.js               # Motion values and the six data-anim types
+│   └── motionPrepaint.js       # Inline script: hero states before first paint
 │
 └── styles/
     ├── tokens.css              # Design tokens
-    └── buttons.css             # Shared button classes
+    ├── buttons.css             # Shared button classes
+    └── motion.css              # Photo frames, Draw origin, hero pre-paint
 ```
 
 ## Page composition
@@ -173,7 +187,16 @@ Duplicating any of these is a bug:
 ## Styling
 
 **Design tokens in `src/styles/tokens.css`** — colours, type scale, spacing,
-timings. Use the tokens, not literal values.
+and the 150ms hover/focus transition. Use the tokens, not literal values.
+Scripted-motion timings live in `src/lib/motion.js` instead (`08-motion.md`).
+
+**Light sections.** `.section--light` paints a section `--beige` (`#FBE9DF`)
+and flips its header type to red. On the homepage, Reviews and pricing use it,
+alternating with the red sections. A button placed on the beige itself adds
+`btn--on-light` (solid red with an inner white ring). Buttons inside the red
+package cards on that band keep the default white-on-red treatment. Red text on
+`--beige` measures 4.99:1, so it passes AA with little room: don't darken the
+beige without re-checking.
 
 Two contrast rules that are easy to get wrong on the brand red (`#C8102E`):
 
@@ -200,11 +223,14 @@ follow; the August-1 banner that used it was removed once the switch shipped.
 
 - **Booking always goes through `BookButton`** with a distinct `source` tag per
   placement. Never call `openCalendly` directly from a page.
-- **`prefers-reduced-motion` must be respected.** The only JS motion left is the
-  reviews marquee, which is matchMedia-gated. Gate anything new the same way.
+- **`prefers-reduced-motion` must be respected.** Scripted motion runs through
+  `SiteMotion` inside `gsap.matchMedia()`, so reduced motion gets the static
+  page. The reviews strip swaps to a static swipeable list. See `08-motion.md`.
 - **Client components are the exception.** Most pages are server components;
   `'use client'` appears only where interaction demands it (Nav, BookButton,
-  ConsentBanner, AnalyticsLoader, ContactCard, ReviewsMarquee).
+  ConsentBanner, AnalyticsLoader, ContactCard, ReviewsMarquee, SiteMotion).
+  Animated sections stay server components: they opt in with `data-anim`
+  attributes that `SiteMotion` reads.
 - **Nav active state is section-aware.** `/lessons/*` keeps the Lessons item
   underlined via prefix matching, while `aria-current="page"` stays exact — on a
   package page you are *in* the section but not *on* the hub page.
@@ -222,7 +248,10 @@ follow; the August-1 banner that used it was removed once the switch shipped.
   pans horizontally" but declares horizontal panning to be the *only* gesture
   the element handles, so vertical drags over it are swallowed and the page
   won't scroll. The default already locks the axis from the gesture's initial
-  direction. Removed from the reviews marquee on August 18, 2026.
+  direction. Removed from the reviews marquee on August 18, 2026. (The moving
+  reviews strip isn't a scroller, since it moves a transform, and it uses
+  `touch-action: pan-y` on purpose: vertical swipes go to the page, horizontal
+  ones to its drag handler.)
 - **Pending inputs are comments, not omissions.** Use `{/* PENDING: ... */}` or
   `❓ BLOCKED`, and never invent content to fill the gap.
 - **iOS Safari is a first-class target.** `useCalendly` mounts an inline widget
@@ -232,7 +261,9 @@ follow; the August-1 banner that used it was removed once the switch shipped.
 ## What was removed in the rebuild
 
 Worth knowing, because half the archive talks about it: the gear-shift
-metaphor, the H-pattern shifter, all GSAP/ScrollTrigger choreography,
+metaphor, the H-pattern shifter, the single-page GSAP/ScrollTrigger
+choreography (GSAP itself came back in September 2026 for per-section
+entrances; `08-motion.md`),
 `useShiftTransition`, `src/components/sections/`, the Puppeteer prerender
 script, `window.__PRERENDER__`, and `vercel.json`. The old section copy is
 recoverable with `git log -- 'src/components/sections/*'`.

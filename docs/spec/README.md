@@ -18,7 +18,7 @@ Superseded material lives in `archive/` and should not be worked from.
 | Hosting | Vercel — **two projects**, one per branch (see `06-deployment.md`) |
 | Live site | `clutchacademy.ca` — built from **`main`** (the old Vite build) |
 | Rebuild | Built from **`overhaul`** (Next.js) on its own Vercel project, for review |
-| Pricing | Post-August-1 offering — $109 / $299 / $469 / $219, all + HST |
+| Pricing | Post-August-1 offering, rounded September 21 — $110 / $300 / $470 / $220, all + HST |
 
 ## The one thing to understand first
 

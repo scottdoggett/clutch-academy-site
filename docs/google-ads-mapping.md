@@ -35,8 +35,8 @@ Until then, Ads can alternatively import the GA4 `purchase` event
 value + consent-mode modeling.
 
 Also note: booked.html derives conversion **value** from the Calendly event
-name using the **current** prices (90/240/400/180). The Phase 10 pricing
-switch must update that mapping to 109/299/469/219.
+name using the current prices (110/300/470/220, since the September 21, 2026
+rounding). Any future price change has to update that mapping too.
 
 ## 2. Campaign / ad-group final URLs
 
@@ -89,10 +89,10 @@ if per-person/per-pair is still unresolved.
 
 | Header (≤25 ch) | Price | Unit | Description (≤25 ch) | Final URL |
 |---|---|---|---|---|
-| `Individual Lesson` | `$109` | per lesson (75 min) | `One-on-one, 75 minutes` | `/lessons/individual` |
-| `Manual Foundations` | `$299` | per package (3 lessons) | `Beginner 3-lesson path` | `/lessons/manual-foundations` |
-| `Manual Confidence` | `$469` | per package (5 lessons) | `Flagship 5-lesson path` | `/lessons/manual-confidence` |
-| `Group Lesson` | `$219` | per lesson (2.5 hr) | `Learn with a friend` | `/lessons/group` |
+| `Individual Lesson` | `$110` | per lesson (75 min) | `One-on-one, 75 minutes` | `/lessons/individual` |
+| `Manual Foundations` | `$300` | per package (3 lessons) | `Beginner 3-lesson path` | `/lessons/manual-foundations` |
+| `Manual Confidence` | `$470` | per package (5 lessons) | `Flagship 5-lesson path` | `/lessons/manual-confidence` |
+| `Group Lesson` | `$220` | per lesson (2.5 hr) | `Learn with a friend` | `/lessons/group` |
 
 All prices + HST (Ads price assets don't display tax — keep landing-page
 prices authoritative). The group row matches the shipped 2.5-hour format; the
