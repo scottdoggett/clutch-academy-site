@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { ScrollVelocityRow } from '@/components/ui/scroll-based-velocity'
+import { useEffect, useRef, useState } from 'react'
+import { gsap, useGSAP } from '@/lib/gsap'
 import './ReviewsMarquee.css'
 
 // Real quotes hand-copied from the Google reviews, manually maintained. When
@@ -84,28 +84,33 @@ const REVIEWS = [
   },
 ]
 
-// Percent of one copy's width travelled per second. The Magic UI row measures
-// its own content and derives px/s from that, so the loop takes the same time
-// on a phone as on a desktop instead of crawling on the narrow one. One copy is
-// ~7,100px at the desktop card width, which puts this at ~60px/s — a little
-// slower than the 72px/s the old scrollLeft loop ran at.
-const BASE_VELOCITY = 0.85
+// Percent of one copy's width travelled per second. Speed is relative to the
+// strip's own length, so a loop takes the same time on a phone as on a desktop
+// instead of crawling on the narrow one. One copy is ~7,100px at the desktop
+// card width, which puts this at ~60px/s.
+const SPEED = 0.85
 
 // The strip of review cards under the home "What Students Are Saying" heading.
-// Motion comes from Magic UI's scroll-based velocity row with its scroll
-// reactivity switched off, so the strip drifts at one constant speed in one
-// direction however the page is scrolled. A drag, a touch swipe, or a sideways
-// trackpad swipe still moves it by hand; the drift stands aside for the length
-// of a drag and resumes on release. A vertical swipe that starts on the strip
-// still scrolls the page (the row sets touch-action: pan-y).
+// It drifts left at one constant speed, and a drag, a touch swipe, or a
+// sideways trackpad swipe moves it by hand; the drift stands aside for the
+// length of a drag and resumes on release. It's the site's one sanctioned
+// loop (docs/spec/08-motion.md rule 7), so it's linear, not eased.
+//
+// It moves a transform, not a scroll position: two copies of the list sit
+// side by side and the offset wraps at one copy's width, so the loop has no
+// seam. The viewport is touch-action: pan-y (ReviewsMarquee.css), which hands
+// vertical swipes to the browser — a swipe that starts on the strip still
+// scrolls the page — and horizontal ones to the pointer handlers here.
 //
 // Server-rendered HTML contains every review. Reduced motion gets a static,
 // swipeable strip instead: with nothing moving and no side-scrolling, the
 // reviews past the first two would otherwise be unreachable.
 export default function ReviewsMarquee() {
-  // Rendered on the server as the animated row and swapped after mount, so the
-  // markup the server sent always matches what React hydrates.
+  // Rendered on the server as the animated strip and swapped after mount, so
+  // the markup the server sent always matches what React hydrates.
   const [reduced, setReduced] = useState(false)
+  const viewportRef = useRef(null)
+  const beltRef = useRef(null)
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -115,10 +120,104 @@ export default function ReviewsMarquee() {
     return () => mq.removeEventListener('change', sync)
   }, [])
 
-  // The row renders this several times over to fill the viewport, marking every
-  // copy after the first aria-hidden, so the list is spoken once.
-  const cards = (
-    <ul className="reviews__track">
+  useGSAP(
+    () => {
+      const viewport = viewportRef.current
+      const belt = beltRef.current
+      if (reduced || !viewport || !belt) return
+
+      const copy = belt.firstElementChild
+      const setX = gsap.quickSetter(belt, 'x', 'px')
+      let width = copy.offsetWidth
+      let offset = 0
+      let dragging = false
+      let inView = true
+      let pointerId = null
+      let lastX = 0
+
+      // Keep the offset inside (-width, 0], so the second copy is always
+      // there to cover the gap the first one leaves.
+      const render = () => {
+        if (width > 0) offset = gsap.utils.wrap(-width, 0, offset)
+        setX(offset)
+      }
+
+      const tick = (_time, deltaMs) => {
+        if (dragging || !inView || width <= 0) return
+        offset -= ((width * SPEED) / 100) * (deltaMs / 1000)
+        render()
+      }
+      gsap.ticker.add(tick)
+
+      const ro = new ResizeObserver(() => {
+        width = copy.offsetWidth
+        render()
+      })
+      ro.observe(copy)
+
+      // Off screen, nothing needs to move. (A hidden tab already stops the
+      // ticker on its own.)
+      const io = new IntersectionObserver(([entry]) => {
+        inView = entry.isIntersecting
+      })
+      io.observe(viewport)
+
+      const onPointerDown = (e) => {
+        // Left button only; other buttons are for the browser's menus.
+        if (e.pointerType === 'mouse' && e.button !== 0) return
+        dragging = true
+        pointerId = e.pointerId
+        lastX = e.clientX
+        viewport.setPointerCapture?.(e.pointerId)
+      }
+      const onPointerMove = (e) => {
+        if (!dragging || e.pointerId !== pointerId) return
+        // Drag right, content follows right.
+        offset += e.clientX - lastX
+        lastX = e.clientX
+        render()
+      }
+      // pointercancel is how a touch that turns out to be a vertical scroll
+      // arrives: the browser takes the gesture, and the drift resumes.
+      const endDrag = () => {
+        if (!dragging) return
+        dragging = false
+        if (pointerId !== null) viewport.releasePointerCapture?.(pointerId)
+        pointerId = null
+      }
+      // Trackpads and horizontal wheels. Vertical intent is left alone so it
+      // reaches the page.
+      const onWheel = (e) => {
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+        e.preventDefault()
+        offset -= e.deltaX
+        render()
+      }
+
+      viewport.addEventListener('pointerdown', onPointerDown)
+      viewport.addEventListener('pointermove', onPointerMove)
+      viewport.addEventListener('pointerup', endDrag)
+      viewport.addEventListener('pointercancel', endDrag)
+      viewport.addEventListener('wheel', onWheel, { passive: false })
+
+      return () => {
+        gsap.ticker.remove(tick)
+        ro.disconnect()
+        io.disconnect()
+        viewport.removeEventListener('pointerdown', onPointerDown)
+        viewport.removeEventListener('pointermove', onPointerMove)
+        viewport.removeEventListener('pointerup', endDrag)
+        viewport.removeEventListener('pointercancel', endDrag)
+        viewport.removeEventListener('wheel', onWheel)
+      }
+    },
+    { dependencies: [reduced], revertOnUpdate: true },
+  )
+
+  // The belt renders this twice; the second copy is aria-hidden, so the list
+  // is spoken once.
+  const cards = (hidden) => (
+    <ul className="reviews__track" aria-hidden={hidden || undefined}>
       {REVIEWS.map((r, i) => (
         <li key={`${r.name}-${i}`} className="reviews__slide">
           <article className="review-card">
@@ -149,22 +248,22 @@ export default function ReviewsMarquee() {
         aria-label="Student testimonials"
         role="region"
       >
-        {cards}
+        {cards(false)}
       </div>
     )
   }
 
   return (
-    <ScrollVelocityRow
-      className="reviews__marquee"
+    <div
+      ref={viewportRef}
+      className="reviews__marquee reviews__marquee--moving"
       aria-label="Student testimonials"
       role="region"
-      baseVelocity={BASE_VELOCITY}
-      direction={1}
-      scrollReactivity={false}
-      draggable
     >
-      {cards}
-    </ScrollVelocityRow>
+      <div ref={beltRef} className="reviews__belt">
+        {cards(false)}
+        {cards(true)}
+      </div>
+    </div>
   )
 }

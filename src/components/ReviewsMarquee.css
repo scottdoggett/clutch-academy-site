@@ -1,13 +1,9 @@
-/* The marquee viewport. The strip is driven by Magic UI's scroll-based
-   velocity row (src/components/ui/scroll-based-velocity.jsx) with scroll
-   reactivity off — a constant drift that translates a transform rather than
-   scrolling. It's still draggable — the row's own `draggable` prop moves the
-   transform from pointer and horizontal-wheel events, and sets touch-action
-   there so a vertical swipe still scrolls the page. Nothing here should
-   reintroduce overflow: a real scroll container would fight the transform for
-   the same gesture. The row element itself carries this class, and its
-   overflow is hidden — hence the vertical padding, which keeps the card
-   shadows from being clipped. */
+/* The marquee viewport. The moving strip (ReviewsMarquee.jsx) translates a
+   belt of two list copies with a transform rather than scrolling. Nothing
+   here should reintroduce overflow scrolling on the moving strip: a real
+   scroll container would fight the transform for the same gesture. The
+   vertical padding keeps the card shadows from being clipped by the
+   viewport's overflow: hidden. */
 .reviews__marquee {
   position: relative;
   flex: 1;
@@ -31,6 +27,29 @@
     #000 calc(100% - 4rem),
     transparent
   );
+}
+
+/* touch-action: pan-y, not pan-x. It hands vertical panning to the browser,
+   so a swipe that starts on the strip still scrolls the page, and leaves
+   horizontal to the pointer handlers. pan-x would claim horizontal as the
+   ONLY gesture and swallow a vertical drag that began over the strip. */
+.reviews__marquee--moving {
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.reviews__marquee--moving:active {
+  cursor: grabbing;
+}
+
+/* The two copies, side by side; this is what the transform moves. */
+.reviews__belt {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Reduced motion gets no marquee at all, so the strip goes back to being a
@@ -58,14 +77,11 @@
 .reviews__track {
   list-style: none;
   margin: 0;
-  /* Trailing gap only. The row stacks copies of this list flush against each
+  /* Trailing gap only. The belt puts the two copies flush against each
      other, so symmetric padding would double the space at every seam. */
   padding: 0 1rem 0 0;
   display: flex;
   gap: 1rem;
-  /* The row sets whitespace-nowrap for the single-line text it usually holds;
-     these cards are paragraphs and have to wrap. */
-  white-space: normal;
 }
 
 .reviews__slide {
@@ -168,6 +184,8 @@
 
   .reviews__track {
     gap: 0.75rem;
+    /* Matches the gap, so the seam between the two copies is invisible. */
+    padding-right: 0.75rem;
   }
 
   .review-card {
