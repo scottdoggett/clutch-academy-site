@@ -192,6 +192,29 @@ export const CONFIG = {
     hold: 0.5, // s it leaves the page alone after the visitor scrolls it
   },
 
+  // Tyre marks behind the black car while it's driven (§Tyre marks). Faint
+  // whenever it rolls, darker and wider when a tyre slides: a drift, a
+  // skid, hard braking, wheelspin.
+  marks: {
+    pool: 6000, // segments, recycled oldest first: 10s of sliding at speed
+    every: 3, // px a wheel rolls between segments, so a strip is continuous
+    jump: 40, // px: a wheel that moved further in one go jumped; no mark
+    alpha: 0.55, // --black at this, for a full skid
+    roll: 0.15, // how strong a plain rolling mark is, of a full skid
+    width: [1.2, 2.2], // px, rolling to a full skid
+    fade: 10, // s a full skid mark takes to fade
+    rollFade: 4, // s a rolling mark takes
+    // Sideways sliding at an axle, m/s past what its grip cancels: marks
+    // start at `slip` and are full strength by `slipFull`.
+    slip: 0.3,
+    slipFull: 3,
+    release: 0.2, // s a skid mark takes to fade back to a rolling one as the tyre grips
+    brakeAbove: 0.8, // brake pedal past this...
+    brakeFromKmh: 15, // ...above this speed marks all four wheels
+    brake: 0.8, // that strongly
+    track: 1.5, // m between the left and right wheels
+  },
+
   render: {
     maxDpr: 2,
     // Window glass, mixed from the body colour: traffic glass towards

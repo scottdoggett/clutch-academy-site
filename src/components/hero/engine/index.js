@@ -21,8 +21,14 @@
 // the length of a drive the canvas moves out of the hero into the driving
 // layer, fixed over the window, and the page scrolls to follow the car.
 // The loop keeps running with the hero off screen, and the canvas goes
-// back into the hero once the car is back in traffic.
+// back into the hero once the car is back in traffic and any tyre marks it
+// left outside the hero have faded.
+//
+// The reviews strip further down is a treadmill (src/lib/treadmill.js):
+// each frame the engine hands the driver where it is and how it's moving,
+// and tells the strip how fast the car is going across it.
 
+import { treadmill } from '../../../lib/treadmill.js'
 import { CONFIG } from '../config.js'
 import { buildGraph } from '../graph.js'
 import { LAYOUTS } from '../layouts/index.js'
@@ -88,6 +94,12 @@ export function createEngine({ hero, host }) {
   let layer = null
   let scrollTo = 0 // where the follow wants the page, px, unrounded
   let scrolled = 0 // where the page was left after the last write
+  // Seconds the loop has run: the tyre marks fade by it.
+  let clock = 0
+  // Until when some tyre mark is still showing, and some outside the hero,
+  // which the canvas has to stay over the window for.
+  let marksUntil = 0
+  let outsideUntil = 0
   // The window and the hero's place on the page, measured each frame while
   // the canvas is over the window.
   const win = { width: 0, height: 0, top: 0, max: 0, left: 0, heroAt: 0, pageHeight: 0 }
@@ -137,17 +149,41 @@ export function createEngine({ hero, host }) {
         y1: Math.min(win.height, y + map.box.height),
       })
     }
-    renderer.draw(sim.cars, driver?.ring, !playing)
+    renderer.draw(sim.cars, driver?.ring, !playing, clock)
   }
 
-  // Driving goes on with the hero off screen: the car can be anywhere.
-  const running = () => (driver || (playing && onScreen)) && !document.hidden && !disposed && !renderer.lost
+  // A tyre mark from the driver, px in the hero's frame, or the strip's.
+  function addMark(x0, y0, x1, y1, strength, onBelt = false) {
+    renderer.marks.add(x0, y0, x1, y1, strength, clock, onBelt)
+    const until = clock + renderer.marks.life(strength)
+    marksUntil = Math.max(marksUntil, until)
+    const b = map?.box
+    if (b && (x0 < 0 || y0 < 0 || x0 > b.width || y0 > b.height)) outsideUntil = Math.max(outsideUntil, until)
+  }
+
+  function clearMarks() {
+    renderer.marks.clear()
+    marksUntil = outsideUntil = 0
+  }
+
+  // Driving goes on with the hero off screen: the car can be anywhere, and
+  // so can its marks. Marks fading in the hero keep it going while it's on
+  // screen, even with the traffic parked.
+  const running = () =>
+    (driver || view === 'page' || ((playing || clock < marksUntil) && onScreen)) &&
+    !document.hidden &&
+    !disposed &&
+    !renderer.lost
 
   // One fixed step of everything: the driver's, which steps the traffic
   // itself when it may move, or the traffic's alone. While driving, the
   // follow decides where the page should be scrolled to.
   function tick() {
-    if (!driver) return sim.step(step)
+    clock += step
+    if (!driver) {
+      if (playing) sim.step(step)
+      return
+    }
     driver.step(step, playing)
     if (view === 'page') scrollTo = driver.follow(step, windowNow())
     if (driver.state === 'done') endDrive()
@@ -156,10 +192,29 @@ export function createEngine({ hero, host }) {
   // Before a frame's steps: the window measured, and the page's walls kept
   // up with it. If the page isn't where it was left, the visitor scrolled it
   // (wheel, trackpad, scrollbar): that wins, and the follow holds off.
+  // The reviews strip, in the hero's px, as it is this frame.
+  function measureBelt() {
+    const el = treadmill.el
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    const top = win.heroAt - window.scrollY
+    return {
+      x0: r.left - win.left,
+      x1: r.right - win.left,
+      y0: r.top - top,
+      y1: r.bottom - top,
+      speed: treadmill.speed,
+      travel: treadmill.travel,
+    }
+  }
+
   function beforeSteps() {
     if (view !== 'page') return
     measure()
     driver?.setPage(pageWalls())
+    const belt = measureBelt()
+    driver?.setBelt(belt)
+    if (belt) renderer.marks.belt(belt.travel, belt.x0, belt.x1)
     const now = window.scrollY
     if (Math.abs(now - scrolled) > 1.5) {
       scrollTo = scrolled = now
@@ -167,23 +222,31 @@ export function createEngine({ hero, host }) {
     }
   }
 
-  // After them: the page scrolled to where the follow wants it.
+  // After them: the strip told how fast the car is going across it, and the
+  // page scrolled to where the follow wants it. With the drive over and the
+  // last marks off the hero faded, the canvas goes back.
   function afterSteps() {
+    treadmill.car = driver?.across ?? null
+    if (view === 'page' && !driver && clock >= outsideUntil) toHero()
     if (view !== 'page' || Math.abs(scrollTo - scrolled) < 0.01) return
     window.scrollTo({ top: scrollTo, behavior: 'instant' })
     scrolled = window.scrollY
   }
 
-  // The canvas over the window, in the driving layer, for a drive.
+  // The canvas over the window, in the driving layer, for a drive. It may
+  // still be there from the last one, with its marks fading.
   function toPage() {
-    view = 'page'
-    layer.appendChild(canvas)
-    Object.assign(canvas.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
+    if (view !== 'page') {
+      view = 'page'
+      layer.appendChild(canvas)
+      Object.assign(canvas.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
+      sized = ''
+      window.addEventListener('resize', onResize)
+      measure()
+      renderer.resize(win.width, win.height)
+    }
     measure()
     scrollTo = scrolled = window.scrollY
-    sized = ''
-    renderer.resize(win.width, win.height)
-    window.addEventListener('resize', onResize)
   }
 
   // And back over the hero once the drive is over.
@@ -196,10 +259,12 @@ export function createEngine({ hero, host }) {
     draw()
   }
 
+  // The window resized: the page reflows under the marks, so they go.
   function onResize() {
     measure()
     renderer.resize(win.width, win.height)
     driver?.setPage(pageWalls())
+    clearMarks()
     draw()
   }
 
@@ -233,11 +298,13 @@ export function createEngine({ hero, host }) {
   function endDrive() {
     driver?.dispose()
     driver = null
+    treadmill.car = null
     onFrame = null
     onEnd?.()
     onEnd = null
     window.removeEventListener('scroll', onScroll)
-    if (view === 'page') toHero()
+    // Marks outside the hero keep the canvas over the window until they fade.
+    if (view === 'page' && clock >= outsideUntil) toHero()
     sync()
   }
 
@@ -306,6 +373,8 @@ export function createEngine({ hero, host }) {
       const graph = buildGraph(layout, { width: box.width, height: box.height, hidden })
       const count = carCount(layout, box.width, box.height)
       map = { name, layout, box, key, graph, count }
+      // Any marks no longer line up with the roads.
+      clearMarks()
       // A new map starts over from the seeded start; the same map at a new
       // size keeps every car on its lane, as far along it. Driving ends if
       // the map changes (there's no driving on the phone map), and carries
@@ -361,6 +430,7 @@ export function createEngine({ hero, host }) {
         mode,
         onControl,
         onExit,
+        onMark: addMark,
       })
       window.addEventListener('scroll', onScroll, { passive: true })
       sync()

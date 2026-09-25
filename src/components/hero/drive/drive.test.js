@@ -88,7 +88,7 @@ test('fast enough, hard steering drifts; the drift holds without spinning, and c
 
 // A drive on the wide map, the driver standing in for the engine. page:
 // walls for the whole page, or the hero's own.
-function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, page = null } = {}) {
+function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, page = null, onMark } = {}) {
   const graph = buildGraph(wide, { width, height })
   const sim = createTraffic(graph, wide, { count: carCount(wide, width, height), seed })
   let controlled = 0
@@ -98,6 +98,7 @@ function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, page = nu
     box: { width, height },
     top: NAV,
     page,
+    onMark,
     onControl: () => controlled++,
   })
   return { sim, driver, car: sim.cars.find((c) => c.black), width, height, controlled: () => controlled }
@@ -287,4 +288,64 @@ test('on the whole page the car drives out of the hero and down; stopped there, 
   assert.ok(!s.car.driven)
   for (let i = 0; i < 20 / DT && !s.car.active; i++) s.sim.step(DT)
   assert.ok(s.car.active, 'never came back in')
+})
+
+test('tyre marks come only while the visitor drives', () => {
+  const laid = []
+  const s = scene({ onMark: (...m) => laid.push(m) })
+  wander(s, 8, mulberry32(7))
+  assert.ok(laid.length > 0, 'no marks while driving')
+  assert.ok(laid.every((m) => m.slice(0, 5).every(Number.isFinite) && m[4] >= CONFIG.marks.roll && m[4] <= 1))
+  const driven = laid.length
+  s.driver.release()
+  for (let i = 0; i < 5 / DT && s.driver.state !== 'done'; i++) s.driver.step(DT, true)
+  assert.equal(laid.length, driven, 'marked on its own way back')
+})
+
+test('on the reviews strip the car rides along with it, and says how fast it is going across it', () => {
+  const laid = []
+  const page = { x0: 0, y0: 0, x1: 1440, y1: 4000 }
+  const s = scene({ page, onMark: (...m) => laid.push(m) })
+  s.driver.step(DT, true)
+  const want = s.driver.controls.want
+  // Down the page, below the hero, then stopped.
+  for (let t = 0; s.car.y < s.height + 300 && t < 30; t += DT) {
+    const err = Math.atan2(Math.sin(Math.PI / 2 - s.car.a), Math.cos(Math.PI / 2 - s.car.a))
+    want.steer = Math.max(-1, Math.min(1, err * 2))
+    want.throttle = 0.6
+    s.driver.step(DT, true)
+  }
+  want.throttle = want.steer = 0
+  want.brake = 1
+  for (let t = 0; t < 4 && Math.abs(s.driver.telemetry.speed) > 0.05; t += DT) s.driver.step(DT, true)
+  want.brake = 0
+  // Into neutral, in manual, so it doesn't creep.
+  s.driver.setMode('manual')
+  want.clutch = 1
+  for (let i = 0; i < 3 && s.driver.telemetry.gear !== 'N'; i++) {
+    s.driver.shift(s.driver.telemetry.gear === 'R' ? +1 : -1)
+    s.driver.step(DT, true)
+  }
+  want.clutch = 0
+  assert.equal(s.driver.telemetry.gear, 'N')
+  for (let i = 0; i < 1 / DT; i++) s.driver.step(DT, true)
+  assert.equal(s.driver.across, null, 'on a strip that is not there')
+  // A strip under it, drifting left at 60 px/s: a second later the car has
+  // gone with it, and it isn't going anywhere across the strip itself.
+  const belt = { x0: 0, x1: 1440, y0: s.car.y - 60, y1: s.car.y + 60, speed: -60, travel: 0 }
+  s.driver.setBelt(belt)
+  const x = s.car.x
+  const before = laid.length
+  for (let i = 0; i < 1 / DT; i++) {
+    belt.travel += belt.speed * DT
+    s.driver.step(DT, true)
+  }
+  assert.ok(Math.abs(s.car.x - (x - 60)) < 3, `the strip moved it ${(s.car.x - x).toFixed(1)}px`)
+  assert.ok(Math.abs(s.driver.across) < 5, `going ${s.driver.across.toFixed(1)} px/s across it, standing still`)
+  // Carried, its wheels don't roll on the strip: no marks.
+  assert.equal(laid.length, before, 'marked the strip while standing on it')
+  // Off the strip again: nothing to say.
+  s.driver.setBelt(null)
+  s.driver.step(DT, true)
+  assert.equal(s.driver.across, null)
 })

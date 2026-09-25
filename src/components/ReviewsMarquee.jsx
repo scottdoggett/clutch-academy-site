@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { gsap, useGSAP } from '@/lib/gsap'
+import { beltSpeed, treadmill } from '@/lib/treadmill'
 import './ReviewsMarquee.css'
 
 // Real quotes hand-copied from the Google reviews, manually maintained. When
@@ -96,6 +97,10 @@ const SPEED = 0.85
 // length of a drag and resumes on release. It's the site's one sanctioned
 // loop (docs/spec/08-motion.md rule 7), so it's linear, not eased.
 //
+// It's also a treadmill for the hero's black car (src/lib/treadmill.js):
+// while someone drives the car across it, the car's wheels push it, and it
+// eases back to its drift when the car is off.
+//
 // It moves a transform, not a scroll position: two copies of the list sit
 // side by side and the offset wraps at one copy's width, so the loop has no
 // seam. The viewport is touch-action: pan-y (ReviewsMarquee.css), which hands
@@ -142,9 +147,17 @@ export default function ReviewsMarquee() {
         setX(offset)
       }
 
+      // The strip's drift, px/s, + right.
+      const rest = () => -(width * SPEED) / 100
+      treadmill.el = viewport
+      treadmill.speed = rest()
+
       const tick = (_time, deltaMs) => {
         if (dragging || !inView || width <= 0) return
-        offset -= ((width * SPEED) / 100) * (deltaMs / 1000)
+        const dt = deltaMs / 1000
+        treadmill.speed = beltSpeed(treadmill.speed, rest(), treadmill.car, dt)
+        offset += treadmill.speed * dt
+        treadmill.travel += treadmill.speed * dt
         render()
       }
       gsap.ticker.add(tick)
@@ -174,6 +187,7 @@ export default function ReviewsMarquee() {
         if (!dragging || e.pointerId !== pointerId) return
         // Drag right, content follows right.
         offset += e.clientX - lastX
+        treadmill.travel += e.clientX - lastX
         lastX = e.clientX
         render()
       }
@@ -191,6 +205,7 @@ export default function ReviewsMarquee() {
         if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
         e.preventDefault()
         offset -= e.deltaX
+        treadmill.travel -= e.deltaX
         render()
       }
 
@@ -201,6 +216,7 @@ export default function ReviewsMarquee() {
       viewport.addEventListener('wheel', onWheel, { passive: false })
 
       return () => {
+        if (treadmill.el === viewport) treadmill.el = null
         gsap.ticker.remove(tick)
         ro.disconnect()
         io.disconnect()

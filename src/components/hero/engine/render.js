@@ -10,7 +10,8 @@
 // Normally the canvas covers the hero. While someone drives, it covers the
 // window instead (§Driving the whole page): the camera follows the hero as
 // the page scrolls, the traffic is clipped to the hero, and the black car
-// can be drawn anywhere.
+// and its tyre marks (marks.js) can be drawn anywhere. The marks go under
+// all the cars.
 
 import {
   BufferAttribute,
@@ -24,6 +25,7 @@ import {
   WebGLRenderer,
 } from 'three'
 import { CONFIG } from '../config.js'
+import { createMarks } from './marks.js'
 
 const vertexShader = /* glsl */ `
   attribute vec3 pose;   // x, y in CSS px (y down), heading in radians
@@ -210,6 +212,15 @@ export function createRenderer(canvas, colors) {
   ringMesh.visible = false
   scene.add(ringMesh)
 
+  const marks = createMarks(quad, corners, colors.black.body)
+  scene.add(marks.mesh)
+
+  // Only these meshes drawn, for one pass of a clipped frame.
+  const all = [marks.mesh, mesh, blackMesh, ringMesh]
+  function only(...shown) {
+    for (const m of all) m.visible = shown.includes(m)
+  }
+
   let lost = false
   const onLost = (e) => {
     e.preventDefault()
@@ -232,6 +243,8 @@ export function createRenderer(canvas, colors) {
   }
 
   return {
+    marks,
+
     // The canvas's size, CSS px.
     resize(width, height) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, CONFIG.render.maxDpr))
@@ -258,9 +271,10 @@ export function createRenderer(canvas, colors) {
 
     // ring: { x, y, t } from the driver while the takeover ring shows, t in
     // seconds. still: reduced motion, where it holds its size and doesn't
-    // fade, then goes.
-    draw(all, ring, still = false) {
+    // fade, then goes. time: the engine's clock, s, for the marks' fade.
+    draw(cars, ring, still = false, time = 0) {
       if (lost) return
+      marks.update(time)
       ringMesh.visible = !!ring
       if (ring) {
         const e = Math.min(1, ring.t / ringStyle.life)
@@ -270,7 +284,7 @@ export function createRenderer(canvas, colors) {
         ringMaterial.uniforms.color.value[3] = still ? 0.9 : 0.9 * (1 - e)
       }
       traffic.n = black.n = 0
-      for (const car of all) {
+      for (const car of cars) {
         if (!car.active) continue
         if (car.black) put(black, car, colors.black)
         else if (traffic.n < max) put(traffic, car, colors.traffic)
@@ -281,26 +295,27 @@ export function createRenderer(canvas, colors) {
         renderer.render(scene, camera)
         return
       }
-      // Over the window: the traffic only inside the hero, then the black
-      // car and the ring wherever they are. A scissored clear would only
-      // clear the scissor box, so the whole canvas is cleared first.
+      // Over the window: the marks wherever they are, the traffic only
+      // inside the hero, then the black car and the ring over everything. A
+      // scissored clear would only clear the scissor box, so the whole
+      // canvas is cleared first.
       const ringOn = ringMesh.visible
       renderer.autoClear = false
       renderer.clear()
-      blackMesh.visible = ringMesh.visible = false
+      only(marks.mesh)
+      renderer.render(scene, camera)
       const w = Math.max(0, clip.x1 - clip.x0)
       const h = Math.max(0, clip.y1 - clip.y0)
       if (w && h) {
+        only(mesh)
         renderer.setScissorTest(true)
         renderer.setScissor(clip.x0, size.height - clip.y1, w, h)
         renderer.render(scene, camera)
         renderer.setScissorTest(false)
       }
-      mesh.visible = false
-      blackMesh.visible = true
-      ringMesh.visible = ringOn
+      only(blackMesh, ...(ringOn ? [ringMesh] : []))
       renderer.render(scene, camera)
-      mesh.visible = true
+      only(marks.mesh, mesh, blackMesh, ...(ringOn ? [ringMesh] : []))
       renderer.autoClear = true
     },
 
@@ -312,6 +327,7 @@ export function createRenderer(canvas, colors) {
       canvas.removeEventListener('webglcontextlost', onLost)
       traffic.geometry.dispose()
       black.geometry.dispose()
+      marks.dispose()
       material.dispose()
       ringGeometry.dispose()
       ringMaterial.dispose()

@@ -77,6 +77,10 @@ export function createPlayer(world, { x, y, a }, speed = 0, { mode, p = CONFIG.p
   let last = null // the gearbox's report from the last step
   // How far into a drift the rear is: 0 gripping, 1 fully loose.
   let drifting = 0
+  // What the tyres are doing, for the marks (tread.js): how fast each axle
+  // is sliding sideways past its grip, m/s; the brake pedal and the speed;
+  // and whether the rear is spinning or locked by the gearbox.
+  const tyres = { front: 0, rear: 0, brake: 0, speed: 0, spin: false }
 
   // m/s along the car's heading, negative when rolling backwards.
   const forwardSpeed = () => {
@@ -86,7 +90,8 @@ export function createPlayer(world, { x, y, a }, speed = 0, { mode, p = CONFIG.p
   }
 
   // Cancel the sideways velocity at one axle, up to its grip. dir is the
-  // way the axle's wheels point.
+  // way the axle's wheels point. Returns how fast the axle is still sliding
+  // sideways, m/s: 0 while it grips.
   function grip(localX, dirAngle, share, dt) {
     const ang = body.getAngle()
     const c = Math.cos(ang)
@@ -101,7 +106,7 @@ export function createPlayer(world, { x, y, a }, speed = 0, { mode, p = CONFIG.p
     const cap = p.grip * share * (mass / 2) * dt
     const j = clamp(-lateral * (mass / 2), -cap, cap)
     body.applyLinearImpulse({ x: sx * j, y: sy * j }, g, true)
-    return Math.abs(-lateral * (mass / 2)) > cap
+    return Math.max(0, Math.abs(lateral) - cap / (mass / 2))
   }
 
   return {
@@ -149,9 +154,13 @@ export function createPlayer(world, { x, y, a }, speed = 0, { mode, p = CONFIG.p
       if (hard) rear *= p.rearGripBraking
       // Wheelspin, and the rear locked by the gearbox (an over-rev, or a gear
       // against the way the car's rolling): the rear lets go.
-      if (out.wheelspin || out.brakeDecel >= CONFIG.gearbox.overrevDecel - 1) rear *= p.rearGripSpin
-      grip(half, ang + delta, 1, dt)
-      grip(-half, ang, rear, dt)
+      const spin = out.wheelspin || out.brakeDecel >= CONFIG.gearbox.overrevDecel - 1
+      if (spin) rear *= p.rearGripSpin
+      tyres.front = grip(half, ang + delta, 1, dt)
+      tyres.rear = grip(-half, ang, rear, dt)
+      tyres.brake = stop
+      tyres.speed = speed
+      tyres.spin = spin
 
       // Drive, at the rear axle, along the heading, as much as the tyres can
       // put down.
@@ -186,9 +195,14 @@ export function createPlayer(world, { x, y, a }, speed = 0, { mode, p = CONFIG.p
       return Math.abs(forwardSpeed())
     },
 
-    // How far into a drift the rear is, 0 to 1: for the tyre marks, later.
+    // How far into a drift the rear is, 0 to 1.
     get drift() {
       return drifting
+    },
+
+    // What the tyres did this step, for the marks.
+    get tyres() {
+      return tyres
     },
 
     // The gearbox's last report: gear, rpm, state and this step's events.

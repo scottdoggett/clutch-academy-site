@@ -22,6 +22,7 @@ import { CONFIG } from '../config.js'
 import { createFollow } from './follow.js'
 import { createInput } from './input.js'
 import { createControls, createPlayer } from './player.js'
+import { createTread } from './tread.js'
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
@@ -33,8 +34,21 @@ const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 // tests) the walls are the hero's edges with the top one at `top`. area:
 // the element keys are heard on, the driving layer. mode: the gearbox's to
 // start with, 'auto' or 'manual'. onControl: the car is now the visitor's.
-// onExit: Esc, or focus leaving the driving layer.
-export function createDriver({ sim, k, box, top, page = null, area, mode = CONFIG.gearbox.defaultMode, onControl, onExit }) {
+// onExit: Esc, or focus leaving the driving layer. onMark(x0, y0, x1, y1,
+// strength, onBelt): a tyre mark segment, px, laid while the visitor
+// drives; on the reviews strip it's in the strip's frame (tread.js).
+export function createDriver({
+  sim,
+  k,
+  box,
+  top,
+  page = null,
+  area,
+  mode = CONFIG.gearbox.defaultMode,
+  onControl,
+  onExit,
+  onMark,
+}) {
   const u = sim.units
   const world = new World({ gravity: { x: 0, y: 0 } })
   const car = sim.cars.find((c) => c.black)
@@ -72,6 +86,12 @@ export function createDriver({ sim, k, box, top, page = null, area, mode = CONFI
   let bounds = page // the walls; the hero's box when there's no page
   let leaving = null // { side, t }: -1 off the left, +1 off the right
   const follow = createFollow()
+  const tread = createTread()
+  // The reviews strip, a treadmill (§The treadmill): { x0, y0, x1, y1 } in
+  // the hero's px, its speed, px/s, + right, and how far it has moved in
+  // all. Null when there's none.
+  let belt = null
+  let across = null // px/s the car is going across the strip, while it's on it
   let ring = null // { t }: seconds since control started
   let target = null // where a returning car is heading, from sim.landing()
   let retarget = 0
@@ -451,12 +471,31 @@ export function createDriver({ sim, k, box, top, page = null, area, mode = CONFI
     else if (state === 'returning') autopilot(dt)
     else if (state === 'leaving') leave(dt)
     world.step(dt, 8, 3)
+    // On the strip, the strip carries the car: it moves with the reviews,
+    // and its own driving is on top of that. What it does to the strip is
+    // its speed across it.
+    across = null
+    if (player && belt) {
+      const at = player.body.getPosition()
+      const x = at.x * k
+      const y = at.y * k
+      if (x >= belt.x0 && x <= belt.x1 && y >= belt.y0 && y <= belt.y1) {
+        const r = bounds ?? hero
+        const reach = u.length / 2 + 1
+        const to = walls ? clamp(x + belt.speed * dt, r.x0 + reach, r.x1 - reach) : x + belt.speed * dt
+        player.body.setTransform({ x: to / k, y: at.y }, player.body.getAngle())
+        across = player.body.getLinearVelocity().x * k
+      }
+    }
     if (player) {
       player.pose(pose)
       car.x = pose.x * k
       car.y = pose.y * k
       car.a = pose.a
       car.v = pose.v * k
+      // Tyre marks, only while it's the visitor's.
+      if (state === 'driving' && onMark) tread.lay(car, player.tyres, k, onMark, belt)
+      else tread.reset()
       const engine = player.engine
       if (engine && state === 'driving') {
         telemetry.gear = engine.gear
@@ -559,6 +598,17 @@ export function createDriver({ sim, k, box, top, page = null, area, mode = CONFI
     // The visitor scrolled the page themselves.
     holdFollow() {
       follow.hold()
+    },
+
+    // The reviews strip, measured by the engine each frame, or null.
+    setBelt(next) {
+      belt = next
+    },
+
+    // How fast the car is going across the strip, px/s, + right, while it's
+    // on it; null when it isn't. The strip answers to it.
+    get across() {
+      return across
     },
 
     // The hero changed size: new walls if they're the hero's, and the car
