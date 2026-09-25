@@ -36,7 +36,7 @@ reviewed. **Work on `overhaul`. Never commit directly to `main`.**
 `docs/spec/archive/` holds the retired single-page spec and the rebuild's
 planning docs. **Don't work from anything in there.**
 
-## Current state (September 24, 2026)
+## Current state (September 25, 2026)
 
 - **All 9 routes are built with real content**: `/`, `/about`,
   `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
@@ -55,26 +55,17 @@ planning docs. **Don't work from anything in there.**
   September motion work, so re-running Lighthouse across all 9 routes is a
   cutover requirement now, not a formality.
 - **The homepage hero is being rebuilt** as a top-down city with traffic and a
-  drivable car, with a manual or an automatic gearbox. Spec:
-  `docs/spec/hero-drive.md`, which works in seven phases and stops for review
-  after each. Phases 1–2 (spec, road maps) are done, committed (`8bd1a72`,
-  `f922e2e`) and pushed to `origin/overhaul`. Phase 3 (ambient traffic) is
-  built and its roads approved; Phase 4 (a drivable black car, planck.js) is
-  built and retuned. **Phase 5 (a manual and an automatic gearbox with a
-  switch, and the gear display) is built and waiting for Scott's review.**
-  Since then the car can be driven over the whole page, with the page
-  scrolling after it (spec §Driving the whole page); Scott tried it and
-  liked it. Phases 3 to 5 and the whole-page drive are committed and pushed
-  to `origin/overhaul`. Tyre marks (Phase 6's, pulled forward) and the
-  reviews strip as a treadmill for the car followed on September 25, then
-  a redesign of the driving display ("Test drive", the speedometer bottom
-  left, the keys and Stop in a dock in the middle, the gear shifter bottom
-  right), and Phase 6 with effects (traffic bumped out of its lane, sparks,
-  stall and tyre smoke), all committed and pushed. The code is in
-  `src/components/hero/`, the traffic in its lazy `engine/` chunk and the
-  driving in its lazy `drive/` chunk, tested with `npm test` (92 tests). The
-  spec's §Handoff says where it is, what changed from the spec, and what's
-  next (Phase 6, knocks, recovery, tyre marks and smoke).
+  drivable car. Spec: `docs/spec/hero-drive.md`, which works in seven phases
+  and stops for review after each. **Phases 1 to 6 are built, committed and
+  pushed to `origin/overhaul`**: the roads, ambient traffic, a black car
+  you can drive over the whole page with a manual or automatic gearbox, a
+  dash along the bottom of the window ("Test drive" to start it), tyre
+  marks, the reviews strip as a treadmill, and traffic bumped out of its
+  lane on a crash, with sparks and smoke. **Phase 7** (performance and
+  fallbacks) is what's left. The code is in `src/components/hero/`, the
+  traffic in its lazy `engine/` chunk and the driving in its lazy `drive/`
+  chunk, tested with `npm test` (92 tests). The spec's §Handoff says where
+  it is, how Scott reviews, the open questions and what bit last time.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 

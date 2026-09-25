@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** September 24, 2026.
+**Last updated:** September 25, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -16,11 +16,13 @@ package cards) and August 20 (the hub's chooser) — have been applied, and in
 September the homepage got a redesign pass: beige light sections, rewritten
 copy, and GSAP motion. One piece is still being built: **the homepage hero is
 being rebuilt as a small city with traffic and a car you can drive**
-(`hero-drive.md`), in seven phases. Two are done; the third (the traffic)
-is built with its roads approved; the fourth (a car you can drive) is built
-and retuned; and the fifth (the gearbox and gear display) is built and
-waiting for review. Everything else that
-remains before cutover is verification and client sign-off. The other caveat: **the July QA pass no longer reflects
+(`hero-drive.md`), in seven phases. Six are built, committed and pushed:
+the roads, the traffic, a car you can drive over the whole page with a
+manual or automatic gearbox, a dashboard along the bottom of the window,
+tyre marks, and traffic that's bumped out of its lane when you hit it,
+with sparks and smoke. Phase 7, performance and fallbacks, is left.
+Everything else that remains before cutover is verification and client
+sign-off. The other caveat: **the July QA pass no longer reflects
 the build**, so re-running it is now a cutover requirement rather than a
 formality.
 
@@ -28,7 +30,8 @@ formality.
 
 The homepage hero becomes a top-down city on the brand red: white roads,
 blue traffic that stops at every junction, and one black car a visitor can
-drive with a real manual gearbox. The copy and both CTAs stay as they are, in
+drive, with a real manual gearbox or an automatic one, anywhere on the
+page. Phases 1 to 6 are built and pushed; the log below runs in order. The copy and both CTAs stay as they are, in
 HTML. The spec is `hero-drive.md`; it was reviewed and every recommendation
 accepted on September 24.
 
@@ -90,8 +93,9 @@ accepted on September 24.
   slow and clunky. It's retuned: 0 to 100 km/h in 1.8s, top speed about 205
   km/h, a quarter turn in about 0.9s, and a drift above 45 km/h that holds
   without spinning.
-- **Phase 5, the gearbox and gear display:** built September 24, waiting
-  for Scott's review. A real six-speed box with a clutch,
+- **Phase 5, the gearbox and gear display:** built September 24, and
+  revised at Scott's request in the entries below. A real six-speed box
+  with a clutch,
   in two modes: manual (↑ and ↓ shift, Shift is the clutch; it grinds,
   stalls and over-revs like a real one) and automatic (it shifts itself and
   feels like the Phase 4 car Scott liked). A button on the display, or M,

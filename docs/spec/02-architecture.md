@@ -97,12 +97,13 @@ src/
 │   │                           # road maps in layouts/, graph.js, layout.js,
 │   │                           # the server-rendered RoadLayer, HeroStage
 │   │                           # (client), engine/ (the lazy traffic chunk:
-│   │                           # traffic.js, render.js, the loop), drive/
-│   │                           # (the lazy planck chunk: the drivable car,
-│   │                           # its gearbox, keys, the page following it,
-│   │                           # the return to traffic),
-│   │                           # the Test drive button and the driving display, and
-│   │                           # their node:test suites
+│   │                           # traffic.js, render.js, marks, particles,
+│   │                           # the loop), drive/ (the lazy planck chunk:
+│   │                           # the drivable car, its gearbox, keys, the
+│   │                           # page following it, tyre marks, knocks and
+│   │                           # effects, the way back to traffic), the
+│   │                           # Test drive button and the driving display,
+│   │                           # and their node:test suites
 │   ├── motion/
 │   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
 │   └── lessons/

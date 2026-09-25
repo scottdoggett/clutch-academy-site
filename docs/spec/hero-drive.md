@@ -9,17 +9,11 @@ new.
 
 ✅ **Reviewed and approved**, September 24, 2026. Every recommendation in the
 first draft was accepted, and the open questions were answered the same day
-(§Decisions). **Phases 1 and 2 are done, committed and pushed**: the road
-layouts, the road graph, the server-rendered road layer, the headline check,
-and their tests. **Phase 3, ambient traffic, is built and its roads
-reviewed and approved. Phase 4, the Drive button and a drivable black car,
-is built and was retuned after Scott's first drive. Phase 5, the gearbox
-(manual and automatic, with a switch between them) and the gear display,
-is built and waiting for review.** Since then the car can be driven over
-the whole page, with the page scrolling after it (§Driving the whole page),
-which Scott tried and liked. Phases 3 to 5 and the whole-page drive are
-committed and pushed to `origin/overhaul`. If you're picking this up, read
-§Handoff first.
+(§Decisions). **Phases 1 to 6 are built, committed and pushed**: the roads
+(Phases 1 and 2), ambient traffic (3), the drivable black car (4), the
+gearbox (5), and knocks with smoke and sparks (6), with a run of changes
+Scott asked for along the way (§Decisions 14 to 28). Only Phase 7 is left.
+If you're picking this up, read §Handoff first.
 
 Legend as in `README.md`: ✅ decided, 🟡 recommended, ❓ open, 📎 pending asset.
 Anything the brief states outright is ✅. What was 🟡 in the draft is now ✅
@@ -28,66 +22,49 @@ measurements, or another doc, it's flagged rather than silently resolved.
 
 ## Handoff
 
-Written September 24, 2026, at the end of Phase 5, for whoever picks it up
-after Scott's review.
+Written September 25, 2026, at the end of Phase 6, for whoever picks it up
+for Phase 7.
 
 ### Where it is
 
-- **Phase 1** (this spec) and **Phase 2** (the roads) are done. Commits
-  `8bd1a72` (code) and `f922e2e` (docs) are on `overhaul` and were pushed to
-  `origin/overhaul` the same day, which deploys to the review Vercel project,
-  not the live site.
-- **Phase 3** (ambient traffic) is built. Its review changed the roads: fewer
-  of them, every road one width, and the phone band fixed at 240px. Scott
-  approved the roads, and the traffic was then fixed for the short blocks and
-  short windows those changes exposed (§Decisions 14 to 17).
-- **Phase 4** (the Drive button and a drivable black car) is built. Scott
-  drove it and found it slow and clunky; the handling was retuned
-  (§Decisions 18) and he was happy with it.
-- **Phase 5** (the gearbox and the gear display) is built and waiting for
-  Scott's review in the dev server. He asked for the automatic to stay
-  alongside the manual, with a way to switch (§Decisions 19).
-- **After Phase 5, the whole page.** Scott asked for the car to drive over
-  the entire site, with the page scrolling after it near the bottom of the
-  window, with momentum (§Decisions 20). It's built, and Scott tried it and
-  liked it (§Driving the whole page, and §After Phase 5 below).
-- **Tyre marks, pulled forward from Phase 6** (September 25). Scott asked
-  for marks behind the black car whenever he drives it, stronger in a skid
-  or drift (§Decisions 21). Built (§Tyre marks, and §After Phase 5
-  below).
-- **Phase 6** (September 25): Scott asked for effects, smoke on a stall and
-  traffic affected by a crash, "and stuff like that" (§Decisions 27).
-  Knocks, recovery for knocked cars, the anti-cascade rule and smoke are
-  built as the spec has them, with sparks and tyre smoke added. Fire came
-  and went the same day: a crash now just bumps the other car and throws
-  sparks (§Decisions 28, §Traffic as physical bodies, §Smoke, §Effects).
-  Phase 7 is what's left.
-- **The treadmill** (September 25). Scott asked for the reviews strip to
-  carry the car and its marks, and for the car to speed it up, slow it or
-  turn it round, "almost like a treadmill" (§Decisions 22). Built (§The
-  treadmill).
-- **The driving display, redesigned** (September 25). The button says
-  "Test drive", and the display runs along the bottom of the window like a
-  car's dash: a half-circle speedometer in the bottom-left corner, the
-  keys, the mode switch and Stop in a dock in the middle, and a large gear
-  shifter in the bottom-right corner (§Decisions 23 and 24). Built (§After
-  Phase 5: the driving display, below).
-- Phases 3 to 5 and the whole-page drive are committed and pushed to
-  `origin/overhaul`, September 24, so the review deployment has them. The
-  September 25 work (tyre marks, the treadmill, the gear knob fix, the
-  display's redesign, the start up top, the new end to a drive, and Phase
-  6 with its effects) is committed and pushed too.
-  Scott usually pushes himself; the HTTPS push command, for when he asks
-  for a push from here, is below.
+- **Phases 1 to 6 are built, committed and pushed** to `origin/overhaul`,
+  which deploys to the review Vercel project, not the live site. Only
+  Phase 7 is left (§What's next).
+- **Phase 1** (this spec) and **Phase 2** (the roads), September 24.
+- **Phase 3** (ambient traffic). Its review changed the roads: fewer of
+  them, every road one width, and the phone band fixed at 240px. Scott
+  approved the roads, and the traffic was then fixed for the short blocks
+  and short windows those changes exposed (§Decisions 14 to 17).
+- **Phase 4** (a drivable black car), retuned after Scott's first drive
+  (§Decisions 18).
+- **Phase 5** (the gearbox, manual and automatic with a switch, §Decisions
+  19). Then, at Scott's asking over September 24 and 25: the car driving
+  the whole page with the page following it (§Decisions 20); tyre marks
+  (21); the reviews strip as a treadmill (22); the driving display
+  redesigned into a car's dash in four rounds (23, 24); the black car
+  starting up top (25); and a drive ending with the car driving itself off
+  the side (26). Each has its own section below and in the design.
+- **Phase 6** (September 25): knocks, recovery for knocked cars, the
+  anti-cascade rule and smoke, with sparks and tyre smoke added. Fire was
+  built and taken out the same day (§Decisions 27 and 28, §Phase 6 as
+  built).
+- Commits: Phases 1 and 2 as `8bd1a72` and `f922e2e`; Phases 3 to 5 as
+  `14bdbd5` and `1d5b5a0`; the whole page as `cd5517f` and `f2a72f4`; the
+  knob fix, the tyre marks and the treadmill as `fb7ab4c`, `88a81bf` and
+  `29a724f`; the dash, the new end to a drive and Phase 6 as `a6143e3` and
+  `107ecab`; and this handoff after them. All pushed. Scott usually pushes
+  himself; the HTTPS push command, for when he asks for a push from here,
+  is below.
 - What exists: `src/components/hero/`, which holds `config.js`, `graph.js`,
   `layout.js`, `layouts/wide.json` and `compact.json`, `RoadLayer.jsx`,
   `HeroStage.jsx`, `DriveButton.jsx`, `DriveHud.jsx` and `DriveHud.css`,
-  `GearGate.jsx` and `gate.js`, `ControlsHint.jsx`, `engine/` (`traffic.js`,
-  `render.js`, `marks.js`, `index.js`), `drive/` (`player.js`, `gearbox.js`,
-  `input.js`, `follow.js`, `tread.js`, `index.js`), the tests and the
-  fixture. The hero markup and CSS are in `src/components/home/Hero.jsx` and
-  `Hero.css`, and the treadmill's meeting point with the reviews strip is
-  `src/lib/treadmill.js`. `npm test` runs 89 tests, all passing. Lint and
+  `GearGate.jsx` and `gate.js`, `ControlsHint.jsx`, `engine/` (`index.js`,
+  `render.js`, `traffic.js`, `marks.js`, `particles.js`), `drive/`
+  (`index.js`, `player.js`, `gearbox.js`, `input.js`, `follow.js`,
+  `tread.js`, `recover.js`, `effects.js`), the tests and the fixture. The
+  hero markup and CSS are in `src/components/home/Hero.jsx` and `Hero.css`,
+  and the treadmill's meeting point with the reviews strip is
+  `src/lib/treadmill.js`. `npm test` runs 92 tests, all passing. Lint and
   build are clean.
 - planck.js 1.5.0 is installed, and only `drive/` imports it.
 - The first prototype of this feature, a different design, is gone: saved
@@ -436,6 +413,41 @@ shifter bottom right with the gear and the clutch lamp lit. The knob's
 travel and the fades can't be seen there, since GSAP doesn't tick in the
 hidden tab.
 
+### Phase 6 as built
+
+Scott asked for effects: "when i stall it should have some smoke. when i
+crash the other cars should be affected and catch on fire. add stuff like
+that". Built September 25; the fire went the same day.
+
+- **Knocks** (§Traffic as physical bodies): a traffic car the black car
+  touches becomes a real body of the same mass after one step's contact is
+  let through, slides and spins with its brakes locked, and knocks others
+  only above 1 m/s of closing speed, the anti-cascade rule.
+- **Recovery** (§Recovery): the black car's way back into a lane, moved out
+  of the driver into `drive/recover.js` and shared. A knocked car settles
+  and drives back into its lane; one pushed off the roads, or that gives
+  up, fades out and comes back in at an edge.
+- **A drive lasts until they're back.** Once the black car's part is done
+  the driver says it's settling, the world stays up for the knocked cars,
+  and pressing Test drive again starts a new drive on the same world.
+- **Effects** (§Smoke, §Effects): smoke from a stall, an over-rev and
+  sliding tyres, and sparks where cars hit. `drive/effects.js` (pure) says
+  what, `engine/particles.js` draws it.
+- **Fire, the smoke burst at a crash and the black car's damage smoke**
+  were built, seen by Scott, and taken out the same day. A crash bumps the
+  other car and throws sparks, and nothing more (§Decisions 28).
+
+**Changed from the spec, for review:** knocked cars find their way back by
+the black car's path as built (§Recovery), not the spec's pure pursuit;
+one that ends up off the roads fades out instead of driving back; tyre
+smoke and sparks are additions.
+
+**Checked:** 3 knock tests (§Tests), Phase 6's done-when among them: a
+chain of knocks clears within 15s of the last. In 28 rams at full throttle,
+21 knocked cars drove back into their lanes and 7 faded out, in 2 to 13s.
+In Chrome, a rammed car knocked across a junction with sparks.
+
+### Open questions
 ### Open questions
 
 1. **Which gearbox mode first?** Automatic, until a visitor picks. It's the
@@ -464,8 +476,9 @@ hidden tab.
 
 ### What's next
 
-1. Scott's review of Phase 6 and the effects in the dev server, and any
-   revisions. Record each one in §Decisions and in the section it changes.
+1. Any more revisions from Scott. He has seen Phase 6 and had the fire
+   taken out; the rest is in §Open questions. Record each one in
+   §Decisions and in the section it changes.
 2. Then Phase 7: finishing reduced motion and lazy loading, save-data,
    WebGL-failure handling, disposal, the performance pass (now with
    particles and knocked cars in it) and the bundle report (§Phases).
@@ -489,9 +502,14 @@ hidden tab.
   arcade values, not realism.
 - **Change only what he asks for.** When a revision says "don't change
   anything except X", take it literally.
-- **Commit only when asked.** He pushes himself. He asked for one push on
-  September 24 and then said he'd push later, so don't push unless he asks in
+- **Commit only when asked.** He usually pushes himself. He asked for
+  pushes on September 24 and 25; otherwise don't push unless he asks in
   that session.
+- **He iterates fast on looks.** On September 25 the driving display went
+  through four layouts and three treatments in a day. For small visual
+  tweaks he's watching the dev server himself: make the change, lint, say
+  what changed and any trade-off, and skip the browser screenshot round.
+  New behaviour and new features still get checked in the browser.
 - **Plain writing** in docs and messages: the `unslop` skill's rules, with no
   em dashes and few parentheses.
 - **UI work** for the Drive button, controls hint and HUD uses the
@@ -557,6 +575,16 @@ Traps:
   with `getBoundingClientRect()`, not `offsetWidth`, which rounds.
 - **Long measurement scripts** can pass the tool's 45s limit. Start them
   unawaited, store results on `window`, and read them in a second call.
+- **GSAP never ticks there,** so the knob's travel, the fades and the
+  entrances can't be seen, and a tween stuck at its start can look like a
+  bug. Check that logic in Node: the knob fix was proved by running the
+  effect's revert through `gsap.context` there.
+- **Timers are throttled** in the hidden tab: a `setTimeout` in a loop can
+  stall a script past the limit. Yield with a `MessageChannel` message
+  instead.
+- **The engine can be slow to arrive** there, since `requestIdleCallback`
+  is slow in a hidden tab. Poll for `__heroEngine` and `.drive` rather than
+  waiting a fixed 5s.
 
 ### Things that bit, and conventions to keep
 
@@ -595,6 +623,17 @@ Traps:
   saw it; the hidden tab couldn't, since its tweens never start. The effect
   now sets a `live` flag false before reverting, and `onUpdate` checks it.
   Any tween that writes somewhere from `onUpdate` needs the same.
+- **Knocks take two steps.** planck can't change a body during a step, so
+  the pre-solve callback only lets the contact through and queues the car;
+  it becomes a dynamic body after `world.step()`. The world manifold's
+  normal points from fixture A to fixture B.
+- **A drive outlives the black car's part.** Knocked cars need the world,
+  so the driver says settling until they're back, and the engine ends the
+  drive only on done. A test that waits for the end has to step the
+  driver, not just the traffic.
+- **The tests count knocked cars as bodies, not traffic.** A knock lets one
+  step's contact through, so the play-mode tests' overlap check skips cars
+  the black car has knocked.
 - **The React lint rules** (`react-hooks` 7) reject writing a ref during
   render and calling setState straight from an effect body. Stable handlers
   go in `useCallback` with no dependencies; a media query's first value comes
@@ -1151,7 +1190,7 @@ portal and control starts there.
 ### Built, Phase 3
 
 `engine/traffic.js` follows the table above. Where the spec was silent, it
-made these calls, all waiting for review:
+made these calls, which Scott has driven through in every phase since:
 
 - **Following** uses the intelligent driver model with the table's values:
   2.5 m/s² to accelerate, 3.5 m/s² to brake, a 1.2s time gap and a 1.5m
@@ -2023,13 +2062,16 @@ disposed on unmount.
   gzipped, three.js included, and the homepage's first-load JS grew 1.2KB.
   Skipping it under save-data or when the hero was never on screen is still
   Phase 7, with the rest of the WebGL-failure handling.
-- **Built in Phases 4 and 5:** the drive chunk (planck, `drive/`, and the gear
-  display with it) starts loading on the pill's hover or focus, at the latest
-  on the press, and phones and touch screens never load it. It's 50.8KB
-  gzipped. The ambient chunk is 138KB. The homepage's first-load JS is 3.7KB
-  above `d4805e0`, the commit before Phase 3, for Phases 3 to 5 together.
-  Four draw calls: the marks, the traffic, the black car and the ring.
-  Smoke comes in Phase 6.
+- **Built in Phases 4 to 6:** the drive chunk (planck and `drive/`) starts
+  loading on the pill's hover or focus, at the latest on the press, and
+  phones and touch screens never load it. At the end of Phase 6 it's 54.5KB
+  gzipped, with 2.1KB more for the driving display loaded alongside, inside
+  the 60KB budget. The ambient chunk (three.js, the traffic, the marks and
+  the particles) is 137.5KB. The homepage's own client chunk (HeroStage, the
+  reviews strip, the pill) is 16KB. At the end of Phase 5 the homepage's
+  first-load JS was 3.7KB above `d4805e0`, the commit before Phase 3; that
+  comparison is Phase 7's to redo. Six draw calls while driving: the marks,
+  the traffic, the black car, the ring, smoke and sparks.
 
 ## Accessibility
 
@@ -2363,7 +2405,7 @@ iframes and prints the new `sizes` array.
 | 2 | ✅ Done, commits `8bd1a72` and `f922e2e`. Layout JSON for both layouts, `graph.js`, `layout.js`, `RoadLayer.jsx` server-rendered, the half-width copy and the phone street band, resize, the headline check, `npm test` with layout and graph tests, the fixture, prototype folder dealt with, `08-motion.md` §The hero updated | ✅ Built September 24, then revised the same day: the road layer rebuilt so ticks end cleanly, zebra crossings at every junction (then thinned), and a bigger, less regular phone map under smaller phone type, then drawn zoomed out. 31 tests pass, lint and build clean, checked in Chrome at 360, 390, 768 and 1440px. |
 | 3 | **Built September 24; roads reviewed and approved (§Decisions 14 to 17).** `engine/`: renderer, cars, traffic, reservations, Ts and corners, turns, portals, respawn, stopping behind the crossings, fade-in, pause and resume, seeded start, on both maps. Pulled forward from Phase 7: the parked frame under reduced motion, and lazy loading. See §Handoff. | Headless traffic test passes. In Chrome at 390, 768, 1440 and 1920px: cars follow lanes, stop behind crossings, take junctions one at a time, respawn, never overlap; parked under reduced motion. `08-motion.md` rules 7 and 8 updated. All done, except that reduced motion was checked through `park()` rather than by toggling the setting (§Handoff). 42 tests, lint and build clean. |
 | 4 | **Built September 24; retuned after Scott's first drive (§Decisions 18).** Drive button, `drive/` with planck, walls, player forces, input and focus, driving over text, exit and rejoin, controls hint, takeover ring. See §Handoff. | Keyboard-only run-through: enter, drive, Tab away, Esc, focus back on Drive. Done in Chrome (§Handoff, Phase 4 as built). Retuned after Scott's first drive (§Decisions 18). 54 tests, lint and build clean. |
-| 5 | **Built September 24, waiting for review.** `gearbox.js` and tests, in manual and automatic with a switch (§Decisions 19), then the HUD. Then, at Scott's request, the car driving the whole page (§Decisions 20). See §Handoff. | Gearbox tests pass (12). The HUD checked in the browser in both modes; the whole-page drive checked in the browser, and Scott liked it; his review of the rest next. 77 tests, lint and build clean. |
+| 5 | **Built September 24; revised through September 25 (§Decisions 19 to 26).** `gearbox.js` and tests, in manual and automatic with a switch (§Decisions 19), then the HUD. Then, at Scott's request, the car driving the whole page (§Decisions 20). See §Handoff. | Gearbox tests pass (12). The HUD checked in the browser in both modes; the whole-page drive checked in the browser, and Scott liked it. 77 tests, lint and build clean. |
 | 6 | **Built September 25** (§Decisions 27). Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks (built early, §Decisions 21), smoke, and at Scott's request sparks and tyre smoke (§Effects); fire came and went (§Decisions 28). | A chain of knocks through a full 16-car hero clears on its own within 15s: tested (§Tests). Checked in Chrome: a rammed car knocked across a junction with sparks. 92 tests, lint and build clean. |
 | 7 | Phones and touch (Drive hidden; done early, in Phase 4), finishing reduced motion and lazy loading, save-data, WebGL-failure handling, disposal, performance pass, bundle report (sizes so far in §Loading and performance) | 60fps with 16 cars, a full mark pool and smoke on a mid-range laptop. Reduced-motion and no-JS checks from `08-motion.md` pass. Chunk sizes reported. |
 
@@ -2522,3 +2564,6 @@ questions still open are in §Handoff, §Open questions.
   gear display (Phase 5).
 - ✅ `08-motion.md` rule 6: the exception for driving the whole page, and
   §The hero: the follow under reduced motion (§Decisions 20).
+- ✅ `08-motion.md` §The hero: the dash's entrances (§Decisions 23, 24), and
+  smoke and sparks (Phase 6).
+- ✅ `05-analytics.md`: the button is "Test drive" (§Decisions 23).
