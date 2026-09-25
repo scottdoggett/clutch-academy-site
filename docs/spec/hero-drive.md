@@ -52,18 +52,30 @@ after Scott's review.
   the entire site, with the page scrolling after it near the bottom of the
   window, with momentum (§Decisions 20). It's built, and Scott tried it and
   liked it (§Driving the whole page, and §After Phase 5 below).
+- **Tyre marks, pulled forward from Phase 6** (September 25). Scott asked
+  for marks behind the black car whenever he drives it, stronger in a skid
+  or drift (§Decisions 21). Built (§Tyre marks, and §After Phase 5
+  below). The rest of Phase 6 still waits for him.
+- **The treadmill** (September 25). Scott asked for the reviews strip to
+  carry the car and its marks, and for the car to speed it up, slow it or
+  turn it round, "almost like a treadmill" (§Decisions 22). Built (§The
+  treadmill).
 - Phases 3 to 5 and the whole-page drive are committed and pushed to
-  `origin/overhaul`, September 24, so the review deployment has them.
+  `origin/overhaul`, September 24, so the review deployment has them. The
+  tyre marks, the treadmill and the gear knob fix are committed on
+  September 25 but not pushed.
   Scott usually pushes himself; the HTTPS push command, for when he asks
   for a push from here, is below.
 - What exists: `src/components/hero/`, which holds `config.js`, `graph.js`,
   `layout.js`, `layouts/wide.json` and `compact.json`, `RoadLayer.jsx`,
   `HeroStage.jsx`, `DriveButton.jsx`, `Hud.jsx` and `Hud.css`,
   `GearGate.jsx` and `gate.js`, `ControlsHint.jsx`, `engine/` (`traffic.js`,
-  `render.js`, `index.js`), `drive/` (`player.js`, `gearbox.js`, `input.js`,
-  `follow.js`, `index.js`), the tests and the fixture. The hero markup and
-  CSS are in `src/components/home/Hero.jsx` and `Hero.css`. `npm test` runs
-  77 tests, all passing. Lint and build are clean.
+  `render.js`, `marks.js`, `index.js`), `drive/` (`player.js`, `gearbox.js`,
+  `input.js`, `follow.js`, `tread.js`, `index.js`), the tests and the
+  fixture. The hero markup and CSS are in `src/components/home/Hero.jsx` and
+  `Hero.css`, and the treadmill's meeting point with the reviews strip is
+  `src/lib/treadmill.js`. `npm test` runs 88 tests, all passing. Lint and
+  build are clean.
 - planck.js 1.5.0 is installed, and only `drive/` imports it.
 - The first prototype of this feature, a different design, is gone: saved
   to a local branch and then deleted, never pushed (§Where this started).
@@ -327,6 +339,50 @@ straight after a reload, the page jumped 378px between two steps with
 nothing driving it; it didn't happen again, and the follow treated it as the
 visitor's own scroll, as it should. Probably ScrollTrigger in the hidden tab.
 
+### After Phase 5: tyre marks
+
+Scott asked for tyre marks behind the black car while he drives it, "more
+intense" when it skids or drifts. That's the marks half of Phase 6, pulled
+forward; knocks and smoke still wait. §Tyre marks has the design as built.
+
+- `player.js` reports how fast each axle is sliding sideways past its grip,
+  the brake pedal, the speed and wheelspin. `drive/tread.js` (pure,
+  tested) turns that into a strip behind each of the four wheels, a segment
+  every 3px, and `engine/marks.js` draws them from a pool of 6,000, fading
+  in the shader.
+- The canvas stays over the window after a drive until any marks left
+  outside the hero have faded, then goes back into the hero.
+
+**Changed from the spec, for review:** the spec marked only skids (hard
+braking, wheelspin, sliding over 1.5 m/s). Scott asked for marks whenever
+the car is driven, so a rolling wheel leaves a faint mark (15% of a skid's
+strength, fading in about 5s) and a sliding one a dark, wider mark (up to
+55% black, 2.2px, fading over 10s). The strength follows the slide.
+
+**Checked:** 5 tests (§Tests). In Chrome: a drift left four dark arcs,
+tailing off as the tyres gripped again, and the braking marks ran up to the
+car; with the drive ended below the hero, the canvas stayed over the window
+until those marks had faded, then went back into the hero.
+
+### After Phase 5: the treadmill
+
+Scott asked whether the moving reviews could carry the car and its tyre
+marks, and for the car to "speed up or slow down or change directions of
+the sliding reviews based on its speed and direction, almost like a
+treadmill". §The treadmill has the design. In short: the strip carries the
+car and its marks, and the car's wheels push the strip back under it.
+
+**For review:** the direction. A treadmill runs back under you, so driving
+right sends the reviews left, and the car mostly runs on the spot. If he
+meant the car dragging the reviews along with it, that's a sign flip.
+
+**Checked:** 6 tests (§Tests). In Chrome: the engine finds the strip
+(the marquee and the engine share `treadmill.js` across chunks), the car
+knows when it's on it and how fast it's going across it, and its marks
+carry on over the cards. The strip itself doesn't move in the automation
+tab, since GSAP never ticks there, so the belt's answer to the car is
+checked by the tests and waits for Scott's drive.
+
 ### Open questions
 
 1. **Which gearbox mode first?** Automatic, until a visitor picks. It's the
@@ -340,12 +396,14 @@ visitor's own scroll, as it should. Probably ScrollTrigger in the hidden tab.
 3. **The feel of the manual box.** Checked by numbers and tests, not by hand,
    since the automation tab can't run the loop. The automatic was tuned to
    match the Phase 4 drive Scott liked.
-4. **The black car on the darkest cards.** Over the pricing cards' deep red
+4. **Which way the treadmill runs** (§The treadmill): back under the car,
+   as built, or along with it.
+5. **The black car on the darkest cards.** Over the pricing cards' deep red
    it's hard to see. Fine over the hero, the beige bands and the photos.
    A light outline would fix it if it bothers him.
-5. **The follow's feel**: the zone (a fifth of the window), the push and the
+6. **The follow's feel**: the zone (a fifth of the window), the push and the
    coast are in `CONFIG.follow`, tuned by numbers, not by hand.
-6. Settled, for the record: the side street's short blocks (§Decisions 17).
+7. Settled, for the record: the side street's short blocks (§Decisions 17).
    In windows about 600 to 730px tall, a car stopped beside it still sits on
    the zebra crossing, and those blocks have no centre ticks.
 
@@ -476,6 +534,14 @@ Traps:
 - **Swapping the focused Drive pill for the panel** removed the element with
   focus, which reads as focus leaving the hero and ended the drive the moment
   it started. Focus moves in a `useLayoutEffect`, in the same commit.
+- **`mm.revert()` fires `onUpdate`.** A GSAP context's `revert()` renders
+  each tween back at its start without suppressing its callbacks. The gear
+  display's knob tweens a plain number and places itself in `onUpdate`, so
+  every gear change put it back where the last route began, which for a
+  drive's first route is N: it went back to the middle every time. Scott
+  saw it; the hidden tab couldn't, since its tweens never start. The effect
+  now sets a `live` flag false before reverting, and `onUpdate` checks it.
+  Any tween that writes somewhere from `onUpdate` needs the same.
 - **The React lint rules** (`react-hooks` 7) reject writing a ref during
   render and calling setState straight from an effect body. Stable handlers
   go in `useCallback` with no dependencies; a media query's first value comes
@@ -1281,6 +1347,43 @@ section of the homepage, down to the footer, and the page scrolls after it.
   engine writes the result with `scrollTo({ behavior: 'instant' })`, since
   `globals.css` smooth-scrolls to `#packages`.
 
+## The treadmill
+
+✅ **Added September 25, at Scott's request** (§Decisions 22). The
+homepage's reviews strip drifts left on its own. While someone drives the
+black car over it, it acts as a treadmill.
+
+- **It carries the car.** While the car's centre is over the strip, the
+  strip moves it along with the cards each step. A car standing on it rides
+  with the reviews, and its own driving is on top of that. The walls still
+  hold.
+- **The car's wheels push it.** The strip's speed eases towards its drift
+  less 0.7 times the car's own speed across it. Drive right and the reviews
+  run left under the car, faster the faster it goes; drive left and they
+  turn round and run right. So a car driving against the strip mostly runs
+  on the spot, and only gains on it above about 120 km/h. The strip answers
+  in about 0.3s, tops out at 600 px/s either way, and settles back to its
+  drift over about 1.2s once the car is off.
+- **The marks ride along.** A wheel on the strip marks the strip, not the
+  page. Its segments are kept in the strip's frame; the shader adds how far
+  the strip has moved, and fades them out at the strip's ends as the cards
+  are. A car carried along without driving lays nothing, since its wheels
+  aren't rolling on the strip, and crossing onto or off it starts a fresh
+  mark.
+- **Where it lives.** `src/lib/treadmill.js` is the meeting point, with no
+  DOM of its own. The marquee registers its viewport, moves by
+  `beltSpeed()`, and publishes its speed and how far it has moved in all,
+  drags and trackpad swipes included. The engine measures the strip each
+  frame, gives the driver its box, speed and travel, and tells the strip how
+  fast the car is going across it. With no car on it, the marquee drifts
+  exactly as before.
+- **Only while driving**, so only on screens with a keyboard. Under reduced
+  motion the reviews are a static, scrollable list with no belt, and the
+  car drives over them like any other section.
+- **Direction.** A treadmill runs back under you, so driving right sends
+  the reviews left. If the other reading is wanted, the car dragging the
+  reviews along with it, a negative `TREADMILL.coupling` does that.
+
 ## Driving and physics
 
 ✅ planck.js with zero gravity for car bodies and collisions. Lateral friction
@@ -1625,6 +1728,45 @@ shader does the fade. A fixed pool size, recycling the oldest.
 | Fade | The shader computes alpha from `uTime` minus birth time. The CPU sets one uniform per frame and nothing per mark. |
 | Upload | Only the ring slots written that frame, via `addUpdateRange` |
 
+✅ **Built September 25, ahead of the rest of Phase 6, at Scott's request**
+(§Decisions 21), with one change: marks whenever the car is driven, not only
+when it slides.
+
+- **How strong.** Every rolling wheel leaves a faint mark, 15% of a skid's
+  strength. A sliding one leaves more, in proportion: the axle's sideways
+  speed past what its grip cancels, from 0.3 m/s (faint) to 3 m/s (full).
+  Hard braking (past 80%, above 15 km/h) marks all four at 80%, and
+  wheelspin or a locked rear marks the rear at full. A skid tails off over
+  0.2s as the tyre grips again, so a mark thins out instead of stopping
+  dead.
+- **What that looks like.** A full skid is `--black` at 55% and 2.2px wide
+  and fades over 10s. A rolling mark is 1.35px, about 8% and fades in about
+  5s. In between, both follow the strength.
+- **In practice** (measured headlessly): driving straight, launching in
+  the automatic and braking at half pedal leave only rolling marks. Full
+  lock scrubs the front tyres. A drift marks both axles at nearly full,
+  the rear from the moment it steps out.
+- **Where.** `player.js` reports what the tyres did each step;
+  `drive/tread.js` places the four wheels (a 2.5m wheelbase, a 1.5m track)
+  and lays a segment behind each every 3px they roll, joined end to end, and
+  none across a jump. Only while the visitor has the car, not on its way
+  back.
+- **Drawing.** `engine/marks.js`: one instanced quad per segment in a pool
+  of 6,000, recycled oldest first, carrying its ends, when it was laid and
+  its strength. The shader places, widens and fades it, and soft-edges it
+  across. Only the slots written since the last frame are uploaded. The
+  marks go under all the cars, and over the whole page while the canvas is
+  over the window (§Driving the whole page). The page view draws three
+  passes: marks, then the traffic clipped to the hero, then the black car.
+- **After a drive** the loop keeps running while marks are fading, even
+  with the traffic parked under reduced motion, and the canvas stays over
+  the window until marks left outside the hero have faded.
+- **Cleared** when the window or the hero changes size (§Resize), since
+  they'd no longer line up with the page.
+- **Reduced motion:** marks show and fade as normal, as §Phones, touch and
+  reduced motion says. They come from what the visitor did, and a slow fade
+  isn't movement.
+
 ## Smoke
 
 ✅ Grey-white sprite particles that grow and fade over about 1s, for stalls,
@@ -1726,8 +1868,8 @@ disposed on unmount.
   on the press, and phones and touch screens never load it. It's 50.8KB
   gzipped. The ambient chunk is 138KB. The homepage's first-load JS is 3.7KB
   above `d4805e0`, the commit before Phase 3, for Phases 3 to 5 together.
-  Two draw calls so far, the cars and the ring; marks and smoke come in Phase
-  6.
+  Four draw calls: the marks, the traffic, the black car and the ring.
+  Smoke comes in Phase 6.
 
 ## Accessibility
 
@@ -1773,17 +1915,21 @@ src/components/hero/
   gate.test.js
   engine/             the ambient chunk
     index.js          loop, rescale, observers, pause and resume, the dev step hook
-    render.js         three.js scene, camera, car instances, ring
+    render.js         three.js scene, camera, car instances, ring, the draw passes
     traffic.js        lane following, gaps, reservations, turns, portals          (pure)
     traffic.test.js   the headless traffic test
-    marks.js
-    smoke.js
+    marks.js          the tyre marks' pool and shader
+    smoke.js          (Phase 6)
   drive/              the drive chunk
     index.js          planck world, walls, contacts, recovery
     player.js         car forces, lateral grip, steering
     input.js          keyboard, focus, preventDefault
     gearbox.js        engine and gearbox model, manual and automatic         (pure)
     gearbox.test.js
+    follow.js         the page following the car                               (pure)
+    follow.test.js
+    tread.js          where the tyre marks go, and how strong                  (pure)
+    tread.test.js
     drive.test.js     the headless play-mode tests
   __fixtures__/
     copy-rects.json   where the copy lands at 32 sizes, and the phone band
@@ -1800,8 +1946,9 @@ src/components/hero/
   `engine/index.js`, `render.js` and `traffic.js`, and in Phase 4
   `DriveButton`, `ControlsHint`, `Hud` and `drive/index.js`, `player.js` and
   `input.js`, and in Phase 5 `drive/gearbox.js`, `GearGate`, `gate.js` and
-  the gear display, with the tests. `marks.js` and `smoke.js` are still to
-  come. The pure
+  the gear display, with the tests; then `drive/follow.js` for the whole
+  page, and `engine/marks.js` and `drive/tread.js` for the tyre marks.
+  `smoke.js` is still to come. The pure
   modules import each other with `.js` extensions, which Node needs and the
   bundler accepts.
 - ✅ Graph paths' `at(s, out)` fills `out` when given one, so the traffic loop
@@ -1813,10 +1960,11 @@ src/components/hero/
 ### Config, starting values
 
 🟡 All tunable. The shape matters more than the numbers. `world`, `car`,
-`roads`, `layout`, `traffic`, `player`, `gearbox`, `recovery`, `follow` and
-`render` exist in `config.js` today, with the values below; the other
+`roads`, `layout`, `traffic`, `player`, `gearbox`, `recovery`, `follow`,
+`marks` and `render` exist in `config.js` today, with the values below; the other
 sections are still to add, each with its phase. Driving the whole page
-added `follow` and `recovery.leaveKmh` and `leaveMax`.
+added `follow` and `recovery.leaveKmh` and `leaveMax`, and the tyre marks
+added `marks`, changed from the first draft's (§Tyre marks).
 Road sizes are the wide map's; `roadsFor(layout)` scales them by
 `layout.zoom`. Phase 3 added three traffic values the first draft didn't
 have: `lineGap`, the px between a stopped car's nose and the crossing;
@@ -1865,7 +2013,9 @@ export const CONFIG = {
               // Phase 6: settleSpeed: 0.5, settleSpin: 0.3, settleMax: 2, nudgeAbove: 1
             },
   follow:   { zone: 0.2, push: 360, rise: 0.15, coast: 0.8, edge: 8, hold: 0.5 },
-  marks:    { pool: 6000, width: 1.5, every: 3, fade: 10, slip: 1.5, brakeAbove: 0.8 },
+  marks:    { pool: 6000, every: 3, jump: 40, alpha: 0.55, roll: 0.15, width: [1.2, 2.2],
+              fade: 10, rollFade: 4, slip: 0.3, slipFull: 3, release: 0.2,
+              brakeAbove: 0.8, brakeFromKmh: 15, brake: 0.8, track: 1.5 },
   smoke:    { pool: 160, life: 1, from: 6, to: 22, alpha: 0.5 },
   render:   { maxDpr: 2, glass: { traffic: 0.55, black: 0.3 },
               ring: { life: 1, from: 16, to: 40, width: 2.5 } },
@@ -1880,10 +2030,11 @@ read the layout JSON with `readFileSync` rather than an import, which avoids
 import-attribute differences between Node and the Next bundler. They lint
 clean under the existing `eslint.config.js`.
 
-**77 tests, all passing,** after the whole-page drive. `graph.test.js` has
-13, `layout.test.js` 20, `engine/traffic.test.js` 12, `drive/drive.test.js`
-11, `drive/gearbox.test.js` 12, `drive/follow.test.js` 7 and `gate.test.js`
-2. The whole run takes about 3s, the traffic and drive tests in parallel.
+**88 tests, all passing,** after the treadmill. `graph.test.js` has 13,
+`layout.test.js` 20, `engine/traffic.test.js` 12, `drive/drive.test.js`
+13, `drive/gearbox.test.js` 12, `drive/follow.test.js` 7,
+`drive/tread.test.js` 5, `gate.test.js` 2 and `src/lib/treadmill.test.js`
+4. The whole run takes about 3s, the traffic and drive tests in parallel.
 
 ✅ Required by the brief:
 
@@ -1994,6 +2145,25 @@ Added, each checking something the brief requires:
   page's walls the car drives 400px below the hero without touching traffic
   or leaving the walls, and stopped there it leaves by the side inside the
   safety net and comes back in at a way in.
+- **Tyre marks** (`drive/tread.test.js`, planck in Node): the wheels sit a
+  wheelbase apart and a track wide and turn with the car; each wheel's
+  strip is laid a segment every 3px, end to end, and never across a jump;
+  driving straight leaves only rolling marks, and a held drift leaves rear
+  marks averaging over 80% strength, stronger than the front's; hard
+  braking from 100 km/h marks all four at the braking strength, and
+  dropping the clutch at high revs in 1st marks the rear at full. In
+  `drive/drive.test.js`, marks come while the visitor drives and stop when
+  the car makes its own way back.
+- **The treadmill** (`src/lib/treadmill.test.js`): with nothing on it, or
+  a car standing on it, the strip keeps its drift; driving right pushes it
+  left, harder the faster the car goes, and settles where the wheels push
+  it, with the car mostly running on the spot; driving left turns it
+  round; it answers within its `grab` time, settles back over a few
+  seconds, and tops out at `max`. In `drive/tread.test.js`, a wheel on the
+  strip marks it in the strip's frame and starts afresh at its edge. In
+  `drive/drive.test.js`, a car in neutral on a strip drifting at 60 px/s
+  goes 60px with it in a second, isn't going anywhere across it, and marks
+  nothing; off the strip, it has nothing to say to it.
 - **The knob's route** (`gate.test.js`): between any two gears, every leg
   runs along a slot or the neutral plane, never across the gate, and ends in
   the right slot; a change mid-travel sets off from where the knob has got
@@ -2017,7 +2187,7 @@ iframes and prints the new `sizes` array.
 | 3 | **Built September 24; roads reviewed and approved (§Decisions 14 to 17).** `engine/`: renderer, cars, traffic, reservations, Ts and corners, turns, portals, respawn, stopping behind the crossings, fade-in, pause and resume, seeded start, on both maps. Pulled forward from Phase 7: the parked frame under reduced motion, and lazy loading. See §Handoff. | Headless traffic test passes. In Chrome at 390, 768, 1440 and 1920px: cars follow lanes, stop behind crossings, take junctions one at a time, respawn, never overlap; parked under reduced motion. `08-motion.md` rules 7 and 8 updated. All done, except that reduced motion was checked through `park()` rather than by toggling the setting (§Handoff). 42 tests, lint and build clean. |
 | 4 | **Built September 24; retuned after Scott's first drive (§Decisions 18).** Drive button, `drive/` with planck, walls, player forces, input and focus, driving over text, exit and rejoin, controls hint, takeover ring. See §Handoff. | Keyboard-only run-through: enter, drive, Tab away, Esc, focus back on Drive. Done in Chrome (§Handoff, Phase 4 as built). Retuned after Scott's first drive (§Decisions 18). 54 tests, lint and build clean. |
 | 5 | **Built September 24, waiting for review.** `gearbox.js` and tests, in manual and automatic with a switch (§Decisions 19), then the HUD. Then, at Scott's request, the car driving the whole page (§Decisions 20). See §Handoff. | Gearbox tests pass (12). The HUD checked in the browser in both modes; the whole-page drive checked in the browser, and Scott liked it; his review of the rest next. 77 tests, lint and build clean. |
-| 6 | Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks, smoke | A chain of knocks through a full 16-car hero clears on its own within 15s |
+| 6 | Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks (built early, September 25, §Decisions 21), smoke | A chain of knocks through a full 16-car hero clears on its own within 15s |
 | 7 | Phones and touch (Drive hidden; done early, in Phase 4), finishing reduced motion and lazy loading, save-data, WebGL-failure handling, disposal, performance pass, bundle report (sizes so far in §Loading and performance) | 60fps with 16 cars, a full mark pool and smoke on a mid-range laptop. Reduced-motion and no-JS checks from `08-motion.md` pass. Chunk sizes reported. |
 
 Phase 4 and 5 UI work uses the `frontend-design` plugin.
@@ -2104,6 +2274,19 @@ After Phase 5:
     `08-motion.md` rule 6 bans scroll-jacking; he asked for it anyway. Built
     as §Driving the whole page, with the top followed too, and rule 6 given
     the exception. He tried it and called it amazing.
+
+September 25:
+
+21. **Tyre marks now, and whenever the car is driven.** Scott asked for
+    marks behind the black car while he drives it, more intense when it
+    skids or drifts. Pulled forward from Phase 6 on their own, and changed
+    from the spec, which marked skids only: every rolling wheel leaves a
+    faint mark, and a sliding one a darker, wider mark in proportion to the
+    slide (§Tyre marks).
+22. **The reviews strip is a treadmill.** Scott wanted the moving reviews
+    to carry the car and its marks, and the car's speed and direction to
+    speed up, slow or reverse the strip, "almost like a treadmill". Built
+    as a treadmill, the strip running back under the car (§The treadmill).
 
 The Safari question about SVG dash lengths went away with the SVG. The
 questions still open are in §Handoff, §Open questions.

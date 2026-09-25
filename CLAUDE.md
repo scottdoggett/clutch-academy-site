@@ -65,9 +65,11 @@ planning docs. **Don't work from anything in there.**
   Since then the car can be driven over the whole page, with the page
   scrolling after it (spec §Driving the whole page); Scott tried it and
   liked it. Phases 3 to 5 and the whole-page drive are committed and pushed
-  to `origin/overhaul`. The code is in
+  to `origin/overhaul`. Tyre marks (Phase 6's, pulled forward) and the
+  reviews strip as a treadmill for the car followed on September 25,
+  committed but not pushed. The code is in
   `src/components/hero/`, the traffic in its lazy `engine/` chunk and the
-  driving in its lazy `drive/` chunk, tested with `npm test` (77 tests). The
+  driving in its lazy `drive/` chunk, tested with `npm test` (88 tests). The
   spec's §Handoff says where it is, what changed from the spec, and what's
   next (Phase 6, knocks, recovery, tyre marks and smoke).
 - **Not yet merged or deployed to the real domain.** Remaining work is

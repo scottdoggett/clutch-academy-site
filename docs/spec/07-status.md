@@ -112,6 +112,24 @@ accepted on September 24.
   to `08-motion.md` rule 6 (no scroll-jacking), which now says so. Built
   September 24; Scott tried it and liked it. 77 tests, lint and build
   clean.
+- **Tyre marks, September 25:** at Scott's request, pulled forward from
+  Phase 6 on their own. The black car leaves marks whenever it's driven:
+  faint while the wheels roll, darker and wider when a tyre slides, in a
+  drift, a skid, hard braking or wheelspin. They fade over 5 to 10s, under
+  the cars and anywhere on the page. The spec only marked skids; this is
+  Scott's change, recorded as Decision 21. Also fixed: the gear display's
+  knob went back to N before every change. 82 tests, lint and build
+  clean.
+- **The reviews strip as a treadmill, September 25:** at Scott's request.
+  While the black car is on the moving reviews, the strip carries it and
+  its tyre marks along, and the car's wheels push the strip back under it:
+  drive right and the reviews run left, faster the faster the car goes;
+  drive left and they turn round. With no car on it the strip drifts as
+  before. 88 tests, lint and build clean. Which way it should run is a
+  question for Scott (`hero-drive.md` §Open questions).
+- **The September 25 work is committed but not pushed:** the tyre marks,
+  the treadmill and the gear knob fix. The review deployment doesn't have
+  them yet.
 - **Phases 6 and 7, still to build:** collisions, with knocked cars, tyre
   marks and smoke, then save-data, WebGL-failure handling, performance and
   the bundle report. Phase 7's phones and touch part was done early, in

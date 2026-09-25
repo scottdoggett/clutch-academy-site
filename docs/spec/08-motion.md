@@ -57,6 +57,10 @@ site takes its cue from that.
    the homepage hero's traffic are the site's only ambient motion. The
    traffic (`hero-drive.md`) was signed off with the hero brief on September
    24, 2026. Anything else that repeats on its own needs sign-off first.
+   The marquee also answers the hero's black car while someone drives it
+   over the strip (`hero-drive.md` §The treadmill): it speeds up, slows or
+   turns round under the car, then eases back to its drift. Scott asked for
+   it on September 25, 2026.
 8. **Reduced motion means none.** Everything goes inside
    `gsap.matchMedia().add(MOTION_OK, …)`. With `prefers-reduced-motion:
    reduce`, the handler never runs and the page is simply there. No
@@ -223,6 +227,9 @@ disappears, then animates in).
     has momentum: it keeps going for a moment after the car slows. Under
     reduced motion there's none, and the page moves only as far as the car
     does.
+  - Tyre marks fade out over 5 to 10s, in the shader. They do under
+    reduced motion too: they come from the visitor's own driving, and a
+    slow fade isn't movement.
 
 ## Homepage map
 

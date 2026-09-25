@@ -120,7 +120,8 @@ src/
 │   ├── tiktokPixel.js
 │   ├── gsap.js                 # GSAP + plugin registration, MOTION_OK
 │   ├── motion.js               # Motion values and the six data-anim types
-│   └── motionPrepaint.js       # Inline script: hero states before first paint
+│   ├── motionPrepaint.js       # Inline script: hero states before first paint
+│   └── treadmill.js            # The reviews strip as a treadmill for the hero's car
 │
 └── styles/
     ├── tokens.css              # Design tokens
