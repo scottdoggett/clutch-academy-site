@@ -1,13 +1,15 @@
 import { forwardRef } from 'react'
 
-// The way into play mode (docs/spec/hero-drive.md §Entry): a quiet pill in
-// the hero's bottom-right corner, after the CTAs in tab order. The drive
-// chunk starts loading as soon as the pill is hovered or focused, so a press
-// rarely waits on it.
+// The way into play mode (docs/spec/hero-drive.md §Entry): a "Test drive"
+// pill in the hero's bottom-right corner, after the CTAs in tab order. The
+// steering wheel sits on a white disc, like a key fob's button; the label
+// is white on the hero red, and the pill stays in sentence case so it never
+// competes with Book a Lesson. The drive chunk starts loading as soon as
+// the pill is hovered or focused, so a press rarely waits on it.
 
 // A steering wheel in the site's 24×24 line-icon idiom: rim, hub and three
 // spokes, strokeWidth 2 like the gear-lever bullet it sits beside in spirit.
-export const WHEEL = (
+const WHEEL = (
   <svg
     className="drive__icon"
     viewBox="0 0 24 24"
@@ -30,14 +32,16 @@ const DriveButton = forwardRef(function DriveButton({ onPress, onPrefetch, busy 
       ref={ref}
       type="button"
       className="drive"
-      aria-label="Drive the black car with your keyboard"
+      aria-label="Test drive the black car with your keyboard"
       aria-busy={busy || undefined}
       onClick={onPress}
       onPointerEnter={onPrefetch}
       onFocus={onPrefetch}
     >
-      {WHEEL}
-      <span className="drive__label">Drive</span>
+      <span className="drive__disc" aria-hidden="true">
+        {WHEEL}
+      </span>
+      <span className="drive__label">Test drive</span>
     </button>
   )
 })

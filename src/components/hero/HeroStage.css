@@ -15,11 +15,11 @@
   pointer-events: none;
 }
 
-/* ---------- The Drive pill (DriveButton.jsx) -------------------------------
-   Quiet on purpose: it mustn't compete with Book a Lesson. A hero-red fill,
-   so over a white road it still reads as a pill; a solid --chrome label,
-   since faded white on the red fails contrast (tokens.css); full white on
-   hover and focus. Sentence case, unlike the CTAs, for the same reason. */
+/* ---------- The Test drive pill (DriveButton.jsx) -------------------------
+   The steering wheel on a white disc, like a key fob's button, and the label
+   in white on the hero red: easy to find, but in sentence case and without
+   a fill, so it never competes with Book a Lesson. A hairline border until
+   hover or focus, then solid white. */
 .drive {
   position: absolute;
   right: 24px;
@@ -28,33 +28,33 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  height: 36px;
-  padding: 0 1rem 0 0.75rem;
-  border: 1px solid rgb(228 228 228 / 0.45);
+  height: 40px;
+  padding: 0 1.125rem 0 0.3125rem;
+  border: 1px solid rgb(228 228 228 / 0.55);
   border-radius: 999px;
   background-color: var(--red-primary);
-  color: var(--chrome);
+  color: var(--white);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.01em;
   cursor: pointer;
   pointer-events: auto;
-  transition: color var(--transition-reduced) ease,
-    border-color var(--transition-reduced) ease;
+  transition: border-color var(--transition-reduced) ease,
+    background-color var(--transition-reduced) ease;
 }
 
-/* A 44px hit area around the 36px pill. */
+/* A 44px hit area around the 40px pill. */
 .drive::before {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: -2px;
 }
 
 .drive:hover,
 .drive:focus-visible {
-  color: var(--white);
   border-color: var(--white);
+  background-color: var(--red-deep);
 }
 
 .drive:focus-visible {
@@ -66,10 +66,20 @@
   cursor: progress;
 }
 
-.drive__icon {
-  width: 18px;
-  height: 18px;
+.drive__disc {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--white);
+  color: var(--red-primary);
+}
+
+.drive__icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* ---------- The driving layer ---------------------------------------------

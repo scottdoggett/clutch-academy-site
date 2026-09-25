@@ -21,16 +21,17 @@ const SETTLE_FAILSAFE = 1500
 // page's shift gate tests for, and 768px up.
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 
-// The gear display, only needed once someone presses Drive: it loads with
-// the drive chunk, on the pill's hover or focus, not with the page. Not
-// React.lazy: that suspends on its first render even once loaded, and the
-// panel has to be there in the same commit that takes focus from the pill.
-const loadHud = () => import('./Hud')
+// The driving display (the speedometer, the dock and the shifter), only
+// needed once someone presses Test drive: it loads with the drive chunk, on
+// the pill's hover or focus, not with the page. Not React.lazy: that
+// suspends on its first render even once loaded, and the dock has to be
+// there in the same commit that takes focus from the pill.
+const loadHud = () => import('./DriveHud')
 
-// How long the controls hint shows when driving starts, ms.
-const HINT_FOR = 4000
+// How long the keys show along the bottom when driving starts, ms.
+const HINT_FOR = 6000
 
-// The rev bar's full scale, rpm (§HUD): the redline mark sits at 7,000.
+// The rev arc's full scale, rpm (§HUD): the redline band starts at 7,000.
 const REV_MAX = 8000
 
 // The gearbox mode a visitor last picked, remembered in this browser only.
@@ -112,14 +113,16 @@ function whenSettled(hero, fn) {
 //    fade in once, after the hero's entrance, and drive; under reduced
 //    motion they're drawn parked and never move.
 //
-// 3. Drive (§Play mode). A pill in the bottom-right corner, once the cars
-//    are showing, on screens with a keyboard and the wide map. Hovering or
-//    focusing it starts loading the drive chunk (planck.js and the car);
-//    pressing it hands the black car over. The car can go anywhere on the
-//    page (§Driving the whole page), so the canvas and the gear display
-//    move into the driving layer, fixed over the window, for the drive.
-//    Focus goes to the gear display, and comes back to the pill when
-//    driving ends with Esc or the ×.
+// 3. Test drive (§Play mode). A pill in the bottom-right corner, once the
+//    cars are showing, on screens with a keyboard and the wide map.
+//    Hovering or focusing it starts loading the drive chunk (planck.js and
+//    the car); pressing it hands the black car over. The car can go
+//    anywhere on the page (§Driving the whole page), so the canvas and the
+//    driving display move into the driving layer, fixed over the window,
+//    along the bottom: the speedometer bottom left, the dock in the middle,
+//    and the gear shifter bottom right.
+//    Focus goes to the dock, and comes back to the pill when driving ends
+//    with Esc or Stop.
 export default function HeroStage() {
   const ref = useRef(null)
   const engineRef = useRef(null)
@@ -145,14 +148,19 @@ export default function HeroStage() {
   // screen) → driving → idle.
   const [mode, setMode] = useState('idle')
   const [hint, setHint] = useState(false)
-  // What the gear display shows, set only when one of these changes; the
-  // rev bar moves every frame through revRef instead.
-  const [hud, setHud] = useState({ gear: 'N', mode: CONFIG.gearbox.defaultMode, clutch: false, off: false })
+  // What the driving display shows, set only when one of these changes; the
+  // speed, the revs and the clutch move every frame through refs instead.
+  const [hud, setHud] = useState({ gear: 'N', mode: CONFIG.gearbox.defaultMode, off: false })
   const [grinding, setGrinding] = useState(false)
   const [Hud, setHudComponent] = useState(null)
-  const revRef = useRef(null)
+  const revsRef = useRef(null)
   const redlineRef = useRef(null)
-  const seen = useRef({ hud: null, grinds: 0, limits: 0, flicker: false })
+  const speedRef = useRef(null)
+  const speedArcRef = useRef(null)
+  const clutchRef = useRef(null)
+  // The speedometer's full scale, loaded with the display.
+  const topKmh = useRef(220)
+  const seen = useRef({ hud: null, grinds: 0, limits: 0, flicker: false, kmh: -1, revs: -1, clutch: null })
   const hintFade = useRef(null)
   const grindTimer = useRef(0)
 
@@ -304,6 +312,7 @@ export default function HeroStage() {
     chunk.current ??= Promise.all([import('./drive/index.js'), loadHud()])
       .then(([drive, hudModule]) => {
         setHudComponent(() => hudModule.default)
+        topKmh.current = hudModule.TOP_KMH
         return drive
       })
       .catch((err) => {
@@ -313,9 +322,9 @@ export default function HeroStage() {
     return chunk.current
   }
 
-  // Driving ends: Esc, the ×, or focus leaving the driving layer. Focus goes
-  // back to the pill only if it was still on the gear display; tabbing away
-  // keeps it where it went.
+  // Driving ends: Esc, Stop, or focus leaving the driving layer. Focus goes
+  // back to the pill only if it was still on the dock; tabbing away keeps it
+  // where it went.
   // Only refs and state setters inside, so one copy does for the component's
   // whole life, including as the driver's onExit.
   const exit = useCallback(() => {
@@ -350,14 +359,14 @@ export default function HeroStage() {
     }, HINT_FOR)
   }, [])
 
-  // A grind: the gearbox shakes sideways for a moment, and the numeral goes
+  // A grind: the shifter shakes sideways for a moment, and the numeral goes
   // black. Under reduced motion there's no shake; the numeral holds black
   // for 0.4s instead.
   const grind = useCallback(() => {
     clearTimeout(grindTimer.current)
     setGrinding(true)
     grindTimer.current = setTimeout(() => setGrinding(false), 400)
-    const box = hudRef.current?.querySelector('.hud__gearbox')
+    const box = layerRef.current?.querySelector('.dash__shifter')
     if (!box) return
     const mm = gsap.matchMedia()
     mm.add(MOTION_OK, () => {
@@ -365,28 +374,47 @@ export default function HeroStage() {
     })
   }, [])
 
-  // Every frame while driving, from the engine: the rev bar and the limiter
-  // straight to the DOM, and React state only when something it shows has
-  // changed.
+  // Every frame while driving, from the engine: the speed, the revs, the
+  // redline's flicker and the clutch lamp written straight to the DOM, each
+  // only when it has changed; React state only when the gear, the mode or
+  // the engine's state has.
   const onFrame = useCallback(
     (t) => {
-      const fill = revRef.current
-      if (fill) fill.style.transform = `scaleX(${Math.min(1, t.rpm / REV_MAX)})`
-      const mark = redlineRef.current
       const seenNow = seen.current
+      const kmh = Math.round(Math.abs(t.speed) * 3.6)
+      if (speedRef.current && kmh !== seenNow.kmh) {
+        seenNow.kmh = kmh
+        speedRef.current.textContent = kmh
+        // The speed's arc is 100 long, filled to its share of the scale.
+        speedArcRef.current?.style.setProperty('stroke-dasharray', `${Math.min(100, (kmh / topKmh.current) * 100)} 100`)
+      }
+      // So is the revs', filled to their share of 8,000.
+      const revs = Math.round(Math.min(1, t.rpm / REV_MAX) * 1000) / 10
+      if (revsRef.current && revs !== seenNow.revs) {
+        seenNow.revs = revs
+        revsRef.current.style.strokeDasharray = `${revs} 100`
+      }
+      const mark = redlineRef.current
       if (mark) {
         seenNow.flicker = t.limits !== seenNow.limits ? !seenNow.flicker : false
         mark.style.opacity = seenNow.flicker ? '0.2' : '1'
       }
       seenNow.limits = t.limits
+      const clutch = t.clutch > 0.5
+      if (clutchRef.current && clutch !== seenNow.clutch) {
+        seenNow.clutch = clutch
+        clutchRef.current.toggleAttribute('data-on', clutch)
+      }
       const off = t.state === 'stalled' || t.state === 'waiting'
       const prev = seenNow.hud
-      if (!prev || prev.gear !== t.gear || prev.mode !== t.mode || prev.clutch !== t.clutch || prev.off !== off) {
+      if (!prev || prev.gear !== t.gear || prev.mode !== t.mode || prev.off !== off) {
         if (prev && prev.mode !== t.mode) {
           saveMode(t.mode)
           flashHint()
+          // The clutch lamp comes and goes with manual: write it afresh.
+          seenNow.clutch = null
         }
-        seenNow.hud = { gear: t.gear, mode: t.mode, clutch: t.clutch, off }
+        seenNow.hud = { gear: t.gear, mode: t.mode, off }
         setHud(seenNow.hud)
       }
       if (t.grinds !== seenNow.grinds) {
@@ -434,8 +462,8 @@ export default function HeroStage() {
       return
     }
     const gearbox = savedMode()
-    seen.current = { hud: null, grinds: 0, limits: 0, flicker: false }
-    setHud({ gear: 'N', mode: gearbox, clutch: false, off: false })
+    seen.current = { hud: null, grinds: 0, limits: 0, flicker: false, kmh: -1, revs: -1, clutch: null }
+    setHud({ gear: 'N', mode: gearbox, off: false })
     if (!layerRef.current) {
       const el = document.createElement('div')
       el.className = 'drive-layer'
@@ -454,9 +482,9 @@ export default function HeroStage() {
     if (!ok) setMode('idle')
   }
 
-  // Driving starts: focus to the panel, in the same commit that swaps the
+  // Driving starts: focus to the dock, in the same commit that swaps the
   // pill for it. The pill had focus, and a later effect would be too late:
-  // its removal reads as focus leaving, which ends the drive. The panel is
+  // its removal reads as focus leaving, which ends the drive. The dock is
   // fixed to the window, and the page mustn't jump to either of them.
   useLayoutEffect(() => {
     if (mode === 'driving') hudRef.current?.focus({ preventScroll: true })
@@ -465,17 +493,20 @@ export default function HeroStage() {
   // The layer goes with the component.
   useEffect(() => () => layerRef.current?.remove(), [])
 
-  // Then the controls hint for a few seconds. It goes in a tick after the
-  // panel so the live region is already there and a screen reader
-  // announces it.
+  // Then the keys along the bottom for a few seconds. They go in a tick
+  // after the dock so the live region is already there and a screen reader
+  // announces them.
   useEffect(() => {
     if (mode === 'driving') {
       const show = setTimeout(flashHint, 50)
-      // The panel comes in: a short rise and fade, on opacity only, since
-      // it already has focus and a hidden element can't keep it.
+      // The dock comes in with a short rise and fade, on opacity, not
+      // autoAlpha, since it already has focus and a hidden element can't
+      // keep it; the speedometer and the shifter rise in the same way.
       const mm = gsap.matchMedia()
       mm.add(MOTION_OK, () => {
         if (hudRef.current) gsap.from(hudRef.current, { opacity: 0, y: 8, duration: DUR_QUICK, ease: EASE_IN, clearProps: 'opacity,transform' })
+        const plates = layerRef.current?.querySelectorAll('.dash__panel')
+        if (plates?.length) gsap.from(plates, { opacity: 0, y: 8, duration: DUR_QUICK, ease: EASE_IN, clearProps: 'opacity,transform' })
       })
       return () => {
         clearTimeout(show)
@@ -503,8 +534,11 @@ export default function HeroStage() {
             {...hud}
             grinding={grinding}
             hint={hint}
-            rev={revRef}
+            revs={revsRef}
             redline={redlineRef}
+            speed={speedRef}
+            speedArc={speedArcRef}
+            clutch={clutchRef}
             onToggleMode={toggleMode}
             onExit={exit}
           />,

@@ -104,8 +104,10 @@ function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, page = nu
   return { sim, driver, car: sim.cars.find((c) => c.black), width, height, controlled: () => controlled }
 }
 
+// Traffic cars, following their lanes, overlapping the black car. A car it
+// knocked is a body in the physics world itself, and planck keeps it out.
 const touching = ({ sim, car }) =>
-  sim.cars.filter((c) => c !== car && c.active && overlap(c, car, sim.units.length, sim.units.width, -3, -3))
+  sim.cars.filter((c) => c !== car && c.active && !c.driven && overlap(c, car, sim.units.length, sim.units.width, -3, -3))
 
 // A wandering drive: throttle and brake in turns, steering swinging about.
 function wander(s, secs, rnd, moving = true, each = () => {}) {
@@ -153,7 +155,7 @@ test('traffic stops for the car parked in its way, and never runs into it', () =
   assert.ok(stoppedBehind > 0, 'nothing ever waited')
 })
 
-test('when driving ends, the car finds its own way back into traffic', (t) => {
+test('asked to rejoin, the car finds its own way back into traffic (Phase 6 will use this)', (t) => {
   const times = []
   let fellBack = 0
   for (const size of [{}, { width: 768, height: 960 }, { width: 1920, height: 1016 }]) {
@@ -161,7 +163,7 @@ test('when driving ends, the car finds its own way back into traffic', (t) => {
       const rnd = mulberry32(run * 31 + (size.width ?? 1440))
       const s = scene({ ...size, seed: run + 1 })
       wander(s, 5 + rnd() * 25, rnd)
-      s.driver.release()
+      s.driver.release({ rejoin: true })
       assert.equal(s.driver.state, 'returning')
       let secs = 0
       while (s.driver.state !== 'done' && secs < CONFIG.recovery.giveUpMax + 1) {
@@ -348,4 +350,36 @@ test('on the reviews strip the car rides along with it, and says how fast it is 
   s.driver.setBelt(null)
   s.driver.step(DT, true)
   assert.equal(s.driver.across, null)
+})
+
+test('when driving ends, the car drives fast off the nearer side, is only gone once out of sight, and comes back in at the top', () => {
+  for (const size of [{}, { width: 1920, height: 1016 }]) {
+    for (let run = 0; run < 6; run++) {
+      const rnd = mulberry32(run * 17 + 3)
+      const s = scene({ ...size, seed: run + 1 })
+      wander(s, 3 + rnd() * 10, rnd)
+      s.driver.release()
+      assert.equal(s.driver.state, 'leaving')
+      let secs = 0
+      let fastest = 0
+      while (s.driver.state === 'leaving') {
+        s.driver.step(DT, true)
+        secs += DT
+        fastest = Math.max(fastest, Math.abs(s.car.v) / K)
+        if (s.driver.state === 'leaving') assert.ok(s.car.driven, 'handed back while still in sight')
+      }
+      assert.ok(['done', 'settling'].includes(s.driver.state), s.driver.state)
+      assert.ok(s.car.x < -s.sim.units.length / 2 || s.car.x > s.width + s.sim.units.length / 2 || !s.car.active, 'gone while still on screen')
+      assert.ok(secs < 6, `took ${secs.toFixed(1)}s to get off the side`)
+      if (secs > 1.5) assert.ok(fastest * 3.6 > 100, `only reached ${(fastest * 3.6).toFixed(0)} km/h in ${secs.toFixed(1)}s`)
+      // Back in traffic, coming in at the top.
+      let back = 0
+      while (!s.car.active && back < 20) {
+        s.sim.step(DT)
+        back += DT
+      }
+      assert.ok(s.car.active, 'never came back')
+      assert.ok(s.car.y < CONFIG.traffic.blackTop * s.height, `came back in ${Math.round(s.car.y)}px down, not at the top`)
+    }
+  }
 })

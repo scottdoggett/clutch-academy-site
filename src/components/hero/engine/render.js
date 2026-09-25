@@ -26,18 +26,22 @@ import {
 } from 'three'
 import { CONFIG } from '../config.js'
 import { createMarks } from './marks.js'
+import { createParticles } from './particles.js'
 
 const vertexShader = /* glsl */ `
   attribute vec3 pose;   // x, y in CSS px (y down), heading in radians
   attribute vec3 body;
   attribute vec3 glass;
+  attribute float fade;  // how much of it shows, 0 to 1
   uniform vec2 size;     // the car's length and width, px
   uniform float pad;     // px of quad beyond the body, room for the soft edge
   varying vec2 vP;       // this point in the car's own frame, px, x forward
   varying vec3 vBody;
   varying vec3 vGlass;
+  varying float vFade;
 
   void main() {
+    vFade = fade;
     vec2 p = position.xy * (size + 2.0 * pad);
     float c = cos(pose.z);
     float s = sin(pose.z);
@@ -57,6 +61,7 @@ const fragmentShader = /* glsl */ `
   varying vec2 vP;
   varying vec3 vBody;
   varying vec3 vGlass;
+  varying float vFade;
 
   float box(vec2 p, vec2 extent, float r) {
     vec2 q = abs(p) - extent + r;
@@ -84,7 +89,7 @@ const fragmentShader = /* glsl */ `
     vec2 q = vec2(p.x, abs(p.y));
     col = mix(col, lamp, cover(box(q - vec2(L * 0.455, W * 0.29), vec2(L * 0.035, W * 0.11), W * 0.05)));
 
-    gl_FragColor = vec4(col, shape);
+    gl_FragColor = vec4(col, shape * vFade);
   }
 `
 
@@ -148,7 +153,10 @@ export function createRenderer(canvas, colors) {
       geometry.setAttribute(name, a)
       return a
     }
-    const set = { geometry, pose: attr('pose'), body: attr('body'), glass: attr('glass'), n: 0 }
+    const fade = new InstancedBufferAttribute(new Float32Array(n), 1)
+    fade.setUsage(DynamicDrawUsage)
+    geometry.setAttribute('fade', fade)
+    const set = { geometry, pose: attr('pose'), body: attr('body'), glass: attr('glass'), fade, n: 0 }
     geometry.instanceCount = 0
     return set
   }
@@ -160,11 +168,12 @@ export function createRenderer(canvas, colors) {
     set.pose.setXYZ(i, car.x, car.y, car.a)
     set.body.setXYZ(i, c.body[0], c.body[1], c.body[2])
     set.glass.setXYZ(i, c.glass[0], c.glass[1], c.glass[2])
+    set.fade.setX(i, car.fade ?? 1)
   }
 
   function finish(set) {
     set.geometry.instanceCount = set.n
-    set.pose.needsUpdate = set.body.needsUpdate = set.glass.needsUpdate = true
+    set.pose.needsUpdate = set.body.needsUpdate = set.glass.needsUpdate = set.fade.needsUpdate = true
   }
 
   const material = new ShaderMaterial({
@@ -215,8 +224,12 @@ export function createRenderer(canvas, colors) {
   const marks = createMarks(quad, corners, colors.black.body)
   scene.add(marks.mesh)
 
+  // Smoke and sparks, over all the cars.
+  const particles = createParticles(quad, corners)
+  for (const m of particles.meshes) scene.add(m)
+
   // Only these meshes drawn, for one pass of a clipped frame.
-  const all = [marks.mesh, mesh, blackMesh, ringMesh]
+  const all = [marks.mesh, mesh, blackMesh, ringMesh, ...particles.meshes]
   function only(...shown) {
     for (const m of all) m.visible = shown.includes(m)
   }
@@ -244,6 +257,7 @@ export function createRenderer(canvas, colors) {
 
   return {
     marks,
+    particles,
 
     // The canvas's size, CSS px.
     resize(width, height) {
@@ -275,6 +289,7 @@ export function createRenderer(canvas, colors) {
     draw(cars, ring, still = false, time = 0) {
       if (lost) return
       marks.update(time)
+      particles.update(time)
       ringMesh.visible = !!ring
       if (ring) {
         const e = Math.min(1, ring.t / ringStyle.life)
@@ -296,9 +311,10 @@ export function createRenderer(canvas, colors) {
         return
       }
       // Over the window: the marks wherever they are, the traffic only
-      // inside the hero, then the black car and the ring over everything. A
-      // scissored clear would only clear the scissor box, so the whole
-      // canvas is cleared first.
+      // inside the hero (a knocked car too, until it's back), then the black
+      // car, the ring and the particles over everything. A scissored clear
+      // would only clear the scissor box, so the whole canvas is cleared
+      // first.
       const ringOn = ringMesh.visible
       renderer.autoClear = false
       renderer.clear()
@@ -313,9 +329,9 @@ export function createRenderer(canvas, colors) {
         renderer.render(scene, camera)
         renderer.setScissorTest(false)
       }
-      only(blackMesh, ...(ringOn ? [ringMesh] : []))
+      only(blackMesh, ...(ringOn ? [ringMesh] : []), ...particles.meshes)
       renderer.render(scene, camera)
-      only(marks.mesh, mesh, blackMesh, ...(ringOn ? [ringMesh] : []))
+      only(marks.mesh, mesh, blackMesh, ...(ringOn ? [ringMesh] : []), ...particles.meshes)
       renderer.autoClear = true
     },
 
@@ -328,6 +344,7 @@ export function createRenderer(canvas, colors) {
       traffic.geometry.dispose()
       black.geometry.dispose()
       marks.dispose()
+      particles.dispose()
       material.dispose()
       ringGeometry.dispose()
       ringMaterial.dispose()

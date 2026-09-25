@@ -3,7 +3,8 @@ import { gsap, MOTION_OK } from '@/lib/gsap'
 import { EASE_SHIFT } from '@/lib/motion'
 import { BOTTOM, PLANE, TOP, X, Y, along, route } from './gate.js'
 
-// The gear display's H-pattern (docs/spec/hero-drive.md §HUD): six forward
+// The gear shifter's H-pattern, in the dash at the bottom right of the
+// window (docs/spec/hero-drive.md §HUD): six forward
 // gates and reverse, a fourth slot top left, so it reads R 1 2 3 4 5 6 left
 // to right. A knob sits in the current gear and travels there the way a hand
 // moves a lever, by the same rule as the About page's shift gate
@@ -12,7 +13,7 @@ import { BOTTOM, PLANE, TOP, X, Y, along, route } from './gate.js'
 // the knob is still travelling sets off from wherever it's got to. Under
 // reduced motion the knob just arrives.
 //
-// All of it is decoration for sighted drivers; the panel is aria-hidden.
+// All of it is decoration for sighted drivers; the dash is aria-hidden.
 
 const SPEED = 180 // units a second along the gate
 const MIN = 0.16 // s: the shortest change, so a one-slot flick still reads

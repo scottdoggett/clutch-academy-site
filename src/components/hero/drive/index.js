@@ -1,28 +1,48 @@
 // The drive chunk (docs/spec/hero-drive.md §Play mode, §Driving and
 // physics): planck.js, the black car under a visitor's control, the walls
-// around the page, and the traffic as kinematic bodies it can run into.
-// HeroStage loads it when the Drive button is hovered, focused or pressed,
-// so phones and touch screens, which have no Drive button, never do.
+// around the page, and the traffic as kinematic bodies it can run into and
+// knock out of their lanes. HeroStage loads it when the Test drive button
+// is hovered, focused or pressed, so phones and touch screens, which have
+// no button, never do.
 //
 // The engine runs it (engine/index.js): while there's a driver, its step()
 // takes the place of the traffic's own. Physics is in metres; the traffic
 // and the drawing are in px, and k converts.
 //
-// A drive goes waiting → driving → returning or leaving → done:
+// A drive goes waiting → driving → leaving → done:
 // - waiting: Drive was pressed while the black car was outside the hero.
 //   It comes in at a way in, and control starts once it's fully inside.
 // - driving: the visitor's, anywhere on the page (§Driving the whole page).
-// - returning: driving ended in the hero, and the car makes its own way to
-//   the nearest lane (§Recovery), then blends into traffic.
-// - leaving: driving ended further down the page, away from the roads. The
-//   car drives off the nearer side and comes back in at a way in.
+// - leaving: driving ended. The car drives itself off the side of the
+//   window, fast, and only once it's out of sight goes back into traffic,
+//   coming in at the top of the map.
+// - returning, instead of leaving, when asked for (release({ rejoin: true })):
+//   the car makes its own way to the nearest lane (recover.js) and blends
+//   into traffic.
+// - done, and until every car it knocked has found its way back or faded
+//   out, settling: the world stays up for them, and a new drive can start.
+//
+// Knocks (§Traffic as physical bodies): the first time the black car
+// touches a traffic car, the contact is let through for one step, and after
+// it the traffic car becomes a real body of the same mass, moving as it
+// was; the next step the two meet properly. A knocked car slides and spins
+// with its brakes locked, can knock others harder than a nudge, settles,
+// and finds its way back into its lane the same way the black car can
+// (recover.js). That's all that happens to it: it's bumped, not damaged.
+//
+// Effects (§Smoke, §Effects): smoke from a stall, an over-rev and sliding
+// tyres, and sparks where cars hit. effects.js says what; onParticle hands
+// each particle to the engine to draw.
 
 import { Box, Chain, World } from 'planck'
 import { CONFIG } from '../config.js'
+import { mulberry32 } from '../engine/traffic.js'
+import { crash, due, rearBurst, stallSmoke, tyreSmoke } from './effects.js'
 import { createFollow } from './follow.js'
 import { createInput } from './input.js'
 import { createControls, createPlayer } from './player.js'
-import { createTread } from './tread.js'
+import { createRecovery } from './recover.js'
+import { createTread, skids, wheelSpots } from './tread.js'
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
@@ -37,6 +57,7 @@ const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 // onExit: Esc, or focus leaving the driving layer. onMark(x0, y0, x1, y1,
 // strength, onBelt): a tyre mark segment, px, laid while the visitor
 // drives; on the reviews strip it's in the strip's frame (tread.js).
+// onParticle(p): smoke or a spark to draw (effects.js).
 export function createDriver({
   sim,
   k,
@@ -48,15 +69,31 @@ export function createDriver({
   onControl,
   onExit,
   onMark,
+  onParticle,
 }) {
   const u = sim.units
   const world = new World({ gravity: { x: 0, y: 0 } })
   const car = sim.cars.find((c) => c.black)
   const controls = createControls()
-  // What the gear display shows, updated every step: gear, rpm, the engine's
-  // state, the mode, whether the clutch key is down, and counters that tick
-  // up on a grind and on the limiter, so the display can react to each.
-  const telemetry = { gear: 'N', rpm: 0, state: 'free', mode, clutch: false, grinds: 0, limits: 0, speed: 0 }
+  const rc = CONFIG.recovery
+  const kc = CONFIG.knock
+  const fx = CONFIG.effects
+  const rnd = mulberry32(CONFIG.world.seed + 101)
+  const emit = onParticle ?? (() => {})
+  // What the driving display shows, updated every step: gear, rpm, the
+  // engine's state, the mode, how far down the clutch pedal is (0 to 1, eased
+  // like the key), and counters that tick up on a grind and on the limiter,
+  // so the display can react to each; and the speed, m/s along the heading.
+  const telemetry = {
+    gear: 'N',
+    rpm: 0,
+    state: 'free',
+    mode,
+    clutch: 0,
+    grinds: 0,
+    limits: 0,
+    speed: 0,
+  }
 
   // A grind shows up as the gearbox's 'grind' event on the next step.
   function shift(dir) {
@@ -69,23 +106,25 @@ export function createDriver({
   }
 
   // No area (the headless tests): no keyboard, and the test sets controls.
-  let input = area
-    ? createInput(area, {
-        controls,
-        onExit,
-        onShift: shift,
-        onToggleMode: () => setMode(telemetry.mode === 'auto' ? 'manual' : 'auto'),
-      })
-    : null
-  const rc = CONFIG.recovery
+  const listen = (el) =>
+    el
+      ? createInput(el, {
+          controls,
+          onExit: () => onExit?.(),
+          onShift: shift,
+          onToggleMode: () => setMode(telemetry.mode === 'auto' ? 'manual' : 'auto'),
+        })
+      : null
+  let input = listen(area)
 
   let state = 'waiting'
   let player = null
   let walls = null
   let hero = null // the hero's box in sight, { x0, y0, x1, y1 }: where traffic is
   let bounds = page // the walls; the hero's box when there's no page
-  let leaving = null // { side, t }: -1 off the left, +1 off the right
-  const follow = createFollow()
+  let leaving = null // { side, t, held, ghost }: side -1 off the left, +1 off the right
+  let back = null // the black car's way back into traffic, when asked to rejoin
+  let follow = createFollow()
   const tread = createTread()
   // The reviews strip, a treadmill (§The treadmill): { x0, y0, x1, y1 } in
   // the hero's px, its speed, px/s, + right, and how far it has moved in
@@ -93,12 +132,15 @@ export function createDriver({
   let belt = null
   let across = null // px/s the car is going across the strip, while it's on it
   let ring = null // { t }: seconds since control started
-  let target = null // where a returning car is heading, from sim.landing()
-  let retarget = 0
-  let returning = 0 // s since it started back
-  let blend = null // { from: pose, t }
   const pose = { x: 0, y: 0, a: 0, v: 0 }
   const kin = new Map() // traffic car → its kinematic body
+  const knocked = new Map() // car → { body, t, back, fading }
+  const blends = new Map() // car → { from, t }: drawn easing into its lane
+  const toKnock = new Map() // traffic car → closing speed, knocked after this step
+  const impacts = [] // this step's crashes, for the sparks
+  const acc = { tyres: [{}, {}] } // particles owed between steps
+  const wheels = [{}, {}, {}, {}]
+  const axles = { front: 0, rear: 0 }
 
   // ---------- Walls ---------------------------------------------------------
   // The page's edges. The top one is the page's top, just under the nav when
@@ -111,6 +153,7 @@ export function createDriver({
     if (leaving) return
     const r = bounds ?? hero
     walls = world.createBody({ type: 'static' })
+    walls.setUserData({ kind: 'wall' })
     const m = (x, y) => ({ x: x / k, y: y / k })
     walls.createFixture(new Chain([m(r.x0, r.y0), m(r.x1, r.y0), m(r.x1, r.y1), m(r.x0, r.y1)], true), {
       restitution: CONFIG.player.wallRestitution,
@@ -152,7 +195,7 @@ export function createDriver({
   // instead would break planck's contacts. A car that jumped (it came back
   // in at a way in) is moved outright. Only cars in the hero are solid: past
   // its edges they're out of sight, and the car mustn't hit what it can't
-  // see.
+  // see. A knocked car has a body of its own.
   function syncTraffic(dt) {
     for (const c of sim.cars) {
       let b = kin.get(c)
@@ -168,6 +211,7 @@ export function createDriver({
       if (!b) {
         b = world.createBody({ type: 'kinematic', position: { x, y }, angle: c.a })
         b.createFixture(new Box(CONFIG.car.length / 2, CONFIG.car.width / 2))
+        b.setUserData({ kind: 'traffic', car: c })
         kin.set(c, b)
         continue
       }
@@ -190,11 +234,194 @@ export function createDriver({
     kin.clear()
   }
 
+  // ---------- Contacts: knocks and crashes ------------------------------------
+
+  const tag = (body) => body.getUserData() ?? {}
+
+  // Where two bodies touch, the way from the first to the second, and how
+  // fast they're closing along it, m/s.
+  function hit(contact) {
+    const wm = contact.getWorldManifold(null)
+    if (!wm || !wm.pointCount) return null
+    const p = wm.points[0]
+    const n = wm.normal
+    const va = contact.getFixtureA().getBody().getLinearVelocityFromWorldPoint(p)
+    const vb = contact.getFixtureB().getBody().getLinearVelocityFromWorldPoint(p)
+    const speed = Math.max(0, (va.x - vb.x) * n.x + (va.y - vb.y) * n.y)
+    return { x: p.x, y: p.y, nx: n.x, ny: n.y, speed }
+  }
+
+  // A traffic car touched by a moving body: let this step's contact through
+  // and knock it after the step, if the other car is the black car being
+  // driven, or anything else closing faster than a nudge. The black car
+  // leaving never knocks: it's on its way out, and it's a wall until it
+  // isn't solid at all.
+  world.on('pre-solve', (contact) => {
+    const a = contact.getFixtureA().getBody()
+    const b = contact.getFixtureB().getBody()
+    const ta = tag(a)
+    const tb = tag(b)
+    let traffic = null
+    let other = null
+    if (ta.kind === 'traffic' && b.isDynamic()) {
+      traffic = ta
+      other = tb
+    } else if (tb.kind === 'traffic' && a.isDynamic()) {
+      traffic = tb
+      other = ta
+    } else return
+    if (toKnock.has(traffic.car)) {
+      contact.setEnabled(false)
+      return
+    }
+    if (other.kind === 'player' && state === 'leaving') return
+    const h = hit(contact)
+    if (!h) return
+    const need = other.kind === 'player' && state === 'driving' ? kc.touch : kc.nudge
+    if (h.speed < need) return
+    contact.setEnabled(false)
+    toKnock.set(traffic.car, h.speed)
+  })
+
+  // Every new contact that's hard enough makes sparks.
+  world.on('begin-contact', (contact) => {
+    if (contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) return
+    const ta = tag(contact.getFixtureA().getBody())
+    const tb = tag(contact.getFixtureB().getBody())
+    if (!ta.kind || !tb.kind) return
+    const h = hit(contact)
+    if (h && h.speed * 3.6 >= fx.sparksKmh) impacts.push(h)
+  })
+
+  // A traffic car out of its lane and into the world as a real body, moving
+  // as it was.
+  function knock(c) {
+    const kb = kin.get(c)
+    if (kb) {
+      world.destroyBody(kb)
+      kin.delete(c)
+    }
+    sim.takeOut(c)
+    const { length, width } = CONFIG.car
+    const body = world.createBody({
+      type: 'dynamic',
+      position: { x: c.x / k, y: c.y / k },
+      angle: c.a,
+      allowSleep: false,
+      angularDamping: kc.spin,
+    })
+    body.createFixture(new Box(length / 2, width / 2), {
+      density: CONFIG.player.mass / (length * width),
+      friction: 0.3,
+      restitution: 0.2,
+    })
+    const v = c.v / k
+    body.setLinearVelocity({ x: Math.cos(c.a) * v, y: Math.sin(c.a) * v })
+    body.setUserData({ kind: 'knocked', car: c })
+    knocked.set(c, { body, t: 0, back: null, fading: null })
+  }
+
+  // After the step: the knocks it brought about, then the sparks.
+  function aftermath() {
+    for (const c of toKnock.keys()) knock(c)
+    toKnock.clear()
+    for (const h of impacts) crash(emit, h.x * k, h.y * k, h.nx, h.ny, h.speed, rnd)
+    impacts.length = 0
+  }
+
+  // ---------- Knocked cars ---------------------------------------------------------
+
+  // Its brakes locked: it slides to a stop.
+  function slide(body, dt) {
+    const v = body.getLinearVelocity()
+    const s = Math.hypot(v.x, v.y)
+    if (s < 1e-4) return
+    const m = body.getMass()
+    const dec = Math.min(kc.friction, s / dt)
+    body.applyForceToCenter({ x: (-v.x / s) * dec * m, y: (-v.y / s) * dec * m }, true)
+  }
+
+  // Lost, or off the roads: no longer solid, and it fades away.
+  function fadeOut(kn) {
+    if (kn.fading) return
+    kn.fading = { t: 0 }
+    kn.back = null
+    for (let f = kn.body.getFixtureList(); f; f = f.getNext()) f.setSensor(true)
+  }
+
+  // Gone: back to traffic, at an edge, or parked up top under reduced
+  // motion, where nothing would bring it in.
+  function handBack(c, kn, moving) {
+    world.destroyBody(kn.body)
+    knocked.delete(c)
+    c.fade = 1
+    if (moving) sim.sendOff(c)
+    else sim.seatInside(c)
+  }
+
+  function knockedBefore(dt) {
+    for (const kn of knocked.values()) {
+      if (kn.back) kn.back.steer(dt)
+      else slide(kn.body, dt)
+    }
+  }
+
+  function knockedAfter(dt, moving) {
+    for (const [c, kn] of knocked) {
+      const b = kn.body
+      const at = b.getPosition()
+      const vel = b.getLinearVelocity()
+      c.x = at.x * k
+      c.y = at.y * k
+      c.a = b.getAngle()
+      c.v = (vel.x * Math.cos(c.a) + vel.y * Math.sin(c.a)) * k
+      kn.t += dt
+      if (kn.fading) {
+        kn.fading.t += dt
+        c.fade = Math.max(0, 1 - kn.fading.t / fx.fade)
+        if (kn.fading.t >= fx.fade) handBack(c, kn, moving)
+        continue
+      }
+      if (!kn.back) {
+        const still = Math.hypot(vel.x, vel.y) < kc.settleSpeed && Math.abs(b.getAngularVelocity()) < kc.settleSpin
+        if (still || kn.t > kc.settleMax) {
+          if (inside(c)) kn.back = createRecovery({ sim, car: c, body: b, k, inside })
+          else fadeOut(kn)
+        }
+        continue
+      }
+      const r = kn.back.check(dt)
+      if (r === 'rejoined') {
+        world.destroyBody(b)
+        knocked.delete(c)
+        blends.set(c, { from: kn.back.from, t: 0 })
+      } else if (r === 'lost') fadeOut(kn)
+    }
+  }
+
+  // For the blend's half second, what's drawn eases from where a car was
+  // off the lanes to where the traffic has it.
+  function applyBlends(dt) {
+    for (const [c, bl] of blends) {
+      bl.t += dt
+      const e = clamp(bl.t / rc.blend, 0, 1)
+      const f = e * e * (3 - 2 * e)
+      c.x = bl.from.x + (c.x - bl.from.x) * f
+      c.y = bl.from.y + (c.y - bl.from.y) * f
+      c.a = bl.from.a + wrap(c.a - bl.from.a) * f
+      if (e >= 1) {
+        blends.delete(c)
+        if (c === car && state === 'blending') state = 'done'
+      }
+    }
+  }
+
   // ---------- Taking over -------------------------------------------------------
 
   function takeOver() {
     sim.takeOut(car)
     player = createPlayer(world, { x: car.x / k, y: car.y / k, a: car.a }, car.v / k, { mode: telemetry.mode })
+    player.body.setUserData({ kind: 'player', car })
     state = 'driving'
     ring = { t: 0 }
     onControl?.()
@@ -204,229 +431,42 @@ export function createDriver({
   // otherwise it goes off and comes straight back in at a way in (the black
   // car is always first). With the traffic standing still under reduced
   // motion, nothing would bring it in, so it's parked on a street instead.
+  // Once it's on its way in, it's waited for: it comes in at the top, where
+  // the first stretch of road is partly under the nav, and it can be past
+  // the way in before it's wholly in view.
+  let entering = false
   function bringIn(moving) {
     if (car.active && inside(car)) return takeOver()
     if (!moving) {
       if (sim.seatInside(car) && inside(car)) takeOver()
       return
     }
-    const comingIn = car.active && car.piece?.seg && car.piece.from.portal
-    if (!comingIn && !car.pending) sim.sendOff(car)
-  }
-
-  // ---------- Returning to traffic ----------------------------------------------
-  // A way back: a curve from where the car is, leaving along its heading, to
-  // a landing spot on the nearest lane it can join (sim.landing()), arriving
-  // along the lane, then on down the lane as far as the line. The car
-  // follows it with its
-  // velocity and turn rate set directly, still a solid body that other cars
-  // stop for and it can't pass through, up to 30 km/h while the landing is
-  // far and 10 km/h for the last few car lengths, stopping at the line if it
-  // gets there. Once it's on the lane's line and heading, and there's room,
-  // it blends into traffic.
-  //
-  // The spec's first version steered it there through the tyre model by
-  // pure pursuit. From wherever a drive ends (mid-block, over the headline,
-  // at a steep angle to the road) that swung wide, ran parallel to the lane
-  // and missed short ones; about a quarter of test runs never made it back.
-
-  const SAMPLES = 24
-  let path = null // points { x, y, at } along the way back, px, `at` cumulative
-  let progress = 0 // index along it the car has reached
-
-  function planBack() {
-    target = sim.landing(car, car, inside)
-    path = null
-    progress = furthest = 0
-    idle = 0
-    if (!target) return
-    const dist = Math.hypot(target.x - car.x, target.y - car.y)
-    const reach = Math.max(1.5 * u.length, dist / 2.5)
-    const p0 = { x: car.x, y: car.y }
-    const p1 = { x: car.x + Math.cos(car.a) * reach, y: car.y + Math.sin(car.a) * reach }
-    const p3 = { x: target.x, y: target.y }
-    const p2 = { x: p3.x - Math.cos(target.a) * reach, y: p3.y - Math.sin(target.a) * reach }
-    path = []
-    for (let i = 0; i <= SAMPLES; i++) {
-      const t = i / SAMPLES
-      const m = 1 - t
-      const x = m * m * m * p0.x + 3 * m * m * t * p1.x + 3 * m * t * t * p2.x + t * t * t * p3.x
-      const y = m * m * m * p0.y + 3 * m * m * t * p1.y + 3 * m * t * t * p2.y + t * t * t * p3.y
-      const prev = path[i - 1]
-      path.push({ x, y, at: prev ? prev.at + Math.hypot(x - prev.x, y - prev.y) : 0 })
-    }
-    // Then on along the lane as far as a car may join it, so it can keep
-    // going while it waits for room, and stop at the line if it has to.
-    const end = path[path.length - 1]
-    const more = target.hi - target.s
-    for (let i = 1; i <= 8; i++) {
-      const d = (more * i) / 8
-      path.push({ x: p3.x + Math.cos(target.a) * d, y: p3.y + Math.sin(target.a) * d, at: end.at + d })
-    }
-  }
-
-  // The point `at` px along the way back, and the heading there.
-  function along(at, out) {
-    let i = 1
-    while (i < path.length - 1 && path[i].at < at) i++
-    const a = path[i - 1]
-    const b = path[i]
-    const f = clamp((at - a.at) / (b.at - a.at || 1), 0, 1)
-    out.x = a.x + (b.x - a.x) * f
-    out.y = a.y + (b.y - a.y) * f
-    out.a = Math.atan2(b.y - a.y, b.x - a.x)
-    return out
-  }
-
-  // Blocked, most likely by a traffic car that's waiting for it: back off
-  // for a second, then plan again.
-  let stuck = 0
-  let backing = 0
-  let landed = false // close to its landing spot at least once
-  let sinceLanded = 0
-  let idle = 0 // s since it last got further along the way back
-  let furthest = 0
-  const aim = { x: 0, y: 0, a: 0 }
-
-  // How far ahead of the car's nose, px, the nearest other car is, if one is
-  // roughly in line with it within a few car lengths.
-  function clearAhead() {
-    const c = Math.cos(car.a)
-    const s = Math.sin(car.a)
-    let near = Infinity
-    for (const o of sim.cars) {
-      if (o === car || !o.active) continue
-      const dx = o.x - car.x
-      const dy = o.y - car.y
-      const ahead = dx * c + dy * s
-      const side = Math.abs(-dx * s + dy * c)
-      if (ahead <= 0 || ahead > 4 * u.length || side > u.width) continue
-      near = Math.min(near, ahead - u.length)
-    }
-    return near
-  }
-
-  function autopilot(dt) {
-    const body = player.body
-    const vel = body.getLinearVelocity()
-    const ang = body.getAngle()
-    const accel = CONFIG.player.traction * dt // m/s of change allowed this step
-    const steerTo = (vx, vy, heading) => {
-      body.setLinearVelocity({
-        x: vel.x + clamp(vx - vel.x, -accel * 2, accel * 2),
-        y: vel.y + clamp(vy - vel.y, -accel * 2, accel * 2),
-      })
-      body.setAngularVelocity(clamp(wrap(heading - ang) * 5, -3, 3))
-    }
-    if (backing > 0) {
-      backing -= dt
-      steerTo(-Math.cos(ang), -Math.sin(ang), ang)
-      if (backing <= 0) path = null
-      return
-    }
-    retarget -= dt
-    if (!path && retarget <= 0) {
-      planBack()
-      retarget = 0.5
-    }
-    if (!path) {
-      steerTo(0, 0, ang)
-      return
-    }
-    // Where along the way back the car is.
-    const was = progress
-    let best = Infinity
-    for (let i = progress; i < Math.min(path.length, progress + 6); i++) {
-      const d = Math.hypot(path[i].x - car.x, path[i].y - car.y)
-      if (d < best) {
-        best = d
-        progress = i
-      }
-    }
-    if (best > 2 * u.length) {
-      path = null
-      return
-    }
-    // Not getting any further (jittering on the spot, or held up) short of
-    // the line: back off and plan again.
-    if (progress > furthest || was !== progress) {
-      furthest = Math.max(furthest, progress)
-      idle = 0
-    } else idle += dt
-    const land = path[SAMPLES].at
-    const here = path[progress].at
-    const left = land - here
-    if (left < 2 * u.length) landed = true
-    // Faster while the landing is a way off, 10 km/h for the last few car
-    // lengths.
-    const slow = rc.rejoinKmh / 3.6
-    const fast = rc.approachKmh / 3.6
-    // And stopping at the end of the way back, the lane's line.
-    const toEnd = path[path.length - 1].at - here
-    const brake = Math.sqrt(2 * CONFIG.traffic.decel * Math.max(0, toEnd / k - 0.2))
-    let speed = Math.min(brake, clamp(slow + ((fast - slow) * (left - 3 * u.length)) / (4 * u.length), slow, fast))
-    // And behind any car in its way, keeping a stopped car's gap.
-    const gap = clearAhead()
-    if (gap < Infinity) speed = Math.min(speed, Math.sqrt(2 * CONFIG.traffic.decel * Math.max(0, (gap - u.s0) / k)))
-    const lead = rc.lead[0] + ((rc.lead[1] - rc.lead[0]) * (speed - slow)) / (fast - slow || 1)
-    along(here + (lead * u.length) / 2, aim)
-    const dx = aim.x - car.x
-    const dy = aim.y - car.y
-    const n = Math.hypot(dx, dy) || 1
-    steerTo((dx / n) * speed, (dy / n) * speed, aim.a)
-    // Standing still anywhere short of the line: blocked, either nose to
-    // something or waiting on a traffic car that's waiting on it. Back off.
-    const moving = Math.hypot(vel.x, vel.y)
-    stuck = moving < 0.3 && toEnd > u.length / 2 ? stuck + dt : 0
-    if (stuck > 1 || (idle > 2 && toEnd > u.length / 2)) {
-      stuck = idle = 0
-      backing = 1
-    }
-  }
-
-  function tryRejoin() {
-    if (!target) return
-    const lane = target.lane
-    const along = (car.x - lane.p0.x) * lane.d.x + (car.y - lane.p0.y) * lane.d.y
-    const off = Math.abs((car.x - lane.p0.x) * -lane.d.y + (car.y - lane.p0.y) * lane.d.x)
-    const turn = Math.abs(wrap(car.a - lane.heading))
-    if (off > rc.near * k || turn > (rc.nearDeg * Math.PI) / 180) return
-    const from = { x: car.x, y: car.y, a: car.a }
-    if (!sim.rejoin(car, lane, along + u.length / 2, Math.max(0, pose.v * k))) return
-    player.dispose()
-    player = null
-    blend = { from, t: 0 }
-    state = 'blending'
-  }
-
-  // For the blend's half second, what's drawn eases from where the car was
-  // off the lanes to where the traffic has it.
-  function applyBlend(dt) {
-    blend.t += dt
-    const e = clamp(blend.t / rc.blend, 0, 1)
-    const f = e * e * (3 - 2 * e)
-    car.x = blend.from.x + (car.x - blend.from.x) * f
-    car.y = blend.from.y + (car.y - blend.from.y) * f
-    car.a = blend.from.a + wrap(car.a - blend.from.a) * f
-    if (e >= 1) {
-      blend = null
-      state = 'done'
-      sim.setBodies([])
+    if (car.active && car.piece?.seg && car.piece.from.portal) entering = true
+    if (!entering && !car.pending) {
+      sim.sendOff(car)
+      entering = true
     }
   }
 
   // ---------- Leaving by the side -------------------------------------------------
-  // Driving ended away from the roads, somewhere down the page. Driving all
-  // the way back up would take a minute and scroll nothing, so the car turns
-  // for the nearer side, the way it's already facing if it's roughly
-  // across the page, and drives off. The walls go so it can. Out of sight,
-  // it comes back in at a way in, as a car that went off an edge does.
+  // Driving ended. The car picks the side of the window it can be off
+  // soonest, counting both how far it is and how far it has to turn, and
+  // drives off it at CONFIG.recovery.leaveKmh. The walls go so it can. Held
+  // up by a traffic car for a moment, it stops being solid and drives
+  // through, rather than never getting there. It only goes once it's out of
+  // sight, and then comes back in at the top of the map (traffic.js).
 
   function startLeaving() {
     const ang = player.body.getAngle()
-    const across = Math.cos(ang)
-    const side = Math.abs(across) > 0.3 ? Math.sign(across) : car.x < (bounds ?? hero).x1 / 2 ? -1 : 1
-    leaving = { side, t: 0 }
+    const r = bounds ?? hero
+    const v = (rc.leaveKmh / 3.6) * k // px/s
+    const cost = (side) => {
+      const far = side > 0 ? r.x1 - car.x : car.x - r.x0
+      const turn = Math.abs(wrap((side > 0 ? 0 : Math.PI) - ang))
+      return far / v + turn / 2
+    }
+    const side = cost(1) <= cost(-1) ? 1 : -1
+    leaving = { side, t: 0, held: 0, ghost: false }
     build()
   }
 
@@ -440,37 +480,74 @@ export function createDriver({
     // turning for the side as it goes.
     const now = vel.x * Math.cos(ang) + vel.y * Math.sin(ang)
     const want = rc.leaveKmh / 3.6
-    const speed = now + clamp(want - now, -CONFIG.player.brake * dt, CONFIG.player.traction * dt)
+    const speed = now + clamp(want - now, -CONFIG.player.brake * dt, rc.leaveAccel * dt)
     body.setLinearVelocity({ x: Math.cos(ang) * speed, y: Math.sin(ang) * speed })
     body.setAngularVelocity(clamp(wrap(aimA - ang) * 3, -2.5, 2.5) * clamp(Math.abs(speed) / 4, 0, 1))
+    // Held up (a traffic car across its way): not solid any more.
+    leaving.held = now < 1 && leaving.t > 0.3 ? leaving.held + dt : 0
+    if (leaving.held > rc.leaveHeld && !leaving.ghost) {
+      leaving.ghost = true
+      for (let f = body.getFixtureList(); f; f = f.getNext()) f.setSensor(true)
+    }
   }
 
-  // Gone: off the side, or given up. It comes back in at a way in, or under
-  // reduced motion, where nothing would bring it, it's parked on a street.
+  // Out of sight past the side of the window.
+  function offSide() {
+    const r = bounds ?? hero
+    return car.x < r.x0 - u.length || car.x > r.x1 + u.length
+  }
+
+  // Gone. It comes back in at a way in, at the top, or under reduced motion,
+  // where nothing would bring it, it's parked on a street up top.
   function done(moving) {
     player.dispose()
     player = null
     leaving = null
+    back = null
     if (!moving) sim.seatInside(car)
     else sim.sendOff(car)
     state = 'done'
-    sim.setBodies([])
+  }
+
+  // ---------- The black car's effects ------------------------------------------------
+
+  function playerEffects(dt) {
+    const engine = player.engine
+    wheelSpots(car, k, wheels)
+    for (const e of engine?.events ?? []) {
+      if (e === 'stall') stallSmoke(emit, car, u, rnd)
+      else if (e === 'overrev') rearBurst(emit, wheels, rnd)
+    }
+    // Sliding tyres smoke: a drift, a skid, wheelspin, a locked rear.
+    const tyres = player.tyres
+    if (tyres.speed > 3) {
+      skids(tyres, CONFIG.marks, axles)
+      ;[axles.front, axles.rear].forEach((s, i) => {
+        if (s <= fx.tyreSmoke) return
+        for (let n = due(acc.tyres[i], fx.tyreRate * s, dt); n > 0; n--) {
+          const w = wheels[i * 2 + (n % 2)]
+          tyreSmoke(emit, w.x, w.y, s, rnd)
+        }
+      })
+    }
   }
 
   // ---------- The step --------------------------------------------------------
 
   // moving: whether the traffic moves. Under reduced motion it stands still,
-  // and only the visitor's car moves.
+  // and only the visitor's car, and anything it knocks, moves.
   function step(dt, moving) {
     if (state === 'waiting') bringIn(moving)
     controls.step(dt)
-    sim.setBodies(player ? [car] : [])
+    sim.setBodies(player ? [car, ...knocked.keys()] : [...knocked.keys()])
     if (moving) sim.step(dt)
     syncTraffic(dt)
     if (state === 'driving') player.step(dt, controls.now)
-    else if (state === 'returning') autopilot(dt)
+    else if (state === 'returning') back.steer(dt)
     else if (state === 'leaving') leave(dt)
+    knockedBefore(dt)
     world.step(dt, 8, 3)
+    aftermath()
     // On the strip, the strip carries the car: it moves with the reviews,
     // and its own driving is on top of that. What it does to the strip is
     // its speed across it.
@@ -493,35 +570,38 @@ export function createDriver({
       car.y = pose.y * k
       car.a = pose.a
       car.v = pose.v * k
-      // Tyre marks, only while it's the visitor's.
+      // Tyre marks and effects, only while it's the visitor's.
       if (state === 'driving' && onMark) tread.lay(car, player.tyres, k, onMark, belt)
       else tread.reset()
+      if (state === 'driving') playerEffects(dt)
       const engine = player.engine
       if (engine && state === 'driving') {
         telemetry.gear = engine.gear
         telemetry.rpm = engine.rpm
         telemetry.state = engine.state
         telemetry.speed = pose.v
-        telemetry.clutch = controls.want.clutch > 0
+        telemetry.clutch = controls.now.clutch
         for (const e of engine.events) {
           if (e === 'grind') telemetry.grinds++
           else if (e === 'limiter') telemetry.limits++
         }
       }
     }
+    knockedAfter(dt, moving)
     if (state === 'returning') {
-      returning += dt
-      if (landed) sinceLanded += dt
-      tryRejoin()
-      // Pinned against a wall, or no lane with room: off at an edge, and
-      // straight back in, rather than stuck.
-      if (state === 'returning' && (sinceLanded > rc.giveUp || returning > rc.giveUpMax)) done(moving)
+      const r = back.check(dt)
+      if (r === 'rejoined') {
+        player.dispose()
+        player = null
+        blends.set(car, { from: back.from, t: 0 })
+        back = null
+        state = 'blending'
+      } else if (r === 'lost') done(moving)
     }
-    if (state === 'leaving') {
-      const right = (bounds ?? hero).x1
-      if (car.x < -u.length || car.x > right + u.length || leaving.t > rc.leaveMax) done(moving)
-    }
-    if (blend) applyBlend(dt)
+    // Only once it's out of sight. leaveMax is a guard that can't be
+    // reached: nothing holds a car that isn't solid.
+    if (state === 'leaving' && (offSide() || leaving.t > rc.leaveMax)) done(moving)
+    applyBlends(dt)
     if (ring) ring.t += dt
   }
 
@@ -535,8 +615,10 @@ export function createDriver({
     shift,
     setMode,
 
+    // done only once every car it knocked is back or gone; settling until
+    // then, with the black car's part over.
     get state() {
-      return state
+      return state === 'done' && (knocked.size || blends.size) ? 'settling' : state
     },
 
     // The takeover ring: where the car is and how long since control
@@ -545,30 +627,42 @@ export function createDriver({
       return ring && ring.t < CONFIG.render.ring.life ? { x: car.x, y: car.y, t: ring.t } : null
     },
 
-    // Driving is over: Esc, the ×, or focus gone. The keys stop counting
-    // and the car finds its own way back: into traffic from the hero, or
-    // off the side from anywhere further down the page.
-    release() {
+    // Driving is over: Esc, Stop, or focus gone. The keys stop counting and
+    // the car drives off the side of the window, then comes back in at the
+    // top. rejoin: make its own way back into the nearest lane instead
+    // (recover.js), as the tests and knocked cars do.
+    release({ rejoin = false } = {}) {
       input?.dispose()
       input = null
       controls.clear()
-      if (state === 'waiting') {
-        state = 'done'
-        sim.setBodies([])
-      }
+      if (state === 'waiting') state = 'done'
       if (state !== 'driving') return
-      if (car.x < hero.x0 || car.x > hero.x1 || car.y < hero.y0 || car.y > hero.y1 + u.length) {
+      const inHero = car.x >= hero.x0 && car.x <= hero.x1 && car.y >= hero.y0 && car.y <= hero.y1 + u.length
+      if (!rejoin || !inHero) {
         state = 'leaving'
         startLeaving()
         return
       }
       state = 'returning'
-      returning = 0
-      target = null
-      path = null
-      retarget = 0
-      stuck = backing = sinceLanded = 0
-      landed = false
+      back = createRecovery({ sim, car, body: player.body, k, inside })
+    },
+
+    // Another drive, on the same world, while cars from the last one are
+    // still settling: the black car is fetched as on the first.
+    restart({ mode: next = telemetry.mode, area: el, onControl: control, onExit: exit }) {
+      if (state !== 'done') return false
+      onControl = control
+      onExit = exit
+      Object.assign(telemetry, { gear: 'N', rpm: 0, state: 'free', mode: next, clutch: 0, speed: 0 })
+      state = 'waiting'
+      entering = false
+      ring = null
+      follow = createFollow()
+      tread.reset()
+      controls.clear()
+      input = listen(el)
+      build()
+      return true
     },
 
     // Held keys go when the loop pauses (off screen, hidden tab).
@@ -646,8 +740,10 @@ export function createDriver({
       input?.dispose()
       input = null
       sim.setBodies([])
-      // Mid-drive (the page is going, or the map changed): the car goes back
-      // to traffic by way of an edge.
+      // Anything still out of its lane (the page is going, or the map
+      // changed) goes back to traffic by way of an edge.
+      for (const [c, kn] of knocked) handBack(c, kn, true)
+      blends.clear()
       if (car.driven) sim.sendOff(car)
     },
   }

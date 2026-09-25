@@ -99,6 +99,7 @@ export function createEngine({ hero, host }) {
   // Until when some tyre mark is still showing, and some outside the hero,
   // which the canvas has to stay over the window for.
   let marksUntil = 0
+  let fxUntil = 0 // and some smoke or a spark
   let outsideUntil = 0
   // The window and the hero's place on the page, measured each frame while
   // the canvas is over the window.
@@ -161,16 +162,23 @@ export function createEngine({ hero, host }) {
     if (b && (x0 < 0 || y0 < 0 || x0 > b.width || y0 > b.height)) outsideUntil = Math.max(outsideUntil, until)
   }
 
+  // Smoke or a spark from the driver (drive/effects.js).
+  function addParticle(p) {
+    renderer.particles.add(p, clock)
+    fxUntil = Math.max(fxUntil, clock + (p.delay ?? 0) + p.life)
+  }
+
   function clearMarks() {
     renderer.marks.clear()
-    marksUntil = outsideUntil = 0
+    renderer.particles.clear()
+    marksUntil = outsideUntil = fxUntil = 0
   }
 
   // Driving goes on with the hero off screen: the car can be anywhere, and
-  // so can its marks. Marks fading in the hero keep it going while it's on
-  // screen, even with the traffic parked.
+  // so can its marks. Marks fading, or smoke still in the air, keep it
+  // going while the hero is on screen, even with the traffic parked.
   const running = () =>
-    (driver || view === 'page' || ((playing || clock < marksUntil) && onScreen)) &&
+    (driver || view === 'page' || ((playing || clock < marksUntil || clock < fxUntil) && onScreen)) &&
     !document.hidden &&
     !disposed &&
     !renderer.lost
@@ -410,16 +418,23 @@ export function createEngine({ hero, host }) {
     // has come in from off screen). onExit: Esc, or focus leaving the hero;
     // the caller ends the drive with stopDrive(). onEnd: the car is back in
     // traffic, or the drive was cut short (the map changed). onFrame: called
-    // with the driver's telemetry after every frame drawn, for the gear
+    // with the driver's telemetry after every frame drawn, for the driving
     // display. mode: the gearbox's, 'auto' or 'manual'. area: the driving
     // layer, fixed over the window, where the canvas goes for the drive and
-    // the keys are heard.
+    // the keys are heard. With the last drive's knocked cars still settling,
+    // its driver takes the new drive on the same world.
     startDrive(makeDriver, { mode, area, onControl, onExit, onEnd: ended, onFrame: frameHook }) {
-      if (disposed || !sim || map?.name !== 'wide' || driver || !area) return false
+      if (disposed || !sim || map?.name !== 'wide' || !area) return false
+      if (driver && driver.state !== 'settling') return false
       onEnd = ended
       onFrame = frameHook
       layer = area
       toPage()
+      if (driver) {
+        driver.restart({ mode, area, onControl, onExit })
+        sync()
+        return true
+      }
       driver = makeDriver({
         sim,
         k: sim.units.pxPerM,
@@ -431,14 +446,15 @@ export function createEngine({ hero, host }) {
         onControl,
         onExit,
         onMark: addMark,
+        onParticle: addParticle,
       })
       window.addEventListener('scroll', onScroll, { passive: true })
       sync()
       return true
     },
 
-    // The visitor is done. The car finds its own way back into traffic, and
-    // the driver goes once it has.
+    // The visitor is done. The car drives itself off, and the driver goes
+    // once it has and every car it knocked is back.
     stopDrive() {
       driver?.release()
     },

@@ -1,0 +1,395 @@
+/* What's on screen while someone drives (DriveHud.jsx), in the driving
+   layer over the window, along the bottom like a car's dash: the
+   speedometer in the bottom-left corner, the dock in the middle, and the
+   gear shifter in the bottom-right corner.
+
+   Each sits on a pod of dark, blurred glass: --red-dark at 82%, blurring
+   whatever's behind, with a faint highlight along its top edge. It reads
+   over the red hero, the beige bands and the white roads alike, and each
+   pod takes the shape of what it holds instead of a box: a dome for the
+   speedometer, a soft pod for the shifter, pills for the dock. White for
+   what matters, solid --cream for anything small: faded white fails
+   contrast (tokens.css). */
+
+.dash__panel,
+.drive-hint__text,
+.dock__bar {
+  background-color: color-mix(in srgb, var(--red-dark) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 8px 24px rgb(74 5 16 / 0.25);
+}
+
+/* ---------- The instruments, one in each bottom corner --------------------- */
+.dash__panel {
+  position: absolute;
+  bottom: 20px;
+  color: var(--white);
+  font-family: var(--font-display);
+  pointer-events: none;
+}
+
+/* ---- The speedometer, bottom left: a half circle that fills with the
+   speed, the speed in figures in its mouth, and a thin arc of revs inside.
+   Its pod is a dome: a half circle over the dial, on the dial's own
+   centre, with soft corners at the foot. The padding puts the dial's centre
+   (107px in and down its box) at the dome's. */
+.dash__speedo {
+  left: 20px;
+  padding: 14px 14px 10px;
+  border-radius: 121px 121px 22px 22px;
+}
+
+.speedo {
+  display: block;
+  width: 214px;
+  height: 119px;
+  overflow: visible;
+}
+
+.speedo__ticks line {
+  stroke: var(--cream);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.speedo__figure {
+  fill: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 8.5px;
+  text-anchor: middle;
+}
+
+.speedo path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.speedo__track {
+  stroke: rgb(253 248 242 / 0.22);
+  stroke-width: 5;
+}
+
+/* The speed, written every frame as a dash length out of 100. */
+.speedo__speed {
+  stroke: var(--white);
+  stroke-width: 5;
+  stroke-dasharray: 0 100;
+}
+
+.speedo__revs-track {
+  stroke: rgb(253 248 242 / 0.16);
+  stroke-width: 2;
+}
+
+/* The band past the 7,000 redline, of 0 to 8,000: the last eighth, in the
+   brand red. It flickers while the limiter bites (HeroStage). */
+.speedo__red {
+  stroke: var(--red-primary);
+  stroke-width: 2;
+  stroke-dasharray: 12.5 100;
+  stroke-dashoffset: -87.5;
+  stroke-linecap: butt;
+}
+
+.speedo__revs {
+  stroke: var(--cream);
+  stroke-width: 2;
+  stroke-dasharray: 0 100;
+}
+
+/* The figures, centred in the half circle's mouth. */
+.speedo__readout {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.speedo__kmh {
+  font-weight: 800;
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.speedo__unit {
+  margin-top: 3px;
+  color: var(--cream);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---- The shifter, bottom right: the H-pattern with its travelling knob,
+   and the gear as a numeral beside it with the clutch lamp under it in
+   manual. What shakes on a grind. Its pod is soft all round, as round at
+   the corners as it can be without cutting into the gate. */
+.dash__shifter {
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 1.125rem;
+  padding: 1.125rem 1.5rem 1.125rem 1.375rem;
+  border-radius: 30px;
+}
+
+.gate {
+  width: 132px;
+  height: 91px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.gate__lines path {
+  fill: none;
+  stroke: var(--cream);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.gate__label {
+  fill: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 9px;
+  text-anchor: middle;
+}
+
+.gate__label--on {
+  fill: var(--white);
+  font-weight: 800;
+}
+
+/* The lever: a white knob with a dark ring, so it sits on the lines. */
+.gate__knob {
+  fill: var(--white);
+  stroke: var(--red-dark);
+  stroke-width: 2;
+}
+
+.dash__gear-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.dash__gear {
+  min-width: 1.1ch;
+  font-weight: 800;
+  font-size: 3.5rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  transition: opacity var(--transition-reduced) ease;
+}
+
+/* Stalled, or restarted and waiting for the clutch: the gear dims. */
+.dash__shifter[data-off] .dash__gear {
+  opacity: 0.35;
+}
+
+/* A grind: the numeral goes the brand red for a moment (and shakes, with
+   motion); black would vanish into the dark glass. */
+.dash__shifter[data-grinding] .dash__gear {
+  color: var(--red-primary);
+}
+
+/* The clutch lamp, manual only: lit while the pedal is down. HeroStage sets
+   data-on every frame. */
+.dash__clutch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  color: var(--cream);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  line-height: 1;
+}
+
+.dash__clutch::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--cream);
+  border-radius: 50%;
+}
+
+.dash__clutch[data-on] {
+  color: var(--white);
+}
+
+.dash__clutch[data-on]::before {
+  border-color: var(--white);
+  background-color: var(--white);
+}
+
+/* ---------- The dock, in the middle of the bottom ------------------------
+   The keys on top while they show, the Auto / Manual switch and Stop below,
+   centred. Nothing here moves when the keys go. It keeps clear of the
+   instruments in the corners, and its keys wrap in a narrow window. */
+.dock {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  width: max-content;
+  max-width: calc(100% - 2 * 272px);
+  margin: 0 auto;
+  font-family: var(--font-display);
+  pointer-events: auto;
+}
+
+.dock:focus {
+  outline: none;
+}
+
+.dock:focus-visible .dock__bar {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+/* Keycaps, in the keys and the bar: a hairline cap with a heavier bottom
+   edge. */
+.dock kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  border: 1px solid rgb(253 248 242 / 0.7);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* The keys, on a pill of the same glass, grouped by what they do: spacing,
+   not separators. */
+.drive-hint:empty {
+  display: none;
+}
+
+.drive-hint__text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  padding: 0.4375rem 1.125rem;
+  border-radius: 20px;
+  color: var(--cream);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.drive-hint__pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+
+.drive-hint__keys {
+  display: inline-flex;
+  gap: 2px;
+}
+
+/* The bar, a pill of the same glass: the mode switch, and Stop. */
+.dock__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 5px;
+  border-radius: 999px;
+}
+
+.dock__mode,
+.dock__stop {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+/* 44px hit areas around the 32px controls. */
+.dock__mode::before,
+.dock__stop::before {
+  content: '';
+  position: absolute;
+  inset: -6px -2px;
+}
+
+.dock__mode {
+  gap: 2px;
+  padding: 2px 0.375rem 2px 2px;
+  border: 0;
+  background: none;
+  color: var(--cream);
+}
+
+.dock__mode span {
+  padding: 0 0.75rem;
+  line-height: 28px;
+  border-radius: 999px;
+  transition: background-color var(--transition-reduced) ease,
+    color var(--transition-reduced) ease;
+}
+
+.dock__mode span[data-on] {
+  background-color: var(--white);
+  color: var(--red-primary);
+}
+
+.dock__mode kbd {
+  margin-left: 0.25rem;
+}
+
+.dock__mode:hover {
+  color: var(--white);
+}
+
+/* Stop, the one white control: the way out should be the easiest thing
+   to find. */
+.dock__stop {
+  gap: 0.5rem;
+  padding: 0 1rem 0 0.375rem;
+  border: 0;
+  background-color: var(--white);
+  color: var(--red-primary);
+  transition: background-color var(--transition-reduced) ease;
+}
+
+.dock__stop kbd {
+  border-color: rgb(200 16 46 / 0.45);
+  color: var(--red-primary);
+}
+
+.dock__stop:hover {
+  background-color: var(--cream);
+}
+
+.dock__mode:focus-visible,
+.dock__stop:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}

@@ -511,18 +511,20 @@ export function createTraffic(graph, layout, { count, seed = CONFIG.world.seed }
   }
 
   // Back in at a random way in with two car lengths clear, the black car
-  // first. With nowhere clear, try again next step.
+  // first, and always: it's never the one dropped to bring the count down,
+  // and it comes in at the top when it can (up top, below). With nowhere
+  // clear, try again next step.
   function respawn() {
     let used = null
     for (const car of cars) {
       if (!car.pending) continue
-      if (live() > target) {
+      if (live() > target && !car.black) {
         car.pending = false
         continue
       }
       const open = g.entries.filter((l) => !used?.includes(l) && roomOn(l, 2 * u.length) >= 2 * u.length)
       if (!open.length) return
-      const lane = pick(open)
+      const lane = pick(car.black ? upTop(open) : open)
       seat(car, lane, u.length)
       car.v = safeSpeed(car)
       ;(used ??= []).push(lane)
@@ -581,13 +583,24 @@ export function createTraffic(graph, layout, { count, seed = CONFIG.world.seed }
 
   // ---------- The start ---------------------------------------------------
 
+  // Of these lanes, the ones up in the top part of the map, where the black
+  // car starts, comes back in and is parked (CONFIG.traffic.blackTop); all
+  // of them if none are.
+  const mid = {}
+  function upTop(lanes) {
+    const high = lanes.filter((l) => l.path.at(l.path.len / 2, mid).y < t.blackTop * g.height)
+    return high.length ? high : lanes
+  }
+
   // Cars scattered along lanes, never in a box, never past a line, and
   // clear of each other, from the seeded generator. The black car starts on
-  // a street that's fully on screen.
+  // a street that's fully on screen, up in the top part of the map
+  // (CONFIG.traffic.blackTop), or anywhere on screen if the top has none.
   function start() {
     const inside = g.lanes.filter((l) => !l.from.portal && !l.to.portal)
+    const blackPool = upTop(inside.length ? inside : g.lanes)
     for (const car of cars) {
-      if (!place(car, car.black && inside.length ? inside : g.lanes)) car.pending = true
+      if (!place(car, car.black ? blackPool : g.lanes)) car.pending = true
     }
     occupy()
     for (const car of cars) if (car.active) car.v = safeSpeed(car)
@@ -731,11 +744,12 @@ export function createTraffic(graph, layout, { count, seed = CONFIG.world.seed }
     car.pending = true
   }
 
-  // Parked on a street on screen, straight away: for the black car when
-  // Drive is pressed under reduced motion, where nothing will drive it in.
+  // Parked on a street on screen, up top, straight away: for the black car
+  // under reduced motion, where nothing will drive it in, when Drive is
+  // pressed with it off screen and when a drive ends.
   function seatInside(car) {
     const inside = g.lanes.filter((l) => !l.from.portal && !l.to.portal)
-    return place(car, inside.length ? inside : g.lanes)
+    return place(car, upTop(inside.length ? inside : g.lanes))
   }
 
   // The pose of a car with its nose at s on a lane, which is straight.

@@ -75,6 +75,10 @@ export const CONFIG = {
     lineGap: 1, // px at full zoom between a stopped car's nose and the crossing
     boxClear: 0.5, // m: a car enters a junction only if it can stop this far past it
     lookahead: 50, // m: how far ahead a car looks for a car or a line to stop for
+    // The black car starts on a street in the top part of the map, this
+    // share of its height down, so it's there to be found on load rather
+    // than tucked in a bottom corner.
+    blackTop: 0.35,
   },
 
   // The black car under a visitor's control (drive/). Everything SI. Phase 4
@@ -173,11 +177,39 @@ export const CONFIG = {
     // the landing because a car can end a drive a long way from any road.
     giveUp: 8, // s
     giveUpMax: 20, // s
-    // Driving ended somewhere down the page, away from the roads: the car
-    // turns for the nearer side and drives off it at this speed, then comes
-    // back in at a way in. leaveMax is the safety net if it never gets there.
-    leaveKmh: 60,
-    leaveMax: 6, // s
+    // Driving ended: the car turns for the nearer side of the window and
+    // drives off it at this speed, then comes back in at the top. Held up
+    // for leaveHeld, it stops being solid. leaveMax is a guard that can't
+    // be reached; it only ever goes once it's out of sight.
+    leaveKmh: 150,
+    leaveAccel: 30, // m/s²: it's leaving, not being driven, so harder than the car can
+    leaveHeld: 0.4, // s
+    leaveMax: 20, // s
+  },
+
+  // A traffic car the black car hits (§Traffic as physical bodies): it
+  // stops following its lane and takes the knock as a real body, sliding
+  // and spinning with its brakes locked, then finds its own way back
+  // (§Recovery). Everything SI.
+  knock: {
+    touch: 0.2, // m/s the black car has to be closing at to knock a car at all
+    nudge: 1, // m/s a knocked or recovering car needs to knock another: gentle touches don't spread
+    friction: 7, // m/s² its locked wheels slow it by
+    spin: 1.6, // how quickly its spinning dies away (angular damping)
+    settleSpeed: 0.5, // m/s: slower than this...
+    settleSpin: 0.3, // rad/s ...and turning slower than this, it has settled
+    settleMax: 2, // s after the knock it starts back regardless
+  },
+
+  // What the driving throws off (§Smoke, §Effects): smoke, and sparks where
+  // cars hit. A crash bumps the other car and throws sparks; nothing more
+  // happens to it.
+  effects: {
+    fade: 0.8, // s a knocked car that's off the roads or lost takes to fade away
+    sparksKmh: 8, // closing speed for sparks
+    tyreSmoke: 0.55, // how hard a tyre has to slide to smoke (of a full skid)
+    tyreRate: 24, // puffs a second from a sliding axle, at a full skid
+    pools: { smoke: 400, glow: 300 },
   },
 
   // The page following the car while it's driven (§Driving the whole
