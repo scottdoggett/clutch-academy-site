@@ -34,6 +34,10 @@ export default function GearGate({ gear }) {
     const { total, to } = path
 
     let moved = false
+    // Reverting a tween renders it back at its start with its callbacks on,
+    // so without this the knob would jump back to where this route began
+    // (N, for a drive's first) every time the gear changed.
+    let live = true
     const mm = gsap.matchMedia()
     mm.add(MOTION_OK, () => {
       if (!total) return
@@ -43,13 +47,18 @@ export default function GearGate({ gear }) {
         d: total,
         duration: Math.max(MIN, total / SPEED),
         ease: EASE_SHIFT,
-        onUpdate: () => place(along(path, travel.d)),
+        onUpdate: () => live && place(along(path, travel.d)),
       })
+      // Reduced motion switched on mid-travel: straight into the gear.
+      return () => live && place(to)
     })
     if (!moved) place(to)
-    // A new gear before this one has landed: stop here, and the next run
-    // sets off from where the knob is.
-    return () => mm.revert()
+    // A new gear, landed or not: stop the knob where it is, and the next
+    // run sets off from there.
+    return () => {
+      live = false
+      mm.revert()
+    }
   }, [gear])
 
   return (
