@@ -203,19 +203,21 @@ disappears, then animates in).
   dispatches `hero:settled`. SiteMotion calls it too when it skips a late
   hero. `HeroStage.jsx` waits for either, with the same 1.5s failsafe the CSS
   uses. Under reduced motion the cars are there from the start, parked. The
-  Drive pill fades in with them, in the same moment.
+  Test drive pill fades in with them, in the same moment.
 - **Driving the black car** (`hero-drive.md` §HUD, built in Phases 4 and 5)
   is motion a visitor starts, so it still works under reduced motion (rule
   8). Its GSAP moments are all under `MOTION_OK`:
-  - When driving starts, the gear display rises 8px and fades in over
-    `DUR_QUICK` on `EASE_IN`. It fades on opacity, not `autoAlpha`, because
-    it already has focus. Under reduced motion it's simply there.
-  - The controls hint fades out over `DUR_BASE` after 4s. Under reduced
-    motion it goes at 4s without the fade.
-  - The knob travels the gear display's H-pattern on `EASE_SHIFT` by the
-    shift gate's rule: back to neutral, across, into the slot. Under reduced
+  - When driving starts, the speedometer in the bottom-left corner, the
+    dock in the middle and the shifter in the bottom-right corner each rise
+    8px and fade in over `DUR_QUICK` on `EASE_IN`. The dock fades on
+    opacity, not `autoAlpha`, because it already has focus. Under reduced
+    motion they're simply there.
+  - The keys along the dock fade out over `DUR_BASE` after 6s. Under
+    reduced motion they go at 6s without the fade.
+  - The knob travels the shifter's H-pattern on `EASE_SHIFT` by the shift
+    gate's rule: back to neutral, across, into the slot. Under reduced
     motion it's in the new gear at once.
-  - A grind shakes the gear display sideways for 0.3s (keyframes, each on
+  - A grind shakes the shifter sideways for 0.3s (keyframes, each on
     `power2.out`), and the numeral turns black for 0.4s. It's the site's one
     shake, and it's allowed because a grind is a mistake. §The idea keeps
     jolts out everywhere else for the same reason. Under reduced motion the
@@ -223,6 +225,10 @@ disappears, then animates in).
   - The rev bar and the takeover ring aren't GSAP. The engine draws them
     every frame. Under reduced motion the ring doesn't grow; it shows at
     full size for its second.
+  - Smoke and sparks (`hero-drive.md` §Smoke, §Effects) aren't GSAP:
+    particles the engine draws every frame, each living under two seconds.
+    They show under reduced motion too, like the tyre marks: they come from
+    what the visitor did.
   - The page following the car (rule 6's exception) isn't GSAP either. It
     has momentum: it keeps going for a moment after the car slows. Under
     reduced motion there's none, and the page moves only as far as the car

@@ -46,8 +46,7 @@ after Scott's review.
   (§Decisions 18) and he was happy with it.
 - **Phase 5** (the gearbox and the gear display) is built and waiting for
   Scott's review in the dev server. He asked for the automatic to stay
-  alongside the manual, with a way to switch (§Decisions 19). Don't start
-  Phase 6 until he says so.
+  alongside the manual, with a way to switch (§Decisions 19).
 - **After Phase 5, the whole page.** Scott asked for the car to drive over
   the entire site, with the page scrolling after it near the bottom of the
   window, with momentum (§Decisions 20). It's built, and Scott tried it and
@@ -55,26 +54,40 @@ after Scott's review.
 - **Tyre marks, pulled forward from Phase 6** (September 25). Scott asked
   for marks behind the black car whenever he drives it, stronger in a skid
   or drift (§Decisions 21). Built (§Tyre marks, and §After Phase 5
-  below). The rest of Phase 6 still waits for him.
+  below).
+- **Phase 6** (September 25): Scott asked for effects, smoke on a stall and
+  traffic affected by a crash, "and stuff like that" (§Decisions 27).
+  Knocks, recovery for knocked cars, the anti-cascade rule and smoke are
+  built as the spec has them, with sparks and tyre smoke added. Fire came
+  and went the same day: a crash now just bumps the other car and throws
+  sparks (§Decisions 28, §Traffic as physical bodies, §Smoke, §Effects).
+  Phase 7 is what's left.
 - **The treadmill** (September 25). Scott asked for the reviews strip to
   carry the car and its marks, and for the car to speed it up, slow it or
   turn it round, "almost like a treadmill" (§Decisions 22). Built (§The
   treadmill).
+- **The driving display, redesigned** (September 25). The button says
+  "Test drive", and the display runs along the bottom of the window like a
+  car's dash: a half-circle speedometer in the bottom-left corner, the
+  keys, the mode switch and Stop in a dock in the middle, and a large gear
+  shifter in the bottom-right corner (§Decisions 23 and 24). Built (§After
+  Phase 5: the driving display, below).
 - Phases 3 to 5 and the whole-page drive are committed and pushed to
   `origin/overhaul`, September 24, so the review deployment has them. The
-  tyre marks, the treadmill and the gear knob fix are committed on
-  September 25 but not pushed.
+  September 25 work (tyre marks, the treadmill, the gear knob fix, the
+  display's redesign, the start up top, the new end to a drive, and Phase
+  6 with its effects) is committed and pushed too.
   Scott usually pushes himself; the HTTPS push command, for when he asks
   for a push from here, is below.
 - What exists: `src/components/hero/`, which holds `config.js`, `graph.js`,
   `layout.js`, `layouts/wide.json` and `compact.json`, `RoadLayer.jsx`,
-  `HeroStage.jsx`, `DriveButton.jsx`, `Hud.jsx` and `Hud.css`,
+  `HeroStage.jsx`, `DriveButton.jsx`, `DriveHud.jsx` and `DriveHud.css`,
   `GearGate.jsx` and `gate.js`, `ControlsHint.jsx`, `engine/` (`traffic.js`,
   `render.js`, `marks.js`, `index.js`), `drive/` (`player.js`, `gearbox.js`,
   `input.js`, `follow.js`, `tread.js`, `index.js`), the tests and the
   fixture. The hero markup and CSS are in `src/components/home/Hero.jsx` and
   `Hero.css`, and the treadmill's meeting point with the reviews strip is
-  `src/lib/treadmill.js`. `npm test` runs 88 tests, all passing. Lint and
+  `src/lib/treadmill.js`. `npm test` runs 89 tests, all passing. Lint and
   build are clean.
 - planck.js 1.5.0 is installed, and only `drive/` imports it.
 - The first prototype of this feature, a different design, is gone: saved
@@ -255,7 +268,8 @@ the "Driving" panel has grown into a gear display.
 - **Taking over** (§Entry): in manual the car starts in N if it's nearly
   stopped, otherwise the highest gear that keeps 2,000 rpm, clutch up (3rd
   at 40 km/h). The automatic starts in 1st at a standstill.
-- **The gear display** (`Hud.jsx`, `GearGate.jsx`, `gate.js`), where the pill
+- **The gear display** (`Hud.jsx`, since replaced by `DriveHud.jsx`, §After
+  Phase 5: the driving display; `GearGate.jsx`, `gate.js`), where the pill
   was, designed with the `frontend-design` plugin in the About page's shift
   gate language: a small H-pattern with R top left, a white knob that
   travels out of its slot, along the neutral plane and into the next on
@@ -383,6 +397,45 @@ carry on over the cards. The strip itself doesn't move in the automation
 tab, since GSAP never ticks there, so the belt's answer to the car is
 checked by the tests and waits for Scott's drive.
 
+### After Phase 5: the driving display
+
+Scott redesigned the Drive button, the gear display and the instructions in
+four rounds on September 25 (§Decisions 23 and 24): the gear and speed
+around the car, then a racing game's cluster above it, then a car's dash
+with a clutch bar above the car, and then, as built:
+
+- **"Test drive"**, in the pill's corner: the steering wheel on a white
+  disc, like a key fob's button, and the label in white.
+- **The speedometer**, in the bottom-left corner: a half circle that fills
+  with the speed, 0 to 220 km/h, the speed in figures in its mouth, and a
+  thin arc of revs inside with the redline.
+- **The dock**, in the middle of the bottom: the keys along the top when a
+  drive starts or the mode changes, fading after 6s, and below them,
+  always, the Auto / Manual switch and Stop. Focus lands on it.
+- **The gear shifter**, in the bottom-right corner, large: its knob
+  travels the H-pattern, the gear sits beside it as a numeral, and in
+  manual a lamp under the numeral lights while the clutch is down.
+- Sleek pods, not boxes: after the fourth round Scott wanted it sleeker,
+  without the rectangular plates. Soft fades behind the instruments came
+  next (along the whole bottom, then only the corners, then smaller) and
+  he didn't like the look. As built, each piece sits on a pod of dark,
+  blurred glass shaped to what it holds: a dome for the speedometer, a
+  soft pod for the shifter, pills for the dock.
+- Nothing rides above the car. The corner panel is gone (`Hud.jsx`,
+  `Hud.css`), and so are the trailing cluster and the clutch bar.
+
+**Added, for review:** the thin rev arc inside the speedometer, and the
+clutch lamp on the shifter. Scott asked for a speedometer and a shifter;
+the revs and the redline are what the manual needs to shift and to see the
+limiter, and with the clutch bar gone the lamp is the only sign the clutch
+is down. The brief asks for both. Each is one element to remove.
+
+**Checked:** in Chrome at 1280×800, in manual in 2nd: the speedometer bottom
+left reading 33 km/h, the dock centred with the manual's keys, and the
+shifter bottom right with the gear and the clutch lamp lit. The knob's
+travel and the fades can't be seen there, since GSAP doesn't tick in the
+hidden tab.
+
 ### Open questions
 
 1. **Which gearbox mode first?** Automatic, until a visitor picks. It's the
@@ -396,26 +449,26 @@ checked by the tests and waits for Scott's drive.
 3. **The feel of the manual box.** Checked by numbers and tests, not by hand,
    since the automation tab can't run the loop. The automatic was tuned to
    match the Phase 4 drive Scott liked.
-4. **Which way the treadmill runs** (§The treadmill): back under the car,
+4. **The rev arc in the speedometer, and the clutch lamp on the shifter**:
+   kept, or dropped (§After Phase 5: the driving display).
+5. **Which way the treadmill runs** (§The treadmill): back under the car,
    as built, or along with it.
-5. **The black car on the darkest cards.** Over the pricing cards' deep red
+6. **The black car on the darkest cards.** Over the pricing cards' deep red
    it's hard to see. Fine over the hero, the beige bands and the photos.
    A light outline would fix it if it bothers him.
-6. **The follow's feel**: the zone (a fifth of the window), the push and the
+7. **The follow's feel**: the zone (a fifth of the window), the push and the
    coast are in `CONFIG.follow`, tuned by numbers, not by hand.
-7. Settled, for the record: the side street's short blocks (§Decisions 17).
+8. Settled, for the record: the side street's short blocks (§Decisions 17).
    In windows about 600 to 730px tall, a car stopped beside it still sits on
    the zebra crossing, and those blocks have no centre ticks.
 
 ### What's next
 
-1. Scott's review of Phase 5 in the dev server, and any revisions. He has
-   tried the whole-page drive and liked it. Record each one in §Decisions and in the section it
-   changes.
-2. Then Phase 6: kinematic-to-dynamic knocks, recovery for knocked cars,
-   the anti-cascade rule, tyre marks and smoke (§Traffic as physical bodies,
-   §Recovery, §Tyre marks, §Smoke). The gearbox's events (stall, over-rev,
-   wheelspin, grind) are ready for the marks and smoke to hang off.
+1. Scott's review of Phase 6 and the effects in the dev server, and any
+   revisions. Record each one in §Decisions and in the section it changes.
+2. Then Phase 7: finishing reduced motion and lazy loading, save-data,
+   WebGL-failure handling, disposal, the performance pass (now with
+   particles and knocked cars in it) and the bundle report (§Phases).
 
 ### How Scott works
 
@@ -1130,9 +1183,16 @@ made these calls, all waiting for review:
   portal, so it starts fully off screen, at the fastest speed that can still
   stop for whatever is ahead. It picks a cruise speed from 36–44 km/h each
   time. The black car comes back first.
+- **Coming back in**, the black car takes a way in at the top of the map
+  when it can (§Decisions 26).
 - **The start** puts the black car on a street with no portal at either end,
   so it begins in view. Every car starts at the fastest speed that can stop
   for what's ahead of it.
+  ✅ Since September 25 it also starts up in the top part of the map, on a
+  street whose middle is within the top 35% of the map's height
+  (`traffic.blackTop`), so it's there to be found on load rather than in a
+  bottom corner, and the first road down clears the nav. Any street on
+  screen if the top has none (§Decisions 25).
 - **The count** includes the black car, and it drives on both maps. Open
   question 1 in §Handoff.
 - **The black car** takes exits that don't lead straight to a portal
@@ -1188,7 +1248,11 @@ windscreen and rear window, two small headlights.
 
 ✅ Built in Phase 4 as above (`DriveButton.jsx`): a 36px pill with a 44px hit
 area, "Drive" in sentence case, quieter than the CTAs' capitals, and a
-steering wheel of rim, hub and three spokes. It shows once the cars are
+steering wheel of rim, hub and three spokes. ✅ Redesigned September 25
+(§Decisions 23): "Test drive", 40px, the wheel in red on a 30px white disc
+and the label in white, a hairline border that goes solid white with a
+deeper red on hover and focus. Its name is "Test drive the black car with
+your keyboard". It shows once the cars are
 showing, only with a fine pointer that can hover and the wide map, watched
 live, and fades in with the cars.
 
@@ -1280,7 +1344,9 @@ revised one in §Recovery. And the HUD doesn't fade out yet: it unmounts as
 focus goes back to the pill, and the pill comes back at once.
 
 ✅ Since §Decisions 20, a drive that ends below the hero ends with the car
-driving off the nearer side instead (§Driving the whole page).
+driving off the nearer side instead (§Driving the whole page). ✅ Since
+§Decisions 26, every drive ends that way, wherever the car is: it drives
+itself off the side of the window, fast, and comes back in at the top.
 
 ### Pausing
 
@@ -1331,13 +1397,17 @@ section of the homepage, down to the footer, and the page scrolls after it.
   link or button works. A click anywhere else keeps focus. Focus moves to
   the HUD and back to the pill with `preventScroll`, so ending a drive at the
   footer doesn't jump the page back to the hero.
-- **Ending a drive away from the roads.** From the hero, the car finds its
-  way back as before (§Recovery). From further down the page, that would be
-  a minute's drive back up with nothing following it. So it turns for the
-  nearer side, the way it's already facing if it's roughly across the page,
-  drives off at 60 km/h with the walls gone, and comes back in at a way in.
-  Under reduced motion it's parked on a street instead. The safety net is
-  6s.
+- **Ending a drive.** Wherever the car is, it drives itself off the side
+  of the window (§Decisions 26). It picks the side it can be off soonest,
+  counting how far it is and how far it has to turn, and drives off with
+  the walls gone, launching at 30 m/s² to 150 km/h. Held up by a traffic
+  car for 0.4s, it stops being solid and drives through. It's handed back
+  to traffic only once it's out of sight past the side, and comes back in
+  at a way in at the top of the map. Median 2.5s from the end of a drive
+  to off the side, 5s from the middle of a 1920px window. Under reduced
+  motion it's then parked on a street up top instead. The Bézier way back
+  into the nearest lane (§Recovery) is kept for Phase 6's knocked cars,
+  behind `release({ rejoin: true })`.
 - **The loop** keeps running with the hero off screen, as long as there's a
   driver.
 - **The engine does the DOM, the driver the logic.** Each frame the engine
@@ -1483,8 +1553,25 @@ the impact.
 ✅ Built in Phase 4: the world on the first press, and every traffic car a
 kinematic body driven by velocity (teleported only when it jumps, coming back
 in at a way in). Traffic also stops for a car off the lanes (§Phase 4 as
-built). The knock itself, the switch to dynamic, is Phase 6; until then the
-visitor's car bounces off traffic as off a wall.
+built).
+
+✅ **Knocks built in Phase 6** (September 25), as above. In `drive/index.js`
+the world's pre-solve callback lets the first contact between a traffic
+car and a moving body through, and after the step the traffic car becomes
+a dynamic body of the same 1,200 kg, moving as it was; the next step the two
+meet properly. The black car knocks a car closing at 0.2 m/s or more while
+it's being driven; anything else, a knocked or recovering car, only above 1
+m/s (the anti-cascade rule), and the black car driving itself off never
+knocks at all. A knocked car's brakes are locked: it slows at 7 m/s² and its
+spin dies away. Traffic stops for it as for the black car. It settles
+(under 0.5 m/s and 0.3 rad/s, or 2s after the knock) and finds its own way
+back by the black car's path (§Recovery, now `drive/recover.js`), or, if it
+ended up off the roads or gives up, fades out over 0.8s and comes back in at
+an edge. A drive isn't over until every car it knocked is back: the world
+stays up, the driver says it's settling, and a new drive can start on it.
+In 28 rams at full throttle, 21 knocked cars drove back into their lanes
+and 7, pushed off the roads, faded out, in 2 to 13s. That's all that
+happens to a knocked car: it's bumped, not damaged (§Decisions 28).
 
 ### Recovery
 
@@ -1506,6 +1593,9 @@ can't turn into a pile-up that never clears.
 | Stuck | A car that hasn't rejoined after 8s fades out and respawns at a portal. It's a safety net for a car pinned against a wall, not a normal path. |
 
 The same path brings the black car back into traffic when driving ends.
+✅ Since Phase 6 it's `drive/recover.js`, shared: knocked cars take it once
+they settle, and the black car when asked to rejoin (§Decisions 26 ended
+drives off the side instead).
 
 🟡 **Built in Phase 4, for the black car, and changed from the table above
 after testing** (`drive/index.js`, `sim.landing()` in `engine/traffic.js`,
@@ -1709,6 +1799,45 @@ lines and a white, red-ringed knob on the hero red. Everything above, plus:
   portal, so it sits in the window's bottom-right corner and stays there as
   the page scrolls.
 
+✅ **Redesigned September 25** (§Decisions 23 and 24), replacing the corner
+panel above. `DriveHud.jsx` draws three things along the bottom of the
+driving layer, like a car's dash, 22px up from the window's edge, with no
+boxes round them:
+
+- **The glass**: every piece sits on the same material, `--red-dark` at
+  82% with a 14px background blur, a faint white highlight along its top
+  edge and a soft shadow, so white reads over the red hero, the beige
+  bands and the white roads. Small text is solid `--cream`.
+- **The speedometer**, 20px in from the bottom-left corner, on a dome: its
+  pod is a half circle over the dial, on the dial's own centre, with soft
+  corners at the foot. A half circle 0
+  to 220 km/h over the top, ticks every 20 and figures every 40, a 5px
+  white arc that fills with the speed, the speed in 36px figures and
+  "km/h" in its mouth, and inside, a thin cream arc of revs to 8,000 with
+  the band past the 7,000 redline in the brand red, flickering on the
+  limiter. `aria-hidden`.
+- **The dock**, centred. Along its top, the keys for the mode in use,
+  grouped with space rather than separators: the automatic's WASD, and the
+  manual's with the lever and "hold for the clutch". They show for 6s when
+  a drive starts and when the mode changes, and wrap in a narrow window to
+  keep clear of the corners. Below them, always, a bar with the Auto /
+  Manual switch (M) and Stop (Esc) on a glass pill, Stop the one white
+  control; the keys sit on a glass pill too. The bar doesn't move when the
+  keys go.
+- **The gear shifter**, 20px in from the bottom-right corner, on a glass pod
+  rounded 30px all round: the
+  H-pattern at 132×91 with its labels, the current one lit, and its knob
+  travelling as before, white with a dark ring; the gear as a 56px numeral
+  beside it, dimmed while stalled or waiting and the brand red on a grind
+  (black would vanish into the glass); and in manual, a clutch lamp under
+  the numeral, lit while the pedal is more than half down. `aria-hidden`.
+- **Focus** lands on the dock, labelled "Driving". The switch and Stop carry
+  `aria-keyshortcuts`, and the live region says M and Esc in words the
+  screen doesn't show twice.
+- **Motion**: the dock, the speedometer and the shifter rise and fade in,
+  and a grind shakes the shifter, all under `MOTION_OK`. The rest (the
+  speed, the revs, the clutch lamp) is written every frame, not animated.
+
 ## Tyre marks
 
 ✅ Marks draw on hard braking, wheelspin, drift, meaning sideways slip over a
@@ -1781,6 +1910,37 @@ over-rev downshifts and hard collisions. Pooled, capped.
 | Over-rev downshift | 4 per rear wheel over 0.3s |
 | Grinding into the wrong direction | Same as over-rev |
 | Hard collision, impulse over threshold | 8 at the contact point |
+
+✅ **Built in Phase 6** (September 25): the table as written, from the
+gearbox's events, with the wrong-way grind smoking as its locked rear
+slides. Also: **sliding tyres smoke**, a drift, a skid, wheelspin, a locked
+rear, at up to 24 puffs a second from an axle sliding past 55% of a full
+skid (the tyre marks' strength, §Tyre marks). The hard-collision burst was
+built and then dropped the same day: a crash throws sparks, nothing more
+(§Decisions 28). Pools are 400 for smoke and 300 for the sparks of
+§Effects, recycled oldest first; puffs from 6 to between 16 and
+26px, soft round, drifting and slowing, 0.7 to 1.2s. `engine/particles.js`
+draws them; `drive/effects.js` (pure) says what to emit.
+
+## Effects
+
+✅ **Added in Phase 6, September 25, at Scott's request** (§Decisions 27
+and 28).
+
+- **Sparks** where cars hit, from 8 km/h of closing speed: bright streaks
+  flying off along the contact, 4 to 22 of them, harder hits throwing more
+  and further, cooling to red in under half a second. They're the whole of
+  a crash: the other car is bumped and throws sparks, and nothing else
+  happens to it or to the black car.
+- **Fire, and the smoke of a crash, were built and dropped the same day**
+  (§Decisions 28). For the record: a car hit at 75 km/h caught fire, burned
+  and charred for 5s, faded and came back in unburnt; a hard crash threw a
+  burst of smoke; and the black car smoked from the front after a hard hit.
+- **Drawn** as glow, added to what's under it, over all the cars and
+  anywhere on the page. The car shader got a fade per car, for a knocked
+  car that's off the roads fading away.
+- **Reduced motion:** sparks and smoke still show, as the spec says of
+  marks and smoke: they're the result of what the visitor did.
 
 ## Phones, touch and reduced motion
 
@@ -1875,15 +2035,17 @@ disposed on unmount.
 
 - The road layer and car canvas are `aria-hidden`. The text underneath is ordinary
   HTML, selectable and read normally. A car driving over it doesn't change that.
-- Keyboard: the Drive button is in the tab order. Driving keys work only while
-  focus is in the hero. Esc and × both exit, and focus goes back to the button.
-- Contrast: the Drive label passes AA at rest, solid `--chrome` at 4.64:1
-  (§Conflicts). The hint uses solid `--cream`.
-- Targets: the Drive pill, the × and the Auto / Manual switch are at least
-  44px.
-- The gear display is `aria-hidden` apart from the switch, the × and the
-  hint's live region. The switch's name says the mode and what pressing it
-  does. The hint is announced when a drive starts and when the mode changes.
+- Keyboard: the Test drive button is in the tab order. Driving keys work only
+  while focus is on the dock, in the driving layer. Esc and Stop both exit,
+  and focus goes back to the button.
+- Contrast: the Test drive label is white on the hero red (it was solid
+  `--chrome`, 4.64:1, as "Drive"). The keys' words use solid `--cream`.
+- Targets: the Test drive pill, Stop and the Auto / Manual switch are at
+  least 44px.
+- The speedometer and the shifter are `aria-hidden`. On the dock, the switch and
+  Stop are buttons with `aria-keyshortcuts`, and the switch's name says the
+  mode and what pressing it does. The keys are announced when a drive starts
+  and when the mode changes.
 - Reduced motion: above.
 - 🟡 Windows turns on Sticky Keys after Shift is pressed five times in a row,
   which is exactly what working a clutch looks like. A browser can't stop that.
@@ -1909,7 +2071,7 @@ src/components/hero/
   HeroStage.css
   DriveButton.jsx
   ControlsHint.jsx
-  Hud.jsx + Hud.css   the gear display, loaded with the drive chunk
+  DriveHud.jsx + .css the speedometer, the dock and the shifter, loaded with the drive chunk
   GearGate.jsx        its H-pattern and travelling knob
   gate.js             where the gears sit in it, and the knob's route        (pure)
   gate.test.js
@@ -1919,9 +2081,12 @@ src/components/hero/
     traffic.js        lane following, gaps, reservations, turns, portals          (pure)
     traffic.test.js   the headless traffic test
     marks.js          the tyre marks' pool and shader
-    smoke.js          (Phase 6)
+    particles.js      smoke and sparks: two pools and their shaders
   drive/              the drive chunk
-    index.js          planck world, walls, contacts, recovery
+    index.js          planck world, walls, contacts, knocks, leaving
+    recover.js        a car's way back into its lane: knocked cars, the black car
+    effects.js        what smoke and sparks to throw off, and where          (pure)
+    knock.test.js     knocks, recovery and effects, headless
     player.js         car forces, lateral grip, steering
     input.js          keyboard, focus, preventDefault
     gearbox.js        engine and gearbox model, manual and automatic         (pure)
@@ -1990,7 +2155,7 @@ export const CONFIG = {
   traffic:  { pxPerCar: 90_000, min: 6, max: 16, compactMin: 4,
               cruiseKmh: [36, 44], turnKmh: 15, accel: 2.5, decel: 3.5, maxDecel: 8,
               headway: 1.2, stopGap: 1.5, dwell: 0.4, reroute: 6,
-              lineGap: 1, boxClear: 0.5, lookahead: 50 },
+              lineGap: 1, boxClear: 0.5, lookahead: 50, blackTop: 0.35 },
   car:      { length: 4.0, width: 1.83, wheelbase: 2.5 },
   player:   { mass: 1200, maxSteerDeg: 38, steerAtTop: 0.65, topKmh: 160,
               grip: 40, rearGrip: 0.9, spinDamping: 2.5,
@@ -2009,14 +2174,15 @@ export const CONFIG = {
               defaultMode: 'auto' },
   recovery: { rejoinKmh: 10, approachKmh: 30, lead: [1, 1.5], near: 1, nearDeg: 20,
               blend: 0.5, maxTurnDeg: 120, giveUp: 8, giveUpMax: 20,
-              leaveKmh: 60, leaveMax: 6,
-              // Phase 6: settleSpeed: 0.5, settleSpin: 0.3, settleMax: 2, nudgeAbove: 1
-            },
+              leaveKmh: 150, leaveAccel: 30, leaveHeld: 0.4, leaveMax: 20 },
+  knock:    { touch: 0.2, nudge: 1, friction: 7, spin: 1.6, settleSpeed: 0.5, settleSpin: 0.3,
+              settleMax: 2 },
+  effects:  { fade: 0.8, sparksKmh: 8, tyreSmoke: 0.55, tyreRate: 24,
+              pools: { smoke: 400, glow: 300 } },
   follow:   { zone: 0.2, push: 360, rise: 0.15, coast: 0.8, edge: 8, hold: 0.5 },
   marks:    { pool: 6000, every: 3, jump: 40, alpha: 0.55, roll: 0.15, width: [1.2, 2.2],
               fade: 10, rollFade: 4, slip: 0.3, slipFull: 3, release: 0.2,
               brakeAbove: 0.8, brakeFromKmh: 15, brake: 0.8, track: 1.5 },
-  smoke:    { pool: 160, life: 1, from: 6, to: 22, alpha: 0.5 },
   render:   { maxDpr: 2, glass: { traffic: 0.55, black: 0.3 },
               ring: { life: 1, from: 16, to: 40, width: 2.5 } },
 }
@@ -2030,11 +2196,11 @@ read the layout JSON with `readFileSync` rather than an import, which avoids
 import-attribute differences between Node and the Next bundler. They lint
 clean under the existing `eslint.config.js`.
 
-**88 tests, all passing,** after the treadmill. `graph.test.js` has 13,
+**92 tests, all passing,** after Phase 6. `graph.test.js` has 13,
 `layout.test.js` 20, `engine/traffic.test.js` 12, `drive/drive.test.js`
-13, `drive/gearbox.test.js` 12, `drive/follow.test.js` 7,
-`drive/tread.test.js` 5, `gate.test.js` 2 and `src/lib/treadmill.test.js`
-4. The whole run takes about 3s, the traffic and drive tests in parallel.
+14, `drive/knock.test.js` 3, `drive/gearbox.test.js` 12,
+`drive/follow.test.js` 7, `drive/tread.test.js` 5, `gate.test.js` 2 and
+`src/lib/treadmill.test.js` 4. The whole run takes about 3s, the traffic and drive tests in parallel.
 
 ✅ Required by the brief:
 
@@ -2114,10 +2280,13 @@ Added, each checking something the brief requires:
   Pressing Drive takes the black car out of traffic and shows the ring;
   a minute's wandering drive at three sizes never leaves the walls or touches
   a traffic car. Parked in the road, traffic stops for it and never runs
-  into it. When driving ends, 24 drives out of 24 find their way back, none
-  touches traffic on the way, and traffic flows normally afterwards. Under
-  reduced motion only the visitor's car moves. Pressed while the black car is
-  off screen, control starts only once it's fully inside.
+  into it. When driving ends, the car drives off the nearer side at over
+  100 km/h, inside 6s even at 1920px, is handed back only once it's out of
+  sight, and comes back in at the top. Asked to rejoin instead, 24 drives
+  out of 24 find their way back into a lane, none touches traffic on the
+  way, and traffic flows normally afterwards. Under reduced motion only the
+  visitor's car moves. Pressed while the black car is off screen, control
+  starts only once it's fully inside.
 - **Gearbox** (`drive/gearbox.test.js`, with a one-line car moving the wheel
   speed): taken over at a standstill it's in N, at 40 km/h in 3rd with 2,000
   rpm or more, and the automatic starts in 1st; shifting without the clutch
@@ -2164,6 +2333,14 @@ Added, each checking something the brief requires:
   `drive/drive.test.js`, a car in neutral on a strip drifting at 60 px/s
   goes 60px with it in a second, isn't going anywhere across it, and marks
   nothing; off the strip, it has nothing to say to it.
+- **Knocks and effects** (`drive/knock.test.js`, planck in Node): rammed
+  at full throttle, a traffic car is knocked out of its lane, moves, and
+  is handed back to traffic, in six seeds; a crash throws sparks and
+  nothing else, and the car it hits never fades while it's on the roads;
+  a stall throws six or more puffs, and a drift tyre smoke; and a chain of knocks through a 1920px hero clears on its
+  own within 15s of the last, Phase 6's done-when. The play-mode tests
+  count a car the black car knocked as a physics body, not traffic, when
+  they check it never drives into traffic.
 - **The knob's route** (`gate.test.js`): between any two gears, every leg
   runs along a slot or the neutral plane, never across the gate, and ends in
   the right slot; a change mid-travel sets off from where the knob has got
@@ -2187,7 +2364,7 @@ iframes and prints the new `sizes` array.
 | 3 | **Built September 24; roads reviewed and approved (§Decisions 14 to 17).** `engine/`: renderer, cars, traffic, reservations, Ts and corners, turns, portals, respawn, stopping behind the crossings, fade-in, pause and resume, seeded start, on both maps. Pulled forward from Phase 7: the parked frame under reduced motion, and lazy loading. See §Handoff. | Headless traffic test passes. In Chrome at 390, 768, 1440 and 1920px: cars follow lanes, stop behind crossings, take junctions one at a time, respawn, never overlap; parked under reduced motion. `08-motion.md` rules 7 and 8 updated. All done, except that reduced motion was checked through `park()` rather than by toggling the setting (§Handoff). 42 tests, lint and build clean. |
 | 4 | **Built September 24; retuned after Scott's first drive (§Decisions 18).** Drive button, `drive/` with planck, walls, player forces, input and focus, driving over text, exit and rejoin, controls hint, takeover ring. See §Handoff. | Keyboard-only run-through: enter, drive, Tab away, Esc, focus back on Drive. Done in Chrome (§Handoff, Phase 4 as built). Retuned after Scott's first drive (§Decisions 18). 54 tests, lint and build clean. |
 | 5 | **Built September 24, waiting for review.** `gearbox.js` and tests, in manual and automatic with a switch (§Decisions 19), then the HUD. Then, at Scott's request, the car driving the whole page (§Decisions 20). See §Handoff. | Gearbox tests pass (12). The HUD checked in the browser in both modes; the whole-page drive checked in the browser, and Scott liked it; his review of the rest next. 77 tests, lint and build clean. |
-| 6 | Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks (built early, September 25, §Decisions 21), smoke | A chain of knocks through a full 16-car hero clears on its own within 15s |
+| 6 | **Built September 25** (§Decisions 27). Kinematic-to-dynamic knocks, recovery, anti-cascade, tyre marks (built early, §Decisions 21), smoke, and at Scott's request sparks and tyre smoke (§Effects); fire came and went (§Decisions 28). | A chain of knocks through a full 16-car hero clears on its own within 15s: tested (§Tests). Checked in Chrome: a rammed car knocked across a junction with sparks. 92 tests, lint and build clean. |
 | 7 | Phones and touch (Drive hidden; done early, in Phase 4), finishing reduced motion and lazy loading, save-data, WebGL-failure handling, disposal, performance pass, bundle report (sizes so far in §Loading and performance) | 60fps with 16 cars, a full mark pool and smoke on a mid-range laptop. Reduced-motion and no-JS checks from `08-motion.md` pass. Chunk sizes reported. |
 
 Phase 4 and 5 UI work uses the `frontend-design` plugin.
@@ -2287,6 +2464,41 @@ September 25:
     to carry the car and its marks, and the car's speed and direction to
     speed up, slow or reverse the strip, "almost like a treadmill". Built
     as a treadmill, the strip running back under the car (§The treadmill).
+23. **The display goes to the car, and "Test drive".** Scott wanted the gear
+    and speed around the car so he doesn't have to look away, the
+    instructions at the bottom of the screen at first, and the button to
+    say "Test drive". Built first as a cluster trailing the car and a dock
+    at the bottom of the window (§Entry).
+24. **The dash.** Scott revised the display three more times the same day.
+    First, a racing game's cluster (a big speedometer, the gear and a big
+    clutch) always right above the car rather than trailing it. Then a
+    car's dash in the bottom-right corner, with a minimal clutch bar above
+    the car. Then, as built: nothing above the car; a half-circle
+    speedometer in the bottom-left corner, the dock back in the middle, and
+    a large gear shifter in the bottom-right corner (§HUD). And then no
+    boxes: the plates came off, soft fades behind the instruments were
+    tried and dropped, and each piece now sits on a pod of dark, blurred
+    glass shaped to it, a dome for the speedometer.
+25. **The black car starts up top.** Scott didn't want it in the bottom-left
+    corner every time the page loads. It now starts on a street in the top
+    part of the map (§Behaviour).
+26. **Ending a drive: off the side, fast, and back at the top.** Scott
+    wanted the car to drive off the side of the window when a visitor
+    stops, faster than it did, and not to vanish until it's off screen,
+    then come back up at the top. It used to find its way into the nearest
+    lane from the hero, and leave at 60 km/h from further down with a 6s
+    cut-off that could remove it in plain sight (§Driving the whole page).
+    It also comes back in at the top whenever it goes off an edge, and is
+    never the car dropped to bring the count down.
+27. **Phase 6, with effects.** Scott asked for effects: smoke when he
+    stalls, cars affected by a crash and catching fire, "and stuff like
+    that". Built as the spec's Phase 6 (knocks, recovery, anti-cascade,
+    smoke) with sparks, tyre smoke, fire and damage smoke added (§Effects).
+28. **No fire: a crash bumps and sparks.** Having seen it, Scott wanted the
+    fire gone and collisions kept, with nothing happening to the other cars
+    beyond being bumped, and the sparks. Fire, charring, the smoke burst at
+    a crash and the black car's damage smoke are removed from the code;
+    stall and tyre smoke stay.
 
 The Safari question about SVG dash lengths went away with the SVG. The
 questions still open are in §Handoff, §Open questions.

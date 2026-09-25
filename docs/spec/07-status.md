@@ -127,14 +127,34 @@ accepted on September 24.
   drive left and they turn round. With no car on it the strip drifts as
   before. 88 tests, lint and build clean. Which way it should run is a
   question for Scott (`hero-drive.md` §Open questions).
-- **The September 25 work is committed but not pushed:** the tyre marks,
-  the treadmill and the gear knob fix. The review deployment doesn't have
-  them yet.
-- **Phases 6 and 7, still to build:** collisions, with knocked cars, tyre
-  marks and smoke, then save-data, WebGL-failure handling, performance and
-  the bundle report. Phase 7's phones and touch part was done early, in
-  Phase 4: Drive isn't offered there. Phase 6 waits on Scott's review of
-  Phase 5.
+- **The September 25 work is committed and pushed** to `origin/overhaul`,
+  all of it below, so the review deployment has it.
+- **The driving display, redesigned, September 25:** at Scott's request,
+  in four rounds the same day. The button says "Test drive". The display
+  runs along the bottom of the window like a car's dash: a half-circle
+  speedometer with a thin rev arc inside in the bottom-left corner; a dock
+  in the middle with the keys when a drive starts, above the Auto / Manual
+  switch and Stop; and a large gear shifter in the bottom-right corner, with
+  a clutch lamp in manual. Each sits on a pod of dark, blurred glass shaped
+  to it (a dome for the speedometer) rather than a box. Nothing rides above the car. The corner panel is
+  gone. 88 tests, lint and build clean.
+- **The black car starts up top, September 25:** on load it now starts on a
+  street in the top part of the map instead of wherever the seed put it,
+  which was often the bottom-left corner.
+- **Ending a drive, September 25:** the car now always drives itself off
+  the side of the window, fast (to 150 km/h, off in 2.5s at the median),
+  is only handed back once it's out of sight, and comes back in at the top
+  of the map. 89 tests, lint clean.
+- **Phase 6, with effects, September 25:** at Scott's request. Traffic cars
+  the black car hits are bumped out of their lanes as real bodies, slide
+  and spin, bump others only above a nudge, and drive themselves back into
+  their lanes; nothing else happens to them. Sparks where cars hit; smoke on
+  a stall, an over-rev and sliding tyres. Fire was built and taken out the
+  same day, at Scott's word. 92 tests, lint and build clean.
+- **Phase 7, still to build:** save-data, WebGL-failure handling,
+  disposal, performance (now with particles and knocked cars in it) and
+  the bundle report. Its phones and touch part was done early, in Phase 4:
+  Drive isn't offered there.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.

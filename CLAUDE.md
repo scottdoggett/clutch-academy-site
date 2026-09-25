@@ -66,10 +66,13 @@ planning docs. **Don't work from anything in there.**
   scrolling after it (spec §Driving the whole page); Scott tried it and
   liked it. Phases 3 to 5 and the whole-page drive are committed and pushed
   to `origin/overhaul`. Tyre marks (Phase 6's, pulled forward) and the
-  reviews strip as a treadmill for the car followed on September 25,
-  committed but not pushed. The code is in
+  reviews strip as a treadmill for the car followed on September 25, then
+  a redesign of the driving display ("Test drive", the speedometer bottom
+  left, the keys and Stop in a dock in the middle, the gear shifter bottom
+  right), and Phase 6 with effects (traffic bumped out of its lane, sparks,
+  stall and tyre smoke), all committed and pushed. The code is in
   `src/components/hero/`, the traffic in its lazy `engine/` chunk and the
-  driving in its lazy `drive/` chunk, tested with `npm test` (88 tests). The
+  driving in its lazy `drive/` chunk, tested with `npm test` (92 tests). The
   spec's §Handoff says where it is, what changed from the spec, and what's
   next (Phase 6, knocks, recovery, tyre marks and smoke).
 - **Not yet merged or deployed to the real domain.** Remaining work is
@@ -88,7 +91,7 @@ planning docs. **Don't work from anything in there.**
 - **The homepage hero's city** (`src/components/hero/`) draws its traffic with
   three.js (WebGL2) and drives the black car with planck.js. Both load lazily
   in their own chunks, the traffic once the page is idle and the driving on
-  the Drive pill's hover or focus, so neither is in the first load. The
+  the Test drive pill's hover or focus, so neither is in the first load. The
   simulation modules are pure (no three.js, no DOM) and tested with
   `npm test`. `hero-drive.md` is the spec.
 - **Shared shell** in `src/app/layout.jsx`: fonts via `next/font` (Plus Jakarta

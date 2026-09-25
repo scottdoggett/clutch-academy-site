@@ -101,7 +101,7 @@ src/
 │   │                           # (the lazy planck chunk: the drivable car,
 │   │                           # its gearbox, keys, the page following it,
 │   │                           # the return to traffic),
-│   │                           # the Drive button and the gear display, and
+│   │                           # the Test drive button and the driving display, and
 │   │                           # their node:test suites
 │   ├── motion/
 │   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)

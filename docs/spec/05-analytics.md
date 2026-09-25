@@ -99,7 +99,7 @@ uses a contact method (phone, email, Instagram, Facebook).
 
 ### `hero_drive` (GA4)
 
-Fired once each time a visitor presses the homepage hero's Drive button
+Fired once each time a visitor presses the homepage hero's Test drive button
 (`src/components/hero/HeroStage.jsx`, `docs/spec/hero-drive.md`), through
 the same consent-gated `window.gtag` as every other event. No parameters,
 and nothing else from play mode is tracked: not how long they drove, not
