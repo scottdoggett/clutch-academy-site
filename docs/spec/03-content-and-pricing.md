@@ -73,8 +73,11 @@ their own Book Now and See More buttons (August 18, 2026); that read as heavy fo
 a signpost and was reverted to text on August 20.
 
 ### `/lessons/*` Package pages
-Each one: breadcrumbs → hero with price and Book CTA → who it's for → what's
-included → real Google review quotes → a five-question FAQ subset → next steps.
+Each one, in the same order since September 28, 2026: breadcrumbs → hero with
+price and Book CTA → what's included → who it's for → real Google review
+quotes → a five-question FAQ subset → next steps. (This file used to put who
+it's for first; only `/lessons/individual` did, and two of the other three
+led with what's included, so that order won.)
 These are Ads destinations; they must stand alone for someone who has never seen
 the homepage. (The review strip that used to close them was removed sitewide in
 August 2026 — see `02-architecture.md`.)

@@ -20,10 +20,10 @@ smooth: easing the clutch out, no jerk, no stall. So the site moves like a
 clean gear change. It starts gently, travels, and settles. It never bounces,
 snaps or overshoots, because in a car those are the mistakes.
 
-The About page's shift gate (`src/components/about/ShiftGate.jsx`) already
-moves this way. Its lever takes a cubic ease-in-out: "slow at both ends and
-quick through the middle is what a hand does on a gear lever". The rest of the
-site takes its cue from that.
+The About page's shift gate (`ShiftGate.jsx`, removed September 28, 2026 and
+recoverable from git) moved this way. Its lever took a cubic ease-in-out:
+"slow at both ends and quick through the middle is what a hand does on a gear
+lever". The rest of the site takes its cue from that.
 
 ## Rules
 
@@ -53,8 +53,8 @@ site takes its cue from that.
    with a keyboard offer, so never on iOS Safari, and the visitor's own
    scroll always wins. Scott asked for it on September 24, 2026, knowing
    this rule.
-7. **No new loops.** The reviews marquee, the shift gate's idle cycle and
-   the homepage hero's traffic are the site's only ambient motion. The
+7. **No new loops.** The reviews marquee and the homepage hero's traffic
+   are the site's only ambient motion. The
    traffic (`hero-drive.md`) was signed off with the hero brief on September
    24, 2026. Anything else that repeats on its own needs sign-off first.
    The marquee also answers the hero's black car while someone drives it
@@ -66,8 +66,7 @@ site takes its cue from that.
    reduce`, the handler never runs and the page is simply there. No
    fade-instead-of-slide fallbacks. Motion that starts itself never runs, so
    the hero's traffic is drawn parked. Motion a visitor starts on purpose
-   still works: the hero's Drive button (`hero-drive.md`, from Phase 4), like
-   the About page's shift gate following a pointer.
+   still works: the hero's Drive button (`hero-drive.md`, from Phase 4).
 9. **Never animate a number's value.** Prices, step numbers and stats don't
    count up. A price flickering through other prices reads as uncertain, and
    the brand promises transparent pricing (01 §Positioning).
@@ -87,7 +86,7 @@ These are constants in `src/lib/motion.js`, so no component invents its own.
 | Token | Value | Use |
 |---|---|---|
 | `EASE_IN` | `power3.out` | Every entrance. Fast start, long soft landing: letting the clutch out. |
-| `EASE_SHIFT` | `power2.inOut` | Moving between two resting states (cubic, the shift gate's curve). |
+| `EASE_SHIFT` | `power2.inOut` | Moving between two resting states (cubic, a hand on a gear lever). |
 | `DUR_QUICK` | `0.3` | Small elements: eyebrows, links, single lines. |
 | `DUR_BASE` | `0.6` | Default reveal. |
 | `DUR_SLOW` | `0.9` | Headlines and photos. |
@@ -248,6 +247,14 @@ What each section gets on the first pass:
 | How It Works | Header: Headline + Rise. "What to Expect" bullets: Stagger (tight). The steps' top border (`.steps__divider`) Draws, the steps Stagger, and each step's rule Draws as its number lands. |
 | Straightforward pricing | Header: Headline + Rise. Cards: Stagger, after the header. "Compare every lesson option" link: Rise. |
 | Meet Your Instructor | Headshot (both the desktop and phone copies): Settle. Heading, name, role and bio: Rise, in that order. Stats: Stagger. Buttons: Rise. |
+
+## About map
+
+The one section on `/about` with motion so far, added September 29, 2026:
+
+| Section | Motion |
+|---|---|
+| Why Students Choose Clutch Academy | Header: Headline + Rise. The road signs: Stagger. From 1024px their posts run 24px past the band's bottom edge and the row clips that edge, so each sign's 24px Rise grows it out of the ground rather than lifting it off. |
 
 Order within a section comes from `data-anim-delay` (seconds): the eyebrow and
 heading start together, the lead follows at 0.3, and whatever comes after the

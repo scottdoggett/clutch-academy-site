@@ -60,16 +60,19 @@ Active source tags:
 | `packages_3pack` | `/lessons/manual-foundations` |
 | `packages_confidence_5pack` | `/lessons/manual-confidence` |
 | `packages_group` | `/lessons/group` hero and closing CTA |
-| `packages_group_2hr` | `/lessons/group` option card |
 | `faq` | `/faq` |
 | `contact` | `/contact` |
 | `lessons_overview_close` | `/manual-driving-lessons` closing CTA |
 
 Historical notes that matter for reading GA4 reports:
 
-- **`packages_group_2hr` now labels a 2.5-hour session.** The tag was kept
-  through the August-1 switch so the series stays continuous, matching the live
-  site. The name is stale; the data is comparable.
+- **`packages_group_2hr` is retired on `overhaul`.** It belonged to the group
+  page's option card, which repeated the hero's price and Book button and was
+  removed on September 28, 2026, when the four package pages took one shape.
+  The live site still fires it, so its GA4 series ends at cutover; group
+  bookings from then on come in under `packages_group` alone. Before that it
+  labelled a 2.5-hour session under a 2-hour name, kept through the August-1
+  switch for continuity.
 - **`announcement` is retired.** It belonged to the August-1 banner's Book
   button, removed once the switch shipped. Historical data remains valid.
 - **`reverse` is retired.** It belonged to the old single-page site's Reverse

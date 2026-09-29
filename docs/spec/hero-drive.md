@@ -1784,7 +1784,8 @@ red, machined, not gamey, in the site's type.
   pattern reads R 1 2 3 4 5 6 left to right. The About page's gate has no
   reverse, so there's nothing to match. Many six-speeds put R there. If the
   school's training car puts it somewhere else, it's a one-line change.
-- **Dot routing.** The same route rule as `ShiftGate.jsx`: back to the neutral
+- **Dot routing.** The same route rule as the old About page's `ShiftGate.jsx`
+  (removed September 28, 2026): back to the neutral
   plane, across, into the slot. It travels on `EASE_SHIFT`, with the duration
   from path length and a short floor. When shifts come faster than the dot can
   travel, the dot re-routes from wherever it is.

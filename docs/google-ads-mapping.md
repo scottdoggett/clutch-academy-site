@@ -52,7 +52,8 @@ rounding). Any future price change has to update that mapping too.
 Each landing page carries its own Calendly source tag, so GA4
 `booking_cta_click.source` attributes clicks per page: `hero`/`about` (home),
 `packages_single`, `packages_3pack`, `packages_confidence_5pack`,
-`packages_group` (+ `packages_group_2hr` on the option card), `about_page`,
+`packages_group` (the group page's option card and its `packages_group_2hr`
+were removed on September 28, 2026), `about_page`,
 `faq`, `contact`, plus the site-wide `nav`. Full map in `spec/05-analytics.md`.
 
 `/manual-driving-lessons` books through one CTA of its own, the closing

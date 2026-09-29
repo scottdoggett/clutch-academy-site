@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** September 25, 2026.
+**Last updated:** September 28, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -162,6 +162,79 @@ accepted on September 24.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.
+
+## Recently completed — September 28, 2026 (beige bands sitewide)
+
+At Scott's request, the homepage's red and beige bands were carried to the
+hub, the four package pages, `/about`, `/faq` and `/contact`. The map is in
+`02-architecture.md` §Styling. Then, the same day, the four package pages were
+made one shape.
+
+- **Every page opens on the red** and alternates from there. The package
+  pages' reviews and every closing Book CTA except the hub's sit on beige, the
+  CTA as the homepage's solid red `btn--on-light` button.
+- **The package pages' quotes are the homepage's review cards** now: cream,
+  red top rule, five gold stars, the reviewer's initial. The card's CSS moved
+  out of `ReviewsMarquee.css` into a shared `ReviewCard.css`, and the four
+  pages render their quotes through one `LessonQuotes` component instead of
+  four copies of the markup.
+- **The About shift gate was redrawn in red on beige**, then replaced the
+  same day (next entry).
+- **The `.lesson-page` wrapper is gone.** Only `/lessons/individual` had it,
+  though `lessons.css` said all four did. It gave that one page tighter
+  section padding (for one continuous red field; as bands, that thin a
+  section read as a stripe) and smaller section headings. All four now use
+  the global padding and the site's shared heading scale.
+- **One shape for the four package pages**, at Scott's word to pick the most
+  common option where they differed: hero → what's included (beige) → who
+  it's for (red) → reviews → quick answers → next steps. What changed:
+  - The hero's second line is the pull line (`.lesson-hero__pull`) on all
+    four. Only Individual used it; the others set it as a second lead.
+  - Individual had who it's for first, as four named cards with icons. It's
+    now second, and a bullet list of the same four sentences, like the
+    others. Its inclusions are red cards.
+  - Group lost its option card, which repeated the hero's price and Book
+    button, so the `packages_group_2hr` tag is retired (`05-analytics.md`).
+    Its three bullets are now the what's-included cards, and it gained a
+    who-it's-for section, whose three lines are new and need Sam's approval
+    (open item 13).
+  - Confidence's skills grid is the same width as the others' content (900px)
+    instead of the full column.
+- **Motion wasn't carried over.** The other routes' motion pass is still to
+  do. The obstacle: on these pages the second section is on screen at load,
+  so the scroll reveals would paint it, hide it at hydration and replay it,
+  the flash `08-motion.md` §The hero warns about.
+- ⚠️ **Heading order on the package pages:** the section `h2`s top out at
+  4rem, the site's shared scale, while the hero `h1` tops out at 3.5rem, so on
+  a wide screen each section heading is larger than the page's title. It was
+  already so on three of the four pages. Not changed.
+
+## Recently completed — September 28–29, 2026 (About's reasons as road signs)
+
+Scott disliked the shift gate that carried "Why Students Choose Clutch
+Academy", so it's gone (`ShiftGate.jsx` deleted; it's in git). Two
+replacements were built for him to choose between, a new car's window
+sticker and a set of road signs; he chose the signs on September 29, and the
+sticker was deleted.
+
+- **`src/components/about/WhySigns.jsx`:** six Ontario-style signs, lettered
+  in Overpass (loaded with `next/font`, on this page only): MANUAL ONLY,
+  ONE-ON-ONE, MAXIMUM YOUR PACE, STALLS AHEAD, a no-parking sign, BOOK ONLINE
+  24 HRS. Each has a short title and one of the gate's old lines.
+- **From 1024px it's a street:** one row, every post running down to the
+  bottom edge of the beige band (the section drops its bottom padding), each
+  at a different height, alternating tall and short. Each sign's words sit
+  above it, and the words over a tall sign spread wider than their column,
+  over its shorter neighbours. Below 1024px each sign stands on a short post
+  beside its words, two to a row, one on phones: six posts to one ground line
+  left the words a few letters wide.
+- **Motion:** the header takes Headline and Rise; the signs Stagger, and
+  rise out of the ground rather than lifting off it (the posts run 24px past
+  the band's edge and the row clips its bottom). The first motion on `/about`.
+- `PENDING`: Sam hasn't approved the titles, and "Manual is all we teach" is
+  a new claim.
+- The quoted reviews moved out of `ReviewsMarquee.jsx` into
+  `src/lib/reviews.js` for the sticker's count; they stay there.
 
 ## Recently completed — September 2026 (homepage)
 
@@ -344,6 +417,7 @@ These are the actual blockers. Most need Sam.
 | 10 | **Slug keyword audit** | Routes | 🟡 Slugs were never deliberately audited. Cheap to change now, expensive once Ads final URLs point at them. |
 | 11 | **New line in Sam's voice** | `src/components/home/AboutTeaser.jsx` | "Everyone stalls while they're learning. Nobody's grading you, so we keep it relaxed, and most people end up having fun." Written in the September copy pass; Sam hasn't approved it. |
 | 12 | **Homepage meta description lags the copy** | `src/app/page.jsx` (`metadata`) | The on-page copy was rewritten in September; the description and OG/Twitter text weren't. Its facts are still right; the wording is the old voice. |
+| 13 | **Group page's "Who it's for" lines** | `src/app/lessons/group/page.jsx` (`WHO`) | Written September 28, 2026, when the page took the other package pages' shape. Each restates the hub's group card or chooser wording, but Sam hasn't seen them. `PENDING`. |
 
 ### From the Site 2.0 review doc — still needing clarification
 

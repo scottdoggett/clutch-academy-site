@@ -49,8 +49,9 @@ planning docs. **Don't work from anything in there.**
   the hub's chooser — see `07-status.md`.
 - **September: a homepage redesign pass.** Reviews and pricing sit on beige
   `.section--light` bands, the homepage copy was rewritten, and the homepage is
-  animated with GSAP under `docs/spec/08-motion.md`. Other routes haven't had
-  their motion pass yet.
+  animated with GSAP under `docs/spec/08-motion.md`. On September 28 the
+  red/beige bands went to every other route too (map in `02-architecture.md`
+  §Styling). Other routes haven't had their motion pass yet.
 - **The July QA pass is stale.** It predates the August 18 layout rework and the
   September motion work, so re-running Lighthouse across all 9 routes is a
   cutover requirement now, not a formality.

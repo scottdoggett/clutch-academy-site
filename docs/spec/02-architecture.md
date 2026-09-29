@@ -106,8 +106,12 @@ src/
 │   │                           # and their node:test suites
 │   ├── motion/
 │   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
+│   ├── ReviewCard.css          # The review card: homepage strip + package pages
+│   ├── about/
+│   │   └── WhySigns.jsx        # /about's reasons, as a street of road signs
 │   └── lessons/
 │       ├── LessonFaq.jsx       # Renders an FAQ subset by id
+│       ├── LessonQuotes.jsx    # A package page's review quotes, as review cards
 │       └── lessons.css         # Shared package-page styles
 │
 ├── hooks/
@@ -116,6 +120,7 @@ src/
 ├── lib/
 │   ├── faqs.js                 # Single source of FAQ truth
 │   ├── googleReviews.js        # Rating, review count, profile URL
+│   ├── reviews.js              # The quoted Google reviews (homepage strip)
 │   ├── consent.js              # Consent storage key + helpers
 │   ├── metaPixel.js
 │   ├── tiktokPixel.js
@@ -135,9 +140,14 @@ src/
 The homepage is five components in order: `Hero → Reviews → HowItWorks →
 PackagesTeaser → AboutTeaser`.
 
-The four package pages share a shape: breadcrumbs → hero (eyebrow, h1, lead,
-pull quote, price, Book CTA) → who it's for → what's included → real Google
-review quotes → FAQ subset → next steps.
+The four package pages have one shape, section for section (made uniform
+September 28, 2026): breadcrumbs → hero (eyebrow, h1, lead, pull line, price,
+Book CTA) → what's included → who it's for → real Google review quotes → FAQ
+subset → next steps. What's included is red cards: Foundations numbers its
+three lessons (`.lesson-curriculum`), since they come in order; the other
+three use the `.lesson-included` grid. Who it's for is always a bullet list.
+Section headings are the site's shared `.section-header` scale; there's no
+page-level wrapper class.
 
 `/manual-driving-lessons` opens **directly on the packages** — its heading
 "Four ways to learn" is the page's `<h1>`. The intro hero that used to carry a
@@ -202,6 +212,7 @@ Duplicating any of these is a bug:
 |---|---|---|
 | FAQ copy | `src/lib/faqs.js` | `/faq`, its FAQPage JSON-LD, every package-page FAQ subset, `/contact`'s cancellation text |
 | Google rating + review count | `src/lib/googleReviews.js` | The homepage reviews badge and the homepage `aggregateRating` |
+| Quoted Google reviews | `src/lib/reviews.js` | The homepage reviews strip |
 | Booking CTA behaviour | `src/components/BookButton.jsx` | Every Book button on the site |
 | Calendly URL | `src/hooks/useCalendly.js` | All booking entry points |
 | Consent storage key | `src/lib/consent.js` | Banner, analytics loader, `booked.html` |
@@ -213,12 +224,30 @@ and the 150ms hover/focus transition. Use the tokens, not literal values.
 Scripted-motion timings live in `src/lib/motion.js` instead (`08-motion.md`).
 
 **Light sections.** `.section--light` paints a section `--beige` (`#FBE9DF`)
-and flips its header type to red. On the homepage, Reviews and pricing use it,
-alternating with the red sections. A button placed on the beige itself adds
-`btn--on-light` (solid red with an inner white ring). Buttons inside the red
-package cards on that band keep the default white-on-red treatment. Red text on
-`--beige` measures 4.99:1, so it passes AA with little room: don't darken the
-beige without re-checking.
+and flips its header type to red. Every page opens on the red, then alternates
+red and beige, and no two beige bands touch. Applied to the homepage first and
+to every other route on September 28, 2026:
+
+| Route | Red | Beige |
+|---|---|---|
+| `/` | Hero, How It Works, Meet Your Instructor | Reviews, pricing |
+| Package pages | Hero, who it's for, Quick answers | What's included, the reviews, the closing CTA |
+| `/manual-driving-lessons` | The packages, the closing CTA | Pick by where you are today |
+| `/about` | The story, What Lessons Are Really Like, Pick where to start | Why Students Choose Clutch Academy, Why Learn Manual Driving |
+| `/faq` | The questions | The closing CTA |
+| `/contact` | The book CTA and contact card | Payment & cancellation |
+
+On the package pages what's included is always red cards on the beige, and
+the reviews are the homepage's review cards (`LessonQuotes`, sharing
+`ReviewCard.css` with the homepage strip).
+
+A button placed on the beige itself adds `btn--on-light` (solid red with an
+inner white ring); every closing Book CTA on beige has it. Buttons inside the
+red cards on a beige band keep the default white-on-red treatment. Solid red
+cards keep their own white type there, and set it on the card, since an `h3`
+inside would otherwise inherit the band's red. Red text on `--beige` measures
+4.99:1, so it passes AA with little room: don't darken the beige without
+re-checking.
 
 Two contrast rules that are easy to get wrong on the brand red (`#C8102E`):
 
