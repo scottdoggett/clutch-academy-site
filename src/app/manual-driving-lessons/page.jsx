@@ -211,7 +211,7 @@ export default function LessonsOverviewPage() {
 
       {/* ---------- Help me choose ---------- */}
       <section
-        className="section hub-choose"
+        className="section section--light hub-choose"
         aria-labelledby="hub-choose-heading"
       >
         <div className="section__inner hub-choose__inner">

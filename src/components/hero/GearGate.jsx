@@ -7,9 +7,10 @@ import { BOTTOM, PLANE, TOP, X, Y, along, route } from './gate.js'
 // window (docs/spec/hero-drive.md §HUD): six forward
 // gates and reverse, a fourth slot top left, so it reads R 1 2 3 4 5 6 left
 // to right. A knob sits in the current gear and travels there the way a hand
-// moves a lever, by the same rule as the About page's shift gate
-// (ShiftGate.jsx): back onto the neutral plane, across it, into the slot,
-// slow at both ends and quick through the middle. A change that comes while
+// moves a lever, by the same rule as the old About page shift gate
+// (ShiftGate.jsx, removed September 28, 2026; it's in git): back onto the
+// neutral plane, across it, into the slot, slow at both ends and quick
+// through the middle. A change that comes while
 // the knob is still travelling sets off from wherever it's got to. Under
 // reduced motion the knob just arrives.
 //

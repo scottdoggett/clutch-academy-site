@@ -1,6 +1,7 @@
 // Where each gear sits in the gear display's H-pattern (GearGate.jsx), and
 // the route the knob takes between two of them. Pure, so the tests can walk
-// it: the rule is the About page's shift gate's (ShiftGate.jsx), back onto
+// it: the rule is the old About page shift gate's (ShiftGate.jsx, removed
+// September 28, 2026 and recoverable from git), back onto
 // the neutral plane, across, into the slot, never straight across the gate.
 
 // In the SVG's own units. N is on the plane, level with 3 and 4, where a

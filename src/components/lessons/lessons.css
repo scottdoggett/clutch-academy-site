@@ -1,12 +1,15 @@
-/* Shared styles for the four package/landing pages (Phase 6).
+/* Shared styles for the four package pages. Every page has the same six
+   sections, on the homepage's alternating bands:
 
-   Type system (July 2026 redesign, established on /lessons/individual):
-   - H1        clamp(2.25rem → 3.5rem), lh 1.04, ≤18ch
-   - h2        clamp(1.75rem → 2.625rem) via `.lesson-page .section-header h2`
-               — pages wrap their sections in <div className="lesson-page">
-   - lead      1.0625rem / 1.6, ≤56ch, cream
-   - pull      one punchy line per hero, white 600 — not a second lead
-   - body/list 1.0625rem cream; notes = small bordered utility lines */
+   hero              red    eyebrow, h1, lead, pull, price, Book
+   what's included   beige  red cards (the numbered curriculum on Foundations,
+                            .lesson-included on the other three), the note
+   who it's for      red    .lesson-block__list
+   reviews           beige  LessonQuotes, the homepage's review cards
+   quick answers     red    LessonFaq
+   next steps        beige  Book CTA and cross-links (.lesson-next, globals.css)
+
+   Section headings use the site's shared .section-header scale. */
 
 /* ---------- Hero -------------------------------------------------------- */
 .lesson-hero__inner {
@@ -45,24 +48,6 @@
   max-width: 44ch;
 }
 
-/* Editorial heading scale for every section on a lesson page. */
-.lesson-page .section-header h2 {
-  font-size: clamp(1.75rem, 3.2vw, 2.625rem);
-  line-height: 1.05;
-}
-
-/* Tighter vertical rhythm than the global 5rem section padding — lesson
-   pages are single-topic and read better as one continuous flow. */
-.lesson-page .section {
-  padding-top: clamp(1.75rem, 3.5vw, 3rem);
-  padding-bottom: clamp(1.75rem, 3.5vw, 3rem);
-}
-
-/* First section still clears the fixed nav. */
-.lesson-page .section--first {
-  padding-top: calc(var(--nav-height) + clamp(1.5rem, 4vw, 3rem));
-}
-
 .lesson-hero__price {
   margin: 0.25rem 0 0;
   font-family: var(--font-display);
@@ -88,12 +73,13 @@
   color: var(--cream);
 }
 
-/* ---------- Who it's for / content blocks ------------------------------- */
+/* ---------- Content blocks ---------------------------------------------- */
 .lesson-block__inner {
   max-width: 900px;
   margin-inline: var(--column-inset) auto;
 }
 
+/* Who it's for, on the red. */
 .lesson-block__list {
   list-style: none;
   margin: 0;
@@ -121,77 +107,34 @@
   background-color: var(--white);
 }
 
-/* Utility register — matches the hub hero's bordered note. */
+/* The licence and car line under what's included, on the beige: a small
+   bordered utility line. --red-deep on the beige is 8.3:1. */
 .lesson-block__note {
   margin: 1.25rem 0 0;
   padding-left: 0.875rem;
-  border-left: 2px solid rgba(255, 255, 255, 0.35);
-  color: var(--chrome);
+  border-left: 2px solid rgba(200, 16, 46, 0.35);
+  color: var(--red-deep);
   font-size: var(--text-small);
   line-height: 1.55;
   max-width: 52ch;
 }
 
-/* ---------- Who it's for (named-scenario cards) -------------------------- */
-/* Four situations a visitor can self-identify with at a glance — outline
-   cards, quieter than the solid content cards further down the page. */
-.lesson-who {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  max-width: 1100px;
-}
-
-.lesson-who__item {
-  padding: clamp(1.125rem, 2vw, 1.5rem);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background-color: rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  transition:
-    border-color var(--transition-reduced) ease,
-    background-color var(--transition-reduced) ease;
-}
-
-@media (hover: hover) {
-  .lesson-who__item:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    background-color: rgba(0, 0, 0, 0.18);
-  }
-}
-
-.lesson-who__icon {
-  width: 1.75rem;
-  height: 1.75rem;
-  color: var(--chrome);
-  margin-bottom: 0.375rem;
-}
-
-.lesson-who__label {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.8125rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+/* ---------- Solid red cards on the beige band --------------------------- */
+/* What's included is a beige band, where the cards, like the homepage's
+   package cards, keep their own white type and stand out against it. Two
+   things change from the red ground: the titles are h3s that would otherwise
+   inherit the band's red and vanish into the card, so the card sets white,
+   and the card takes the review cards' soft warm shadow, since its white
+   hairline disappears on the beige. */
+.lesson-curriculum__item,
+.lesson-included__item {
   color: var(--white);
+  box-shadow:
+    0 1px 0 rgba(74, 5, 16, 0.06),
+    0 12px 28px -16px rgba(74, 5, 16, 0.45);
 }
 
-.lesson-who__text {
-  margin: 0;
-  color: var(--cream);
-  font-size: 0.96875rem;
-  line-height: 1.55;
-}
-
-@media (max-width: 767px) {
-  .lesson-who {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---------- Curriculum (numbered lesson progression) -------------------- */
+/* ---------- Curriculum (Foundations: the numbered progression) ---------- */
 .lesson-curriculum {
   list-style: none;
   margin: 0;
@@ -233,9 +176,13 @@
   line-height: 1.5;
 }
 
-/* ---------- Skills grid (flagship: no per-lesson mapping in the brief,
-   so skills render as an unnumbered mastery grid, not a curriculum) ------ */
-.lesson-skills {
+/* ---------- Included grid (the other three packages) --------------------- */
+/* Unnumbered, since nothing here comes in an order. Confidence's cards carry
+   a skill and a line about it; Individual's and Group's carry one line each,
+   the placeholder inclusions still waiting on Sam, so they take .__line
+   rather than a heading. Two columns, or three when there are exactly three
+   cards, so Group's don't leave one alone on a second row. */
+.lesson-included {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -244,137 +191,46 @@
   gap: 1rem;
 }
 
-.lesson-skills__item {
+.lesson-included:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lesson-included__item {
   padding: clamp(1rem, 2vw, 1.5rem);
   background-color: var(--red-deep);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.lesson-skills__title {
+.lesson-included__title {
   margin: 0 0 0.25rem;
   font-size: clamp(1.125rem, 1.8vw, 1.375rem);
   line-height: 1.15;
 }
 
-.lesson-skills__desc {
+.lesson-included__desc {
   margin: 0;
   color: var(--cream);
   font-size: var(--text-body);
   line-height: 1.5;
 }
 
-@media (max-width: 767px) {
-  .lesson-skills {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---------- Option cards (group page: two bookable formats) ------------- */
-/* Track count follows the number of options. The group page sells a single
-   2.5-hour session today, but sold two before the August-1 switch and may
-   again — auto-fit means neither case leaves a dead half-column. */
-.lesson-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: 1rem;
-  max-width: 1100px;
-}
-
-/* A lone card shouldn't stretch the full 1100px. */
-.lesson-options:has(> :only-child) {
-  max-width: 32rem;
-}
-
-.lesson-option {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-  padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  background-color: var(--red-deep);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.lesson-option__title {
+.lesson-included__line {
   margin: 0;
-  font-size: clamp(1.25rem, 1.9vw, 1.625rem);
-  line-height: 1.1;
-}
-
-.lesson-option__desc {
-  margin: 0;
-  color: var(--cream);
-  font-size: var(--text-body);
-  line-height: 1.5;
-}
-
-.lesson-option__price {
-  margin: auto 0 0;
-  padding-top: 0.75rem;
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--white);
-  font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: baseline;
-  gap: 0.375rem;
-}
-
-.lesson-option__unit {
-  font-size: 0.35em;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
-}
-
-.lesson-option .btn {
-  margin-top: 0.75rem;
-  text-align: center;
-}
-
-@media (max-width: 767px) {
-  .lesson-options {
-    grid-template-columns: 1fr;
-  }
+  font-weight: 700;
+  font-size: clamp(1.0625rem, 1.4vw, 1.125rem);
+  line-height: 1.35;
+  letter-spacing: var(--letter-tight);
 }
 
 /* ---------- Real student quotes ----------------------------------------- */
 /* Uncapped so the grid fills its 1200px .section__inner and lines up with the
-   heading above it — see .hub-cards for the same correction. */
+   heading above it — see .hub-cards for the same correction. The cards are
+   the homepage's review cards (LessonQuotes.jsx, ReviewCard.css). */
 .lesson-quotes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-}
-
-.lesson-quote {
-  padding: clamp(1rem, 2vw, 1.5rem);
-  background-color: var(--red-deep);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.lesson-quote__text {
-  margin: 0;
-  font-style: italic;
-  color: var(--cream);
-  font-size: 1.0625rem;
-  line-height: 1.55;
-}
-
-.lesson-quote__name {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-small);
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
-  color: var(--white);
 }
 
 /* ---------- FAQ subset --------------------------------------------------- */
@@ -437,6 +293,8 @@
 
 /* ---------- Responsive ---------------------------------------------------- */
 @media (max-width: 767px) {
+  .lesson-included,
+  .lesson-included:has(> :nth-child(3):last-child),
   .lesson-quotes {
     grid-template-columns: 1fr;
   }

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
+import LessonQuotes from '../../../components/lessons/LessonQuotes'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
@@ -80,7 +81,7 @@ export default function ManualFoundationsPage() {
             each one picking up exactly where the last left off.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
-          <p className="lesson-hero__lead">
+          <p className="lesson-hero__pull">
             Most students arrive nervous — and leave wondering what they were
             nervous about.
           </p>
@@ -96,8 +97,11 @@ export default function ManualFoundationsPage() {
         </div>
       </section>
 
-      {/* ---------- The progression ---------- */}
-      <section className="section" aria-labelledby="curriculum-heading">
+      {/* ---------- What's included: the progression ---------- */}
+      <section
+        className="section section--light"
+        aria-labelledby="curriculum-heading"
+      >
         <div className="section__inner lesson-block__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">The progression</p>
@@ -147,26 +151,17 @@ export default function ManualFoundationsPage() {
         </div>
       </section>
 
-      {/* ---------- Trust ---------- */}
       {/* ---------- Real reviews ---------- */}
-      <section className="section" aria-labelledby="quotes-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="quotes-heading"
+      >
         <div className="section__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">From the Google reviews</p>
             <h2 id="quotes-heading">The progression, in students’ words</h2>
           </header>
-          <div className="lesson-quotes">
-            {QUOTES.map((q) => (
-              <figure key={q.name} className="lesson-quote">
-                <blockquote className="lesson-quote__text">
-                  “{q.text}”
-                </blockquote>
-                <figcaption className="lesson-quote__name">
-                  — {q.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <LessonQuotes quotes={QUOTES} />
         </div>
       </section>
 
@@ -182,7 +177,10 @@ export default function ManualFoundationsPage() {
       </section>
 
       {/* ---------- Final CTA + cross-links ---------- */}
-      <section className="section" aria-labelledby="next-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="next-heading"
+      >
         <div className="section__inner lesson-next">
           <header className="section-header">
             <p className="section-header__eyebrow">Start from zero</p>
@@ -190,7 +188,7 @@ export default function ManualFoundationsPage() {
           </header>
           <BookButton
             source="packages_3pack"
-            className="btn btn--primary btn--xl"
+            className="btn btn--primary btn--xl btn--on-light"
           >
             Book This Package
           </BookButton>

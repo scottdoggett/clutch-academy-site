@@ -230,10 +230,12 @@ img {
 }
 
 /* ---------- Light sections ------------------------------------------------
-   A beige band for breaking up the red, used on the homepage's reviews and
-   pricing sections. It flips everything the shared styles paint white or
-   cream: header type, the secondary button, and the focus ring (a white one
-   vanishes on a light ground). Contrast figures are on the --beige token. */
+   A beige band for breaking up the red. Every page opens on the red, then
+   alternates: the homepage's reviews and pricing, and on the other routes the
+   sections between their openers and footers (docs/spec/02-architecture.md
+   §Styling has the map). It flips everything the shared styles paint white
+   or cream: header type, the secondary button, and the focus ring (a white
+   one vanishes on a light ground). Contrast figures are on the --beige token. */
 .section--light {
   background-color: var(--beige);
   color: var(--red-primary);
@@ -331,6 +333,21 @@ img {
 .lesson-next__links a:focus-visible {
   outline: 2px solid var(--white);
   outline-offset: 2px;
+}
+
+/* The block closes the package pages and /faq on a beige band, and the hub
+   on the red, so its links flip with the ground. The Book button above them
+   takes `btn--on-light` there. */
+.section--light .lesson-next__links {
+  color: var(--red-dark);
+}
+
+.section--light .lesson-next__links a {
+  color: var(--red-primary);
+}
+
+.section--light .lesson-next__links a:focus-visible {
+  outline-color: var(--red-primary);
 }
 
 /* Studio photos ship with white backgrounds; multiply-blend over a red fill

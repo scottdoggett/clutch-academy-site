@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
-import ShiftGate from '../../components/about/ShiftGate'
+import WhySigns from '../../components/about/WhySigns'
 import headshot from '../../../public/headshot.jpeg'
 import './about.css'
 
@@ -11,32 +11,6 @@ export const metadata = {
     'Why Sam Anthony started Clutch Academy — calm, patient, judgment-free manual driving lessons on real Toronto roads, tailored to your pace.',
   alternates: { canonical: '/about' },
 }
-
-// Six reasons laid out on a five-speed gate — 1 through 5 and R, one line per
-// position. The July 2026 brief asked for these as a simple icon grid with
-// checkmarks; that shipped as a 3×2 of bordered boxes and read as the third
-// boxed grid on the page, saying nothing about manual driving. Each label from
-// the brief is kept beside its rewrite below.
-//
-// PENDING: Sam to approve the rewritten lines. Nothing here is a new claim —
-// each one restates a brief label in the voice the rest of the page already
-// uses — but the wording is ours, not his.
-const GEARS = [
-  // "Calm, patient instruction"
-  { gear: '1', line: 'No sighing. No raised voice. No clock-watching.' },
-  // "Learn at your own pace"
-  { gear: '2', line: 'Stall it thirty times. Nobody is counting.' },
-  // "One-on-one lessons"
-  { gear: '3', line: 'Just you and Sam. Nobody in the back seat waiting a turn.' },
-  // "Online booking & secure payment"
-  // Non-breaking space: "1 a.m." is one token and must not break across
-  // lines, which at this measure it otherwise does.
-  { gear: '4', line: 'Book and pay online — at 1\u00A0a.m., if that’s when you decide.' },
-  // "Real Toronto roads"
-  { gear: '5', line: 'Downtown traffic and real hills, not an empty parking lot.' },
-  // "Hundreds of successful lessons taught"
-  { gear: 'R', line: 'Hundreds of lessons taught. Every driver started where you are.' },
-]
 
 // Common student fears and how they're overcome (brief: "What Lessons Are
 // Really Like"). Each fear is grounded in what real students say in the
@@ -172,19 +146,7 @@ export default function AboutPage() {
       </section>
 
       {/* ---------- Why Students Choose Clutch Academy ---------- */}
-      <section
-        className="section about-why"
-        aria-labelledby="why-choose-heading"
-      >
-        <div className="section__inner">
-          <header className="section-header section-header--center">
-            <p className="section-header__eyebrow">Six reasons, one per gear</p>
-            <h2 id="why-choose-heading">Why Students Choose Clutch Academy</h2>
-          </header>
-
-          <ShiftGate gears={GEARS} />
-        </div>
-      </section>
+      <WhySigns />
 
       {/* ---------- What Lessons Are Really Like ---------- */}
       <section
@@ -214,7 +176,7 @@ export default function AboutPage() {
 
       {/* ---------- Why Learn Manual Driving (brief copy, verbatim) ------- */}
       <section
-        className="section about-manual"
+        className="section section--light about-manual"
         aria-labelledby="why-manual-heading"
       >
         <div className="section__inner about-manual__inner">

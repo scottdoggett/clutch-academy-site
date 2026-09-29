@@ -2,6 +2,7 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
+import LessonQuotes from '../../../components/lessons/LessonQuotes'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
@@ -15,55 +16,24 @@ export const metadata = {
 // Pricing is the post-August-1 offering: 75 min · $110 + HST.
 const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 
-// "Who it's for" scenarios — the same four situations the old bullet list
-// described, each with a name and a line icon a visitor can self-identify
-// with at a glance. Icons inherit stroke styling from the svg wrapper.
+// PENDING: SINGLE-LESSON INCLUSIONS — final 3–5 bullets from Sam. These carry
+// over the placeholder bullets already shown on the live site's pricing card;
+// confirm before launch.
+const INCLUDED = [
+  'One-on-one instruction, tailored to your starting level',
+  'Clutch control basics and finding the bite point',
+  'First-gear starts, stops, and real-road practice',
+  'Personalized feedback on exactly what to practice next',
+]
+
+// Four situations a visitor can recognise themselves in. They were named,
+// iconned cards until September 2026, when the four package pages took one
+// shape and this section became the bullet list the other three use.
 const WHO = [
-  {
-    label: 'The returning driver',
-    text: 'You learned manual years ago and want the muscle memory back before it matters.',
-    icon: (
-      // Loop arrow — the skill coming back around.
-      <>
-        <path d="M21 12a9 9 0 1 1-2.64-6.36" />
-        <path d="M21 3v6h-6" />
-      </>
-    ),
-  },
-  {
-    label: 'The Europe trip',
-    text: 'You’re renting a car in Europe this summer — where manual is often the default — and want to arrive ready.',
-    icon: (
-      // Paper plane.
-      <>
-        <path d="M22 2 11 13" />
-        <path d="M22 2 15 22l-4-9-9-4Z" />
-      </>
-    ),
-  },
-  {
-    label: 'The total beginner',
-    text: 'You’ve never driven stick and want a real first introduction before committing to a package.',
-    icon: (
-      // Learner's L-plate.
-      <>
-        <rect x="3.5" y="3.5" width="17" height="17" rx="2" />
-        <path d="M10 8v8h5" />
-      </>
-    ),
-  },
-  {
-    label: 'The one skill to fix',
-    text: 'You have a specific skill to iron out — hill starts, smoother shifting, downshifting — and one focused session will do it.',
-    icon: (
-      // Target.
-      <>
-        <circle cx="12" cy="12" r="8.5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="12" cy="12" r="0.75" fill="currentColor" />
-      </>
-    ),
-  },
+  'You learned manual years ago and want the muscle memory back before it matters.',
+  'You’re renting a car in Europe this summer — where manual is often the default — and want to arrive ready.',
+  'You’ve never driven stick and want a real first introduction before committing to a package.',
+  'You have a specific skill to iron out — hill starts, smoother shifting, downshifting — and one focused session will do it.',
 ]
 
 // Real quotes from the Google-review set, chosen because both describe a
@@ -81,7 +51,7 @@ const QUOTES = [
 
 export default function IndividualLessonPage() {
   return (
-    <div className="lesson-page">
+    <>
       <Breadcrumbs
         items={[
           { label: 'Home', href: '/' },
@@ -121,52 +91,22 @@ export default function IndividualLessonPage() {
         </div>
       </section>
 
-      {/* ---------- Who it's for ---------- */}
-      <section className="section" aria-labelledby="who-heading">
-        <div className="section__inner lesson-block__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">Who it’s for</p>
-            <h2 id="who-heading">Best for refreshers and first tastes</h2>
-          </header>
-          <div className="lesson-who">
-            {WHO.map((w) => (
-              <article key={w.label} className="lesson-who__item">
-                <svg
-                  className="lesson-who__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  {w.icon}
-                </svg>
-                <h3 className="lesson-who__label">{w.label}</h3>
-                <p className="lesson-who__text">{w.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ---------- What's included ---------- */}
-      <section className="section" aria-labelledby="included-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="included-heading"
+      >
         <div className="section__inner lesson-block__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">What’s included</p>
             <h2 id="included-heading">Your 75 minutes behind the wheel</h2>
           </header>
-          {/* PENDING: SINGLE-LESSON INCLUSIONS — final 3–5 bullets from Sam.
-              The list below carries over the placeholder bullets already
-              shown on the live site's pricing card; confirm before launch. */}
-          <ul className="lesson-block__list">
-            <li>One-on-one instruction, tailored to your starting level</li>
-            <li>Clutch control basics and finding the bite point</li>
-            <li>First-gear starts, stops, and real-road practice</li>
-            <li>Personalized feedback on exactly what to practice next</li>
+          <ul className="lesson-included">
+            {INCLUDED.map((item) => (
+              <li key={item} className="lesson-included__item">
+                <p className="lesson-included__line">{item}</p>
+              </li>
+            ))}
           </ul>
           <p className="lesson-block__note">
             Taught in a manual hatchback. A valid G2 or G licence
@@ -175,26 +115,32 @@ export default function IndividualLessonPage() {
         </div>
       </section>
 
-      {/* ---------- Trust ---------- */}
+      {/* ---------- Who it's for ---------- */}
+      <section className="section" aria-labelledby="who-heading">
+        <div className="section__inner lesson-block__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Who it’s for</p>
+            <h2 id="who-heading">Best for refreshers and first tastes</h2>
+          </header>
+          <ul className="lesson-block__list">
+            {WHO.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ---------- Real reviews ---------- */}
-      <section className="section" aria-labelledby="quotes-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="quotes-heading"
+      >
         <div className="section__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">From the Google reviews</p>
             <h2 id="quotes-heading">After one lesson</h2>
           </header>
-          <div className="lesson-quotes">
-            {QUOTES.map((q) => (
-              <figure key={q.name} className="lesson-quote">
-                <blockquote className="lesson-quote__text">
-                  “{q.text}”
-                </blockquote>
-                <figcaption className="lesson-quote__name">
-                  — {q.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <LessonQuotes quotes={QUOTES} />
         </div>
       </section>
 
@@ -210,7 +156,10 @@ export default function IndividualLessonPage() {
       </section>
 
       {/* ---------- Final CTA + cross-links ---------- */}
-      <section className="section" aria-labelledby="next-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="next-heading"
+      >
         <div className="section__inner lesson-next">
           <header className="section-header">
             <p className="section-header__eyebrow">Ready to drive?</p>
@@ -218,7 +167,7 @@ export default function IndividualLessonPage() {
           </header>
           <BookButton
             source="packages_single"
-            className="btn btn--primary btn--xl"
+            className="btn btn--primary btn--xl btn--on-light"
           >
             Book This Lesson
           </BookButton>
@@ -235,7 +184,6 @@ export default function IndividualLessonPage() {
           </p>
         </div>
       </section>
-
-    </div>
+    </>
   )
 }

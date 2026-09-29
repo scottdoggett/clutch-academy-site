@@ -71,13 +71,19 @@ export default function FaqPage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="faq-cta-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="faq-cta-heading"
+      >
         <div className="section__inner lesson-next">
           <header className="section-header">
             <p className="section-header__eyebrow">Answered everything?</p>
             <h2 id="faq-cta-heading">Then let’s drive</h2>
           </header>
-          <BookButton source="faq" className="btn btn--primary btn--xl">
+          <BookButton
+            source="faq"
+            className="btn btn--primary btn--xl btn--on-light"
+          >
             Book a Lesson
           </BookButton>
           <p className="lesson-next__links">

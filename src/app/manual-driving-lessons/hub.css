@@ -297,7 +297,11 @@
 /* Plain text lines, not cards. The card treatment tried on August 18 boxed
    each situation with its own package plaque and two buttons; it read as heavy
    for what is a signpost, so this is back to one sentence per row — with a
-   gear-lever bullet hanging in the left margin. */
+   gear-lever bullet hanging in the left margin.
+
+   The section is the page's beige band (September 2026, after the homepage),
+   between the packages and the closing CTA on the red, so the text is the
+   dark red and the bullets and links the brand red. */
 .hub-choose__list {
   list-style: none;
   margin: 0;
@@ -312,48 +316,47 @@
   grid-template-columns: auto 1fr;
   align-items: start;
   gap: 0.75rem;
-  color: var(--cream);
+  color: var(--red-dark);
   font-size: 1.0625rem;
   line-height: 1.55;
 }
 
 /* Optically aligned to the first line of text rather than to its box: the
    lever's knob wants to sit level with the cap height, which line-height 1.55
-   puts a little below the top. Solid --white, not a faded one: muted text on
-   the brand red has to be a solid token to clear 4.5:1 (tokens.css). */
+   puts a little below the top. */
 .hub-choose__bullet {
   width: 1.25rem;
   height: 1.25rem;
   flex-shrink: 0;
   margin-top: 0.3em;
-  color: var(--white);
+  color: var(--red-primary);
 }
 
 .hub-choose__item a {
-  color: var(--white);
+  color: var(--red-primary);
   font-weight: 600;
   text-underline-offset: 3px;
 }
 
 .hub-choose__item a:focus-visible {
-  outline: 2px solid var(--white);
+  outline: 2px solid var(--red-primary);
   outline-offset: 2px;
 }
 
 .hub-choose__aside a {
-  color: var(--white);
+  color: var(--red-primary);
   font-weight: 600;
   text-underline-offset: 3px;
 }
 
 .hub-choose__aside a:focus-visible {
-  outline: 2px solid var(--white);
+  outline: 2px solid var(--red-primary);
   outline-offset: 2px;
 }
 
 .hub-choose__aside {
   margin: 1.25rem 0 0;
-  color: var(--cream);
+  color: var(--red-dark);
   font-size: 0.9375rem;
 }
 

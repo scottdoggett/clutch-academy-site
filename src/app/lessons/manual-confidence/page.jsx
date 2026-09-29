@@ -2,6 +2,7 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
+import LessonQuotes from '../../../components/lessons/LessonQuotes'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
@@ -75,7 +76,6 @@ export default function ManualConfidencePage() {
         aria-labelledby="lesson-heading"
       >
         <div className="section__inner lesson-hero__inner">
-          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="section-header__eyebrow">
             Private · 5 Lessons · The Flagship
           </p>
@@ -88,7 +88,8 @@ export default function ManualConfidencePage() {
             the city can throw at a clutch — downtown, merging, rush hour,
             hills, and parking — with coaching tailored to you the whole way.
           </p>
-          <p className="lesson-hero__lead">
+          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          <p className="lesson-hero__pull">
             This is the package for finishing the job: not just moving the
             car, but genuine confidence anywhere.
           </p>
@@ -107,18 +108,21 @@ export default function ManualConfidencePage() {
         </div>
       </section>
 
-      {/* ---------- What you'll master ---------- */}
-      <section className="section" aria-labelledby="skills-heading">
-        <div className="section__inner">
+      {/* ---------- What's included: what you'll master ---------- */}
+      <section
+        className="section section--light"
+        aria-labelledby="skills-heading"
+      >
+        <div className="section__inner lesson-block__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">The full scope</p>
             <h2 id="skills-heading">What you’ll master</h2>
           </header>
-          <ul className="lesson-skills">
+          <ul className="lesson-included">
             {SKILLS.map((s) => (
-              <li key={s.title} className="lesson-skills__item">
-                <h3 className="lesson-skills__title">{s.title}</h3>
-                <p className="lesson-skills__desc">{s.desc}</p>
+              <li key={s.title} className="lesson-included__item">
+                <h3 className="lesson-included__title">{s.title}</h3>
+                <p className="lesson-included__desc">{s.desc}</p>
               </li>
             ))}
           </ul>
@@ -153,26 +157,17 @@ export default function ManualConfidencePage() {
         </div>
       </section>
 
-      {/* ---------- Trust ---------- */}
       {/* ---------- Real reviews ---------- */}
-      <section className="section" aria-labelledby="quotes-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="quotes-heading"
+      >
         <div className="section__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">From the Google reviews</p>
             <h2 id="quotes-heading">Confidence, in students’ words</h2>
           </header>
-          <div className="lesson-quotes">
-            {QUOTES.map((q) => (
-              <figure key={q.name} className="lesson-quote">
-                <blockquote className="lesson-quote__text">
-                  “{q.text}”
-                </blockquote>
-                <figcaption className="lesson-quote__name">
-                  — {q.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <LessonQuotes quotes={QUOTES} />
         </div>
       </section>
 
@@ -188,7 +183,10 @@ export default function ManualConfidencePage() {
       </section>
 
       {/* ---------- Final CTA + cross-links ---------- */}
-      <section className="section" aria-labelledby="next-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="next-heading"
+      >
         <div className="section__inner lesson-next">
           <header className="section-header">
             <p className="section-header__eyebrow">The premium path</p>
@@ -196,7 +194,7 @@ export default function ManualConfidencePage() {
           </header>
           <BookButton
             source="packages_confidence_5pack"
-            className="btn btn--primary btn--xl"
+            className="btn btn--primary btn--xl btn--on-light"
           >
             Book This Package
           </BookButton>

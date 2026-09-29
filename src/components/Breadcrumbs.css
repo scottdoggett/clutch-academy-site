@@ -12,8 +12,8 @@
   padding: calc(var(--nav-height) + 0.875rem) clamp(1.25rem, 4vw, 4rem) 0;
 }
 
-/* ...and the hero then only needs its normal rhythm. Three classes so this
-   wins over `.lesson-page .section--first`, which sets the nav clearance for
+/* ...and the hero then only needs its normal rhythm. Specific enough to win
+   over `.section--first` in globals.css, which sets the nav clearance for
    pages that have no breadcrumbs. */
 .breadcrumbs + .section.section--first {
   padding-top: clamp(1rem, 2.5vw, 1.75rem);

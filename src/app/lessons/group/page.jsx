@@ -2,6 +2,7 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
+import LessonQuotes from '../../../components/lessons/LessonQuotes'
 import { faqSubset } from '../../../lib/faqs'
 
 export const metadata = {
@@ -22,18 +23,30 @@ export const metadata = {
 // ❓ BLOCKED: whether group pricing is per person or per pair — copy below
 //    deliberately avoids claiming either. Confirm with Sam before launch.
 //
-// The source tag stays `packages_group_2hr` even though the option is now
-// 2.5 hours: it is the same card in the same slot, and keeping the tag keeps
-// the GA4 series continuous across the switch (matches the live site).
-const OPTIONS = [
-  {
-    title: '2.5-Hour Group Lesson',
-    desc: 'Bring a friend and split the experience — plenty of seat time each, at a fun, low-pressure pace.',
-    price: '$220',
-    unit: '/ 2.5 hours + HST',
-    source: 'packages_group_2hr',
-    cta: 'Book 2.5-Hour Group',
-  },
+// Until September 28, 2026 the page had one more section, a card for the one
+// 2.5-hour option with its own price and Book button (`packages_group_2hr`).
+// It repeated the hero's price and booking, so it went when the four package
+// pages took one shape, and its source tag was retired (05-analytics.md).
+
+// PENDING: GROUP-LESSON INCLUSIONS — final 3–5 bullets from Sam (08 §7).
+// These carry over the placeholder bullets already shown on the live site's
+// group cards.
+const INCLUDED = [
+  'Learn with a friend in a supportive, low-pressure setting',
+  'Take turns at the wheel — watching is learning too',
+  'Great for first-timers who want the moral support',
+]
+
+// PENDING: Sam to approve. Written September 28, 2026, when this page gained
+// the "Who it's for" section the other three have. Nothing here is a new
+// claim: each line restates the hub's group card and chooser ("Learn
+// alongside a friend", "Share the experience and split the nerves", "Great
+// low-pressure first exposure to the clutch", "You'd rather learn with a
+// friend").
+const WHO = [
+  'You’d rather learn with a friend than on your own.',
+  'You want someone to share the experience with and split the nerves.',
+  'You’re new to the clutch and want a low-pressure first go at it.',
 ]
 
 // Real quotes from the Google-review set — chosen for the fun, supportive
@@ -80,7 +93,7 @@ export default function GroupLessonsPage() {
             with Sam coaching every turn at the wheel.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
-          <p className="lesson-hero__lead">
+          <p className="lesson-hero__pull">
             Most students arrive nervous — and leave wondering what they were
             nervous about. Bringing a friend makes that even easier.
           </p>
@@ -94,45 +107,22 @@ export default function GroupLessonsPage() {
         </div>
       </section>
 
-      {/* ---------- The current group option ---------- */}
-      <section className="section" aria-labelledby="options-heading">
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">How it works</p>
-            <h2 id="options-heading">The group session</h2>
-          </header>
-          <div className="lesson-options">
-            {OPTIONS.map((o) => (
-              <article key={o.source} className="lesson-option">
-                <h3 className="lesson-option__title">{o.title}</h3>
-                <p className="lesson-option__desc">{o.desc}</p>
-                <p className="lesson-option__price">
-                  {o.price}
-                  <span className="lesson-option__unit">{o.unit}</span>
-                </p>
-                <BookButton source={o.source} className="btn btn--secondary">
-                  {o.cta}
-                </BookButton>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- What to expect ---------- */}
-      <section className="section" aria-labelledby="expect-heading">
+      {/* ---------- What's included: what to expect ---------- */}
+      <section
+        className="section section--light"
+        aria-labelledby="expect-heading"
+      >
         <div className="section__inner lesson-block__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">What to expect</p>
             <h2 id="expect-heading">Supportive, social, low-pressure</h2>
           </header>
-          {/* PENDING: GROUP-LESSON INCLUSIONS — final 3–5 bullets from Sam
-              (08 §7). The list below carries over the placeholder bullets
-              already shown on the live site's group cards. */}
-          <ul className="lesson-block__list">
-            <li>Learn with a friend in a supportive, low-pressure setting</li>
-            <li>Take turns at the wheel — watching is learning too</li>
-            <li>Great for first-timers who want the moral support</li>
+          <ul className="lesson-included">
+            {INCLUDED.map((item) => (
+              <li key={item} className="lesson-included__item">
+                <p className="lesson-included__line">{item}</p>
+              </li>
+            ))}
           </ul>
           <p className="lesson-block__note">
             Taught in a manual hatchback on real Toronto roads.
@@ -141,26 +131,32 @@ export default function GroupLessonsPage() {
         </div>
       </section>
 
-      {/* ---------- Trust ---------- */}
+      {/* ---------- Who it's for ---------- */}
+      <section className="section" aria-labelledby="who-heading">
+        <div className="section__inner lesson-block__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Who it’s for</p>
+            <h2 id="who-heading">For learning with a friend</h2>
+          </header>
+          <ul className="lesson-block__list">
+            {WHO.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ---------- Real reviews ---------- */}
-      <section className="section" aria-labelledby="quotes-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="quotes-heading"
+      >
         <div className="section__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">From the Google reviews</p>
             <h2 id="quotes-heading">The experience, in students’ words</h2>
           </header>
-          <div className="lesson-quotes">
-            {QUOTES.map((q) => (
-              <figure key={q.name} className="lesson-quote">
-                <blockquote className="lesson-quote__text">
-                  “{q.text}”
-                </blockquote>
-                <figcaption className="lesson-quote__name">
-                  — {q.name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <LessonQuotes quotes={QUOTES} />
         </div>
       </section>
 
@@ -176,7 +172,10 @@ export default function GroupLessonsPage() {
       </section>
 
       {/* ---------- Final CTA + cross-links ---------- */}
-      <section className="section" aria-labelledby="next-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="next-heading"
+      >
         <div className="section__inner lesson-next">
           <header className="section-header">
             <p className="section-header__eyebrow">Bring a friend</p>
@@ -184,7 +183,7 @@ export default function GroupLessonsPage() {
           </header>
           <BookButton
             source="packages_group"
-            className="btn btn--primary btn--xl"
+            className="btn btn--primary btn--xl btn--on-light"
           >
             Book a Group Lesson
           </BookButton>
@@ -202,7 +201,6 @@ export default function GroupLessonsPage() {
           </p>
         </div>
       </section>
-
     </>
   )
 }

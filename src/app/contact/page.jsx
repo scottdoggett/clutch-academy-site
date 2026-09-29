@@ -46,7 +46,10 @@ export default function ContactPage() {
       </section>
 
       {/* ---------- Secure payment + cancellation messaging ---------- */}
-      <section className="section" aria-labelledby="policies-heading">
+      <section
+        className="section section--light"
+        aria-labelledby="policies-heading"
+      >
         <div className="section__inner contact-policies">
           <header className="section-header">
             <p className="section-header__eyebrow">Booking, simply</p>
