@@ -117,7 +117,7 @@ Many brand assets (final logo, instructor photo, color overrides) are tracked as
 
 ## Non-negotiable constraints
 
-- **Four pricing cards: two private + two group.** Private — $90 single lesson, $240 for a 3-pack. Group — $90 1-hour, $180 2-hour. (Whether the group prices are per-person or per-pair is still PENDING client confirmation — see the `PENDING` comments in `Packages.jsx`.) `App.jsx` wires one Calendly handler per card (`onBookSingle`, `onBookPack`, `onBookGroup1hr`, `onBookGroup2hr`), each tagged with its own analytics `source`.
+- **Four pricing cards: three private + one group.** Private — $90 for a 1-hour Individual Manual Lesson, $240 for the 3-lesson Manual Foundations Package, $400 for the 5-lesson Complete Confidence Package. Group — $180 for a 2-hour Group Manual Lesson. Lessons are 1 hour (the August–September 75-minute format is retired). (Whether the group price is per-person or per-pair is still PENDING client confirmation — see the `PENDING` comment in `Packages.jsx`.) Prices also live in `index.html` (meta descriptions + Offer schema), `public/llms.txt`, and `public/booked.html` (conversion values). `App.jsx` wires one Calendly handler per card (`onBookSingle`, `onBookPack`, `onBookConfidence`, `onBookGroup2hr`), each tagged with its own analytics `source`.
 - **Gear-shift metaphor is core, not decoration.** Don't simplify away layout positions or animation choreography without explicit approval.
 - **iOS Safari is a first-class target.** The `autoKill: false` scroll tween and the custom mobile Calendly host both exist because of iOS-specific bugs — don't "clean them up" without testing on iOS.
 - **Reduced motion must remain a fully functional path.** Every new animation needs a matchMedia gate or equivalent fallback.

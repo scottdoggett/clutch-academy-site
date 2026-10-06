@@ -30,12 +30,12 @@
   --gear-indicator-padding: clamp(24px, 3vw, 40px);
   --gear-indicator-stroke: 3px;
   --nav-bar-height: 64px;
-  /* Height of the fixed announcement strip above the nav, when present. Kept
-     at 0 by default and set to the strip's real rendered height by
-     AnnouncementBanner (via ResizeObserver). Because --nav-height (below) is
-     the top-clearance token every section + gear indicator keys off, this is
-     the single value that makes the whole layout account for the strip — and
-     reverts to 0 automatically when the strip auto-hides after July 31. */
+  /* Height of a fixed announcement strip above the nav, when one is mounted.
+     Kept at 0 by default; a strip sets it to its real rendered height (the
+     retired pre-Aug-1 AnnouncementBanner did this via ResizeObserver). Because
+     --nav-height (below) is the top-clearance token every section + gear
+     indicator keys off, this is the single value that makes the whole layout
+     account for a strip. No strip is mounted today. */
   --announcement-height: 0px;
   /* Total fixed-header clearance: nav bar plus any announcement strip. */
   --nav-height: calc(var(--nav-bar-height) + var(--announcement-height));
