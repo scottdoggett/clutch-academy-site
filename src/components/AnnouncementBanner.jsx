@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import './AnnouncementBanner.css'
 
-// Winter-rates notice. A thin strip above the nav that slides away as the
+// Fall-sale notice. A thin strip above the nav that slides away as the
 // page scrolls. Rendered unconditionally so the prerendered snapshot and the
-// first client paint match; take it out of App.jsx when the season ends.
+// first client paint match; take it out of App.jsx when the sale ends.
 export default function AnnouncementBanner() {
   const bannerRef = useRef(null)
 
@@ -66,12 +66,12 @@ export default function AnnouncementBanner() {
     <aside
       ref={bannerRef}
       className="announcement-banner"
-      aria-label="Winter pricing notice"
+      aria-label="Fall sale notice"
     >
       <p className="announcement-banner__copy">
-        <span className="announcement-banner__flag">Winter rates</span>
+        <span className="announcement-banner__flag">Fall sale</span>
         <span className="announcement-banner__msg">
-          We&apos;ve downshifted our prices for the season. Lessons now from{' '}
+          We&apos;ve downshifted our prices for a limited time. Lessons now from{' '}
           <strong>$90</strong>.
         </span>
       </p>

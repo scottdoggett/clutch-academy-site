@@ -62,7 +62,7 @@
 
   .announcement-banner__copy {
     flex-direction: column;
-    /* Center both lines (incl. the WINTER RATES flag) on the cross axis; the
+    /* Center both lines (incl. the FALL SALE flag) on the cross axis; the
        base rule's align-items: baseline would otherwise left-pin them. */
     align-items: center;
     gap: 0.3rem;
