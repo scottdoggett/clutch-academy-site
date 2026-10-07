@@ -74,6 +74,24 @@ export default function AnnouncementBanner() {
           We&apos;ve downshifted our prices for a limited time. Lessons now from{' '}
           <strong>$90</strong>.
         </span>
+        {/* The biggest saving on the package cards (Packages.jsx): $470 to $400. */}
+        <span className="announcement-banner__save">
+          <svg
+            className="announcement-banner__tag"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M11.4 2.6A2 2 0 0 1 12.8 2H20a2 2 0 0 1 2 2v7.2a2 2 0 0 1-.6 1.4l-8.7 8.7a2.4 2.4 0 0 1-3.4 0l-6.6-6.6a2.4 2.4 0 0 1 0-3.4z" />
+            <circle cx="16.5" cy="7.5" r="1.25" />
+          </svg>
+          <span>
+            <strong>Save up to $70</strong>{' '}
+            <span className="announcement-banner__save-note">
+              on lesson packages.
+            </span>
+          </span>
+        </span>
       </p>
     </aside>
   )

@@ -1,6 +1,29 @@
 import GearSection from '../GearSection'
 import './Packages.css'
 
+// Fall sale: next to today's price, each card shows the price it had until
+// October 5, 2026 struck through, and the difference. Those were 75-minute
+// lessons and a 2.5-hour group (f8645c4). Drop `was` when the sale ends.
+function PackagePrice({ amount, was, unit }) {
+  return (
+    <div className="package-card__pricing">
+      <p className="package-card__price">
+        <span className="package-card__currency">$</span>
+        {amount}
+        {was && (
+          <span className="package-card__deal">
+            <s className="package-card__was">
+              <span className="package-card__sr-only">Was </span>${was}
+            </s>
+            <span className="package-card__save">Save ${was - amount}</span>
+          </span>
+        )}
+      </p>
+      <p className="package-card__unit">/ {unit}</p>
+    </div>
+  )
+}
+
 export default function Packages({
   onBookSingle,
   onBookPack,
@@ -23,10 +46,7 @@ export default function Packages({
             <p className="package-card__tag">Private · 1 Hour</p>
             <h3>Individual Manual Lesson</h3>
             <p className="package-card__desc">Best for refreshers.</p>
-            <p className="package-card__price">
-              <span className="package-card__currency">$</span>90
-              <span className="package-card__unit">/ hour</span>
-            </p>
+            <PackagePrice amount={90} was={110} unit="hour" />
           </div>
 
           <div className="package-card__details">
@@ -44,17 +64,14 @@ export default function Packages({
         </article>
 
         <article className="package-card package-card--featured package-card--red-2">
-          <span className="package-card__badge">Save $30</span>
+          <span className="package-card__badge">Save $60</span>
           <div className="package-card__info">
             <p className="package-card__tag">Private · 3 Lessons</p>
             <h3>Manual Foundations Package</h3>
             <p className="package-card__desc">
               Full progression to road-confident.
             </p>
-            <p className="package-card__price">
-              <span className="package-card__currency">$</span>240
-              <span className="package-card__unit">/ 3 lessons</span>
-            </p>
+            <PackagePrice amount={240} was={300} unit="3 lessons" />
           </div>
 
           <div className="package-card__details">
@@ -72,17 +89,14 @@ export default function Packages({
         </article>
 
         <article className="package-card package-card--red-3">
-          <span className="package-card__badge">Save $50</span>
+          <span className="package-card__badge">Save $70</span>
           <div className="package-card__info">
             <p className="package-card__tag">Private · 5 Lessons</p>
             <h3>Complete Confidence Package</h3>
             <p className="package-card__desc">
               Master manual driving in real-world conditions.
             </p>
-            <p className="package-card__price">
-              <span className="package-card__currency">$</span>400
-              <span className="package-card__unit">/ 5 lessons</span>
-            </p>
+            <PackagePrice amount={400} was={470} unit="5 lessons" />
           </div>
 
           <div className="package-card__details">
@@ -108,10 +122,7 @@ export default function Packages({
             <p className="package-card__desc">
               Bring a friend. Split the experience.
             </p>
-            <p className="package-card__price">
-              <span className="package-card__currency">$</span>180
-              <span className="package-card__unit">/ 2 hours</span>
-            </p>
+            <PackagePrice amount={180} was={220} unit="2 hours" />
           </div>
 
           <div className="package-card__details">
