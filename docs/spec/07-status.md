@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** September 28, 2026.
+**Last updated:** October 7, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -8,7 +8,7 @@ this file disagrees with another doc about current state, this file wins.
 ## In one paragraph
 
 The Next.js rebuild is **complete and unmerged**. All 9 routes carry real
-content, analytics and consent are wired, and the August-1 pricing switch has
+content, analytics and consent are wired, and the October winter pricing has
 been applied to both branches. It is deployed to its own Vercel project for
 review while `main` keeps serving customers the original Vite site. Three rounds
 of client review — August 16 (copy and structure), August 18 (layout, mobile,
@@ -163,6 +163,104 @@ accepted on September 24.
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.
 
+## Recently completed — October 7, 2026 (site review, first changes)
+
+A walk through every page on localhost at 1440 and 390px produced a list of
+suggestions. Scott took the top ones; the rest are under "Open from the
+October 7 review" below.
+
+- **The Google rating is on show.** The homepage reviews band showed five
+  stars and kept "5.0 from 33 reviews" for screen readers only. It now reads
+  "5.0 · 44 reviews". A rating beside the hero's buttons was built too and
+  taken out the same day: Scott didn't want it in the hero. The profile had
+  44 reviews on October 7, 43 of them
+  five stars and one four (Google shows 5.0); `googleReviews.js` holds the
+  numbers. Which review is the four-star one couldn't be checked, so the
+  comments that said every review is five stars now say to check a review's
+  own rating before quoting it.
+- **Worth knowing for the hero:** in a short laptop window (1280×600,
+  1536×730) its copy block sits within a few px of the roads' 48px
+  clearance, so even one more line under the buttons hides two roads there
+  and fails `npm test`. Anything added to the hero copy has to fit beside
+  the buttons, or the map has to change.
+- **One featured package.** Foundations is "Recommended" on the homepage,
+  the hub and its own page. "Best Value" is gone (both packs are $80 a
+  lesson), as are "Most Popular" (no booking data behind it) and every
+  "flagship" and "premium". The cards' one-liners carry "$80 each"; the
+  package heroes say "$80 a lesson, save $30" (or $50); the homepage's
+  Confidence card has a "Save $50" badge, as on `main`.
+- **Confidence says it starts from zero**, in its eyebrow, lead and skills
+  note, and on the cards. Scott confirmed it: a beginner can book it.
+- **One name per package**, on the cards, footer, About's links,
+  breadcrumbs, cross-links, the Offer schema and `llms.txt`. The rules are
+  in `03-content-and-pricing.md` §Names, labels and claims.
+- **The footer** had to change for the full names. Explore now lists the
+  pages in one column and the four packages in the other, each column as
+  wide as its content, and on tablets (640–1023px) Explore takes a row of its
+  own. No label wraps at any width from 640px.
+- **The fall sale, ported from `main`.** The banner above the nav ("Fall
+  sale … Save up to $70 on lesson packages"), sliding away on scroll, and the
+  old price struck out with a Save tag beside every price: homepage and hub
+  cards and the four package heroes. The savings against single lessons
+  (Confidence's "Save $50" badge, the heroes' "save $30/$50") came off so
+  each card shows one saving. `src/lib/sale.js` holds the old prices and the
+  switch that ends it. The
+  banner's height is estimated in CSS for first paint, so the nav isn't
+  covered before hydration (`main` has that flash); the homepage hero starts
+  under the banner and keeps its tested size, so the road map and
+  `copy-rects.json` are unchanged. The per-hour catch in the old prices is
+  in `03-content-and-pricing.md` §The fall sale.
+- **A phone pass over every page** (320–430px, screenshots and a script
+  for overflow, text size and tap targets). Nothing overflowed. Fixed:
+  - The banner: the flag and the saving share its top row and the message
+    runs full width under them, 76px tall instead of 93px (`main`'s phone
+    layout gave the message a third of the width, and Inter took three
+    lines there).
+  - The footer: Contact and Follow side by side, Explore in two columns,
+    pages and packages, so about half a screen instead of a screen and a
+    half; the Contact column is as wide as the email, which overran
+    Follow below 390px at an even split.
+  - The reviews strip's edge fade is 1.25rem on phones, not 4rem, which
+    washed out each quote's first words; the shortest quote (Hannah's) is
+    no longer first, where it left the only card a phone shows half empty;
+    "Read more reviews on Google" fits one line.
+  - The card prices on phones: no gap between the price and the old one,
+    and the unit straight under the price with the Save tag after it.
+  - The package pages' "Quick answers" have the /faq page's +/× (at every
+    width): the browser's marker hung outside the column at desktop and
+    disappeared on phones, so nothing said the rows open.
+  - Eyebrows, section headings and the leads under them balance or avoid a
+    lone last word when they wrap ("…SAME / LESSONS", "low- / pressure",
+    "…the first / two."); the homepage stat labels fit one line; the
+    Foundations step titles line up (tabular numbers); Contact's small
+    print is two sentences instead of one run-on.
+  - Tap targets to 44px: the logo link, "Compare every lesson option",
+    "How Clutch Academy started" (hit areas that don't move anything), the
+    404's links and the cookie banner's buttons. The breadcrumbs stay at
+    33px, the documented exception.
+- **Section headings cap at 3rem**, down from 4rem, so no section heading
+  is bigger than its page's title. The hub's title went up to the package
+  pages' 3.5rem (it had been scaled down with its section headings), and
+  Contact's to 3.25rem.
+
+## Recently completed — October 5–6, 2026 (winter pricing)
+
+- **Winter rates, back to one-hour lessons:** $90 / hour, $240 (3 lessons),
+  $400 (5 lessons), $180 / 2-hour group, all + HST. Shipped to the live site
+  on October 5 (`f8645c4` on `main`) and ported here on October 6, across
+  every surface in `03-content-and-pricing.md`'s list. Savings lines are $30
+  and $50. The 75-minute and 2.5-hour formats are gone, which settles the
+  group-format question that was flagged `❓ BLOCKED` in the group page.
+- **`main` has a banner** (`a82df9d`), renamed "Fall sale" (`75e2646`) and
+  given "Save up to $70" and struck-out old prices with Save chips
+  (`a1bd04b`, `4eff398`). Ported to `overhaul` October 7, without the chips
+  (see below).
+- **The 5-pack's badge differs between branches.** `main`'s homepage card
+  reads "Save $70"; `overhaul`'s has no corner badge since October 7, and
+  shows its $70 as a tag beside the struck-out $470 instead.
+- Sam's Calendly event types still need the new prices and durations. That's
+  where the charge is set.
+
 ## Recently completed — September 28, 2026 (beige bands sitewide)
 
 At Scott's request, the homepage's red and beige bands were carried to the
@@ -204,10 +302,10 @@ made one shape.
   do. The obstacle: on these pages the second section is on screen at load,
   so the scroll reveals would paint it, hide it at hydration and replay it,
   the flash `08-motion.md` §The hero warns about.
-- ⚠️ **Heading order on the package pages:** the section `h2`s top out at
-  4rem, the site's shared scale, while the hero `h1` tops out at 3.5rem, so on
-  a wide screen each section heading is larger than the page's title. It was
-  already so on three of the four pages. Not changed.
+- ✅ **Heading order on the package pages:** the section `h2`s topped out
+  at 4rem against the hero `h1`'s 3.5rem, so each section heading was larger
+  than the page's title. Fixed October 7: section headings cap at 3rem
+  sitewide.
 
 ## Recently completed — September 28–29, 2026 (About's reasons as road signs)
 
@@ -406,7 +504,7 @@ These are the actual blockers. Most need Sam.
 | # | Item | Where | Notes |
 |---|---|---|---|
 | 1 | **Group pricing basis** — per person or per pair? | `/lessons/group` | ❓ BLOCKED. All copy deliberately avoids claiming either. Ads price assets depend on it too. |
-| 2 | **`aggregateRating` in the homepage JSON-LD** | `src/app/page.jsx` | Real GBP figures, but self-attested rating markup carries manual-action risk. Inherited from the live site. Keep or remove — decide before cutover. |
+| 2 | **`aggregateRating` in the homepage JSON-LD** | `src/app/page.jsx` | Real GBP figures (5.0 from 44, October 7, 2026), but self-attested rating markup carries manual-action risk. Inherited from the live site. Keep or remove — decide before cutover. |
 | 3 | **Google Ads conversion label** | `public/booked.html` | Empty string ⇒ Ads conversions are a silent no-op. Account-side fix. |
 | 4 | **Confidence guarantee — dropped from the rebuild** | `/lessons/manual-confidence`, `src/app/page.jsx` | ✅ Resolved by removal (Sept 21, 2026). The terms were never written, so the claim is gone from the hero lead and the homepage Offer schema. `main` still advertises it — if Sam wants it back, the terms have to come first. |
 | 5 | **Package inclusions** | `/lessons/individual`, `/lessons/group` | Current bullets are the live site's placeholders. Sam owes final 3–5 each. |
@@ -427,12 +525,42 @@ Raised with the client, not yet answered:
 |---|---|
 | "Update cancellation policy" | The screenshot supplied is character-identical to the current text. No new wording was given. |
 | Move Payment & cancellation from Contact → FAQ | `/faq` already renders payment *and* cancellation answers from `faqs.js`. Moving the Contact block there duplicates them. Replace the FAQ entries, or add a distinct styled section? |
-| Highlight Complete Confidence "like Foundations" | Move the featured treatment from Foundations to Confidence, or feature both? |
+| Highlight Complete Confidence "like Foundations" | Move the featured treatment from Foundations to Confidence, or feature both? ⚠️ On October 7 Foundations became the *only* featured package, at Scott's word, which goes the other way from this request. Still open with the client: if Sam wants Confidence featured, it's one `featured`/`badge` change in `PackagesTeaser.jsx` and the hub. |
 | "Social logo in footer" | Instagram/Facebook glyphs, or the Clutch Academy brand mark? The phrasing points both ways. |
+
+### Open from the October 7 review
+
+Suggestions from the October 7 walk-through that weren't taken up that day.
+Scott said the package pages' layout comes next and the Calendly links
+later.
+
+- **Package pages:** the right half of every hero and closing band is
+  empty at desktop (photos pending); a summary card (price, length, what's
+  included, Book) could fill it. The heroes' leads read as written for
+  search, and three share the pull line "Most students arrive nervous…".
+- **Calendly:** every Book button opens the same link, so a visitor who
+  chose a package picks it again in Calendly. Needs per-package links from
+  Sam (`useCalendly.js` already plans for them).
+- **Copy:** an em-dash pass on every page but the homepage; "renting a car
+  in Europe this summer" on Individual; "licence" vs "license" (FAQ and How
+  It Works say "license"); the cancellation answer contradicts itself
+  ("after 24 hours of booking"), so Sam's wording (item 6) matters more.
+- **Phones:** the reviews strip's 64px edge fade washes out the first words
+  of each quote; the footer's nine stacked links run about a screen and a
+  half.
+- **Hub:** the 1–4 numbers on the cards read as a sequence; the homepage's
+  "Compare every lesson option" lands on cards, not a comparison.
+- **FAQ:** two columns of accordions; one column in groups would read more
+  easily. Missing answers only Sam can give: rescheduling, G1 holders,
+  service area.
 
 ## Known bugs
 
-None outstanding. Both entries that stood here on August 16 — the off-centre
+- **The 404's heading is off the column.** It sits at 176px at 1440, the
+  column at 112px, so the page breaks the one-left-edge rule
+  (`.placeholder-hero`). Found October 7.
+
+Nothing else outstanding. Both entries that stood here on August 16 — the off-centre
 content blocks and the hub's missing booking CTA — were fixed on August 18; see
 above. The fix for the first one differs from what this file proposed: it
 recommended dropping the narrower `max-width` so each block fills its heading's
@@ -453,7 +581,8 @@ table.
 
 | Check | Status |
 |---|---|
-| Build + lint | ✅ Clean as of September 24, 2026 |
+| Build + lint | ✅ Clean as of October 7, 2026 |
+| `npm test` | ✅ 92 of 92, October 7, 2026 |
 | Hero road maps (`npm test`) | ✅ 31 tests: both maps connected, no dead ends, no U-turns, whole ticks only, crossings in place, nothing within 48px of the copy at 32 recorded sizes (September 24) |
 | Hero roads in Chrome | ✅ 360, 390, 768, 1280, 1440, 1920px; every road piece within 0.007px of its tested geometry (September 24) |
 | Hero roads in Safari | Not checked, but no longer a known risk: the SVG dash-length concern went with the SVG. Covered by the pre-launch real-device pass. |

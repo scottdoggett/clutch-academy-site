@@ -68,8 +68,10 @@ src/
 ├── app/
 │   ├── layout.jsx              # Shared shell: fonts, metadata defaults,
 │   │                           # motion pre-paint script, consent
-│   │                           # bootstrap + gtag, skip link, Nav, Footer,
-│   │                           # ConsentBanner, AnalyticsLoader, SiteMotion
+│   │                           # bootstrap + gtag, skip link, the fall-sale
+│   │                           # AnnouncementBanner (while it runs), Nav,
+│   │                           # Footer, ConsentBanner, AnalyticsLoader,
+│   │                           # SiteMotion
 │   ├── globals.css             # Base elements, .section / .section__inner,
 │   │                           # .section--light (the beige band)
 │   ├── page.jsx                # Homepage + DrivingSchool/Offer/Person JSON-LD
@@ -88,6 +90,8 @@ src/
 │   ├── BookButton.jsx          # THE booking CTA — every one goes through it
 │   ├── ContactCard.jsx         # Channels with per-channel intent tracking
 │   ├── ConsentBanner.jsx       # Consent Mode v2 accept/decline
+│   ├── AnnouncementBanner.jsx  # Fall-sale strip above the nav; rides up on scroll
+│   ├── WasPrice.jsx            # The struck-out pre-sale price beside a price
 │   ├── AnalyticsLoader.jsx     # Loads pixels only after consent
 │   ├── ReviewsMarquee.jsx      # Google-review strip: GSAP drift + drag/swipe,
 │   │                           # static swipeable list under reduced motion
@@ -266,9 +270,12 @@ otherwise it inherits `margin: 0 auto` and re-centres inside the column, landing
 page. The cap is a reading measure, not a centring device. Fixed August 18,
 2026; every route resolves to a single left edge from 320px to 1713px.
 
-`--announcement-height` is held at `0px`. It exists so a future notice strip can
-publish its own height into one token and have every `--nav-height` clearance
-follow; the August-1 banner that used it was removed once the switch shipped.
+`--announcement-height` is `0px` unless a notice strip is mounted. Today that's
+the fall sale's `AnnouncementBanner` (`src/lib/sale.js` switches it). Its CSS
+sets an estimated height per breakpoint for first paint and its script the
+measured one, so every `--nav-height` clearance follows. The homepage hero is
+the exception: it starts under the strip and sizes itself as if the strip
+weren't there, so its road map and tests don't change (`Hero.css`).
 
 ## Conventions
 
@@ -279,7 +286,8 @@ follow; the August-1 banner that used it was removed once the switch shipped.
   page. The reviews strip swaps to a static swipeable list. See `08-motion.md`.
 - **Client components are the exception.** Most pages are server components;
   `'use client'` appears only where interaction demands it (Nav, BookButton,
-  ConsentBanner, AnalyticsLoader, ContactCard, ReviewsMarquee, SiteMotion).
+  ConsentBanner, AnnouncementBanner, AnalyticsLoader, ContactCard,
+  ReviewsMarquee, SiteMotion).
   Animated sections stay server components: they opt in with `data-anim`
   attributes that `SiteMotion` reads.
 - **Nav active state is section-aware.** `/lessons/*` keeps the Lessons item

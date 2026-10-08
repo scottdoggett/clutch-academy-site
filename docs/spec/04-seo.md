@@ -63,7 +63,7 @@ Two things to hold onto:
 - **The FAQ schema and the visible FAQ cannot drift** — both render from the
   same array. Preserve that property.
 - ❓ **`AggregateRating` is an open flag.** It carries the real Google Business
-  Profile figures (5.0 from 33 reviews) rather than anything invented, but
+  Profile figures (5.0 from 44 reviews, October 7, 2026) rather than anything invented, but
   self-attested rating markup on your own site is the pattern Google's 2019
   guidance warns about, and it can earn a manual action. It was inherited from
   the live site, not introduced here. Someone has to decide: keep it, or remove

@@ -41,9 +41,12 @@ planning docs. **Don't work from anything in there.**
 - **All 9 routes are built with real content**: `/`, `/about`,
   `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
   `/faq`, `/contact`, plus a custom 404.
-- **Pricing is the post-August-1 offering, rounded up to the nearest $10 on
-  September 21** — $110 / 75 min, $300, $470, $220 / 2.5 hr, all + HST. On
-  both branches. The dated announcement banner has been removed.
+- **Pricing is the winter offering from October 5, 2026** — $90 / hour,
+  $240, $400, $180 / 2 hr, all + HST. Lessons are one hour again; the 75-minute
+  and 2.5-hour formats are gone. On both branches. Both also run a "Fall sale":
+  a banner above the nav that slides away on scroll, and each price shown
+  next to its pre-October price struck out. On `overhaul`, `src/lib/sale.js`
+  holds the old prices and the one switch that ends it.
 - **Three rounds of client review are applied.** August 16 was copy and
   structure; August 18 was layout, mobile and the package cards; August 20 was
   the hub's chooser — see `07-status.md`.
@@ -88,7 +91,8 @@ planning docs. **Don't work from anything in there.**
   `npm test`. `hero-drive.md` is the spec.
 - **Shared shell** in `src/app/layout.jsx`: fonts via `next/font` (Plus Jakarta
   Sans + Inter), metadata defaults, inline Consent Mode v2 bootstrap
-  (deny-first) + gtag.js, skip link, Nav, Footer, ConsentBanner, AnalyticsLoader.
+  (deny-first) + gtag.js, skip link, the fall-sale AnnouncementBanner, Nav,
+  Footer, ConsentBanner, AnalyticsLoader.
 - **Analytics** (all consent-gated): GA4 `G-5E5GEN5N59`, Google Ads
   `AW-18196514948`, Meta Pixel `2845684255788584`, TikTok Pixel. Pixels load
   only after consent (`src/lib/consent.js` holds the storage key).
@@ -139,8 +143,14 @@ planning docs. **Don't work from anything in there.**
   inputs. Never invent content that conflicts with the brand: no invented
   reviews, bios, policies, or inclusions.
 - **No `Review`/`aggregateRating` markup on any new page.** The homepage
-  business schema still carries the live site's 5.0/33 rating — an unresolved
-  flag (`07-status.md` #2), not a precedent.
+  business schema still carries the real 5.0/44 rating (October 2026) — an
+  unresolved flag (`07-status.md` #2), not a precedent.
+- **One name per package, one featured package.** Individual Manual Lesson,
+  Manual Foundations Package, Group Manual Lessons, Complete Manual
+  Confidence Package, everywhere. Foundations alone is featured
+  ("Recommended"); no "Best Value", "Most Popular" or "flagship". Don't name
+  the car or claim instructor licensing, insurance or an instructor brake.
+  `03-content-and-pricing.md` §Names, labels and claims.
 - After completing each numbered step in a multi-step task, **pause and report
   progress** before continuing.
 - If a doc conflicts with the code, with itself, or with what the developer

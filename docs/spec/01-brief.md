@@ -80,8 +80,8 @@ A small but established GTA market. Prices below were accurate when surveyed in
 | Shifters (Etobicoke) | Premium coaching, dual-control car | Consultation-based |
 | Race Lab (Thornhill) | Motorsport curriculum, rally fleet | $319–$459 / 2hr |
 
-At $110 per 75-minute lesson, Clutch Academy sits mid-market — above StickGTA's
-entry rate, well below the motorsport schools.
+At $90 per one-hour lesson, Clutch Academy sits mid-market — just above
+StickGTA's entry rate, well below the motorsport schools.
 
 ## Brand voice
 

@@ -71,7 +71,7 @@ the older `lessons_overview`, which labelled the removed hero's button.
 |---|---|---|
 | `Individual Lesson` | `Refresher or first intro` / `One-on-one, real Toronto roads` | `/lessons/individual` |
 | `Foundations — 3 Lessons` | `Complete-beginner progression` / `Clutch control to independence` | `/lessons/manual-foundations` |
-| `Confidence — 5 Lessons` | `Downtown, highway, rush hour` / `The premium flagship package` | `/lessons/manual-confidence` |
+| `Confidence — 5 Lessons` | `Downtown, highway, rush hour` / `Starts from zero, $80 a lesson` | `/lessons/manual-confidence` |
 | `Group Lessons` | `Learn alongside a friend` / `Fun, supportive environment` | `/lessons/group` |
 | `Compare All Packages` | `Every option on one page` / `Prices shown up front` | `/manual-driving-lessons` |
 | `About Your Instructor` | `Meet Sam — calm & patient` / `Judgment-free lessons` | `/about` |
@@ -81,24 +81,24 @@ the older `lessons_overview`, which labelled the removed hero's button.
 
 ## 4. Price assets — current pricing
 
-The August 1, 2026 switch has happened; these are simply the current prices,
-live on the site and charged today. No scheduling or promo framing needed —
-any "book before Aug 1" ad copy still running is stale and should be pulled.
+Winter rates, from October 5, 2026: these are the current prices, live on
+the site. Any ad copy still quoting $110, 75-minute lessons or a 2.5-hour group
+is stale and should be pulled.
 
 Type: **Services** · Currency: **CAD** · Price qualifier: "From" only on Group
 if per-person/per-pair is still unresolved.
 
 | Header (≤25 ch) | Price | Unit | Description (≤25 ch) | Final URL |
 |---|---|---|---|---|
-| `Individual Lesson` | `$110` | per lesson (75 min) | `One-on-one, 75 minutes` | `/lessons/individual` |
-| `Manual Foundations` | `$300` | per package (3 lessons) | `Beginner 3-lesson path` | `/lessons/manual-foundations` |
-| `Manual Confidence` | `$470` | per package (5 lessons) | `Flagship 5-lesson path` | `/lessons/manual-confidence` |
-| `Group Lesson` | `$220` | per lesson (2.5 hr) | `Learn with a friend` | `/lessons/group` |
+| `Individual Lesson` | `$90` | per lesson (1 hr) | `One-on-one, one hour` | `/lessons/individual` |
+| `Manual Foundations` | `$240` | per package (3 lessons) | `Beginner 3-lesson path` | `/lessons/manual-foundations` |
+| `Manual Confidence` | `$400` | per package (5 lessons) | `Flagship 5-lesson path` | `/lessons/manual-confidence` |
+| `Group Lesson` | `$180` | per lesson (2 hr) | `Learn with a friend` | `/lessons/group` |
 
 All prices + HST (Ads price assets don't display tax — keep landing-page
-prices authoritative). The group row matches the shipped 2.5-hour format; the
-shorter options were retired in the switch. ❓ Whether $219 is per person or
-per pair is still unresolved — see `spec/07-status.md`.
+prices authoritative). The group row matches the live 2-hour format.
+❓ Whether $180 is per person or per pair is still unresolved — see
+`spec/07-status.md`.
 
 ## 5. Housekeeping once applied
 
