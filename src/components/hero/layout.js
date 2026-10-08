@@ -62,9 +62,11 @@ export function resolveClearance(layout, { width, height, copy, clearance = CONF
 }
 
 // ---------- Room for a car -----------------------------------------------
-// In a short window, like a laptop browser shrunk down or a phone on its
-// side (both over 768px wide, so both get this map), the blocks get so
-// short that a lane can't hold a car. The crossings at either end run into
+// In a short enough window, like a laptop browser shrunk down or a phone on
+// its side (both over 768px wide, so both get this map), the blocks get so
+// short that a lane can't hold a car. Since the uniform grid (October 2026)
+// that takes a window shorter than any the tests record; the merged map's
+// side street got there at 600px. The crossings at either end run into
 // each other, and the traffic jams: a car let into a lane shorter than
 // itself stops with its tail in the junction behind and holds it for good.
 //
@@ -179,7 +181,32 @@ export function roadPieces(layout, roads = roadsFor(layout)) {
     }
   }
 
-  return { bands, boxes, ticks, walks }
+  // Rounded block corners: a square the size of the round in each corner
+  // between two roads at a junction, white less a quarter circle
+  // (RoadLayer.css). It goes when either of its two roads does.
+  const fillets = []
+  const r = roads.fillet
+  for (const n of graph.nodes) {
+    if (!JUNCTION.has(n.kind)) continue
+    for (const [a, b] of [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']]) {
+      if (!n.arms[a] || !n.arms[b]) continue
+      const east = a === 'e' || b === 'e'
+      const south = a === 's' || b === 's'
+      fillets.push({
+        kind: 'fillet',
+        corner: (south ? 's' : 'n') + (east ? 'e' : 'w'),
+        node: n.id,
+        seg: n.arms[a].id,
+        seg2: n.arms[b].id,
+        x: [n.nx, east ? n.hx : -n.hx - r],
+        y: [n.ny, south ? n.hy : -n.hy - r],
+        w: [0, r],
+        h: [0, r],
+      })
+    }
+  }
+
+  return { bands, boxes, ticks, walks, fillets }
 }
 
 // A piece's box in px, in a layout box of width × height.
@@ -197,6 +224,10 @@ export function hideRule(graph) {
   const segs = new Set(graph.segments.filter((s) => s.hidden).map((s) => s.id))
   const noBox = new Set(graph.nodes.filter((n) => n.kind === 'through' || n.kind === 'unused').map((n) => n.id))
   const noStop = new Set(graph.nodes.filter((n) => !n.stop).map((n) => n.id))
-  return ({ kind, seg, node }) =>
-    kind === 'box' ? noBox.has(node) : kind === 'walk' ? segs.has(seg) || noStop.has(node) : segs.has(seg)
+  return ({ kind, seg, seg2, node }) =>
+    kind === 'box'
+      ? noBox.has(node)
+      : kind === 'walk'
+        ? segs.has(seg) || noStop.has(node)
+        : segs.has(seg) || segs.has(seg2)
 }

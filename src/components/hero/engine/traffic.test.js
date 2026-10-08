@@ -13,6 +13,7 @@ import { carCount, createTraffic, overlap } from './traffic.js'
 
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const wide = read('../layouts/wide.json')
+const medium = read('../layouts/medium.json')
 const compact = read('../layouts/compact.json')
 
 const DT = CONFIG.world.step
@@ -22,8 +23,8 @@ const STILL_MAX = 15 // s: every car moves at least this often
 // A desktop, a portrait tablet, and a phone's street band.
 const SIZES = [
   { layout: wide, width: 1440, height: 716 },
-  { layout: wide, width: 768, height: 960 },
-  { layout: compact, width: 390, height: 240 },
+  { layout: medium, width: 768, height: 960 },
+  { layout: compact, width: 390, height: compact.band },
 ]
 const label = (s) => `${s.layout.name} ${s.width}×${s.height}`
 
@@ -265,8 +266,9 @@ const copyOf = (s) => ({ x0: s.copy[0], y0: s.copy[1], x1: s.copy[2], y1: s.copy
 
 test('traffic drives around the segments the runtime rules hide, in the short windows', () => {
   for (const s of rects.short.sizes) {
-    const size = { layout: wide, width: s.hero[0], height: s.hero[1] }
-    const { hidden } = resolveMap(wide, { ...size, copy: copyOf(s) })
+    // All three are under 1200px wide, so they get the medium map.
+    const size = { layout: medium, width: s.hero[0], height: s.hero[1] }
+    const { hidden } = resolveMap(medium, { ...size, copy: copyOf(s) })
     assert.ok(hidden.length > 0)
     const { sim } = simFor({ ...size, hidden })
     const gone = new Set(hidden)
@@ -290,7 +292,7 @@ test('at every recorded size, a car can be let onto every lane out of a junction
   const sizes = rects.sizes.map((s) =>
     s.band
       ? { layout: compact, width: s.band[2] - s.band[0], height: s.band[3] - s.band[1], label: s.viewport.join('×') }
-      : { layout: wide, width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') },
+      : { layout: s.viewport[0] >= 1200 ? wide : medium, width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') },
   )
   for (const size of sizes) {
     const { graph, sim } = simFor(size, { count: 0 })

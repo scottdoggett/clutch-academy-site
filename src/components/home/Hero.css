@@ -82,18 +82,31 @@
 }
 
 .hero__roads--wide,
+.hero__roads--medium,
 .hero__streets {
   display: none;
+}
+
+/* The map for the width, the same queries as the layouts' JSON and
+   CONFIG.layout. From 1200px the wide map's six columns; from 768px the
+   medium map's four, wider apart, so the blocks keep their shape on a
+   tablet or a small laptop. */
+@media (min-width: 1200px) {
+  .hero__roads--wide {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .hero__roads--medium {
+    display: block;
+  }
 }
 
 /* Tablets and up: the copy keeps to the left half of the hero and the city
    fills the right half. The column is centred, so half of it ends exactly on
    the hero's centre line at every width. The headline comes down to suit. */
 @media (min-width: 768px) {
-  .hero__roads--wide {
-    display: block;
-  }
-
   .hero__copy {
     max-width: 50%;
   }
@@ -106,21 +119,27 @@
 }
 
 /* Phones: the copy is as wide as the screen, so the roads get a band of
-   their own under it, always --hero-band tall. The hero is just the copy and
-   the band, not the whole first screen: on a tall phone a band that grew to
-   fill the screen read as too long (September 24 review). The band is
-   full-bleed and flush with the hero's bottom, and its top margin is the
-   roads' 48px clearance from the headline block, so no road can come closer
-   to the copy at any size.
+   their own under it, always --hero-band tall (set in Hero.jsx from
+   layouts/compact.json). The hero is just the copy and the band, not the
+   whole first screen: on a tall phone a band that grew to fill the screen
+   read as too long (September 24 review). The band is full-bleed and flush
+   with the hero's bottom, and its top margin is the roads' 48px clearance
+   from the subhead, so no road can come closer to the text at any size.
 
-   The copy is a size smaller than on tablets and the buttons share a row,
-   which is what leaves the band room for a proper street grid. */
+   The buttons sit inside the band's grid (October 8 review): one to a block
+   in its top row, with a road on every side and the cars driving round
+   them. The copy is a size smaller than on tablets. */
 @media (max-width: 767px) {
   .hero {
-    --hero-band: 240px;
     flex-direction: column;
     min-height: 0;
     padding-bottom: 0;
+  }
+
+  /* So the buttons are placed against the hero, which the band spans, rather
+     than the padded copy column. */
+  .hero__inner {
+    position: static;
   }
 
   .hero__streets {
@@ -146,16 +165,45 @@
     font-size: 1rem;
   }
 
+  /* The two blocks from the band's top road to its second, between the
+     outer columns: the box's edges are those roads' edges, and its padding
+     and the gap over the middle road keep each button --ctas-margin clear
+     of the roads round its block. The band is flush with the hero's bottom,
+     so the box is placed from there. */
   .hero__ctas {
-    flex-wrap: nowrap;
-    gap: 0.5rem;
+    --ctas-margin: clamp(6px, 2.5vw, 12px);
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--ctas-x0) * 100% + var(--ctas-road) / 2);
+    right: calc((1 - var(--ctas-x1)) * 100% + var(--ctas-road) / 2);
+    bottom: calc((1 - var(--ctas-y1)) * var(--hero-band) + var(--ctas-road) / 2);
+    height: calc((var(--ctas-y1) - var(--ctas-y0)) * var(--hero-band) - var(--ctas-road));
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 calc(var(--ctas-road) + 2 * var(--ctas-margin));
+    padding: var(--ctas-margin);
   }
 
+  /* Each button fills its block, less the margin. Below 480px the labels
+     take two lines, "Book a / Lesson" and "See / Packages": the padding
+     leaves 6.5em for the words, room for "Packages" and not for either
+     label whole, so the two always break alike. */
   .hero__ctas .btn {
-    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 0;
-    padding-inline: 0.5rem;
-    font-size: 0.8125rem;
+    padding: 0.25rem max(0.375rem, calc(50% - 3.25em));
+    font-size: clamp(0.75rem, 3.4vw, 0.8125rem);
+    line-height: 1.2;
     text-align: center;
+    text-wrap: balance;
+  }
+}
+
+/* From 480px both labels fit on one line. */
+@media (min-width: 480px) and (max-width: 767px) {
+  .hero__ctas .btn {
+    padding-inline: 0.375rem;
   }
 }

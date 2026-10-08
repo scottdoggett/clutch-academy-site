@@ -29,6 +29,7 @@ export function roadsFor(layout) {
     side: r.side * k,
     tick: scale(r.tick),
     crosswalk: scale(r.crosswalk),
+    fillet: r.fillet * k,
     clearance: r.clearance,
   }
 }

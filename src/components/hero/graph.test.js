@@ -8,8 +8,12 @@ import { CONFIG } from './config.js'
 import { buildGraph, checkGraph } from './graph.js'
 
 const load = (name) => JSON.parse(readFileSync(new URL(`./layouts/${name}.json`, import.meta.url), 'utf8'))
-const LAYOUTS = { wide: load('wide'), compact: load('compact') }
-const SIZE = { wide: { width: 1440, height: 836 }, compact: { width: 390, height: 176 } }
+const LAYOUTS = { wide: load('wide'), medium: load('medium'), compact: load('compact') }
+const SIZE = {
+  wide: { width: 1440, height: 836 },
+  medium: { width: 1024, height: 704 },
+  compact: { width: 390, height: LAYOUTS.compact.band },
+}
 
 // A plus sign: one main road across, one down, crossing in the middle.
 const PLUS = {

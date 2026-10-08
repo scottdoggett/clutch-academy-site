@@ -14,6 +14,7 @@ import { hideRule, laneMinimum, offenders, pieceRect, resolveClearance, resolveM
 
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const wide = read('./layouts/wide.json')
+const medium = read('./layouts/medium.json')
 const compact = read('./layouts/compact.json')
 const rects = read('./__fixtures__/copy-rects.json')
 
@@ -26,11 +27,16 @@ const tileOn = (layout) => {
 }
 
 // Which layout a recorded size gets, and the box that layout is drawn in.
-const WIDE_FROM = 768
-const wideSizes = rects.sizes.filter((s) => s.viewport[0] >= WIDE_FROM)
-const phoneSizes = rects.sizes.filter((s) => s.viewport[0] < WIDE_FROM)
+// From 768px a map covers the whole hero: the wide one from 1200px, the
+// medium one below.
+const HERO_FROM = 768
+const WIDE_FROM = 1200
+const heroSizes = rects.sizes.filter((s) => s.viewport[0] >= HERO_FROM)
+const phoneSizes = rects.sizes.filter((s) => s.viewport[0] < HERO_FROM)
+const mapFor = (s) => (s.viewport[0] >= WIDE_FROM ? wide : medium)
+const HERO_MAPS = [wide, medium]
 const boxes = [
-  ...wideSizes.map((s) => ({ layout: wide, width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') })),
+  ...heroSizes.map((s) => ({ layout: mapFor(s), width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') })),
   ...phoneSizes.map((s) => ({
     layout: compact,
     width: s.band[2] - s.band[0],
@@ -43,18 +49,24 @@ const copyOf = (s) => ({ x0: s.copy[0], y0: s.copy[1], x1: s.copy[2], y1: s.copy
 const required = (s) =>
   rects.required.widths.includes(s.viewport[0]) && s.viewport[1] >= rects.required.minViewportHeight
 
-test('the wide map starts where CSS switches to it', () => {
+test('each map starts where CSS switches to it', () => {
+  assert.equal(CONFIG.layout.heroQuery, `(min-width: ${HERO_FROM}px)`)
   assert.equal(CONFIG.layout.wideQuery, `(min-width: ${WIDE_FROM}px)`)
   assert.equal(wide.media, CONFIG.layout.wideQuery)
-  assert.equal(compact.media, `(max-width: ${WIDE_FROM - 1}px)`)
+  assert.equal(medium.media, `${CONFIG.layout.heroQuery} and (max-width: ${WIDE_FROM - 1}px)`)
+  assert.equal(compact.media, `(max-width: ${HERO_FROM - 1}px)`)
+  // Hero.css shows each whole-hero map's road layer under the map's own query.
+  const css = readFileSync(new URL('../home/Hero.css', import.meta.url), 'utf8')
+  for (const layout of HERO_MAPS) assert.ok(css.includes(`@media ${layout.media} {`), `Hero.css has no @media ${layout.media}`)
 })
 
-test('on phones, the street band starts 48px under the copy and fills the hero to its edges', () => {
+test('on phones, the street band starts 48px under the copy, is the map\'s height, and fills the hero to its edges', () => {
   assert.ok(phoneSizes.length >= 6)
   for (const s of phoneSizes) {
     const [l, t, r, b] = s.band
     assert.ok(t - s.copy[3] >= CONFIG.roads.clearance, `${s.viewport.join('×')}: band is ${t - s.copy[3]}px under the copy`)
     assert.deepEqual([l, r, b], [0, s.hero[0], s.hero[1]], s.viewport.join('×'))
+    assert.equal(b - t, compact.band, s.viewport.join('×'))
   }
 })
 
@@ -111,23 +123,25 @@ test('portals are off screen by at least a car length', () => {
 })
 
 test('no road and no junction inside the headline envelope', () => {
-  const r = wide.reserve
-  const inside = (x, y) => x > r.x0 && x < r.x1 && y > r.y0 && y < r.y1
-  for (const n of wide.nodes) assert.ok(!inside(n.x, n.y), `${n.id} is inside the reserve`)
-  const at = Object.fromEntries(wide.nodes.map((n) => [n.id, n]))
-  for (const s of segmentsOf(wide)) {
-    const [a, b] = [at[s.a], at[s.b]]
-    const crosses =
-      Math.min(a.x, b.x) < r.x1 && Math.max(a.x, b.x) > r.x0 && Math.min(a.y, b.y) < r.y1 && Math.max(a.y, b.y) > r.y0
-    assert.ok(!crosses, `${s.id} runs through the reserve`)
+  for (const layout of HERO_MAPS) {
+    const r = layout.reserve
+    const inside = (x, y) => x > r.x0 && x < r.x1 && y > r.y0 && y < r.y1
+    for (const n of layout.nodes) assert.ok(!inside(n.x, n.y), `${layout.name}: ${n.id} is inside the reserve`)
+    const at = Object.fromEntries(layout.nodes.map((n) => [n.id, n]))
+    for (const s of segmentsOf(layout)) {
+      const [a, b] = [at[s.a], at[s.b]]
+      const crosses =
+        Math.min(a.x, b.x) < r.x1 && Math.max(a.x, b.x) > r.x0 && Math.min(a.y, b.y) < r.y1 && Math.max(a.y, b.y) > r.y0
+      assert.ok(!crosses, `${layout.name}: ${s.id} runs through the reserve`)
+    }
   }
 })
 
 test('no road comes within 48px of the headline at 1280, 1440 or 1920px wide', () => {
-  const sizes = wideSizes.filter(required)
+  const sizes = heroSizes.filter(required)
   assert.ok(sizes.length >= 6, 'the fixture is missing required sizes')
   for (const s of sizes) {
-    const graph = buildGraph(wide, { width: s.hero[0], height: s.hero[1] })
+    const graph = buildGraph(mapFor(s), { width: s.hero[0], height: s.hero[1] })
     const bad = offenders(graph, copyOf(s)).map((seg) => seg.id)
     assert.deepEqual(bad, [], `${s.viewport.join('×')}`)
   }
@@ -135,13 +149,13 @@ test('no road comes within 48px of the headline at 1280, 1440 or 1920px wide', (
 
 test('everywhere else, the runtime rule only hides what the map can lose', (t) => {
   const report = []
-  for (const s of wideSizes) {
-    const { hidden, blocked, graph } = resolveClearance(wide, {
+  for (const s of heroSizes) {
+    const { hidden, blocked, graph } = resolveClearance(mapFor(s), {
       width: s.hero[0],
       height: s.hero[1],
       copy: copyOf(s),
     })
-    assert.deepEqual(checkGraph(graph, wide), [], s.viewport.join('×'))
+    assert.deepEqual(checkGraph(graph, mapFor(s)), [], s.viewport.join('×'))
     if (hidden.length || blocked.length) {
       report.push(
         `${s.viewport.join('×')}: hidden [${hidden.join(', ')}]` +
@@ -152,25 +166,15 @@ test('everywhere else, the runtime rule only hides what the map can lose', (t) =
   t.diagnostic(report.length ? report.join('\n') : 'no size needs anything hidden')
 })
 
-test('the wide map is a merged grid, not graph paper', (t) => {
-  const { xs, ys } = wide.baseGrid
-  // Spacing between the base grid's main roads varies by no more than ±30%.
-  for (const lines of [xs, ys]) {
-    const gaps = lines.slice(1).map((v, i) => v - lines[i])
-    const mean = gaps.reduce((a, b) => a + b, 0) / gaps.length
-    for (const g of gaps) assert.ok(Math.abs(g / mean - 1) <= 0.3, `spacing ${g} vs mean ${mean.toFixed(3)}`)
-  }
-
-  // 20–30% of the base grid's interior segments are gone. A base segment is
-  // still there if main-road segments on its line cover all of it.
-  const at = Object.fromEntries(wide.nodes.map((n) => [n.id, n]))
-  const mains = segmentsOf(wide)
-    .filter((s) => s.kind === 'main')
-    .map((s) => [at[s.a], at[s.b]])
-  const covered = (axis, line, from, to) => {
+// Whether road segments on a grid line cover all of it from `from` to
+// `to`, in a layout's normalised terms.
+const coverage = (layout) => {
+  const at = Object.fromEntries(layout.nodes.map((n) => [n.id, n]))
+  const segs = segmentsOf(layout).map((s) => [at[s.a], at[s.b]])
+  return (axis, line, from, to) => {
     const along = axis === 'h' ? 'x' : 'y'
     const across = axis === 'h' ? 'y' : 'x'
-    const spans = mains
+    const spans = segs
       .filter(([a, b]) => a[across] === line && b[across] === line)
       .map(([a, b]) => [Math.min(a[along], b[along]), Math.max(a[along], b[along])])
       .sort((p, q) => p[0] - q[0])
@@ -178,25 +182,144 @@ test('the wide map is a merged grid, not graph paper', (t) => {
     for (const [lo, hi] of spans) if (lo <= reach + 1e-9 && hi > reach) reach = hi
     return reach >= to - 1e-9
   }
-  let total = 0
-  let gone = 0
-  for (const x of xs) {
-    for (let i = 0; i + 1 < ys.length; i++, total++) if (!covered('v', x, ys[i], ys[i + 1])) gone++
-  }
-  for (const y of ys) {
-    for (let i = 0; i + 1 < xs.length; i++, total++) if (!covered('h', y, xs[i], xs[i + 1])) gone++
-  }
-  const share = gone / total
-  t.diagnostic(`${gone} of ${total} base segments removed (${Math.round(share * 100)}%)`)
-  assert.ok(share >= 0.2 && share <= 0.3)
+}
 
-  // And a side street cutting through the blocks. There were three until
-  // September 24, when review found the map too busy.
-  assert.ok(wide.roads.filter((r) => r.kind === 'side').length >= 1)
+const evenlySpaced = (lines) => {
+  const gaps = lines.slice(1).map((v, i) => v - lines[i])
+  for (const g of gaps) assert.ok(Math.abs(g - gaps[0]) < 1e-4, `spacing ${g} vs ${gaps[0]}`)
+}
+
+// Sam asked for a uniform grid on October 8, 2026, in place of the brief's
+// merged, uneven one (a base grid varying by up to ±30%, with 20–30% of its
+// segments removed and a side street cut through).
+test('the wide and medium maps are uniform grids, with the headline in one open block', () => {
+  for (const layout of HERO_MAPS) uniformHeroGrid(layout)
+  // The medium map is the same rows with fewer, wider columns.
+  assert.deepEqual(medium.grid.ys, wide.grid.ys)
+  assert.ok(medium.grid.xs.length < wide.grid.xs.length)
+})
+
+function uniformHeroGrid(layout) {
+  const { xs, ys } = layout.grid
+  // Every column the same distance apart, and every row.
+  evenlySpaced(xs)
+  evenlySpaced(ys)
+
+  // Every junction sits on the grid, and every road end off screen.
+  const on = (v, lines) => lines.some((l) => Math.abs(v - l) < 1e-9)
+  for (const n of layout.nodes) {
+    const portal = n.x < 0 || n.x > 1 || n.y < 0 || n.y > 1
+    if (!portal) assert.ok(on(n.x, xs) && on(n.y, ys), `${layout.name}: ${n.id} is off the grid`)
+  }
+
+  const covered = coverage(layout)
+  const [top, bottom] = [ys[0], ys.at(-1)]
+  // Downtown, east of the headline's envelope, nothing is missing: every
+  // column runs off the top and the bottom, every row off the right edge.
+  const downtown = xs.filter((x) => x > layout.reserve.x1)
+  assert.ok(downtown.length >= 2, layout.name)
+  for (const x of downtown) assert.ok(covered('v', x, 0, 1), `${layout.name}: column ${x} has a gap`)
+  for (const y of ys) assert.ok(covered('h', y, downtown[0], 1), `${layout.name}: row ${y} has a gap downtown`)
+  // The top and bottom rows cross the whole hero, and west of downtown each
+  // column keeps the spacing above the top row and below the bottom one.
+  for (const y of [top, bottom]) assert.ok(covered('h', y, 0, 1), `${layout.name}: row ${y} doesn't cross the hero`)
+  for (const x of xs.filter((v) => !downtown.includes(v))) {
+    assert.ok(covered('v', x, 0, top) && covered('v', x, bottom, 1), `${layout.name}: column ${x} is missing above or below the copy`)
+  }
+
+  // No side streets: every road is part of the grid.
+  assert.equal(layout.roads.filter((r) => r.kind === 'side').length, 0)
+}
+
+// Scott, October 8: on a smaller screen the six columns were squeezed, so
+// below 1200px the medium map has four. Its blocks at a 768px tablet are
+// wider than the wide map's would be at 1200px.
+const MIN_COLUMN_GAP = 165 // px, centre to centre
+
+test('downtown blocks are never squeezed: at every recorded size, columns are 165px or more apart', (t) => {
+  let tightest = { gap: Infinity }
+  for (const s of [...heroSizes, ...rects.short.sizes]) {
+    const { xs } = mapFor(s).grid
+    const gap = (xs[1] - xs[0]) * s.hero[0]
+    if (gap < tightest.gap) tightest = { gap, where: `${s.viewport.join('×')} (${mapFor(s).name})` }
+    assert.ok(gap >= MIN_COLUMN_GAP, `${s.viewport.join('×')}: columns ${gap.toFixed(0)}px apart`)
+  }
+  t.diagnostic(`tightest: ${tightest.gap.toFixed(0)}px at ${tightest.where}`)
+})
+
+test('the phone map is a uniform grid too, with nothing above its top road', () => {
+  const { xs, ys } = compact.grid
+  evenlySpaced(xs)
+  evenlySpaced(ys)
+  const covered = coverage(compact)
+  // Every row runs edge to edge, and every column from the top row off the
+  // bottom. Nothing goes up past the top row, into the gap under the copy.
+  for (const y of ys) assert.ok(covered('h', y, 0, 1), `row ${y} has a gap`)
+  for (const x of xs) assert.ok(covered('v', x, ys[0], 1), `column ${x} has a gap`)
+  for (const n of compact.nodes) assert.ok(n.y >= ys[0], `${n.id} is above the top road`)
+  assert.equal(compact.roads.filter((r) => r.kind === 'side').length, 0)
+  // The buttons' two blocks: the top row, either side of the middle column.
+  const { x0, x1, y0, y1 } = compact.ctas
+  assert.deepEqual([x0, x1, y0, y1], [xs[0], xs.at(-1), ys[0], ys[1]])
+  assert.equal(xs.length, 3)
+  assert.ok(Math.abs(xs[1] - (x0 + x1) / 2) < 1e-9, 'the middle column splits the two blocks evenly')
+})
+
+// The least red between a button and the roads round its block, px: the
+// low end of --ctas-margin in Hero.css, less a pixel for the fixture's
+// rounding.
+const BUTTON_CLEAR = 6 - 1
+
+test('on phones, each button sits in a block of its own, with a road on every side', () => {
+  const road = roadsFor(compact).main
+  const round = roadsFor(compact).fillet
+  const covered = coverage(compact)
+  for (const s of phoneSizes) {
+    const label = s.viewport.join('×')
+    const [, top, width] = s.band
+    const height = compact.band
+    assert.equal(s.ctas.length, 2, label)
+    const cells = s.ctas.map(([l, t, r, b]) => {
+      // The grid lines either side of the button's centre, px in the band.
+      const cx = (l + r) / 2
+      const cy = (t + b) / 2 - top
+      const i = compact.grid.xs.findIndex((x, k, xs) => x * width < cx && cx < xs[k + 1] * width)
+      const j = compact.grid.ys.findIndex((y, k, ys) => y * height < cy && cy < ys[k + 1] * height)
+      assert.ok(i >= 0 && j >= 0, `${label}: a button is outside the grid's blocks`)
+      const [xa, xb] = [compact.grid.xs[i], compact.grid.xs[i + 1]]
+      const [ya, yb] = [compact.grid.ys[j], compact.grid.ys[j + 1]]
+      const clear = Math.min(
+        l - (xa * width + road / 2),
+        xb * width - road / 2 - r,
+        t - top - (ya * height + road / 2),
+        yb * height - road / 2 - (b - top),
+      )
+      assert.ok(clear >= BUTTON_CLEAR, `${label}: a button comes within ${clear}px of a road`)
+      // The rounds on the block's corners (RoadLayer.css) come nearer a
+      // button's corners than the roads do. Within a round's square, the
+      // road is outside the circle centred on the square's inner corner, so
+      // a button corner inside that circle is clear by the rest of it.
+      const inner = { x0: xa * width + road / 2, x1: xb * width - road / 2, y0: ya * height + road / 2, y1: yb * height - road / 2 }
+      for (const [px, py] of [[l, t - top], [r, t - top], [l, b - top], [r, b - top]]) {
+        const left = px - inner.x0 < inner.x1 - px
+        const upper = py - inner.y0 < inner.y1 - py
+        const dx = left ? px - inner.x0 : inner.x1 - px
+        const dy = upper ? py - inner.y0 : inner.y1 - py
+        if (dx >= round || dy >= round) continue
+        const gap = round - Math.hypot(round - dx, round - dy)
+        assert.ok(gap >= BUTTON_CLEAR, `${label}: a button's corner comes within ${gap.toFixed(1)}px of a rounded corner`)
+      }
+      for (const [axis, line, from, to] of [['h', ya, xa, xb], ['h', yb, xa, xb], ['v', xa, ya, yb], ['v', xb, ya, yb]]) {
+        assert.ok(covered(axis, line, from, to), `${label}: a button's block is open on one side`)
+      }
+      return `${i},${j}`
+    })
+    assert.notEqual(cells[0], cells[1], `${label}: both buttons are in one block`)
+  }
 })
 
 test('the road layer has a road and ticks for every segment, a box for every junction, a crossing on every road into a cross or T', () => {
-  for (const layout of [wide, compact]) {
+  for (const layout of [wide, medium, compact]) {
     const { bands, boxes, ticks, walks } = roadPieces(layout)
     const graph = buildGraph(layout)
     const segs = graph.segments.length
@@ -212,6 +335,34 @@ test('the road layer has a road and ticks for every segment, a box for every jun
 })
 
 const overlaps = (a, b) => a.x0 < b.x1 - 1e-6 && a.x1 > b.x0 + 1e-6 && a.y0 < b.y1 - 1e-6 && a.y1 > b.y0 + 1e-6
+
+test('every block corner at a junction is rounded, and each round sits in its corner, out of the roads, at any recorded size', () => {
+  const PAIRS = [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']]
+  for (const layout of [wide, medium, compact]) {
+    const graph = buildGraph(layout)
+    const corners = graph.nodes
+      .filter((n) => ['cross', 'tee', 'corner'].includes(n.kind))
+      .reduce((sum, n) => sum + PAIRS.filter(([a, b]) => n.arms[a] && n.arms[b]).length, 0)
+    assert.equal(roadPieces(layout).fillets.length, corners, layout.name)
+  }
+  for (const b of boxes) {
+    const { bands, boxes: junctions, fillets } = roadPieces(b.layout)
+    const rect = (p) => pieceRect(p, b.width, b.height)
+    const roads = [...bands, ...junctions].map(rect)
+    const graph = buildGraph(b.layout, { width: b.width, height: b.height })
+    const round = roadsFor(b.layout).fillet
+    for (const f of fillets) {
+      const r = rect(f)
+      assert.ok(Math.abs(r.x1 - r.x0 - round) < 1e-6 && Math.abs(r.y1 - r.y0 - round) < 1e-6)
+      for (const q of roads) assert.ok(!overlaps(r, q), `${b.label}: the ${f.corner} round at ${f.node} is on a road`)
+      // Its inner corner is the junction box's corner.
+      const n = graph.nodes.find((m) => m.id === f.node)
+      const x = f.corner.endsWith('e') ? r.x0 - n.box.x1 : n.box.x0 - r.x1
+      const y = f.corner.startsWith('s') ? r.y0 - n.box.y1 : n.box.y0 - r.y1
+      assert.ok(Math.abs(x) < 1e-6 && Math.abs(y) < 1e-6, `${b.label}: the ${f.corner} round at ${f.node} is off its corner`)
+    }
+  }
+})
 
 test('crossings and ticks never run into each other or into a junction, at any recorded size', (t) => {
   let shortest = { len: Infinity }
@@ -249,14 +400,14 @@ test('crossings and ticks never run into each other or into a junction, at any r
 })
 
 test('each crossing spans its road, sits just clear of the junction, and has whole stripes', () => {
-  for (const layout of [wide, compact]) {
+  for (const layout of [wide, medium, compact]) {
     const roads = roadsFor(layout)
     const { gap, depth, stripe, space } = roads.crosswalk
     for (const kind of ['main', 'side']) {
       const stripes = roads[kind] / (stripe + space)
       assert.ok(Math.abs(stripes - Math.round(stripes)) < 1e-9, `${layout.name} ${kind} road takes ${stripes} stripes`)
     }
-    const size = layout === wide ? { width: 1440, height: 836 } : { width: 390, height: 240 }
+    const size = { wide: { width: 1440, height: 836 }, medium: { width: 1024, height: 704 }, compact: { width: 390, height: compact.band } }[layout.name]
     const graph = buildGraph(layout, size)
     for (const w of roadPieces(layout).walks) {
       const r = pieceRect(w, size.width, size.height)
@@ -283,6 +434,7 @@ test('phones draw the same map zoomed out: every road size scaled, the clearance
   const k = CONFIG.layout.zoom.compact
   assert.ok(k > 0 && k < 1)
   assert.equal(roadsFor(wide).zoom, 1)
+  assert.equal(roadsFor(medium).zoom, 1)
   const r = roadsFor(compact)
   assert.equal(r.main, CONFIG.roads.main * k)
   assert.equal(r.side, CONFIG.roads.side * k)
@@ -305,26 +457,32 @@ test('the CSS that hides a too-short run of ticks follows the zoom instead of a 
   assert.match(css, /\.roads__tick \{[^}]*font-size: var\(--tile\)/)
 })
 
-test('hiding a T\'s stem takes its crossings and its box with it', () => {
-  // In the wide map, c12 is a T: v1 through, h2w leaving east. Hide h2w.
-  const graph = buildGraph(wide, { width: 1440, height: 836, hidden: ['h2w.0'] })
+test('hiding a T\'s stem takes its crossings, its box and its rounds with it', () => {
+  // In the wide map, c42 is a T: v4 through, h2 leaving east. Hide h2's
+  // first block.
+  const graph = buildGraph(wide, { width: 1440, height: 836, hidden: ['h2.0'] })
   const hidden = hideRule(graph)
   const pieces = roadPieces(wide)
   const at = (kind, node) => [...pieces.walks, ...pieces.boxes].filter((p) => p.kind === kind && p.node === node)
-  assert.equal(graph.nodes.find((n) => n.id === 'c12').kind, 'through')
-  assert.ok(at('walk', 'c12').length === 3)
-  for (const p of at('walk', 'c12')) assert.ok(hidden(p), 'a crossing survived on a straight run')
-  for (const p of at('box', 'c12')) assert.ok(hidden(p))
-  assert.ok(hidden({ kind: 'band', seg: 'h2w.0' }))
-  assert.ok(hidden({ kind: 'tick', seg: 'h2w.0' }))
+  assert.equal(graph.nodes.find((n) => n.id === 'c42').kind, 'through')
+  assert.ok(at('walk', 'c42').length === 3)
+  for (const p of at('walk', 'c42')) assert.ok(hidden(p), 'a crossing survived on a straight run')
+  for (const p of at('box', 'c42')) assert.ok(hidden(p))
+  // Both of the T's rounds are on the stem's corners, so both go.
+  const rounds = (node) => pieces.fillets.filter((p) => p.node === node)
+  assert.equal(rounds('c42').length, 2)
+  for (const p of rounds('c42')) assert.ok(hidden(p), 'a round survived on a straight run')
+  assert.ok(hidden({ kind: 'band', seg: 'h2.0' }))
+  assert.ok(hidden({ kind: 'tick', seg: 'h2.0' }))
   // Everything elsewhere stays.
   assert.ok(!hidden({ kind: 'band', seg: 'h1.0' }))
-  for (const p of at('walk', 'c11')) assert.ok(!hidden(p))
+  for (const p of at('walk', 'c41')) assert.ok(!hidden(p))
+  for (const p of rounds('c41')) assert.ok(!hidden(p))
 })
 
 test('at every recorded size, every lane already has room for a car, so the room rule hides nothing', () => {
-  for (const s of wideSizes) {
-    const { hidden, tight } = resolveMap(wide, { width: s.hero[0], height: s.hero[1], copy: copyOf(s) })
+  for (const s of heroSizes) {
+    const { hidden, tight } = resolveMap(mapFor(s), { width: s.hero[0], height: s.hero[1], copy: copyOf(s) })
     assert.deepEqual(hidden, [], s.viewport.join('×'))
     assert.deepEqual(tight, [], s.viewport.join('×'))
   }
@@ -333,17 +491,22 @@ test('at every recorded size, every lane already has room for a car, so the room
   }
 })
 
-test('in a window too short for the whole map, the room rule hides roads until every lane holds a car', (t) => {
+// The room rule (resolveMap) is a safety net now. The merged map's short
+// blocks either side of its side street held no car in these windows, and
+// the rule hid the side street; every block of the uniform grid holds one.
+test('in a window too short for the whole map, every lane still holds a car', (t) => {
   const report = []
   for (const s of rects.short.sizes) {
     const size = { width: s.hero[0], height: s.hero[1] }
-    const full = buildGraph(wide, size)
-    assert.ok(full.lanes.some((l) => l.path.len < laneMinimum(wide)), `${s.viewport.join('×')} isn't short`)
-    const { hidden, tight, graph } = resolveMap(wide, { ...size, copy: copyOf(s) })
+    const layout = mapFor(s)
+    const full = buildGraph(layout, size)
+    for (const lane of full.lanes) assert.ok(lane.path.len >= laneMinimum(layout), `${s.viewport.join('×')}: ${lane.id}`)
+    const { hidden, blocked, tight, graph } = resolveMap(layout, { ...size, copy: copyOf(s) })
     assert.deepEqual(tight, [], s.viewport.join('×'))
-    assert.deepEqual(checkGraph(graph, wide), [], s.viewport.join('×'))
-    for (const lane of graph.lanes) assert.ok(lane.path.len >= laneMinimum(wide), `${s.viewport.join('×')}: ${lane.id}`)
-    report.push(`${s.viewport.join('×')}: hidden [${hidden.join(', ')}]`)
+    assert.deepEqual(checkGraph(graph, layout), [], s.viewport.join('×'))
+    report.push(
+      `${s.viewport.join('×')} (${layout.name}): hidden [${hidden.join(', ')}]` + (blocked.length ? `, still too close [${blocked.join(', ')}]` : ''),
+    )
   }
   t.diagnostic(report.join('\n'))
 })

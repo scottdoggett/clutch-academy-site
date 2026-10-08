@@ -8,8 +8,8 @@ import './RoadLayer.css'
 // offset (RoadLayer.css), so roads, ticks and crossings are exact at any
 // size and CSS rescales them for free.
 //
-// Paint order: white roads, white junction boxes, black centre ticks, black
-// zebra crossings.
+// Paint order: white roads, white junction boxes, grey centre ticks, grey
+// zebra crossings, and the white rounds on the blocks' corners.
 //
 // data-piece, data-seg and data-node are what HeroStage uses to hide a
 // segment the headline check has taken out.
@@ -30,7 +30,7 @@ const place = ({ x, y, w, h }) => {
 export default function RoadLayer({ layout, className }) {
   // The map's own road sizes, zoomed out on phones (CONFIG.layout.zoom).
   const roads = roadsFor(layout)
-  const { bands, boxes, ticks, walks } = roadPieces(layout, roads)
+  const { bands, boxes, ticks, walks, fillets } = roadPieces(layout, roads)
   const { tick, crosswalk } = roads
   return (
     <div
@@ -65,6 +65,17 @@ export default function RoadLayer({ layout, className }) {
           className={`roads__walk roads__walk--${p.axis}`}
           data-piece="walk"
           data-seg={p.seg}
+          data-node={p.node}
+          style={place(p)}
+        />
+      ))}
+      {fillets.map((p) => (
+        <span
+          key={`f${p.node}${p.corner}`}
+          className={`roads__fillet roads__fillet--${p.corner}`}
+          data-piece="fillet"
+          data-seg={p.seg}
+          data-seg2={p.seg2}
           data-node={p.node}
           style={place(p)}
         />

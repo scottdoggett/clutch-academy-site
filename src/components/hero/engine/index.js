@@ -365,7 +365,7 @@ export function createEngine({ hero, host }) {
   const engine = {
     canvas,
 
-    // name: 'wide' or 'compact'. box: where the layout's box is inside the
+    // name: 'wide', 'medium' or 'compact'. box: where the layout's box is inside the
     // hero, CSS px. hidden: segments the headline check has taken out.
     setMap({ name, box, hidden = [] }) {
       if (disposed || box.width <= 0 || box.height <= 0) return
@@ -424,7 +424,7 @@ export function createEngine({ hero, host }) {
     // the keys are heard. With the last drive's knocked cars still settling,
     // its driver takes the new drive on the same world.
     startDrive(makeDriver, { mode, area, onControl, onExit, onEnd: ended, onFrame: frameHook }) {
-      if (disposed || !sim || map?.name !== 'wide' || !area) return false
+      if (disposed || !sim || map?.name === 'compact' || !area) return false
       if (driver && driver.state !== 'settling') return false
       onEnd = ended
       onFrame = frameHook
@@ -463,7 +463,7 @@ export function createEngine({ hero, host }) {
       return driver?.state === 'driving'
     },
 
-    // The gear display's Auto / Manual switch.
+    // The dock's gearbox switch. (M switches inside drive/, through input.js.)
     setDriveMode(next) {
       driver?.setMode(next)
     },

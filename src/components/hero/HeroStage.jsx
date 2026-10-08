@@ -7,18 +7,22 @@ import { DUR_BASE, DUR_QUICK, EASE_IN, HERO_SETTLED } from '@/lib/motion'
 import { CONFIG } from './config.js'
 import DriveButton from './DriveButton'
 import { hideRule, resolveMap } from './layout.js'
-// Only the wide map sits near the copy; the phone band clears it by
+// Only the whole-hero maps sit near the copy; the phone band clears it by
 // construction, so its map doesn't need to ship to the client for this.
 import wideMap from './layouts/wide.json'
+import mediumMap from './layouts/medium.json'
+
+const HERO_MAPS = { wide: wideMap, medium: mediumMap }
 import './HeroStage.css'
 
 // The same failsafe motion.css gives the hero's own entrance, ms. If the
 // entrance never reports that it's finished, the traffic goes anyway.
 const SETTLE_FAILSAFE = 1500
 
-// Drive needs a keyboard and the wide map (docs/spec/hero-drive.md §Phones,
-// touch and reduced motion): a fine pointer that can hover, as the About
-// page's shift gate tests for, and 768px up.
+// Drive needs a keyboard and a whole-hero map, wide or medium
+// (docs/spec/hero-drive.md §Phones, touch and reduced motion): a fine
+// pointer that can hover, as the About page's shift gate tests for, and
+// 768px up.
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 
 // The driving display (the speedometer, the dock and the shifter), only
@@ -109,12 +113,12 @@ function whenSettled(hero, fn) {
 //
 // 2. The traffic (§Ambient traffic). The engine and three.js load as their
 //    own chunk once the page is idle, and only where WebGL works. The canvas
-//    covers the hero on the wide map and the street band on phones. The cars
-//    fade in once, after the hero's entrance, and drive; under reduced
-//    motion they're drawn parked and never move.
+//    covers the hero on the wide and medium maps and the street band on
+//    phones. The cars fade in once, after the hero's entrance, and drive;
+//    under reduced motion they're drawn parked and never move.
 //
 // 3. Test drive (§Play mode). A pill in the bottom-right corner, once the
-//    cars are showing, on screens with a keyboard and the wide map.
+//    cars are showing, on screens with a keyboard and a whole-hero map.
 //    Hovering or focusing it starts loading the drive chunk (planck.js and
 //    the car); pressing it hands the black car over. The car can go
 //    anywhere on the page (§Driving the whole page), so the canvas and the
@@ -139,10 +143,10 @@ export default function HeroStage() {
   const layerRef = useRef(null)
   // The cars are on screen: faded in, or parked under reduced motion.
   const [shown, setShown] = useState(false)
-  // A keyboard, and the wide map. Read on the client only; the server never
+  // A keyboard, and a whole-hero map. Read on the client only; the server never
   // renders the pill (it waits for the cars), so the two can't disagree.
   const [canDrive, setCanDrive] = useState(
-    () => typeof window !== 'undefined' && matchMedia(CONFIG.layout.wideQuery).matches && matchMedia(FINE_POINTER).matches,
+    () => typeof window !== 'undefined' && matchMedia(CONFIG.layout.heroQuery).matches && matchMedia(FINE_POINTER).matches,
   )
   // idle → starting (the chunk loading, or the black car coming in from off
   // screen) → driving → idle.
@@ -168,10 +172,14 @@ export default function HeroStage() {
     const stage = ref.current
     const hero = stage?.parentElement
     const copy = hero?.querySelector('.hero__copy')
-    const roads = hero?.querySelector('.roads[data-layout="wide"]')
+    const layers = {
+      wide: hero?.querySelector('.roads[data-layout="wide"]'),
+      medium: hero?.querySelector('.roads[data-layout="medium"]'),
+    }
     const streets = hero?.querySelector('.hero__streets')
-    if (!hero || !copy || !roads || !streets) return
+    if (!hero || !copy || !layers.wide || !layers.medium || !streets) return
 
+    const whole = window.matchMedia(CONFIG.layout.heroQuery)
     const wide = window.matchMedia(CONFIG.layout.wideQuery)
     let timer = 0
     let live = true
@@ -188,11 +196,13 @@ export default function HeroStage() {
       let blocked = []
       let tight = []
       const h = hero.getBoundingClientRect()
-      // Below the wide breakpoint the roads are in their own band under the
-      // CTAs, clear of the copy by construction.
-      if (wide.matches) {
+      // From 768px the roads cover the hero, the wide map from 1200px and
+      // the medium one below; on phones they're in their own band under the
+      // subhead, clear of the copy by construction.
+      const name = whole.matches ? (wide.matches ? 'wide' : 'medium') : null
+      if (name) {
         const c = copy.getBoundingClientRect()
-        const result = resolveMap(wideMap, {
+        const result = resolveMap(HERO_MAPS[name], {
           width: h.width,
           height: h.height,
           copy: { x0: c.left - h.left, y0: c.top - h.top, x1: c.right - h.left, y1: c.bottom - h.top },
@@ -200,7 +210,7 @@ export default function HeroStage() {
         hidden = hideRule(result.graph)
         blocked = result.blocked
         tight = result.tight
-        map = { name: 'wide', box: { x: 0, y: 0, width: h.width, height: h.height }, hidden: result.hidden }
+        map = { name, box: { x: 0, y: 0, width: h.width, height: h.height }, hidden: result.hidden }
       } else {
         const s = streets.getBoundingClientRect()
         map = {
@@ -210,9 +220,13 @@ export default function HeroStage() {
         }
       }
       engine?.setMap(map)
-      for (const el of roads.querySelectorAll('[data-piece]')) {
-        const { piece, seg, node } = el.dataset
-        el.toggleAttribute('data-hidden', hidden({ kind: piece, seg, node }))
+      // Only the layer on screen has anything hidden; the other is cleared.
+      for (const [layer, roads] of Object.entries(layers)) {
+        const rule = layer === name ? hidden : () => false
+        for (const el of roads.querySelectorAll('[data-piece]')) {
+          const { piece, seg, seg2, node } = el.dataset
+          el.toggleAttribute('data-hidden', rule({ kind: piece, seg, seg2, node }))
+        }
       }
       // Once per change, not on every re-check.
       const problem = `${blocked}|${tight}`
@@ -238,6 +252,7 @@ export default function HeroStage() {
     ro.observe(hero)
     ro.observe(copy)
     ro.observe(streets)
+    whole.addEventListener('change', check)
     wide.addEventListener('change', check)
     check()
     // next/font can reflow the copy after the first measure.
@@ -263,14 +278,24 @@ export default function HeroStage() {
       // already drawn the cars parked, and they just appear.
       let faded = false
       mm = gsap.matchMedia()
-      mm.add(MOTION_OK, () => {
+      mm.add(MOTION_OK, (ctx) => {
         if (!faded) gsap.set(engine.canvas, { autoAlpha: 0 })
+        // The fade belongs to this context. The settled event usually fires
+        // inside the hero timeline's onComplete, and GSAP files anything
+        // made in a callback under that timeline's context: SiteMotion's,
+        // which reverts whenever the window crosses one of its breakpoints
+        // (768px, 1024px). That rewound the fade and hid the cars until a
+        // reload. So it's a method of this context, called a microtask
+        // later, once GSAP's callback has returned; called inside it, this
+        // context would nest in SiteMotion's and its revert would park the
+        // traffic.
+        ctx.add('fadeIn', () => gsap.to(engine.canvas, { autoAlpha: 1, duration: DUR_BASE, ease: EASE_IN }))
         const cancel = whenSettled(hero, () => {
           engine.play()
           setShown(true)
           if (faded) return
           faded = true
-          gsap.to(engine.canvas, { autoAlpha: 1, duration: DUR_BASE, ease: EASE_IN })
+          queueMicrotask(() => live && ctx.fadeIn())
         })
         // Reduced motion switched on: stand every car back at the start.
         return () => {
@@ -288,6 +313,7 @@ export default function HeroStage() {
       clearTimeout(timer)
       cancelIdle()
       ro.disconnect()
+      whole.removeEventListener('change', check)
       wide.removeEventListener('change', check)
       mm?.revert()
       engine?.dispose()
@@ -434,17 +460,17 @@ export default function HeroStage() {
   // Whether this screen can drive, watched live. If it stops being able to
   // mid-drive (the window narrowed to the phone map), driving ends.
   useEffect(() => {
-    const wide = window.matchMedia(CONFIG.layout.wideQuery)
+    const whole = window.matchMedia(CONFIG.layout.heroQuery)
     const fine = window.matchMedia(FINE_POINTER)
-    const can = () => wide.matches && fine.matches
+    const can = () => whole.matches && fine.matches
     const change = () => {
       setCanDrive(can())
       if (!can()) exit()
     }
-    wide.addEventListener('change', change)
+    whole.addEventListener('change', change)
     fine.addEventListener('change', change)
     return () => {
-      wide.removeEventListener('change', change)
+      whole.removeEventListener('change', change)
       fine.removeEventListener('change', change)
     }
   }, [exit])

@@ -1,6 +1,7 @@
 {
-  "about": "Where the hero's copy block (.hero__copy) lands, measured in Chrome on the dev server after fonts loaded. hero is [width, height]; copy, and on phones the street band, are [left, top, right, bottom] relative to the hero, all CSS px. The layout tests check every road against these. Re-record whenever the hero's copy or CSS changes: see record.md.",
+  "about": "Where the hero's copy block (.hero__copy) lands, measured in Chrome on the dev server after fonts loaded. hero is [width, height]; copy, and on phones the street band and the two buttons inside it (ctas), are [left, top, right, bottom] relative to the hero, all CSS px. The layout tests check every road against these. Re-record whenever the hero's copy or CSS changes: see record.md.",
   "recorded": "2026-09-24",
+  "phonesRecorded": "2026-10-08",
   "required": {
     "widths": [1280, 1440, 1920],
     "minViewportHeight": 680,
@@ -15,14 +16,14 @@
     ]
   },
   "sizes": [
-    { "viewport": [320, 568], "hero": [320, 720], "copy": [20, 88, 300, 432], "band": [0, 480, 320, 720] },
-    { "viewport": [360, 640], "hero": [360, 694], "copy": [20, 88, 340, 406], "band": [0, 454, 360, 694] },
-    { "viewport": [360, 740], "hero": [360, 694], "copy": [20, 88, 340, 406], "band": [0, 454, 360, 694] },
-    { "viewport": [375, 667], "hero": [375, 673], "copy": [20, 88, 355, 385], "band": [0, 433, 375, 673] },
-    { "viewport": [390, 844], "hero": [390, 677], "copy": [20, 88, 370, 389], "band": [0, 437, 390, 677] },
-    { "viewport": [412, 915], "hero": [412, 684], "copy": [20, 88, 392, 396], "band": [0, 444, 412, 684] },
-    { "viewport": [430, 932], "hero": [430, 689], "copy": [20, 88, 410, 401], "band": [0, 449, 430, 689] },
-    { "viewport": [600, 960], "hero": [600, 634], "copy": [24, 88, 576, 346], "band": [0, 394, 600, 634] },
+    { "viewport": [320, 568], "hero": [320, 567], "copy": [20, 88, 300, 355], "band": [0, 403, 320, 567], "ctas": [[46, 435, 140, 491], [180, 435, 274, 491]] },
+    { "viewport": [360, 640], "hero": [360, 553], "copy": [20, 88, 340, 341], "band": [0, 389, 360, 553], "ctas": [[50, 422, 159, 476], [201, 422, 310, 476]] },
+    { "viewport": [360, 740], "hero": [360, 553], "copy": [20, 88, 340, 341], "band": [0, 389, 360, 553], "ctas": [[50, 422, 159, 476], [201, 422, 310, 476]] },
+    { "viewport": [375, 667], "hero": [375, 532], "copy": [20, 88, 355, 320], "band": [0, 368, 375, 532], "ctas": [[51, 402, 166, 455], [209, 402, 324, 455]] },
+    { "viewport": [390, 844], "hero": [390, 537], "copy": [20, 88, 370, 325], "band": [0, 373, 390, 537], "ctas": [[53, 406, 173, 459], [217, 406, 337, 459]] },
+    { "viewport": [412, 915], "hero": [412, 543], "copy": [20, 88, 392, 331], "band": [0, 379, 412, 543], "ctas": [[55, 414, 184, 465], [228, 414, 357, 465]] },
+    { "viewport": [430, 932], "hero": [430, 549], "copy": [20, 88, 410, 337], "band": [0, 385, 430, 549], "ctas": [[57, 419, 192, 470], [238, 419, 373, 470]] },
+    { "viewport": [600, 960], "hero": [600, 493], "copy": [24, 88, 576, 281], "band": [0, 329, 600, 493], "ctas": [[72, 365, 276, 413], [324, 365, 528, 413]] },
     { "viewport": [768, 1024], "hero": [768, 960], "copy": [31, 325, 384, 684] },
     { "viewport": [820, 1180], "hero": [820, 1116], "copy": [33, 413, 410, 750] },
     { "viewport": [834, 1194], "hero": [834, 1130], "copy": [33, 419, 417, 758] },

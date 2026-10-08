@@ -15,6 +15,7 @@ import { createDriver } from './index.js'
 const wide = JSON.parse(readFileSync(new URL('../layouts/wide.json', import.meta.url), 'utf8'))
 const DT = CONFIG.world.step
 const K = CONFIG.world.pxPerM
+const TOP = 64 // px, the nav's bottom: the top wall
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 
 function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, mode = 'auto' } = {}) {
@@ -25,7 +26,7 @@ function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, mode = 'a
     sim,
     k: K,
     box: { width, height },
-    top: 64,
+    top: TOP,
     mode,
     onParticle: (p) => particles.push(p),
   })
@@ -35,15 +36,19 @@ function scene({ width = 1440, height = 716, seed = CONFIG.world.seed, mode = 'a
 
 const knockedCars = (s) => s.sim.cars.filter((c) => c !== s.car && c.driven)
 
-// Flat out at the nearest traffic car until one more is knocked.
+// Flat out at the nearest traffic car until one more is knocked. Only cars
+// a car length or more below the top wall count: one on a street running up
+// under the nav can't be reached, and aiming at it pins the black car
+// against the wall. The uniform grid has a street off the top every column.
 function ram(s, secs = 10) {
   const already = new Set(knockedCars(s))
   const want = s.driver.controls.want
+  const reach = TOP + CONFIG.car.length * K
   for (let t = 0; t < secs; t += DT) {
     let best = null
     let bestD = Infinity
     for (const c of s.sim.cars) {
-      if (c === s.car || !c.active || c.driven) continue
+      if (c === s.car || !c.active || c.driven || c.y < reach) continue
       const d = Math.hypot(c.x - s.car.x, c.y - s.car.y)
       if (d < bestD) {
         bestD = d

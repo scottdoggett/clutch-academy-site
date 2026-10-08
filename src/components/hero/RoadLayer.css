@@ -48,7 +48,7 @@
   background-image: linear-gradient(
     to right,
     transparent var(--lead),
-    var(--black) var(--lead) calc(var(--lead) + var(--tick-len)),
+    var(--road-line) var(--lead) calc(var(--lead) + var(--tick-len)),
     transparent calc(var(--lead) + var(--tick-len))
   );
   background-size: var(--tile) 100%;
@@ -59,7 +59,7 @@
   background-image: linear-gradient(
     to bottom,
     transparent var(--lead),
-    var(--black) var(--lead) calc(var(--lead) + var(--tick-len)),
+    var(--road-line) var(--lead) calc(var(--lead) + var(--tick-len)),
     transparent calc(var(--lead) + var(--tick-len))
   );
   background-size: 100% var(--tile);
@@ -78,7 +78,7 @@
   }
 }
 
-/* Zebra crossings: black stripes across the road, each running the way the
+/* Zebra crossings: grey stripes across the road, each running the way the
    road does. A tile is one stripe with half the space either side, so the
    stripes sit clear of the road's edges. */
 .roads__walk {
@@ -91,7 +91,7 @@
   background-image: linear-gradient(
     to bottom,
     transparent var(--walk-lead),
-    var(--black) var(--walk-lead) calc(var(--walk-lead) + var(--stripe)),
+    var(--road-crossing) var(--walk-lead) calc(var(--walk-lead) + var(--stripe)),
     transparent calc(var(--walk-lead) + var(--stripe))
   );
   background-size: 100% var(--walk-tile);
@@ -103,11 +103,36 @@
   background-image: linear-gradient(
     to right,
     transparent var(--walk-lead),
-    var(--black) var(--walk-lead) calc(var(--walk-lead) + var(--stripe)),
+    var(--road-crossing) var(--walk-lead) calc(var(--walk-lead) + var(--stripe)),
     transparent calc(var(--walk-lead) + var(--stripe))
   );
   background-size: var(--walk-tile) 100%;
   background-repeat: space no-repeat;
+}
+
+/* Rounded block corners: white, less a quarter circle centred on the
+   corner furthest from the junction. */
+.roads__fillet {
+  --fx: 0%;
+  --fy: 0%;
+  background: radial-gradient(
+    circle farthest-side at var(--fx) var(--fy),
+    transparent calc(100% - 0.75px),
+    var(--white) 100%
+  );
+}
+
+.roads__fillet--ne {
+  --fx: 100%;
+}
+
+.roads__fillet--se {
+  --fx: 100%;
+  --fy: 100%;
+}
+
+.roads__fillet--sw {
+  --fy: 100%;
 }
 
 /* Set by HeroStage when the headline check hides a segment. */

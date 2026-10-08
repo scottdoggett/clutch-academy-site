@@ -31,27 +31,34 @@ export const CONFIG = {
     // kind because they cut through blocks rather than being part of the
     // base grid (layouts/wide.json), and must end on a road at both ends.
     side: 40, // px
-    tick: { width: 2, length: 8, gap: 10 }, // the black centre line, px
-    // The zebra crossing on every road into a cross or a T, px: black
+    tick: { width: 2, length: 8, gap: 10 }, // the grey centre line, px
+    // The zebra crossing on every road into a cross or a T, px: grey
     // stripes `stripe` wide with `space` between, `depth` long, starting
     // `gap` clear of the junction box. Road widths are whole numbers of
     // stripe + space, so a 40px road takes 5 stripes and a 24px one takes 3.
     crosswalk: { gap: 3, depth: 10, stripe: 2, space: 6 },
+    // The round on a block's corner, px (October 2026).
+    fillet: 12,
     clearance: 48, // px from any road's edge to the headline block
   },
 
   layout: {
-    // The wide map covers the whole hero, with the copy in its left half.
-    // Below this (phones) the roads move to a band under the CTAs
-    // (Hero.css). CSS and JS share this query, so the map on screen and the
-    // map the traffic drives never disagree.
-    wideQuery: '(min-width: 768px)',
+    // From heroQuery the roads cover the whole hero, with the copy in its
+    // left half, and Drive is offered. Below it (phones) the roads move to a
+    // band under the subhead, with the buttons inside it (Hero.css). From
+    // wideQuery that's the wide map's six columns; between the two, the
+    // medium map's four, so a tablet's or a small laptop's blocks aren't
+    // squeezed (October 2026). CSS and JS share these queries, and each map's
+    // JSON carries its own, so the map on screen and the map the traffic
+    // drives never disagree.
+    heroQuery: '(min-width: 768px)',
+    wideQuery: '(min-width: 1200px)',
     // How long the hero has to stop resizing before the city re-measures.
     resizeDebounce: 150, // ms
     // How far each map is zoomed out: every road size above, and from Phase
     // 3 the cars, times this. The phone band is small enough that full-size
     // roads left almost no road between one junction and the next.
-    zoom: { wide: 1, compact: 0.6 },
+    zoom: { wide: 1, medium: 1, compact: 0.6 },
   },
 
   // Ambient traffic (engine/traffic.js). Speeds, accelerations and gaps are
@@ -61,7 +68,9 @@ export const CONFIG = {
     pxPerCar: 90_000, // one car per this many px² of the layout's box
     min: 6,
     max: 16,
-    compactMin: 4, // six cars in a 360×240 band is a jam
+    // Phones: the uniform grid (October 2026) has room for six, enough to
+    // keep cars going round the buttons. The merged map's band jammed at six.
+    compactMin: 6,
     cruiseKmh: [36, 44], // each car picks its own cruise from this range
     turnKmh: 15,
     accel: 2.5, // m/s²

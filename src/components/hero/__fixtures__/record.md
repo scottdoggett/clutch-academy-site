@@ -65,9 +65,13 @@ window.__rows = []
     }
     const row = { viewport: [w, h], hero: [Math.round(hb.width), Math.round(hb.height)] }
     row.copy = rect(d.querySelector('.hero__copy'))
-    // Phones only: the street band the compact map is drawn in.
+    // Phones only: the street band the compact map is drawn in, and the two
+    // buttons that sit inside it.
     const band = d.querySelector('.hero__streets')
-    if (getComputedStyle(band).display !== 'none') row.band = rect(band)
+    if (getComputedStyle(band).display !== 'none') {
+      row.band = rect(band)
+      row.ctas = [...d.querySelectorAll('.hero__ctas .btn')].map(rect)
+    }
     window.__rows.push(row)
     f.remove()
   }
