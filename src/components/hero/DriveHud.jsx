@@ -27,7 +27,8 @@ const round = (v) => Math.round(v * 10) / 10
 //   revs inside with the redline.
 // - The dock, in the middle. The keys show along its top when driving
 //   starts and when the mode changes, then fade; below them, always, the
-//   Auto / Manual switch and Stop. Focus lands on the dock, labelled
+//   gearbox switch (Automatic and Manual, each its own button, a white thumb
+//   on the one in use) and Stop. Focus lands on the dock, labelled
 //   "Driving", and the switch and Stop are what screen readers get.
 // - The gear shifter, in the bottom-right corner, large: its knob travels
 //   the H-pattern, the gear sits beside it as a numeral, and in manual a
@@ -42,7 +43,7 @@ const round = (v) => Math.round(v * 10) / 10
 // clutch lamp are written straight to the DOM through the refs, so React
 // re-renders only when the gear, the mode or the engine's state changes.
 const DriveHud = forwardRef(function DriveHud(
-  { gear, mode, off, grinding, hint, speed, speedArc, revs, redline, clutch, onToggleMode, onExit },
+  { gear, mode, off, grinding, hint, speed, speedArc, revs, redline, clutch, onMode, onExit },
   ref,
 ) {
   const manual = mode === 'manual'
@@ -95,17 +96,24 @@ const DriveHud = forwardRef(function DriveHud(
           {hint && <ControlsHint mode={mode} />}
         </div>
         <div className="dock__bar">
-          <button
-            type="button"
-            className="dock__mode"
-            aria-label={manual ? 'Manual gearbox. Switch to automatic' : 'Automatic gearbox. Switch to manual'}
-            aria-keyshortcuts="M"
-            onClick={onToggleMode}
-          >
-            <span data-on={!manual || undefined}>Auto</span>
-            <span data-on={manual || undefined}>Manual</span>
-            <kbd aria-hidden="true">M</kbd>
-          </button>
+          <div className="dock__gearbox" role="group" aria-label="Gearbox" data-mode={mode}>
+            <button
+              type="button"
+              aria-pressed={!manual}
+              aria-keyshortcuts={manual ? 'M' : undefined}
+              onClick={() => onMode('auto')}
+            >
+              Automatic
+            </button>
+            <button
+              type="button"
+              aria-pressed={manual}
+              aria-keyshortcuts={manual ? undefined : 'M'}
+              onClick={() => onMode('manual')}
+            >
+              Manual
+            </button>
+          </div>
           <button
             type="button"
             className="dock__stop"

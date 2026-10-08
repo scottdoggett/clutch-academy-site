@@ -425,8 +425,10 @@ export default function HeroStage() {
     [flashHint, grind],
   )
 
-  const toggleMode = () => {
-    engineRef.current?.setDriveMode(hud.mode === 'auto' ? 'manual' : 'auto')
+  // The dock's gearbox switch: each option picks its own mode, so pressing
+  // the one already in use does nothing. M still toggles (drive/input.js).
+  const pickMode = (next) => {
+    if (next !== hud.mode) engineRef.current?.setDriveMode(next)
   }
 
   // Whether this screen can drive, watched live. If it stops being able to
@@ -539,7 +541,7 @@ export default function HeroStage() {
             speed={speedRef}
             speedArc={speedArcRef}
             clutch={clutchRef}
-            onToggleMode={toggleMode}
+            onMode={pickMode}
             onExit={exit}
           />,
           layer,

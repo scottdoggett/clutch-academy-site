@@ -233,7 +233,7 @@
 }
 
 /* ---------- The dock, in the middle of the bottom ------------------------
-   The keys on top while they show, the Auto / Manual switch and Stop below,
+   The keys on top while they show, the gearbox switch and Stop below,
    centred. Nothing here moves when the keys go. It keeps clear of the
    instruments in the corners, and its keys wrap in a narrow window. */
 .dock {
@@ -309,7 +309,7 @@
   gap: 2px;
 }
 
-/* The bar, a pill of the same glass: the mode switch, and Stop. */
+/* The bar, a pill of the same glass: the gearbox switch, and Stop. */
 .dock__bar {
   display: flex;
   align-items: center;
@@ -318,12 +318,47 @@
   border-radius: 999px;
 }
 
-.dock__mode,
+/* The gearbox switch: Automatic and Manual side by side, the same width,
+   each its own button, and a white thumb under the one in use. The thumb
+   slides across on a change, the one movement here; under reduced motion
+   it jumps. M still switches (the keys above say so, in words): a keycap
+   on the switch itself read as shorthand for Manual. */
+.dock__gearbox {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 2px;
+}
+
+.dock__gearbox::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc(50% - 2px);
+  border-radius: 999px;
+  background-color: var(--white);
+  transition: none;
+}
+
+.dock__gearbox[data-mode='manual']::before {
+  transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dock__gearbox::before {
+    transition: transform 0.2s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+}
+
+.dock__gearbox button,
 .dock__stop {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 32px;
+  justify-content: center;
+  border: 0;
   border-radius: 999px;
   font-family: var(--font-display);
   font-weight: 700;
@@ -331,49 +366,42 @@
   cursor: pointer;
 }
 
-/* 44px hit areas around the 32px controls. */
-.dock__mode::before,
+.dock__gearbox button {
+  height: 28px;
+  padding: 0 0.875rem;
+  background: none;
+  color: var(--cream);
+  transition: color var(--transition-reduced) ease;
+}
+
+.dock__gearbox button[aria-pressed='true'] {
+  color: var(--red-primary);
+  cursor: default;
+}
+
+.dock__gearbox button[aria-pressed='false']:hover {
+  color: var(--white);
+}
+
+/* 44px hit areas around the controls: the switch's 28px options, which
+   meet in the middle, and Stop's 32px. */
+.dock__gearbox button::before,
 .dock__stop::before {
   content: '';
   position: absolute;
+  inset: -8px 0;
+}
+
+.dock__stop::before {
   inset: -6px -2px;
-}
-
-.dock__mode {
-  gap: 2px;
-  padding: 2px 0.375rem 2px 2px;
-  border: 0;
-  background: none;
-  color: var(--cream);
-}
-
-.dock__mode span {
-  padding: 0 0.75rem;
-  line-height: 28px;
-  border-radius: 999px;
-  transition: background-color var(--transition-reduced) ease,
-    color var(--transition-reduced) ease;
-}
-
-.dock__mode span[data-on] {
-  background-color: var(--white);
-  color: var(--red-primary);
-}
-
-.dock__mode kbd {
-  margin-left: 0.25rem;
-}
-
-.dock__mode:hover {
-  color: var(--white);
 }
 
 /* Stop, the one white control: the way out should be the easiest thing
    to find. */
 .dock__stop {
   gap: 0.5rem;
+  height: 32px;
   padding: 0 1rem 0 0.375rem;
-  border: 0;
   background-color: var(--white);
   color: var(--red-primary);
   transition: background-color var(--transition-reduced) ease;
@@ -388,7 +416,7 @@
   background-color: var(--cream);
 }
 
-.dock__mode:focus-visible,
+.dock__gearbox button:focus-visible,
 .dock__stop:focus-visible {
   outline: 2px solid var(--white);
   outline-offset: 3px;
