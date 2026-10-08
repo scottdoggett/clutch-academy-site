@@ -12,7 +12,7 @@ first draft was accepted, and the open questions were answered the same day
 (§Decisions). **Phases 1 to 6 are built, committed and pushed**: the roads
 (Phases 1 and 2), ambient traffic (3), the drivable black car (4), the
 gearbox (5), and knocks with smoke and sparks (6), with a run of changes
-Scott asked for along the way (§Decisions 14 to 28). Only Phase 7 is left.
+Scott asked for along the way (§Decisions 14 to 33). Only Phase 7 is left.
 If you're picking this up, read §Handoff first.
 
 Legend as in `README.md`: ✅ decided, 🟡 recommended, ❓ open, 📎 pending asset.
@@ -48,15 +48,31 @@ for Phase 7.
   anti-cascade rule and smoke, with sparks and tyre smoke added. Fire was
   built and taken out the same day (§Decisions 27 and 28, §Phase 6 as
   built).
+- **After Phase 6**: the dock's Auto / Manual toggle became a gearbox
+  switch of two buttons, Automatic and Manual, at Scott's asking on
+  September 25 (§Decisions 29). The session that built it ended before it
+  was checked in a browser or shown to him, so it was committed on October
+  7 unreviewed.
+- **October 8**: the maps are uniform grids, at Sam's asking (§Decisions
+  30), and on phones the two buttons sit inside the grid, one to a block,
+  with cars driving round them (§Decisions 31). Then, in Scott's review:
+  below 1200px a medium map with fewer, wider columns so the blocks aren't
+  squeezed, and one row less on phones (§Decisions 32). Then the roads'
+  look: of six tried side by side, Scott picked rounded block corners and
+  grey markings (§Decisions 33). The grids await his next look (§Open
+  questions 9).
 - Commits: Phases 1 and 2 as `8bd1a72` and `f922e2e`; Phases 3 to 5 as
   `14bdbd5` and `1d5b5a0`; the whole page as `cd5517f` and `f2a72f4`; the
   knob fix, the tyre marks and the treadmill as `fb7ab4c`, `88a81bf` and
   `29a724f`; the dash, the new end to a drive and Phase 6 as `a6143e3` and
-  `107ecab`; and this handoff after them. All pushed. Scott usually pushes
+  `107ecab`; this handoff after them; the gearbox switch as `26383da`; and
+  October 8's grids, phone buttons, resize fix and road look as `19d0028`.
+  All pushed. Scott usually pushes
   himself; the HTTPS push command, for when he asks for a push from here,
   is below.
 - What exists: `src/components/hero/`, which holds `config.js`, `graph.js`,
-  `layout.js`, `layouts/wide.json` and `compact.json`, `RoadLayer.jsx`,
+  `layout.js`, `layouts/` (`wide.json`, `medium.json` and `compact.json`),
+  `RoadLayer.jsx` and `RoadLayer.css`,
   `HeroStage.jsx`, `DriveButton.jsx`, `DriveHud.jsx` and `DriveHud.css`,
   `GearGate.jsx` and `gate.js`, `ControlsHint.jsx`, `engine/` (`index.js`,
   `render.js`, `traffic.js`, `marks.js`, `particles.js`), `drive/`
@@ -64,7 +80,7 @@ for Phase 7.
   `tread.js`, `recover.js`, `effects.js`), the tests and the fixture. The
   hero markup and CSS are in `src/components/home/Hero.jsx` and `Hero.css`,
   and the treadmill's meeting point with the reviews strip is
-  `src/lib/treadmill.js`. `npm test` runs 92 tests, all passing. Lint and
+  `src/lib/treadmill.js`. `npm test` runs 96 tests, all passing. Lint and
   build are clean.
 - planck.js 1.5.0 is installed, and only `drive/` imports it.
 - The first prototype of this feature, a different design, is gone: saved
@@ -97,7 +113,8 @@ Under reduced motion the cars are drawn parked and nothing moves.
   event and an idle moment, only where WebGL2 exists, since three.js r186 is
   WebGL2 only. It hands the engine the map from its existing debounced
   resize check, including any segments the headline check hid. The canvas
-  covers the hero on the wide map and `.hero__streets` on phones. The cars
+  covers the hero on the wide and medium maps and `.hero__streets` on
+  phones. The cars
   fade in once, over `DUR_BASE`, after the hero's entrance; under
   `gsap.matchMedia(MOTION_OK)` they play, and when reduced motion switches on
   they go back to the seeded start and stop.
@@ -162,7 +179,8 @@ traffic.
   growing from 16px to 40px and fading over a second. Under reduced motion
   it holds its size for the second instead.
 - **`HeroStage.jsx`** shows the Drive pill once the cars are showing, on
-  screens with a fine pointer that can hover and the wide map, watched live.
+  screens with a fine pointer that can hover and a whole-hero map (wide or
+  medium, 768px up), watched live.
   Hover or focus starts loading the drive chunk; a press sends one GA4
   `hero_drive` event and hands the car over. Focus moves to the driving
   panel in the same commit that swaps the pill for it, and comes back to
@@ -388,7 +406,8 @@ with a clutch bar above the car, and then, as built:
   thin arc of revs inside with the redline.
 - **The dock**, in the middle of the bottom: the keys along the top when a
   drive starts or the mode changes, fading after 6s, and below them,
-  always, the Auto / Manual switch and Stop. Focus lands on it.
+  always, the gearbox switch (Automatic and Manual, since §Decisions 29)
+  and Stop. Focus lands on it.
 - **The gear shifter**, in the bottom-right corner, large: its knob
   travels the H-pattern, the gear sits beside it as a numeral, and in
   manual a lamp under the numeral lights while the clutch is down.
@@ -448,7 +467,6 @@ chain of knocks clears within 15s of the last. In 28 rams at full throttle,
 In Chrome, a rammed car knocked across a junction with sparks.
 
 ### Open questions
-### Open questions
 
 1. **Which gearbox mode first?** Automatic, until a visitor picks. It's the
    easier start; manual is the school's whole point. One line in
@@ -470,7 +488,14 @@ In Chrome, a rammed car knocked across a junction with sparks.
    A light outline would fix it if it bothers him.
 7. **The follow's feel**: the zone (a fifth of the window), the push and the
    coast are in `CONFIG.follow`, tuned by numbers, not by hand.
-8. Settled, for the record: the side street's short blocks (§Decisions 17).
+8. **The gearbox switch** (§Decisions 29): built but not yet seen by Scott,
+   nor checked in a browser. Two buttons with a sliding thumb, and M named
+   in the keys rather than on the switch.
+9. **The uniform grids and the phone buttons** (§Decisions 30 to 32): the
+   1200px switch between six columns and four, the blocks still tall on a
+   portrait tablet (169×256px at 768×1024), six cars on the phone band's two
+   rows, and the 48px of red kept between the subhead and the first road.
+10. Settled, for the record: the side street's short blocks (§Decisions 17).
    In windows about 600 to 730px tall, a car stopped beside it still sits on
    the zebra crossing, and those blocks have no centre ticks.
 
@@ -623,6 +648,18 @@ Traps:
   saw it; the hidden tab couldn't, since its tweens never start. The effect
   now sets a `live` flag false before reverting, and `onUpdate` checks it.
   Any tween that writes somewhere from `onUpdate` needs the same.
+- **A tween made in a GSAP callback belongs to the callback's context.**
+  GSAP runs a timeline's callbacks inside the context the timeline was made
+  in, so anything created there is filed under it. The hero's settled event
+  fires from the hero timeline's onComplete, in SiteMotion's matchMedia
+  context, so the cars' fade-in landed there. That context reverts and
+  re-runs whenever the window crosses 768px or 1024px (its `small` and
+  `desktop` conditions), which rewound the fade and left the cars hidden
+  until a reload (fixed October 8). The fade is now a named method of
+  HeroStage's own context (`ctx.add('fadeIn', ...)`), called a microtask
+  after the event: called inside the callback, GSAP would nest HeroStage's
+  context in SiteMotion's, and its revert would park the traffic. Anything
+  else that animates on `hero:settled` needs the same.
 - **Knocks take two steps.** planck can't change a body during a step, so
   the pre-solve callback only lets the contact through and queues the car;
   it becomes a dynamic body after `world.step()`. The world manifold's
@@ -736,10 +773,11 @@ sides and 40px of its bottom, inside the brief's 48px clearance.
   of it puts its right edge exactly on the hero's centre line at every width.
   The headline comes down to fit: `clamp(2.25rem, 4.4vw, 4.5rem)`, two lines
   up to about 1500px and three above. At 1920px that's 72px, down from 96px.
-- **Below 768px, the hero grows a street band under the CTAs** and the roads
-  live there. On phones the copy is a size smaller and the two buttons share
-  a row (revised September 24), which roughly halves the copy's height and
-  gives the band the room. Headline `clamp(2.25rem, 10.5vw, 3.25rem)`, 41px at
+- **Below 768px, the hero grows a street band under the subhead** and the
+  roads live there, with the two buttons inside it, one to a block (since
+  October 8, §Decisions 31; until then the buttons shared a row above the
+  band). On phones the copy is a size smaller, which roughly halves its
+  height and gives the band the room. Headline `clamp(2.25rem, 10.5vw, 3.25rem)`, 41px at
   390px; subhead 16px; eyebrow 12px, one line from 360px up.
 
 After the rework, in Chrome on the dev server, after fonts loaded. The full
@@ -796,33 +834,42 @@ exactly.
 
 ## Road layout
 
-### Two layouts
+### Three layouts
 
-✅ Two fixed layouts, chosen by the same media query in CSS and JS so the road
-layer and the traffic never disagree. The query lives in `config.js` as
-`layout.wideQuery`, and a test checks the JSON and the CSS agree with it.
+✅ Three fixed layouts since October 8 (two before; §Decisions 32), chosen
+by the same media queries in CSS and JS so the road layer and the traffic
+never disagree. The queries live in `config.js` as `layout.heroQuery`
+(768px up, a map across the whole hero) and `layout.wideQuery` (1200px up,
+the wide map), and each layout's JSON carries its own. A test checks the
+config, the JSON and `Hero.css` agree.
 
 | Layout | When | Drawn across |
 |---|---|---|
-| `wide` | `(min-width: 768px)` | The whole hero. The copy keeps to the left half. |
-| `compact` | Below 768px, phones | A street band under the CTAs, not the whole hero |
+| `wide` | `(min-width: 1200px)` | The whole hero. The copy keeps to the left half. Six columns. |
+| `medium` | `(min-width: 768px) and (max-width: 1199px)` | The same, with four columns, wider apart |
+| `compact` | Below 768px, phones | A street band under the subhead, with the buttons inside it, not the whole hero |
 
 JS reads `matchMedia` for the choice, not the hero's measured width. The media
 query includes the scrollbar and the hero's width doesn't, so measuring would
 disagree with CSS for about 15px either side of the breakpoint.
 
-**`wide`.** One map from a 768px tablet to a 2560px monitor. It works because
-the copy's right edge is on the centre line at every one of those widths
-(§Measured). The first draft put the breakpoint at 1024px, with tablets on the
+**`wide` and `medium`.** Between them they cover a 768px tablet to a
+2560px monitor, the same way: the copy's right edge is on the centre line at
+every one of those widths (§Measured). Until October 8 the wide map did it
+alone; the medium map takes 768px to 1199px so the grid's columns aren't
+squeezed there (§The medium map). The first draft put the breakpoint at 1024px, with tablets on the
 street band. In review that looked wrong: tablets didn't match either the wider
 or the narrower views. Tablets now get the desktop treatment.
 
 **`compact`.** ✅ The hero grows a street band, `.hero__streets`, stacked as
-a column: the copy, then the band, always 240px tall (`--hero-band` in
-`Hero.css`). The hero is exactly that tall and no taller, so on phones it
-doesn't fill the first screen the way it does on desktop. The band's top
-margin is the 48px clearance, so it starts exactly 48px under the CTAs at
-every size, by construction, with no measuring. It's full-bleed: its side
+a column: the copy, then the band, always `band` px tall, 164 since
+October 8 (`compact.json`; Hero.jsx sets `--hero-band` from it). The hero
+is exactly that tall and no taller, so on phones it doesn't fill the first
+screen the way it does on desktop. The band's top margin is the 48px
+clearance, so it starts exactly 48px under the subhead at every size, by
+construction, with no measuring. The two buttons sit inside it
+(§The phone map); they're out of the copy's flow, so the copy box ends at
+the subhead. It's full-bleed: its side
 margins cancel `.section`'s padding, which is now published as
 `--section-pad-x` and `--section-pad-y` in `globals.css` for this. The
 layout is normalised to the band, not the hero. The road layer and the car
@@ -832,7 +879,10 @@ canvas cover only the band, and there's no driving.
 first screen and the band took whatever height the copy left, never less
 than 240px. That ran from 240px on anything shorter than about 700px to
 419px on a 430×932 phone and 502px on a 600px tablet. Scott liked the band
-at its smallest and not how long it got, so it's that height always.
+at its smallest and not how long it got, so it's that height always. On
+October 8 it grew to 260px to take the buttons, which used to sit above it,
+then lost a row of blocks in review, for 164px; the hero as a whole is
+140px shorter than before (537px at 390×844, from 677px).
 
 ### Data
 
@@ -844,110 +894,165 @@ no TypeScript: `src/components/hero/layouts/wide.json` and `compact.json`.
 {
   "name": "wide",
   "media": "(min-width: 768px)",
-  "baseGrid": { "xs": [0.595, 0.74, 0.895], "ys": [0.13, 0.3, 0.55, 0.715, 0.93] },
+  "grid": { "xs": [0.15, 0.3, 0.45, 0.6, 0.75, 0.9], "ys": [0.13, 0.39667, 0.66333, 0.93] },
   "reserve": { "x0": 0, "y0": 0.2, "x1": 0.56, "y1": 0.85 },
   "nodes": [
-    { "id": "t1", "x": 0.595, "y": -0.06 },
-    { "id": "c11", "x": 0.595, "y": 0.13 }
+    { "id": "t4", "x": 0.6, "y": -0.06 },
+    { "id": "c41", "x": 0.6, "y": 0.13 }
   ],
   "roads": [
-    { "id": "v1", "kind": "main", "nodes": ["t1", "c11", "c12", "j1", "c13", "c14", "c15", "b1"] },
-    { "id": "ss1", "kind": "side", "nodes": ["j1", "j3"] }
+    { "id": "v4", "kind": "main", "nodes": ["t4", "c41", "c42", "c43", "c44", "b4"] },
+    { "id": "v1n", "kind": "main", "nodes": ["t1", "c11"] }
   ]
 }
 ```
 
 - A road is a polyline through node ids. Consecutive pairs are segments, and
   every segment is horizontal or vertical. The grid is Toronto's, no diagonals.
-  A segment's id is its road id and index, `v1.3`, stable at any size.
+  A segment's id is its road id and index, `v4.3`, stable at any size. In
+  `wide`, a junction's id is its column and row, `c42`.
 - A node outside 0–1 is a **portal**, an off-screen end where traffic leaves
   and enters. Every portal is at least a car length, 24px, off screen at every
   recorded size. In `wide` that's −0.06 and 1.06 vertically and −0.04 and 1.04
   horizontally. The compact band is short, so its bottom portals sit at 1.25.
-- `baseGrid` records the main-road lines the map started from, so the tests can
-  report how much was removed and how much spacing varies.
+- `grid` records the wide map's column and row lines, so the tests can check
+  they're evenly spaced and that every junction sits on them. Until October
+  8 it was `baseGrid`, the uneven lines the merged map started from
+  (§Decisions 30).
 - `reserve` is the headline envelope in normalised terms. No node or segment
   may enter it. The real guarantee is the pixel check against the fixture.
 - An `about` string in each file says what the map is and what was removed.
 
 ### The wide map
 
-Downtown is everything east of x 0.595. Main roads cross the whole hero at
-the top, y 0.13, and the bottom, y 0.93. The headline sits in one big open
-block between them.
+✅ **A uniform grid since October 8** (§Decisions 30): every column the same
+distance apart and every row the same distance apart, so every block in the
+city is the same size. The headline sits in one big open block, the only
+break in the pattern.
 
-- **Base grid:** main roads at x 0.595, 0.74 and 0.895, and y 0.13, 0.30,
-  0.55, 0.715 and 0.93. Vertical spacing varies from −17% to +25% of the mean.
-- **Removed:** 6 of the 22 interior segments, 27%. V2 is gone between H2 and
-  H3 and between H4 and H5, V3 between H4 and H5, H2 and H3 between V2 and
-  V3, and H4 between V1 and V2. The blocks merge into two L-shapes, a tall
-  block the height of three, and a long one across the bottom.
-- **Side streets, one:** across the merged middle block from V1 to V3.
-- **Off V3 to the right edge:** two short roads, at y 0.3 and 0.715.
-- **Left of the copy:** one street off the top road to the top edge, and one
-  off the bottom road to the bottom edge, at x 0.29 and 0.17 so they don't
-  line up. They fill the left side on wide screens without entering the
-  block.
-- **Junctions:** 4 crosses, 9 Ts and 3 corners. 13 portals, 31 segments,
-  62 lanes.
+- **From 1200px** (`(min-width: 1200px)`); the medium map below that.
+- **Columns** every 0.15 of the width, at x 0.15, 0.3, 0.45, 0.6, 0.75 and
+  0.9. The next ones would sit at 0 and 1.05, on and past the edges, so the
+  grid reads as running on off screen.
+- **Rows** every 0.267 of the height, at y 0.13, 0.397, 0.663 and 0.93. The
+  top and bottom rows are where the headline clearance allows (§Keeping
+  clear of the headline), and the two between split the gap evenly. Three
+  rows of blocks rather than four, so a block is close to square on a laptop
+  or desktop hero (216×191px at 1440×780, 288×268 at 1920×1080) and the
+  map stays well short of the "too busy" the September 24 review found.
+- **Downtown**, from x 0.6 east, is the whole grid: every column runs from
+  the top edge to the bottom edge and every row from x 0.6 off the right
+  edge.
+- **West of downtown** the columns keep the same spacing, but only above the
+  top road and below the bottom road. The top and bottom roads cross the
+  whole hero. Nothing else enters the headline's block.
+- **No side streets**, and no corners.
+- **Junctions:** 10 crosses and 8 Ts. 18 portals, 41 segments, 82 lanes.
+- **Measured** at every recorded size from 1200px: the tightest gap between
+  parallel roads is 103px (h2 and h3 at 1280×600), the shortest lane 50px,
+  and every run between crossings has its ticks, the shortest 37px (v1s at
+  1280×600). Below 1200px the medium map takes over (§The medium map).
+- `layouts/wide.json` is generated from the lines, so the ids follow them:
+  `c42` is column 4, row 2; `t`, `b`, `l` and `r` are the portals off each
+  edge; `h2` is row 2 and `v4` column 4, and west of downtown each column is
+  two stubs, `v1n` and `v1s`.
 
-✅ **Thinned in review, September 24:** the first version read as slightly
-too busy, and four roads came out. They were all side streets or stubs, not
-base-grid roads, so the grid is still 27% removed and inside the brief's 20
-to 30%. One more base-grid segment would have taken it to 32%. The four:
+**Before October 8**, the map followed the brief: a base grid whose spacing
+varied by up to ±30% (x 0.595, 0.74 and 0.895; y 0.13, 0.3, 0.55, 0.715 and
+0.93), with 27% of its interior segments removed so blocks merged into
+L-shapes, one side street across the merged middle block, two short roads
+off to the right edge, and two streets left of the copy at x 0.29 and 0.17
+so they didn't line up. 4 crosses, 9 Ts and 3 corners. It was thinned twice
+in review on September 24 as too busy (§Decisions 14 and 15): from 3 side
+streets and 42 segments to 1 and 31. Sam found the result too random.
 
-- the side street that stood in for H4 between V1 and V2, which leaves V1 one
-  long run from H3 to the bottom road;
-- the side street down the long bottom block, between V2 and V3, whose short
-  blocks at tablet widths couldn't hold a stopped car behind its crossings;
-- V2's stub below the bottom road;
-- the second street off the bottom road left of the copy, at x 0.38.
+### The medium map
 
-Then a fifth, in the second revision (§Decisions 15): the middle one of the
-three short roads off V3 to the right edge, at y 0.55. The first version had
-3 side streets, 16 Ts and 2 corners, 16 portals and 42 segments.
+✅ **From 768px to 1199px since October 8** (§Decisions 32). On a smaller
+screen the wide map's six columns squeezed together: 115px apart at a
+768px tablet and 154px at 1024px, so the blocks were narrow and tall. Scott
+wanted fewer columns past a threshold.
 
-A fourth, vertical side street was drawn and cut. At 768px the downtown is
-only 311px across, and it left slivers of block 22px wide.
+- **Columns** every 0.22 of the width, at x 0.18, 0.4, 0.62 and 0.84: two
+  downtown and two west of it. The next ones would sit at −0.04 and 1.06,
+  both off screen at every width the map is used. So the columns are 169px
+  apart at 768px, 225px at 1024px and 264px at 1199px.
+- **Rows** the same as the wide map's, at y 0.13, 0.397, 0.663 and 0.93.
+- **The same rules otherwise**: downtown, from x 0.62 east, is the whole
+  grid; west of it the columns run only above the top road and below the
+  bottom one; no side streets; nothing in `reserve`. The first column east
+  of the copy needs 0.589 at 768px, and 0.62 clears it.
+- **Junctions:** 6 crosses and 6 Ts. 14 portals, 28 segments, 56 lanes.
+- **The switch at 1200px**, the site column's width: there the wide map's
+  columns are 180px apart, more than the medium map's at 768px. A test
+  holds every recorded size to columns at least 165px apart.
+- **Measured:** the tightest gap between parallel roads is 129px, at
+  768×1024. The three short windows (`short.sizes`) are all under 1200px,
+  so they get this map; the headline check there does what it did on the
+  wide map (§Room for a car), and the shortest lane is 37px against the
+  27px a car needs.
 
 ### The phone map
 
-Revised September 24: the first phone map was one main road with three
-evenly spaced streets off it, and read as too symmetrical.
+✅ **A uniform grid with the buttons inside it, since October 8**
+(§Decisions 31). Scott found the phone hero's buttons, roads and spacing
+off, and wanted the buttons inside the roads with cars going round them;
+of three layouts he picked one button to a block.
 
-- **Main roads:** one across the top of the band at y 0.16, and one across
-  the lower right at y 0.74, from the second street to the right edge.
-- **Streets down**, at uneven x: 0.13 and 0.43 run to the bottom edge; 0.64
-  is a side street from the top road that becomes a main road where it
-  crosses the lower one and carries on off the bottom edge. So the grid jogs
-  instead of repeating.
-- **Side streets, one:** the one at x 0.64.
-- **Junctions:** 1 cross, 4 Ts. 6 portals, 11 segments.
-- ✅ **Thinned in review, September 24,** as slightly too busy. Two roads
-  came out: the street at x 0.87, which ran from the top road to the lower
-  one, and the short side street across the left block at y 0.46. The street
-  at x 0.64 stays, because it's the jog, and because without it the map
-  would have no cross. The first version had 8 Ts.
-- It has to work from a 320×240 band to a 767×240 one.
-- **Drawn zoomed out, at 0.6** (`CONFIG.layout.zoom.compact`). At full size the
-  roads crowded the band: the shortest block left 1.2px of road between its
-  two crossings. So every road size on the phone map is 0.6 of the desktop
-  one: 24px roads, the ticks and crossings to match, and from Phase 3 the
-  cars. Side streets were 14.4px until every road became one width
-  (§Decisions 15). The map itself is unchanged. Now the
-  shortest stretch between two crossings is 27.6px, every block has its
-  ticks, and the tightest gap between parallel roads is 43px.
+- **Columns** at x 0.08, 0.5 and 0.92: a street down each side, 8% in, and
+  one down the middle. The next columns would be well off screen.
+- **Two rows**, 96px apart, the first along the band's top edge (its top
+  edge flush with the band's): y 0.073 and 0.659 of the 164px band. So a
+  block is 72px tall, and the band ends 44px below the second row, with the
+  columns running off the bottom. A third row, and the 96px of band it
+  took, came out in review the same day to keep the hero compact
+  (§Decisions 32).
+- **The buttons** sit in the top row's two blocks, one each, either side of
+  the middle street (`ctas` in `compact.json`, the centre lines round
+  them). Hero.jsx publishes those and the road width as custom properties
+  and Hero.css places the buttons' box from them, against the hero, whose
+  bottom the band shares. Each button fills its block less a margin of
+  `clamp(6px, 2.5vw, 12px)` on every side. Below 480px both labels take two
+  lines ("Book a / Lesson", "See / Packages"), padded so they always break
+  alike; from 480px each fits on one. 94×56px at 320px wide, 120×53 at 390,
+  204×48 at 600: never under 44px tall.
+- **Nothing crosses the band's top edge**, so the subhead keeps its 48px
+  clearance by construction. Traffic comes in and leaves at the sides and
+  the bottom.
+- **Junctions:** 3 crosses, 3 Ts. 7 portals, 14 segments. No side streets.
+- **Six cars** (`CONFIG.traffic.compactMin`, from four), enough to keep
+  cars going round the buttons. The merged map's band jammed at six; the
+  grid has the room, and the 5-minute traffic test runs clean with them on
+  the two rows.
+- **Measured:** the tightest gap between parallel roads is 72px, between
+  the top two rows. Every block has its ticks.
+- It has to work from a 320×164 band to a 767×164 one. The tests check the
+  buttons against the measured fixture at every phone size: each inside a
+  block of its own, a road on all four sides, at least 6px clear of them.
+- **Drawn zoomed out, at 0.6** (`CONFIG.layout.zoom.compact`): 24px roads,
+  the ticks, crossings and cars to match. At full size the first phone map's
+  roads crowded the band.
+
+**Before October 8**, the phone map was deliberately irregular: a main road
+across the top of a 240px band and one across the lower right, three
+streets down at uneven x, one of them a side street that jogged, 1 cross
+and 4 Ts. It was revised twice on September 24, first because an even
+first draft read as too symmetrical, then thinned as too busy. The buttons
+shared a row above the band.
 
 ### Rules for the map
 
 ✅ From the brief, and asserted by tests where a test can check them:
 
-- Main roads come from a base grid whose spacing varies by up to ±30% from the
-  mean. Then 20–30% of interior segments are removed so blocks merge into larger,
-  uneven shapes. The percentage counts the downtown grid, since everything west
-  of it is removed for the headline anyway.
+- ✅ **Every map is a uniform grid** (§Decisions 30 and 31, replacing the
+  brief's rule): columns evenly spaced, rows evenly spaced, every junction on
+  the grid, nothing missing downtown, and west of downtown each column kept
+  above the top road and below the bottom one. Below 1200px the columns are
+  fewer and wider apart, never under 165px (§The medium map). The brief had a base grid
+  whose spacing varied by up to ±30% from the mean, with 20–30% of interior
+  segments removed so blocks merged into larger, uneven shapes.
 - Side streets cut through blocks and end on another road at both ends. No
-  side street runs off an edge. The brief made them 60% of main-road width;
+  side street runs off an edge. The wide map has none since October 8. The brief made them 60% of main-road width;
   ✅ since review on September 24 every road is one width (§Decisions 15),
   so a side street is the same white, the same width and the same ticks as
   any other road, and only the map data still calls it one.
@@ -957,10 +1062,13 @@ evenly spaced streets off it, and read as too symmetrical.
 - The graph is fully connected, and drivable that way: from every way in, a
   car can reach every way out without a U-turn, and no lane is a trap.
 - No road of any kind crosses the headline block, and every road edge stays at
-  least 48px from it.
+  least 48px from it. On phones since October 8 the block is the eyebrow,
+  headline and subhead: the buttons sit inside the roads on purpose, at
+  least 6px clear of them (§The phone map).
 - Every lane holds at least one car, and parallel roads leave at least a car
-  length of red between them, at every recorded size. The tightest is 27px,
-  between H2 and the side street in a 1280×600 window.
+  length of red between them, at every recorded size. The tightest is 72px,
+  between the phone map's two rows; on the wide map it's 103px, at
+  1280×600, and on the medium map 129px, at 768×1024.
 - Every visitor sees the same map on every load. The map keeps its shape on
   resize and never regenerates.
 
@@ -970,8 +1078,9 @@ evenly spaced streets off it, and read as too symmetrical.
 |---|---|
 | Main road | 40px, two 20px lanes. At 6px per metre that's 6.7m, two 3.3m lanes. 24px on the phone map (zoom 0.6). |
 | Side street | 40px, the same as a main road, since review (§Decisions 15). It was 24px, two 12px lanes. |
-| Centre ticks | Black, 2px wide, 8px long, 10px gaps, on both kinds of road |
-| Zebra crossings | ✅ Added in review: on every road into a cross or a T, a stack of black stripes across the full width of the road, 3px clear of the junction box and 10px long, each stripe running the way the road does. Stripes are 2px with 6px between, so every road takes 5. They started at 4px with 4px between and were thinned in review as too heavy; 2px matches the centre ticks. Corners have none, since traffic doesn't stop there. Cars stop behind them from Phase 3. They replaced grey stop lines across the right-hand half of the road, which were tried first the same day. |
+| Centre ticks | Grey (`--road-line`, `#8F8F8F`) since October 8, black before (§Decisions 33). 2px wide, 8px long, 10px gaps, on both kinds of road |
+| Zebra crossings | ✅ Added in review: on every road into a cross or a T, a stack of stripes, black until October 8 and light grey since (`--road-crossing`, `#CFCFCF`, §Decisions 33), across the full width of the road, 3px clear of the junction box and 10px long, each stripe running the way the road does. Stripes are 2px with 6px between, so every road takes 5. They started at 4px with 4px between and were thinned in review as too heavy; 2px matches the centre ticks. Corners have none, since traffic doesn't stop there. Cars stop behind them from Phase 3. They replaced grey stop lines across the right-hand half of the road, which were tried first the same day. |
+| Rounded corners | ✅ Since October 8 (§Decisions 33): every block corner where two roads meet at a junction is rounded, 12px, or 7.2px on the phone map. A round goes with either of its two roads when the headline check hides one. |
 
 ### Keeping clear of the headline
 
@@ -1018,10 +1127,10 @@ layer shows the full map, which is correct at every recorded size.
 ### Room for a car
 
 ✅ Added September 24, after the roads were approved. In a window too short
-for the whole wide map, the blocks either side of the side street get
-shorter than a car. That happens below about 600px of window height, which
-includes phones on their side: they're over 768px wide, so they get this
-map, and an 844×390 phone has a 488px hero. There the two crossings at
+for the whole wide map, the merged map's blocks either side of its side
+street got shorter than a car. That happened below about 600px of window
+height, which includes phones on their side: they're over 768px wide, so
+they get this map, and an 844×390 phone has a 488px hero. There the two crossings at
 either end of a block run into each other, and the traffic jams. A car let
 into a lane shorter than itself stops with its tail in the junction behind
 and holds it for good.
@@ -1032,11 +1141,20 @@ its half-metre clearance (27px), it hides one road: first a side street
 meeting a short lane, since that turns its junctions into plain straight
 road, then the short segment itself. It hides a road only if the map still
 passes `checkGraph()` and has fewer short lanes. At every recorded size it
-hides nothing. In the three short windows in the fixture (`short.sizes`:
-844×390, 932×430 and 1100×520) it hides the side street, on top of the two
-segments the headline check hides. The road layer drops its pieces the same
-way, which leaves a gap in the centre ticks where its junction was. Anything
-still too short goes to the console as a warning.
+hides nothing. Until October 8, in the three short windows in the fixture
+(`short.sizes`: 844×390, 932×430 and 1100×520), it hid the merged map's side
+street. Every lane of the uniform grid holds a car even there (the shortest
+is 37px against the 27px a car needs, on the street off the bottom at
+932×430), so the rule hides nothing in them either and is a safety net for
+windows shorter still. The road layer drops its pieces the same way,
+which leaves a gap in the centre ticks where its junction was. Anything still
+too short goes to the console as a warning.
+
+In those short windows the headline check still can't clear the copy: the top
+and bottom roads come within 48px of it, and stay, since without them the
+streets west of downtown would be dead ends. It hides what it can, so one
+street comes off the top and turns into the top road, and one comes up off
+the bottom into the bottom road, as on the merged map.
 
 The traffic has a safety net as well: it never lets a car into a lane it
 can't stop in with its tail clear of the box behind, and never lets one car
@@ -1052,7 +1170,7 @@ Every piece sits at a fraction of its box plus a pixel offset, from custom
 properties: `left: calc(var(--x) * 100% + var(--dx) * 1px)`, and the same for
 top, width and height. So a 40px road is 40px and a crossing sits 3px clear
 of its junction at any size, CSS rescales everything for free, and no
-JavaScript is involved. Four kinds of piece, painted in this order:
+JavaScript is involved. Five kinds of piece, painted in this order:
 
 | Piece | What it is |
 |---|---|
@@ -1060,16 +1178,15 @@ JavaScript is involved. Four kinds of piece, painted in this order:
 | Junction box | White, as big as the junction really is. With every road one width that's always a square, 40×40, or 24×24 on the phone map; while side streets were narrower it was 24×40 where one met a main road. Mostly it lands on road that's already white; at a corner it fills the outside of the bend. |
 | Centre ticks | One strip per segment, from the crossing (or box edge) at one end to the other. Each tile is one 8px tick with 5px of gap either side, and `background-repeat: space` draws only whole tiles and spreads them evenly. A tick is never cut short, and every run starts and ends the same way. A run too short for even one whole tick, as between two crossings on the shortest blocks, draws none: the strip is a size container, and a container query hides the `::before` the ticks are drawn on. The query is "narrower than 1em", with the strip's font size set to one tile, because a container query can't read a custom property but does measure em against the container. So it follows the map's zoom with no number repeated in the CSS. |
 | Zebra crossing | See §Rules for the map. Drawn the same way as the ticks, one stripe per tile. |
+| Round | A square the size of the round (`roads.fillet`, 12px) in each block corner between two roads at a junction, white less a quarter circle centred on its far corner, so the block's corner reads as rounded. Tested to sit exactly on the junction box's corner and on no road, at every recorded size. It carries both its roads (`data-seg`, `data-seg2`) and hides with either. |
 
 Tested at every recorded size: no tick touches a junction box or crossing,
-and no crossing touches another. 21 of the 832 tick runs across all those
-sizes are too short for a whole tick and draw none. They're all on the
-blocks either side of the side street between H2 and H3, on V1 above and
-below it and on V3 above it, in every window up to about 730px tall:
-900×700, 1000×700, 1280×600, 1280×680, 1280×720, 1366×660 and 1536×730.
-Every phone block has ticks. Before the maps were thinned (§Decisions 14)
-it was 24 of 1,144, and between the thinning and the side street's
-widening (§Decisions 15) it was 8 of 880. In Chrome, the first version's 241
+and no crossing touches another. Since the uniform grid (§Decisions 30),
+every one of the 1,072 tick runs across all those sizes has its ticks. The
+merged map had 21 of 832 too short for a whole tick, all on the blocks
+either side of its side street, in every window up to about 730px tall.
+Before it was thinned (§Decisions 14) it was 24 of 1,144, and between the
+thinning and the side street's widening (§Decisions 15) it was 8 of 880. In Chrome, the first version's 241
 pieces rendered within 0.007px of the geometry the tests check.
 
 **Why not the SVG.** The first build drew the roads as one inline SVG,
@@ -1082,8 +1199,11 @@ across, minus 12px", so neither exact tick runs nor crossings were possible.
 The rebuild also removes the one Safari risk the SVG had, dash lengths under
 non-scaling strokes. `background-repeat: space` has been in Safari for years.
 
-**Weight.** The two layers are 164 elements, 24KB of HTML, 1.7KB gzipped,
-down from 241 elements and 33KB before the maps were thinned. Next also
+**Weight.** The three layers are 439 elements, about 68KB of HTML and 3.6KB
+gzipped, since the rounded corners (October 8): the rounds are 110 of them,
+21KB and 1.1KB gzipped. With the medium map and before the rounds it was
+329 elements, 47KB and 2.5KB. The two merged maps' were 164
+elements and 24KB, down from 241 and 33KB before they were thinned. Next also
 embeds a server component's output in the hydration payload, so the first
 version grew the homepage about 4.8KB gzipped in all. Zero terms are left out of each
 piece's style to keep that down.
@@ -1292,8 +1412,8 @@ steering wheel of rim, hub and three spokes. ✅ Redesigned September 25
 and the label in white, a hairline border that goes solid white with a
 deeper red on hover and focus. Its name is "Test drive the black car with
 your keyboard". It shows once the cars are
-showing, only with a fine pointer that can hover and the wide map, watched
-live, and fades in with the cars.
+showing, only with a fine pointer that can hover and a whole-hero map (768px
+up), watched live, and fades in with the cars.
 
 ✅ On press, the black car leaves traffic and is under your control from
 wherever it is.
@@ -1310,10 +1430,13 @@ wherever it is.
 over a second; under reduced motion it holds its full size for the second
 instead. The starting gear is as above in manual; the automatic starts in 1st
 at a standstill (§Gearbox and engine). The hint shows the keys as keycaps,
-for the mode in use: the automatic's **WASD drive · M manual · Esc exit**, and
-the manual's list above with **M automatic** added. It shows at the start of
-a drive and again whenever the mode changes. A line only breaks between a key
-and the next key's word, never inside a pair.
+for the mode in use: the automatic's **WASD drive · M switch to manual**, and
+the manual's **WASD drive · ↑↓ shift · Shift hold for the clutch · M switch
+to automatic**. Esc isn't shown, since Stop sits under the keys with its
+own; the live region still says "Esc stops". (Until §Decisions 29 the
+dash's hint left M out too, with its keycap on the switch instead.) It
+shows at the start of a drive and again whenever the mode changes. A line
+only breaks between a key and the next key's word, never inside a pair.
 
 ### Keys
 
@@ -1324,7 +1447,7 @@ and the next key's word, never inside a pair.
 | A / D | Steer. 🟡 ← and → do the same. |
 | ↑ / ↓ | Shift up or down one step through R N 1 2 3 4 5 6. Key repeat is ignored. Manual only; the automatic ignores the lever. |
 | Shift, either one, held | Clutch. Manual only. |
-| M | ✅ Switch between the automatic and the manual box (§Decisions 19). Key repeat is ignored. The gear display has the same switch as a button. |
+| M | ✅ Switch between the automatic and the manual box (§Decisions 19). Key repeat is ignored. The dock has the same switch as two buttons, Automatic and Manual (§Decisions 29). |
 | Esc | Exit |
 
 - ✅ **Reverse.** The brief reads "S brake (and reverse throttle when in R)".
@@ -1858,12 +1981,18 @@ boxes round them:
   limiter. `aria-hidden`.
 - **The dock**, centred. Along its top, the keys for the mode in use,
   grouped with space rather than separators: the automatic's WASD, and the
-  manual's with the lever and "hold for the clutch". They show for 6s when
-  a drive starts and when the mode changes, and wrap in a narrow window to
-  keep clear of the corners. Below them, always, a bar with the Auto /
-  Manual switch (M) and Stop (Esc) on a glass pill, Stop the one white
-  control; the keys sit on a glass pill too. The bar doesn't move when the
-  keys go.
+  manual's with the lever and "hold for the clutch", and in both, M with
+  the mode it switches to. They show for 6s when a drive starts and when
+  the mode changes, and wrap in a narrow window to keep clear of the
+  corners. Below them, always, a bar with the gearbox switch and Stop
+  (Esc) on a glass pill, Stop the one white control; the keys sit on a
+  glass pill too. The bar doesn't move when the keys go.
+- **The gearbox switch** (§Decisions 29, replacing an Auto / Manual toggle
+  with an M keycap): Automatic and Manual side by side, the same width,
+  each its own button, and a white thumb under the one in use, its label
+  in the brand red. Pressing the one already in use does nothing. The
+  thumb slides across in 0.2s on a change; under reduced motion it jumps.
+  Each option is 28px tall, with a 44px hit area.
 - **The gear shifter**, 20px in from the bottom-right corner, on a glass pod
   rounded 30px all round: the
   H-pattern at 132×91 with its labels, the current one lit, and its knob
@@ -1871,12 +2000,16 @@ boxes round them:
   beside it, dimmed while stalled or waiting and the brand red on a grind
   (black would vanish into the glass); and in manual, a clutch lamp under
   the numeral, lit while the pedal is more than half down. `aria-hidden`.
-- **Focus** lands on the dock, labelled "Driving". The switch and Stop carry
-  `aria-keyshortcuts`, and the live region says M and Esc in words the
-  screen doesn't show twice.
+- **Focus** lands on the dock, labelled "Driving". The switch is a group
+  labelled "Gearbox", its two buttons marked pressed or not
+  (`aria-pressed`), and the one M would pick carries `aria-keyshortcuts`,
+  as does Stop. The live region says Esc in words, since the screen shows
+  it only on Stop.
 - **Motion**: the dock, the speedometer and the shifter rise and fade in,
-  and a grind shakes the shifter, all under `MOTION_OK`. The rest (the
-  speed, the revs, the clutch lamp) is written every frame, not animated.
+  and a grind shakes the shifter, all under `MOTION_OK`. The switch's
+  thumb is a CSS transition, only under `prefers-reduced-motion:
+  no-preference`. The rest (the speed, the revs, the clutch lamp) is
+  written every frame, not animated.
 
 ## Tyre marks
 
@@ -1986,15 +2119,17 @@ and 28).
 
 ✅ Touch devices and viewports under 768px get ambient traffic only. The Drive
 button isn't rendered at all. ✅ Built in Phase 4, ahead of Phase 7: the pill
-needs the wide map and a fine pointer that can hover, both watched live, and
+needs a whole-hero map (768px up, wide or medium) and a fine pointer that can
+hover, both watched live, and
 driving ends if either stops being true mid-drive.
 
 - ✅ "Touch" means not `(hover: hover) and (pointer: fine)`, the test the
   About gate uses. A touchscreen laptop with a trackpad still gets Drive. An iPad
   with a keyboard doesn't, because it reports a coarse pointer.
 - ✅ **Drive's line is the brief's 768px.** The first draft hid it below 1024px,
-  because tablets were on the street band. Tablets now get the wide map, so a
-  mouse-and-keyboard window from 768px up can drive.
+  because tablets were on the street band. Tablets now get a whole-hero map
+  (the medium one since October 8), so a mouse-and-keyboard window from
+  768px up can drive.
 
 ✅ With `prefers-reduced-motion`, the roads and parked cars are drawn and the
 traffic doesn't move. Drive still works, since pressing it is an explicit
@@ -2083,12 +2218,13 @@ disposed on unmount.
   and focus goes back to the button.
 - Contrast: the Test drive label is white on the hero red (it was solid
   `--chrome`, 4.64:1, as "Drive"). The keys' words use solid `--cream`.
-- Targets: the Test drive pill, Stop and the Auto / Manual switch are at
-  least 44px.
-- The speedometer and the shifter are `aria-hidden`. On the dock, the switch and
-  Stop are buttons with `aria-keyshortcuts`, and the switch's name says the
-  mode and what pressing it does. The keys are announced when a drive starts
-  and when the mode changes.
+- Targets: the Test drive pill, Stop and both options of the gearbox switch
+  are at least 44px.
+- The speedometer and the shifter are `aria-hidden`. On the dock, the
+  gearbox switch is a group labelled "Gearbox" of two buttons, Automatic and
+  Manual, the one in use pressed (`aria-pressed`); the other and Stop carry
+  `aria-keyshortcuts`. The keys are announced when a drive starts and when
+  the mode changes.
 - Reduced motion: above.
 - 🟡 Windows turns on Sticky Keys after Shift is pressed five times in a row,
   which is exactly what working a clutch looks like. A browser can't stop that.
@@ -2103,8 +2239,9 @@ src/components/hero/
   config.js           every tunable: density, road sizes, speeds, gearbox, marks, smoke, physics
   layouts/
     wide.json
+    medium.json
     compact.json
-    index.js          both maps, for components (the pure modules take a layout as an argument)
+    index.js          the three maps, for components (the pure modules take a layout as an argument)
   layout.js           pick a layout, scale to pixels, headline check and the hide rule   (pure)
   graph.js            nodes, lanes, junction kinds, movements, turn paths                (pure)
   RoadLayer.jsx       server component: one road layer per map, as positioned elements
@@ -2193,9 +2330,9 @@ export const CONFIG = {
   world:    { pxPerM: 6, step: 1 / 120, maxSteps: 8, seed: 20260924 },
   roads:    { main: 40, side: 40, tick: { width: 2, length: 8, gap: 10 },
               crosswalk: { gap: 3, depth: 10, stripe: 2, space: 6 }, clearance: 48 },
-  layout:   { wideQuery: '(min-width: 768px)', resizeDebounce: 150,
-              zoom: { wide: 1, compact: 0.6 } },
-  traffic:  { pxPerCar: 90_000, min: 6, max: 16, compactMin: 4,
+  layout:   { heroQuery: '(min-width: 768px)', wideQuery: '(min-width: 1200px)',
+              resizeDebounce: 150, zoom: { wide: 1, medium: 1, compact: 0.6 } },
+  traffic:  { pxPerCar: 90_000, min: 6, max: 16, compactMin: 6,
               cruiseKmh: [36, 44], turnKmh: 15, accel: 2.5, decel: 3.5, maxDecel: 8,
               headway: 1.2, stopGap: 1.5, dwell: 0.4, reroute: 6,
               lineGap: 1, boxClear: 0.5, lookahead: 50, blackTop: 0.35 },
@@ -2239,8 +2376,8 @@ read the layout JSON with `readFileSync` rather than an import, which avoids
 import-attribute differences between Node and the Next bundler. They lint
 clean under the existing `eslint.config.js`.
 
-**92 tests, all passing,** after Phase 6. `graph.test.js` has 13,
-`layout.test.js` 20, `engine/traffic.test.js` 12, `drive/drive.test.js`
+**96 tests, all passing,** since October 8 (92 after Phase 6; the uniform
+grids added three, and the rounded corners one). `graph.test.js` has 13, `layout.test.js` 24, `engine/traffic.test.js` 12, `drive/drive.test.js`
 14, `drive/knock.test.js` 3, `drive/gearbox.test.js` 12,
 `drive/follow.test.js` 7, `drive/tread.test.js` 5, `gate.test.js` 2 and
 `src/lib/treadmill.test.js` 4. The whole run takes about 3s, the traffic and drive tests in parallel.
@@ -2263,6 +2400,13 @@ Added, each checking something the brief requires:
   holds a car. Parallel roads leave at least a car length of red between them;
   the test prints the tightest. No node or segment enters `reserve`. The CSS
   breakpoint, the config query and the JSON agree.
+- **The grids** (since October 8, §Decisions 30 and 31): each map's columns
+  and rows are evenly spaced, every junction is on them, nothing is missing
+  downtown or on the phone map, and neither has a side street. On phones,
+  at every recorded size, each button sits in a block of its own with a
+  road on every side, at least 6px clear, and the band is the map's height.
+  From 768px, columns are at least 165px apart at every recorded size, and
+  each map's media query matches the config's and `Hero.css`'s.
 - **Road layer:** a road and a tick run for every segment, a box for every
   junction, a crossing on every road into a cross or T and none at corners.
   At every recorded size, no crossing leaves its road or touches a junction or
@@ -2542,6 +2686,57 @@ September 25:
     beyond being bumped, and the sparks. Fire, charring, the smoke burst at
     a crash and the black car's damage smoke are removed from the code;
     stall and tyre smoke stay.
+29. **The gearbox switch, two buttons and no keycap.** Scott, on September
+    25: "i dont like the M its not very clear". The dock's Auto / Manual
+    toggle, one button with an M keycap, became Automatic and Manual as two
+    buttons with a thumb under the one in use, and M moved into the keys
+    above as "M switch to manual" (or "to automatic"), like the other keys.
+    The keycap on the switch read as shorthand for Manual. M still switches
+    (`drive/input.js`); each button picks its own mode (`pickMode` in
+    `HeroStage.jsx`). 🟡 Not yet reviewed by Scott (§Open questions 8).
+30. **A uniform grid.** On October 8 Scott passed on that Sam doesn't like
+    the random pattern and wants a uniform grid, on every screen. The wide
+    map is now columns every 0.15 of the width and rows every 0.267 of the
+    height, with nothing removed downtown, no side streets, and the
+    headline in one open block (§The wide map). This reverses the brief's
+    merged grid, ±30% spacing and 20–30% of segments removed, and the side
+    streets; the tests now hold the map to the uniform grid instead. The
+    phone map followed in its own revision, with the buttons inside the
+    roads (§Decisions 31). A test that rams the nearest car to start a chain of knocks now
+    skips cars under the nav, which the grid's streets off the top made
+    common and the black car can't reach.
+31. **On phones, the buttons inside the roads.** Scott, the same day: the
+    phone hero's buttons, roads and spacing didn't feel right, and the
+    buttons should sit inside the roads with cars moving around them,
+    on phones only. Of three layouts (both buttons stacked in one block,
+    side by side in one wide block, or one to a block), he picked one to a
+    block. The phone map became a uniform grid of three columns and rows
+    every 96px, the buttons fill the top row's two blocks, and the band
+    grew from 240px to 260px to take them, which left the hero about 45px
+    shorter. Phones get six cars instead of four (§The phone map).
+32. **Fewer columns on smaller screens, one row less on phones.** Scott,
+    reviewing the same day: on desktop he didn't want the grid compressed
+    on smaller screens, and past a threshold there should be fewer columns;
+    on phones, one row fewer so it's more compact. From 1200px the wide map
+    keeps its six columns; from 768px to 1199px a new medium map has four,
+    0.22 of the width apart instead of 0.15, so a 768px tablet's columns
+    are 169px apart rather than 115 (§The medium map). The phone band lost
+    its empty middle row of blocks, from 260px to 164px; the buttons' row
+    is unchanged (§The phone map).
+33. **The roads' look: rounded corners and grey markings.** Scott, the same
+    day: he liked the roads but thought they could be better, and asked to
+    see variations. Five were built as CSS over the same road layer and
+    shown side by side, at 1440px and on a phone, with a picker in the dev
+    server: B, today's colours with rounded corners and no crossings; C,
+    rounded corners, grey markings, and a kerb and beige pavement round every
+    block; D, blush roads with a white centre line; and E, roads drawn as
+    their white edges only, with cream traffic. He asked for C without the
+    pavement and chose it: white roads, rounded block corners, the centre
+    line in grey and the zebra crossings in a lighter grey. The busyness was
+    mostly the black crossings, four ladders at every junction; in light
+    grey they read as texture. The picker and the other looks are gone. The
+    markings' greys are tokens (`--road-line`, `--road-crossing`) and the
+    round is `roads.fillet` in `config.js`.
 
 The Safari question about SVG dash lengths went away with the SVG. The
 questions still open are in §Handoff, §Open questions.

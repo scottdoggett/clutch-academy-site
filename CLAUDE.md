@@ -68,8 +68,12 @@ planning docs. **Don't work from anything in there.**
   lane on a crash, with sparks and smoke. **Phase 7** (performance and
   fallbacks) is what's left. The code is in `src/components/hero/`, the
   traffic in its lazy `engine/` chunk and the driving in its lazy `drive/`
-  chunk, tested with `npm test` (92 tests). The spec's §Handoff says where
-  it is, how Scott reviews, the open questions and what bit last time.
+  chunk, tested with `npm test` (96 tests). On October 8 the maps became
+  uniform grids at Sam's asking, with a medium map of fewer columns below
+  1200px, and on phones the two buttons moved inside the roads, one to a
+  block. The same day the roads got rounded block corners and grey
+  markings. The spec's §Handoff says where it is, how
+  Scott reviews, the open questions and what bit last time.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 

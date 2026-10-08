@@ -41,10 +41,13 @@ accepted on September 24.
   map fills the right. The headline comes down to fit, 72px at 1920px instead
   of 96px. On phones the hero is the copy, a size smaller with the two
   buttons on one row, then a street band 240px tall (fixed at that in the
-  Phase 3 review; it used to grow to fill the first screen). The roads are server-rendered
+  Phase 3 review; it used to grow to fill the first screen). Both maps
+  became uniform grids on October 8, with the phone buttons moved inside the
+  band (below). The roads are server-rendered
   positioned elements, so they're there with no JavaScript; centre ticks end
   in whole ticks at every junction, and every road into a cross or a T has a
-  thin black zebra crossing. The phone map is drawn zoomed out, every road
+  thin zebra crossing, black until October 8 and grey since, when the
+  blocks' corners were rounded (below). The phone map is drawn zoomed out, every road
   size at 0.6, so the blocks have room. A client check hides any road that
   comes within 48px of the copy; at all 32 measured sizes nothing needs
   hiding. 31 tests (`npm test`). Committed as `8bd1a72` and `f922e2e`, and
@@ -155,6 +158,48 @@ accepted on September 24.
   their lanes; nothing else happens to them. Sparks where cars hit; smoke on
   a stall, an over-rev and sliding tyres. Fire was built and taken out the
   same day, at Scott's word. 92 tests, lint and build clean.
+- **The gearbox switch, September 25, committed October 7:** at Scott's
+  request ("i dont like the M its not very clear"), the dock's Auto / Manual
+  toggle with an M keycap is now two buttons, Automatic and Manual, with a
+  white thumb under the one in use, and the keys above name M in words.
+  The session that built it ended before it was checked in a browser, so
+  Scott hasn't seen it yet (`hero-drive.md` §Decisions 29, §Open
+  questions 8). 92 tests, lint and build clean.
+- **A uniform grid, October 8:** Sam doesn't like the random pattern, so the
+  wide map (768px and up) is now evenly spaced columns and rows, every block
+  the same size, with the headline in one open block and no side streets.
+  It replaces the brief's merged, uneven grid, and the tests hold it to the
+  new rule (`hero-drive.md` §The wide map, §Decisions 30).
+- **On phones, the buttons inside the roads, October 8:** at Scott's
+  request, and his pick of three layouts. The phone map is a uniform grid
+  too, three columns and rows every 96px, and the two buttons each fill a
+  block of its top row, with a road on every side and six cars (from four)
+  going round them. The band is 260px (from 240) and starts 48px under the
+  subhead; the hero is about 45px shorter. Below 480px both labels break
+  onto two lines alike. The phone rows of the hero fixture are re-recorded
+  with the buttons in them, and a test holds each button inside its own
+  block (`hero-drive.md` §The phone map, §Decisions 31).
+- **Fewer columns on smaller screens, one row less on phones, October 8:**
+  in Scott's review of the two above. Below 1200px a new medium map has four
+  columns instead of six, 0.22 of the width apart, so a 768px tablet's
+  blocks are 169px across rather than 115 and nothing is squeezed; a test
+  holds every recorded size to columns at least 165px apart. On phones the
+  empty row of blocks under the buttons is gone: the band is 164px, and
+  the hero 537px tall at 390×844 (677px before October 8). Awaiting
+  Scott's next look (`hero-drive.md` §The medium map, §Decisions 32). 95
+  tests, lint and build clean.
+- **Cars back after a resize, October 8:** narrowing or widening the window
+  across 768px or 1024px left the roads redrawn but the cars hidden until a
+  reload. The cars' fade-in had been filed under the site motion's GSAP
+  context, which reverts at those breakpoints; it's HeroStage's own now
+  (`hero-drive.md` §Things that bit). Checked in headless Chrome through
+  1440, 700, 1440, 1100, 900 and 1440px, and under reduced motion.
+- **The roads' look, October 8:** Scott asked to see variations of the
+  roads. Of five tried side by side, he picked rounded block corners with
+  the centre line in grey and the zebra crossings in a lighter grey, on the
+  same white roads (`hero-drive.md` §Decisions 33). The road layer grew by
+  110 elements, about 1.1KB gzipped. 96 tests pass; checked in headless
+  Chrome at 1440×900, 1100×520, 768×1024 and 390×844.
 - **Phase 7, still to build:** save-data, WebGL-failure handling,
   disposal, performance (now with particles and knocked cars in it) and
   the bundle report. Its phones and touch part was done early, in Phase 4:
