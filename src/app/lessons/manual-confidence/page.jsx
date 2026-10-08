@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
+import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import LessonQuotes from '../../../components/lessons/LessonQuotes'
@@ -8,13 +9,13 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Complete Manual Confidence Package — 5 Lessons | Clutch Academy',
   description:
-    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $470 + HST.',
+    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $400 + HST.',
   alternates: { canonical: '/lessons/manual-confidence' },
 }
 
 // Keyword target (08 §4): "highway + city manual lessons Toronto"
 // (supporting: highway lessons, hill starts, city driving).
-// Pricing is the post-August-1 offering: $470 + HST, five 75-minute lessons.
+// Pricing is the October 2026 winter offering: $400 + HST, five one-hour lessons.
 
 // The six skills, verbatim from the brief. Descriptions add only light,
 // generic framing — no invented curriculum detail or route specifics.
@@ -66,7 +67,7 @@ export default function ManualConfidencePage() {
         items={[
           { label: 'Home', href: '/' },
           { label: 'Lessons', href: '/manual-driving-lessons' },
-          { label: 'Complete Manual Confidence' },
+          { label: 'Complete Manual Confidence Package' },
         ]}
       />
 
@@ -77,16 +78,16 @@ export default function ManualConfidencePage() {
       >
         <div className="section__inner lesson-hero__inner">
           <p className="section-header__eyebrow">
-            Private · 5 Lessons · The Flagship
+            Private · 5 Lessons · Starts From Zero
           </p>
           <h1 id="lesson-heading" className="lesson-hero__headline">
             Complete Manual Confidence Package
           </h1>
           <p className="lesson-hero__lead">
-            The premium version of learning manual: five one-on-one sessions
-            of highway and city manual lessons in Toronto, covering everything
-            the city can throw at a clutch — downtown, merging, rush hour,
-            hills, and parking — with coaching tailored to you the whole way.
+            Five one-on-one highway and city manual lessons in Toronto. They
+            start from zero, so you don’t need to have driven stick before,
+            and finish with everything the city can throw at a clutch:
+            downtown, merging, rush hour, hills and parking.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="lesson-hero__pull">
@@ -94,9 +95,10 @@ export default function ManualConfidencePage() {
             car, but genuine confidence anywhere.
           </p>
           <p className="lesson-hero__price">
-            $470
+            $400
+            <WasPrice pkg="confidence" />
             <span className="lesson-hero__price-unit">
-              / 5 lessons + HST · save $80 vs. five singles
+              / 5 lessons + HST · $80 a lesson
             </span>
           </p>
           <BookButton
@@ -127,8 +129,10 @@ export default function ManualConfidencePage() {
             ))}
           </ul>
           <p className="lesson-block__note">
-            Every session is one-on-one in a manual hatchback, on
-            real Toronto roads. A valid G2 or G licence is required.
+            New to manual? The first lessons cover clutch control, the bite
+            point, and starts and stops before any of this. Every session is
+            one-on-one in a manual hatchback, on real Toronto roads. A valid G2
+            or G licence is required.
           </p>
         </div>
       </section>
@@ -189,8 +193,8 @@ export default function ManualConfidencePage() {
       >
         <div className="section__inner lesson-next">
           <header className="section-header">
-            <p className="section-header__eyebrow">The premium path</p>
-            <h2 id="next-heading">Book the flagship</h2>
+            <p className="section-header__eyebrow">From zero to the highway</p>
+            <h2 id="next-heading">Book your five lessons</h2>
           </header>
           <BookButton
             source="packages_confidence_5pack"
@@ -200,7 +204,9 @@ export default function ManualConfidencePage() {
           </BookButton>
           <p className="lesson-next__links">
             Not sure you need all five?{' '}
-            <Link href="/lessons/manual-foundations">Manual Foundations</Link>{' '}
+            <Link href="/lessons/manual-foundations">
+              Manual Foundations Package
+            </Link>{' '}
             is the three-lesson beginner progression, and a{' '}
             <Link href="/lessons/individual">single lesson</Link> works as a
             taster — or{' '}

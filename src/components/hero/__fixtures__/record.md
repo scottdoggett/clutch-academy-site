@@ -17,6 +17,12 @@ fonts change. When that happens:
    needs to change. See `docs/spec/hero-drive.md` §Keeping clear of the
    headline.
 
+The script also runs in headless Chrome over its DevTools protocol, and
+lands within 1px of a normal window. Start Chrome with `--hide-scrollbars`:
+without it each iframe draws a classic 15px scrollbar and every hero
+measures 15px narrower than in a normal macOS Chrome, whose scrollbars
+overlay.
+
 Keep the size list in step with the fixture. The required sizes are the
 1280, 1440 and 1920px rows at 680px of viewport height and up.
 

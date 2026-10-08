@@ -4,16 +4,13 @@
    No background of its own: it sits on the page's --red-primary, the same
    ground every other page's opening section stands on. */
 
-/* Page-scoped type correction: the global section h2 (4rem) overwhelms a
-   hub page; keep headings editorial, not billboard. */
-.hub-packages .section-header h1,
-.hub-packages .section-header h2,
-.hub-choose .section-header h2 {
-  font-size: clamp(1.75rem, 3.2vw, 2.625rem);
-  line-height: 1.05;
-}
-
+/* The page's title, at the package pages' title size (.lesson-hero__headline)
+   so it outranks the section headings below it. Until October 2026 it was
+   scaled down with them to 2.625rem, when the global section h2 was 4rem;
+   at 3rem the h2s need no correction here. */
 .hub-packages .section-header h1 {
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 1.05;
   scroll-margin-top: calc(var(--nav-height) + 1.25rem);
 }
 
@@ -272,6 +269,12 @@
   color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
 }
 
+/* With a struck-out old price beside it (the fall sale, WasPrice), the unit
+   takes its own line, as on the homepage cards (PackagesTeaser.css). */
+.hub-card__price:has(.price-was) .hub-card__unit {
+  flex-basis: 100%;
+}
+
 /* Transparent to the card's flex column at desktop — the price and the CTA
    behave as the direct children they used to be. Only phones make it a row. */
 .hub-card__foot {
@@ -490,6 +493,38 @@
 
   .hub-card__unit {
     font-size: 0.4em;
+  }
+
+  /* With an old price, the price and it share the first line and the unit
+     drops under them, as at desktop. A grid, not a wrapping row: a wrapping
+     row is as wide as all three on one line, and this block doesn't shrink,
+     so it squeezed the CTA beside it to a narrow column. */
+  .hub-card__price:has(.price-was) {
+    display: grid;
+    /* Flexible second column: the full-width rows below would otherwise
+       widen the first and open a gap between the price and the old one. */
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-content: start;
+    align-items: baseline;
+    gap: 0.125rem 0.375rem;
+  }
+
+  .hub-card__price:has(.price-was) .hub-card__unit {
+    grid-column: 1 / -1;
+  }
+
+  /* The saving takes a line of its own, after the unit so the price and
+     what it buys read together: beside the prices it makes the block about
+     170px wide and pushes the CTA to three lines. */
+  .hub-card__price .price-deal {
+    display: contents;
+  }
+
+  .hub-card__price .price-save {
+    grid-column: 1 / -1;
+    justify-self: start;
+    order: 1;
+    margin-top: 0.25rem;
   }
 
   .hub-card__cta {

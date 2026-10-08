@@ -4,8 +4,8 @@
 // lesson page surfaces a relevant subset by id — so on-page copy and
 // structured data can't drift.
 //
-// The August-1 switch (60 -> 75 min) needed no edits here: the answers talk in
-// lesson counts, not durations. If duration copy is ever added, it belongs in
+// Neither duration switch (60 -> 75 min on August 1, back to 60 in October
+// 2026) needed edits here: the answers talk in lesson counts, not durations. If duration copy is ever added, it belongs in
 // this array — never forked into a page.
 export const FAQS = [
   {

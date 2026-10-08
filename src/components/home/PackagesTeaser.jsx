@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import WasPrice from '../WasPrice'
 import './PackagesTeaser.css'
 
 // Homepage teasers: name, one-liner, price, link — the detail (inclusions,
@@ -6,46 +7,56 @@ import './PackagesTeaser.css'
 // to the package pages; don't explain every service inline").
 //
 // Names are the overhaul-target package names so they match the pages they
-// link to; prices are the post-August-1 offering (08 §3), matching the switch
-// already shipped on the live site in 308317c.
+// link to; prices are the October 2026 winter offering (one-hour lessons, a
+// two-hour group), matching the live site (f8645c4 on main).
+//
+// One featured package, sitewide: Foundations, with the Recommended badge,
+// the only corner badge. The fall sale's savings are tags beside each struck-
+// out price (WasPrice). Both packs cost $80 a lesson, so neither is "Best
+// Value". The per-lesson price sits in the one-liner, where it doesn't move
+// the price rows out of line with the single and group cards.
 const TEASERS = [
   {
     tag: 'Private · Single',
     title: 'Individual Manual Lesson',
-    desc: 'One 75-minute lesson. Good for a first try or a refresher.',
-    price: '$110',
-    unit: '/ 75 min + HST',
+    desc: 'A one-hour lesson. Good for a first try or a refresher.',
+    price: '$90',
+    unit: '/ hour + HST',
     href: '/lessons/individual',
+    pkg: 'individual',
     tier: 1,
   },
   {
     tag: 'Private · 3 Lessons',
-    title: 'Manual Foundations',
-    desc: 'Three lessons, which is what most beginners need to feel confident.',
-    price: '$300',
+    title: 'Manual Foundations Package',
+    desc: 'Three lessons at $80 each, which is what most beginners need to feel confident.',
+    price: '$240',
     unit: '/ 3 lessons + HST',
     href: '/lessons/manual-foundations',
+    pkg: 'foundations',
     tier: 2,
     featured: true,
+    badge: 'Recommended',
   },
   {
     tag: 'Group · With a Friend',
     title: 'Group Manual Lessons',
-    desc: 'Two and a half hours with a friend, taking turns at the wheel.',
-    price: '$220',
-    unit: '/ 2.5 hours + HST',
+    desc: 'Two hours with a friend, taking turns at the wheel.',
+    price: '$180',
+    unit: '/ 2 hours + HST',
     href: '/lessons/group',
+    pkg: 'group',
     tier: 3,
   },
   {
     tag: 'Private · 5 Lessons',
-    title: 'Complete Manual Confidence',
-    desc: 'Five lessons covering downtown, highway merging, hills and rush hour.',
-    price: '$470',
+    title: 'Complete Manual Confidence Package',
+    desc: 'Five lessons at $80 each, from zero to downtown, highway merging, hills and rush hour.',
+    price: '$400',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
+    pkg: 'confidence',
     tier: 4,
-    badge: 'Best Value',
   },
 ]
 
@@ -85,6 +96,7 @@ export default function PackagesTeaser() {
               <div className="teaser-card__foot">
                 <p className="teaser-card__price">
                   {t.price}
+                  <WasPrice pkg={t.pkg} />
                   <span className="teaser-card__unit">{t.unit}</span>
                 </p>
                 <Link

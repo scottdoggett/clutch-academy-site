@@ -574,10 +574,9 @@
         var CONSENT_KEY = 'clutch.consent.v1'
         var FIRED_PREFIX = 'clutch.booked.fired.'
         var CURRENCY = 'CAD'
-        // The 75-minute individual lesson is the most common booking, so it's
-        // the safe default when the event name is missing or unrecognised
-        // when the event name is missing or unrecognized.
-        var DEFAULT_VALUE = 110
+        // The 60-minute individual lesson is the most common booking, so it's
+        // the safe default when the event name is missing or unrecognized.
+        var DEFAULT_VALUE = 90
         var META_PIXEL_ID = '2845684255788584'
         var TIKTOK_PIXEL_ID = 'D87LSEBC77UENKCNER8G'
 
@@ -660,21 +659,21 @@
 
         // PENDING: confirm the exact Calendly event-type names with Sam and
         // tighten this mapping. Until then we keyword-match the four packages
-        // (individual 75-min $110 / 3-pack $300 / 5-pack "Complete Manual
-        // Confidence" $470 / group 2.5-hour $220) and fall back to $110. They
+        // (individual 60-min $90 / 3-pack $240 / 5-pack "Complete Manual
+        // Confidence" $400 / group 2-hour $180) and fall back to $90. They
         // all open one Calendly page today, so the event name is the only
         // signal of which package was booked.
         function priceForEvent(name) {
           var n = (name || '').toLowerCase()
           if (!n) return DEFAULT_VALUE
-          // Group is tested first: a "2.5" in the event name satisfies the
-          // 5-pack's \b5\b rule and would misprice a $220 group booking as $470.
-          if (/group|2\.5|two\s*and\s*a\s*half|150/.test(n)) return 220
+          // Group is tested first, so a group event whose name mentions a
+          // package can't fall through to the "pack" rule and misprice it.
+          if (/group|\b2\s*-?\s*h|two[\s-]*hour|120/.test(n)) return 180
           // 5-lesson "Complete Manual Confidence". Checked before the "pack"
           // rule, which would otherwise swallow a "5-Pack" name.
-          if (/confidence|highway|five|\b5\b/.test(n)) return 470
-          if (/3|three|pack/.test(n)) return 300 // private 3-pack
-          return DEFAULT_VALUE // 75-minute individual lesson
+          if (/confidence|highway|five|\b5\b/.test(n)) return 400
+          if (/3|three|pack/.test(n)) return 240 // private 3-pack
+          return DEFAULT_VALUE // 60-minute individual lesson
         }
 
         function readConsent() {

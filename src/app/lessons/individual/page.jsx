@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
+import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import LessonQuotes from '../../../components/lessons/LessonQuotes'
@@ -8,12 +9,12 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Individual Manual Driving Lesson in Toronto | Clutch Academy',
   description:
-    'One-on-one manual driving refresher in Toronto, or a first introduction to stick shift. Real roads, patient instruction, $110 + HST. Book online.',
+    'One-on-one manual driving refresher in Toronto, or a first introduction to stick shift. Real roads, patient instruction, $90 + HST. Book online.',
   alternates: { canonical: '/lessons/individual' },
 }
 
 // Keyword target (08 §4): "manual driving refresher Toronto".
-// Pricing is the post-August-1 offering: 75 min · $110 + HST.
+// Pricing is the October 2026 winter offering: 1 hour · $90 + HST.
 const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 
 // PENDING: SINGLE-LESSON INCLUSIONS — final 3–5 bullets from Sam. These carry
@@ -71,7 +72,7 @@ export default function IndividualLessonPage() {
             Individual Manual Lesson
           </h1>
           <p className="lesson-hero__lead">
-            Seventy-five minutes, one-on-one, on real Toronto roads. The individual
+            One hour, one-on-one, on real Toronto roads. The individual
             lesson is the manual driving refresher Toronto drivers book when the
             skill has gone rusty — and the easiest first introduction if
             you’ve never touched a stick shift.
@@ -82,8 +83,9 @@ export default function IndividualLessonPage() {
             nervous about.
           </p>
           <p className="lesson-hero__price">
-            $110
-            <span className="lesson-hero__price-unit">/ 75 min + HST</span>
+            $90
+            <WasPrice pkg="individual" />
+            <span className="lesson-hero__price-unit">/ hour + HST</span>
           </p>
           <BookButton source="packages_single" className="btn btn--primary">
             Book This Lesson
@@ -99,7 +101,7 @@ export default function IndividualLessonPage() {
         <div className="section__inner lesson-block__inner">
           <header className="section-header">
             <p className="section-header__eyebrow">What’s included</p>
-            <h2 id="included-heading">Your 75 minutes behind the wheel</h2>
+            <h2 id="included-heading">Your hour behind the wheel</h2>
           </header>
           <ul className="lesson-included">
             {INCLUDED.map((item) => (

@@ -139,6 +139,23 @@
   color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
 }
 
+/* With a struck-out old price beside it (the fall sale, WasPrice), the unit
+   takes its own line: price, old price and unit don't fit one line in every
+   card, and a unit that wraps in some cards and not others puts the prices
+   at different heights. */
+.teaser-card__price:has(.price-was) .teaser-card__unit {
+  flex-basis: 100%;
+}
+
+/* A step smaller than elsewhere, so price, old price and saving share one
+   line in a four-up card at 1024px. On phones the saving has its own line
+   and takes the standard size. */
+@media (min-width: 768px) {
+  .teaser-card__price .price-save {
+    font-size: 0.625rem;
+  }
+}
+
 /* See hub.css — transparent to the flex column at desktop, a row on phones. */
 .teaser-card__foot {
   display: contents;
@@ -155,6 +172,7 @@
 }
 
 .teasers__hub-link a {
+  position: relative;
   color: var(--red-primary);
   font-family: var(--font-display);
   font-weight: 700;
@@ -162,6 +180,13 @@
   text-transform: uppercase;
   font-size: var(--text-small);
   text-underline-offset: 4px;
+}
+
+/* A 44px hit area without moving the link or its underline. */
+.teasers__hub-link a::after {
+  content: '';
+  position: absolute;
+  inset: -0.875rem 0;
 }
 
 .teasers__hub-link a:focus-visible {
@@ -238,6 +263,38 @@
 
   .teaser-card__unit {
     font-size: 0.4em;
+  }
+
+  /* With an old price, the price and it share the first line and the unit
+     drops under them, as at desktop. A grid, not a wrapping row: a wrapping
+     row is as wide as all three on one line, and this block doesn't shrink,
+     so it squeezed the CTA beside it to a narrow column. */
+  .teaser-card__price:has(.price-was) {
+    display: grid;
+    /* Flexible second column: the full-width rows below would otherwise
+       widen the first and open a gap between the price and the old one. */
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-content: start;
+    align-items: baseline;
+    gap: 0.125rem 0.375rem;
+  }
+
+  .teaser-card__price:has(.price-was) .teaser-card__unit {
+    grid-column: 1 / -1;
+  }
+
+  /* The saving takes a line of its own, after the unit so the price and
+     what it buys read together: beside the prices it makes the block about
+     170px wide and pushes the CTA to three lines. */
+  .teaser-card__price .price-deal {
+    display: contents;
+  }
+
+  .teaser-card__price .price-save {
+    grid-column: 1 / -1;
+    justify-self: start;
+    order: 1;
+    margin-top: 0.25rem;
   }
 
   .teaser-card__cta {

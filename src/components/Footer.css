@@ -23,10 +23,16 @@
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  /* Explore carries 9 links against Contact's 2 and Follow's 2, so it gets the
-     extra width — at an even 1fr its labels wrapped and the two sub-columns
-     came out ragged. */
-  grid-template-columns: 1.3fr 1fr 1.6fr 0.8fr;
+  /* Each column as wide as its content, the leftover spread between them.
+     Fixed shares kept failing one column or another: at an even 1fr the
+     Explore labels wrapped, and once the packages took their full names
+     (October 2026) a share wide enough for "Complete Manual Confidence
+     Package" squeezed the brand onto two lines. Explore never shrinks
+     (max-content); when room runs short, the brand's description wraps
+     instead. Everything fits on one line from 1024px; below that, the tablet
+     rule takes over. */
+  grid-template-columns: auto auto max-content auto;
+  justify-content: space-between;
   gap: clamp(1.5rem, 3vw, 2.5rem);
   padding-bottom: clamp(2rem, 4vw, 3rem);
 }
@@ -80,7 +86,10 @@
   display: grid;
   grid-auto-flow: column;
   grid-template-rows: repeat(5, auto);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Each sub-column as wide as its longest label: the packages' column
+     needs far more than the pages' one. */
+  grid-template-columns: auto auto;
+  justify-content: start;
   align-content: start;
   gap: 0.5rem 1.5rem;
 }
@@ -131,31 +140,55 @@
 }
 
 /* ---------- Responsive ---------------------------------------------- */
-@media (max-width: 1023px) {
+/* Tablets: brand, contact and follow share the first row, and Explore takes
+   the whole second row, since half the width can't hold the package names. */
+@media (min-width: 640px) and (max-width: 1023px) {
   .footer__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, auto);
+  }
+
+  .footer__col--explore {
+    order: 1;
+    grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 639px) {
+  /* The brand, then Contact and Follow side by side, then Explore. One column
+     of nine 44px links made the footer a screen and a half tall. */
   .footer__grid {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
+    /* Contact as wide as the email address, which can't wrap; at an even
+       split it ran into Follow below 390px. */
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.75rem 1.5rem;
   }
 
-  /* One narrow column beats two cramped ones on phones. */
+  .footer__col--brand,
+  .footer__col--explore {
+    grid-column: 1 / -1;
+  }
+
+  .footer__col--explore {
+    order: 1;
+  }
+
+  /* Still down-then-across, pages then packages. The package names take two
+     lines where they must; at 44px a row has room for two. */
   .footer__list--two-col {
-    grid-auto-flow: row;
-    grid-template-rows: none;
-    grid-template-columns: 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 1rem;
   }
 
-  /* Full-width 44px rows. These stacked links were 17px tall on a 25px pitch —
-     a legible list, but a row of near-misses for a thumb. The gap goes to zero
-     because the tap padding now supplies the rhythm. */
+  /* 44px rows. These stacked links were 17px tall on a 25px pitch — a
+     legible list, but a row of near-misses for a thumb. The row gap goes to
+     zero because the tap padding now supplies the rhythm. */
   .footer__list,
   .footer__list--two-col {
-    gap: 0;
+    row-gap: 0;
+  }
+
+  .footer__list a {
+    line-height: 1.3;
   }
 
   .footer__list a {

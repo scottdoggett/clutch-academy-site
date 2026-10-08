@@ -3,12 +3,10 @@
 // src/lib/googleReviews.js.
 //
 // Read by the homepage's moving strip (src/components/ReviewsMarquee.jsx).
+// Every card is as tall as the longest quote, so the first one, the only
+// card a phone shows at first, should be a full one; the shortest quotes
+// sit further in.
 export const REVIEWS = [
-  {
-    quote:
-      'Had such a positive experience! Very professional, calm, and efficient. Would definitely recommend!',
-    name: 'Hannah Bance',
-  },
   {
     quote:
       "Honestly one of the best driving instructors out there if you want to learn manual. Super patient, explains everything in a way that actually makes sense, and makes you feel comfortable even if you're nervous or completely new to stick.",
@@ -18,6 +16,11 @@ export const REVIEWS = [
     quote:
       'I had the best time learning how to drive manual with Sam. He has great customer service and wonderful tips for driving with a stick. Thank you Clutch team!!!',
     name: 'Dakota Abell',
+  },
+  {
+    quote:
+      'Had such a positive experience! Very professional, calm, and efficient. Would definitely recommend!',
+    name: 'Hannah Bance',
   },
   {
     quote:

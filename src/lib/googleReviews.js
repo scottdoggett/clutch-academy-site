@@ -7,9 +7,11 @@
 // moves) in this one spot.
 //
 // Review QUOTES live in src/components/ReviewsMarquee.jsx.
+// October 7, 2026: 44 reviews, 43 of them five stars and one four, which
+// Google shows as 5.0 (the mean is 4.98).
 const googleReviews = {
   rating: 5,
-  reviewCount: 33, // per the profile, July 2026
+  reviewCount: 44, // per the profile, October 7, 2026
   url: 'https://maps.app.goo.gl/5Mi1EeB3jRs35Ezr5',
 }
 

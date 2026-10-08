@@ -19,8 +19,9 @@
 
 .reviews__badge {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.25rem 0.625rem;
 }
 
 .reviews__badge-label {
@@ -38,9 +39,23 @@
   color: var(--star-gold);
 }
 
+.reviews__badge-score {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  color: var(--red-deep);
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 767px) {
   .reviews__footer {
     justify-content: flex-start;
     padding-top: 0.75rem;
+  }
+
+  /* One line at 320px and up; at full size the label wrapped to two. */
+  .reviews__footer .btn {
+    font-size: 0.8125rem;
+    padding-inline: 1rem;
   }
 }

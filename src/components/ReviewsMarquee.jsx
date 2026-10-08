@@ -159,10 +159,11 @@ export default function ReviewsMarquee() {
       {REVIEWS.map((r, i) => (
         <li key={`${r.name}-${i}`} className="reviews__slide">
           <article className="review-card">
-            {/* Every review on the profile is five stars (googleReviews.js
-                holds the 5.0 rating), so the row is fixed rather than
-                per-review data. Decorative: the section badge speaks the
-                rating once. */}
+            {/* Every card shows five stars, fixed rather than per-review
+                data. That held for the whole profile until October 2026,
+                when one of the 44 reviews was four stars (googleReviews.js);
+                check a review's own rating before quoting it here.
+                Decorative: the section badge speaks the rating once. */}
             <p className="review-card__stars" aria-hidden="true">
               ★★★★★
             </p>

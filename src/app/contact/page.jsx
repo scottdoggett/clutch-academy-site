@@ -34,9 +34,10 @@ export default function ContactPage() {
               Book Your First Lesson
             </BookButton>
             <p className="contact-hero__payment-note">
-              Payment collected securely at time of booking, not in person
-              <br />
-              All cards accepted
+              <span>
+                Payment collected securely at time of booking, not in person.
+              </span>
+              <span>All cards accepted.</span>
             </p>
           </header>
 

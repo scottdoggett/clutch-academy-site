@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
+import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import LessonQuotes from '../../../components/lessons/LessonQuotes'
@@ -8,12 +9,12 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Manual Foundations Package — 3 Lessons | Clutch Academy',
   description:
-    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $300 + HST.',
+    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $240 + HST.',
   alternates: { canonical: '/lessons/manual-foundations' },
 }
 
 // Keyword target (08 §4): "learn to drive manual Toronto" (beginners).
-// Pricing is the post-August-1 offering: $300 + HST, three 75-minute lessons.
+// Pricing is the October 2026 winter offering: $240 + HST, three one-hour lessons.
 
 // The three-lesson progression, from the brief. Descriptions elaborate only
 // with language already established on the site (HowItWorks first-lesson
@@ -58,7 +59,7 @@ export default function ManualFoundationsPage() {
         items={[
           { label: 'Home', href: '/' },
           { label: 'Lessons', href: '/manual-driving-lessons' },
-          { label: 'Manual Foundations' },
+          { label: 'Manual Foundations Package' },
         ]}
       />
 
@@ -69,7 +70,7 @@ export default function ManualFoundationsPage() {
       >
         <div className="section__inner lesson-hero__inner">
           <p className="section-header__eyebrow">
-            Private · 3 Lessons · Most Popular
+            Private · 3 Lessons · Recommended
           </p>
           <h1 id="lesson-heading" className="lesson-hero__headline">
             Manual Foundations Package
@@ -86,9 +87,10 @@ export default function ManualFoundationsPage() {
             nervous about.
           </p>
           <p className="lesson-hero__price">
-            $300
+            $240
+            <WasPrice pkg="foundations" />
             <span className="lesson-hero__price-unit">
-              / 3 lessons + HST · save $30 vs. three singles
+              / 3 lessons + HST · $80 a lesson
             </span>
           </p>
           <BookButton source="packages_3pack" className="btn btn--primary">
@@ -196,7 +198,7 @@ export default function ManualFoundationsPage() {
             Want downtown, highway, and rush-hour mastery on top of the
             foundations? Step up to{' '}
             <Link href="/lessons/manual-confidence">
-              Complete Manual Confidence
+              Complete Manual Confidence Package
             </Link>
             . Already driven manual before? A{' '}
             <Link href="/lessons/individual">single lesson</Link> may be all

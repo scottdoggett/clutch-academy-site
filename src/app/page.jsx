@@ -7,13 +7,13 @@ import googleReviews from '../lib/googleReviews'
 
 export const metadata = {
   description:
-    'Manual transmission driving lessons in Toronto from $110. One-on-one, on real roads, with founder-instructor Sam Anthony. Book your first lesson online.',
+    'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads, with founder-instructor Sam Anthony. Book your first lesson online.',
   alternates: { canonical: '/' },
   openGraph: {
     url: 'https://clutchacademy.ca/',
     title: 'Manual Driving Lessons in Toronto | Clutch Academy',
     description:
-      'Manual transmission driving lessons in Toronto from $110. One-on-one, on real roads. Book your first lesson online.',
+      'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads. Book your first lesson online.',
     images: [
       {
         url: '/og-image.png?v=2',
@@ -27,7 +27,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Manual Driving Lessons in Toronto | Clutch Academy',
     description:
-      'Manual transmission driving lessons in Toronto from $110. One-on-one, on real roads.',
+      'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads.',
     images: ['/og-image.png?v=2'],
   },
 }
@@ -116,10 +116,10 @@ const SCHEMA_GRAPH = {
     {
       '@type': 'Offer',
       '@id': 'https://clutchacademy.ca/#offer-single',
-      name: '75min Individual Manual Lesson',
+      name: 'Individual Manual Lesson',
       description:
-        'Seventy-five minutes of one-on-one manual transmission instruction.',
-      price: '110.00',
+        'One hour of one-on-one manual transmission instruction.',
+      price: '90.00',
       priceCurrency: 'CAD',
       category: 'Driving lesson',
       availability: 'https://schema.org/InStock',
@@ -130,8 +130,8 @@ const SCHEMA_GRAPH = {
       '@id': 'https://clutchacademy.ca/#offer-3pack',
       name: 'Manual Foundations Package (3 Lessons)',
       description:
-        'Three 75-minute lessons: progression from clutch basics to road-confident driving.',
-      price: '300.00',
+        'Three one-hour lessons: progression from clutch basics to road-confident driving.',
+      price: '240.00',
       priceCurrency: 'CAD',
       category: 'Driving lesson package',
       availability: 'https://schema.org/InStock',
@@ -140,10 +140,10 @@ const SCHEMA_GRAPH = {
     {
       '@type': 'Offer',
       '@id': 'https://clutchacademy.ca/#offer-confidence-5pack',
-      name: 'Complete Confidence Package (5 Lessons)',
+      name: 'Complete Manual Confidence Package (5 Lessons)',
       description:
-        'Five 75-minute lessons covering downtown driving, highway merging, hill starts, and rush-hour practice.',
-      price: '470.00',
+        'Five one-hour lessons covering downtown driving, highway merging, hill starts, and rush-hour practice.',
+      price: '400.00',
       priceCurrency: 'CAD',
       category: 'Driving lesson package',
       availability: 'https://schema.org/InStock',

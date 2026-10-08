@@ -2,17 +2,19 @@ import Link from 'next/link'
 import './Footer.css'
 
 // Full sitemap (08 §1) — the footer doubles as the site-wide internal-linking
-// block, so every route is listed, package pages included.
+// block, so every route is listed, package pages included. The list fills
+// two columns down-then-across, five rows deep: the site's pages, then the
+// four packages under their full names, in the package cards' order.
 const QUICK_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Lessons Overview', href: '/manual-driving-lessons' },
-  { label: 'Individual Lesson', href: '/lessons/individual' },
-  { label: 'Manual Foundations', href: '/lessons/manual-foundations' },
-  { label: 'Manual Confidence', href: '/lessons/manual-confidence' },
-  { label: 'Group Lessons', href: '/lessons/group' },
   { label: 'About', href: '/about' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
+  { label: 'Individual Manual Lesson', href: '/lessons/individual' },
+  { label: 'Manual Foundations Package', href: '/lessons/manual-foundations' },
+  { label: 'Group Manual Lessons', href: '/lessons/group' },
+  { label: 'Complete Manual Confidence Package', href: '/lessons/manual-confidence' },
 ]
 
 export default function Footer() {
@@ -46,7 +48,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <nav className="footer__col" aria-label="Footer navigation">
+        <nav className="footer__col footer__col--explore" aria-label="Footer navigation">
           <h3 className="footer__heading">Explore</h3>
           <ul className="footer__list footer__list--two-col">
             {QUICK_LINKS.map((link) => (

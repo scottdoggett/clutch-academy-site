@@ -22,10 +22,19 @@
 }
 
 .nav__brand {
+  position: relative;
   display: inline-flex;
   align-items: center;
   text-decoration: none;
   line-height: 0;
+}
+
+/* The logo is 17-32px tall; this grows the link's hit area to at least
+   44px without growing the bar, which must stay --nav-bar-height. */
+.nav__brand::after {
+  content: '';
+  position: absolute;
+  inset: -0.875rem 0;
 }
 
 .nav__logo {

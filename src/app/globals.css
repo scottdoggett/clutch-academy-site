@@ -205,10 +205,18 @@ img {
   text-transform: uppercase;
   color: var(--chrome);
   margin: 0;
+  /* When a long one wraps on a phone, two even lines rather than a lone
+     last word ("…SAME / LESSONS"). */
+  text-wrap: balance;
 }
 
+/* Capped at 3rem so no section heading outsizes its page's title: the package
+   and About h1s top out at 3.5rem, the homepage's at 4.5rem (October 2026;
+   at 4rem every section heading was bigger than the title above it).
+   Balanced, so a wrap leaves no lone word or "low- / pressure" on a phone. */
 .section-header h2 {
-  font-size: clamp(2rem, 5vw, 4rem);
+  text-wrap: balance;
+  font-size: clamp(2rem, 3.6vw, 3rem);
   line-height: 1;
   margin: 0;
 }
@@ -216,6 +224,8 @@ img {
 .section-header__lead {
   font-size: var(--text-body);
   color: var(--cream);
+  /* Avoids a lone last word on narrow screens ("…about the first / two."). */
+  text-wrap: pretty;
   margin: 0;
 }
 
@@ -364,14 +374,18 @@ img {
 }
 
 /* Stub-page link lists (lessons hub, 404) — legible on the brand red. */
+/* Each link is a 44px row; the rows supply the spacing. */
 .placeholder-hero ul {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 0;
 }
 
 .placeholder-hero ul a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--white);
   font-size: var(--text-body-lg);
   text-underline-offset: 3px;
@@ -391,4 +405,42 @@ img {
     transition-duration: var(--transition-reduced) !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------- Fall sale: the old price, struck through, and the saving -----
+   WasPrice (src/components/WasPrice.jsx) beside today's price on the cards
+   and the package heroes, all on reds. The two stay together. */
+.price-deal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+/* Sized from the price it sits in. Solid grey, not white-alpha, so it keeps
+   its contrast on every red. */
+.price-was {
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--chrome);
+  text-decoration-line: line-through;
+  text-decoration-thickness: 2px;
+  white-space: nowrap;
+}
+
+/* A smaller cousin of the cards' corner badge, as on the live site. Fixed
+   size: it reads the same beside a 28px card price and a 48px hero price.
+   The homepage cards take it down a step at desktop (PackagesTeaser.css). */
+.price-save {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red-primary);
+  background-color: var(--cream);
+  padding: 0.3rem 0.4rem;
+  border-radius: 1px;
 }

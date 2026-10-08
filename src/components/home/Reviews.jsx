@@ -36,11 +36,17 @@ export default function Reviews() {
         <div className="reviews__rule" data-anim="draw" data-anim-delay="0.5" />
         <div className="reviews__footer" data-anim="rise" data-anim-delay="0.6">
           {/* Stars/count derive from the shared numbers module so the badge
-              can never disagree with the homepage aggregateRating schema. */}
+              can never disagree with the homepage aggregateRating schema.
+              The score is on show, not just for screen readers: the count is
+              what makes five stars believable (October 2026 review). */}
           <div className="reviews__badge">
             <span className="reviews__badge-label">Google reviews</span>
             <span className="reviews__badge-stars" aria-hidden="true">
               {'★'.repeat(Math.round(googleReviews.rating))}
+            </span>
+            <span className="reviews__badge-score" aria-hidden="true">
+              {googleReviews.rating.toFixed(1)} · {googleReviews.reviewCount}{' '}
+              reviews
             </span>
             <span className="visually-hidden">
               Rated {googleReviews.rating.toFixed(1)} out of 5 from{' '}

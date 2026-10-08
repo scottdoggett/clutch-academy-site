@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../components/BookButton'
+import WasPrice from '../../components/WasPrice'
 import './hub.css'
 
 export const metadata = {
@@ -11,8 +12,8 @@ export const metadata = {
 
 // Summary cards for the four dedicated pages. Who-it's-for and lesson-content
 // lines come from the July 2026 brief; names are the overhaul-target package
-// names. Prices are the post-August-1 offering (08 §3), matching the switch
-// already shipped on the live site in 308317c.
+// names. Prices are the October 2026 winter offering (one-hour lessons, a
+// two-hour group), matching the live site (f8645c4 on main).
 const PACKAGES = [
   {
     tag: 'Private · Single Lesson',
@@ -22,26 +23,28 @@ const PACKAGES = [
       'One-on-one instruction on real Toronto roads',
       'Tailored to your starting level — zero experience is fine',
     ],
-    price: '$110',
-    unit: '/ 75 min + HST',
+    price: '$90',
+    unit: '/ hour + HST',
     href: '/lessons/individual',
+    pkg: 'individual',
     tier: 1,
   },
   {
     tag: 'Private · 3 Lessons',
     title: 'Manual Foundations Package',
-    who: 'Ideal for complete beginners — a structured progression.',
+    who: 'For complete beginners: three lessons in a planned order, $80 each.',
     points: [
       'Lesson 1: clutch control, bite point, starts & stops',
       'Lesson 2: traffic, intersections, hill starts',
       'Lesson 3: independent driving, smoother shifting',
     ],
-    price: '$300',
+    price: '$240',
     unit: '/ 3 lessons + HST',
     href: '/lessons/manual-foundations',
+    pkg: 'foundations',
     tier: 2,
     featured: true,
-    badge: 'Most Popular',
+    badge: 'Recommended',
   },
   {
     tag: 'Group · With a Friend',
@@ -51,25 +54,26 @@ const PACKAGES = [
       'Share the experience and split the nerves',
       'Great low-pressure first exposure to the clutch',
     ],
-    price: '$220',
-    unit: '/ 2.5 hours + HST',
+    price: '$180',
+    unit: '/ 2 hours + HST',
     href: '/lessons/group',
+    pkg: 'group',
     tier: 3,
   },
   {
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence Package',
-    who: 'The premium flagship — full mastery of real-world driving.',
+    who: 'From zero to downtown, the highway and rush hour, at $80 a lesson.',
     points: [
       'Downtown driving, highway merging, rush-hour traffic',
       'Advanced hill starts and parking',
       'Personalized coaching throughout',
     ],
-    price: '$470',
+    price: '$400',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
+    pkg: 'confidence',
     tier: 4,
-    badge: 'Best Value',
   },
 ]
 
@@ -192,6 +196,7 @@ export default function LessonsOverviewPage() {
                 <div className="hub-card__foot">
                   <p className="hub-card__price">
                     {p.price}
+                    <WasPrice pkg={p.pkg} />
                     <span className="hub-card__unit">{p.unit}</span>
                   </p>
                   <Link

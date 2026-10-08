@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
+import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import LessonFaq from '../../../components/lessons/LessonFaq'
 import LessonQuotes from '../../../components/lessons/LessonQuotes'
@@ -8,18 +9,18 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Group Manual Driving Lessons in Toronto | Clutch Academy',
   description:
-    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 2.5 hours, $220 + HST. Book online.',
+    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 2 hours, $180 + HST. Book online.',
   alternates: { canonical: '/lessons/group' },
 }
 
 // Keyword target (08 §4): "group manual driving lessons Toronto" /
 // learn-with-a-friend.
 //
-// ❓ BLOCKED (Phase 0, still open): the post-August-1 group format —
-//    the brief mentioned both 1-hour and 2.5-hour options, but the new pricing
-//    lists ONLY a 2.5-hour group at $220 + HST, and that is what the live site
-//    shipped on August 1 (308317c). This page now matches the live offering.
-//    If Sam wants a shorter option back, it is an addition, not a revert.
+// Group format: one 2-hour group at $180 + HST, the October 2026 winter
+//    offering (live on main in f8645c4). The brief mentioned 1-hour and
+//    2.5-hour options; August 1 shipped a single 2.5-hour group at $220, and
+//    winter pricing replaced it with this one. A 1-hour option would be an
+//    addition.
 // ❓ BLOCKED: whether group pricing is per person or per pair — copy below
 //    deliberately avoids claiming either. Confirm with Sam before launch.
 //
@@ -98,8 +99,9 @@ export default function GroupLessonsPage() {
             nervous about. Bringing a friend makes that even easier.
           </p>
           <p className="lesson-hero__price">
-            $220
-            <span className="lesson-hero__price-unit">/ 2.5 hours + HST</span>
+            $180
+            <WasPrice pkg="group" />
+            <span className="lesson-hero__price-unit">/ 2 hours + HST</span>
           </p>
           <BookButton source="packages_group" className="btn btn--primary">
             Book a Group Lesson

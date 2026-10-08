@@ -29,6 +29,27 @@
   );
 }
 
+/* On a phone the strip is barely wider than a card, and a 4rem fade washed
+   out the first words of every quote. */
+@media (max-width: 767px) {
+  .reviews__marquee {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.25rem,
+      #000 calc(100% - 1.25rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.25rem,
+      #000 calc(100% - 1.25rem),
+      transparent
+    );
+  }
+}
+
 /* touch-action: pan-y, not pan-x. It hands vertical panning to the browser,
    so a swipe that starts on the strip still scrolls the page, and leaves
    horizontal to the pointer handlers. pan-x would claim horizontal as the

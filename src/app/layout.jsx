@@ -1,11 +1,13 @@
 import Script from 'next/script'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+import AnnouncementBanner from '../components/AnnouncementBanner'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import ConsentBanner from '../components/ConsentBanner'
 import AnalyticsLoader from '../components/AnalyticsLoader'
 import SiteMotion from '../components/motion/SiteMotion'
 import { MOTION_PREPAINT } from '../lib/motionPrepaint'
+import { FALL_SALE } from '../lib/sale'
 import './globals.css'
 
 const jakarta = Plus_Jakarta_Sans({
@@ -113,6 +115,8 @@ export default function RootLayout({ children }) {
         <a href="#main" className="skip-link">
           Skip to content
         </a>
+        {/* Above the nav while the fall sale runs (src/lib/sale.js). */}
+        {FALL_SALE && <AnnouncementBanner />}
         <Nav />
         <main id="main">{children}</main>
         <Footer />

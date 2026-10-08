@@ -54,13 +54,13 @@ const PACKAGE_LINKS = [
   },
   {
     href: '/lessons/manual-foundations',
-    label: 'Manual Foundations (3 lessons)',
-    desc: 'Complete beginner to independent driving.',
+    label: 'Manual Foundations Package',
+    desc: 'Three lessons, complete beginner to independent driving.',
   },
   {
     href: '/lessons/manual-confidence',
-    label: 'Complete Manual Confidence (5 lessons)',
-    desc: 'Downtown, highway, rush hour — the flagship.',
+    label: 'Complete Manual Confidence Package',
+    desc: 'Five lessons, from zero to downtown, the highway and rush hour.',
   },
   {
     href: '/lessons/group',

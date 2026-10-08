@@ -16,8 +16,10 @@
   text-align: left;
 }
 
+/* A step above the 3rem section headings (globals.css), so the page's title
+   is never the smaller of the two. */
 .contact-hero__headline {
-  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
   line-height: 1;
   letter-spacing: var(--letter-tight);
   margin: 0;
@@ -30,6 +32,9 @@
   letter-spacing: var(--letter-caps);
   text-transform: uppercase;
   color: var(--chrome);
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
 }
 
 /* ---------- Payment & cancellation ---------- */
