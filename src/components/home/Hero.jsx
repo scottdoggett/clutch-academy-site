@@ -1,8 +1,10 @@
+/* global process -- Next replaces process.env.NODE_ENV at build time */
 import BookButton from '../BookButton'
 import RoadLayer from '../hero/RoadLayer'
 import HeroStage from '../hero/HeroStage'
 import { roadsFor } from '../hero/graph'
 import { LAYOUTS } from '../hero/layouts'
+import CtaLooks from './CtaLooks'
 import './Hero.css'
 
 // On phones the buttons sit inside the street band's grid, one to a block
@@ -58,10 +60,14 @@ export default function Hero() {
           </p>
           <div className="hero__ctas" data-hero="ctas">
             <BookButton source="hero" className="btn btn--primary">
-              Book a Lesson
+              <span className="hero__cta-label">
+                Book a <span className="hero__cta-end">Lesson</span>
+              </span>
             </BookButton>
             <a className="btn btn--secondary" href="#packages">
-              See Packages
+              <span className="hero__cta-label">
+                See <span className="hero__cta-end">Packages</span>
+              </span>
             </a>
           </div>
         </div>
@@ -70,6 +76,8 @@ export default function Hero() {
         <RoadLayer layout={LAYOUTS.compact} className="hero__roads" />
       </div>
       <HeroStage />
+      {/* Development only: the button looks on trial, October 2026. */}
+      {process.env.NODE_ENV === 'development' && <CtaLooks />}
     </section>
   )
 }

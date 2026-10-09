@@ -1,0 +1,798 @@
+/* The hero button looks on trial (CtaLooks.jsx). <html data-cta> picks one;
+   without it, or at "a", the buttons are as they are today. Each look
+   restyles both buttons on desktop and inside the phone band's blocks. */
+
+html[data-cta] {
+  --i-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --i-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6'/%3E%3C/svg%3E");
+  --i-right-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --i-down-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6'/%3E%3C/svg%3E");
+  --i-down-red: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C8102E' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6'/%3E%3C/svg%3E");
+  /* A road sign's arrow: a solid shaft and head. */
+  --i-sign-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 9.6h11.6V4l8.9 8-8.9 8v-5.6H2z'/%3E%3C/svg%3E");
+  --i-sign-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.6 2h4.8v11.6H20l-8 8.9-8-8.9h5.6z'/%3E%3C/svg%3E");
+}
+
+/* ---------- B · Arrow chip ----------------------------------------------
+   Sentence case on pills, each with a round chip: a red one with an arrow
+   on Book, and an outlined one pointing down on See Packages, since it
+   scrolls down the page. */
+html[data-cta='b'] .hero__ctas {
+  gap: 1.25rem;
+  align-items: center;
+}
+
+html[data-cta='b'] .hero__ctas .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.4375rem 0.4375rem 0.4375rem 1.625rem;
+  font-size: 1.0625rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-cta='b'] .hero__ctas .btn::after {
+  content: '';
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--red-primary) var(--i-right-white) center / 1.125rem no-repeat;
+  transition: transform var(--transition-reduced) ease;
+}
+
+html[data-cta='b'] .hero__ctas .btn--secondary {
+  padding-left: 0.5rem;
+  background: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+
+html[data-cta='b'] .hero__ctas .btn--secondary::after {
+  background: var(--i-down-white) center / 1.125rem no-repeat;
+  box-shadow: inset 0 0 0 2px var(--white);
+}
+
+html[data-cta='b'] .hero__ctas .btn--secondary:hover {
+  color: var(--white);
+}
+
+html[data-cta='b'] .hero__ctas .btn--primary:hover::after {
+  transform: translateX(3px);
+}
+
+html[data-cta='b'] .hero__ctas .btn--secondary:hover::after {
+  transform: translateY(3px);
+}
+
+/* ---------- C · Road sign -----------------------------------------------
+   A blue guide sign for Book and a white one for See Packages, each with
+   its inner border line and an arrow, in the About page's sign blue. */
+html[data-cta='c'] .hero__ctas {
+  gap: 1rem;
+}
+
+html[data-cta='c'] .hero__ctas .btn {
+  --sign: #164a91;
+  --edge: var(--white);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 0;
+  border-radius: 10px;
+  padding: 1.0625rem 1.375rem 1.0625rem 1.625rem;
+  background: var(--sign);
+  color: var(--edge);
+  box-shadow: inset 0 0 0 4px var(--sign), inset 0 0 0 6px var(--edge), 0 4px 0 rgb(0 0 0 / 0.22);
+  font-size: 1.0625rem;
+  letter-spacing: 0.06em;
+}
+
+html[data-cta='c'] .hero__ctas .btn--secondary {
+  --sign: var(--white);
+  --edge: var(--black);
+}
+
+html[data-cta='c'] .hero__ctas .btn::after {
+  content: '';
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: currentColor;
+  mask: var(--i-right) center / contain no-repeat;
+}
+
+html[data-cta='c'] .hero__ctas .btn--secondary::after {
+  mask-image: var(--i-down);
+}
+
+html[data-cta='c'] .hero__ctas .btn:hover {
+  background: var(--sign);
+  color: var(--edge);
+  translate: 0 -1px;
+}
+
+/* ---------- E · Licence plate -------------------------------------------
+   Book as a white plate: a black rim, two screws, and the city along the
+   top. See Packages is the same plate in the deep red. */
+html[data-cta='e'] .hero__ctas {
+  gap: 1rem;
+}
+
+html[data-cta='e'] .hero__ctas .btn {
+  --plate: linear-gradient(#ffffff, #eceef0);
+  --rim: var(--black);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  padding: 1.375rem 2.5rem 1rem;
+  background: var(--plate);
+  color: var(--black);
+  box-shadow: inset 0 0 0 5px var(--rim), 0 4px 0 rgb(0 0 0 / 0.25);
+  font-size: 1.1875rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+html[data-cta='e'] .hero__ctas .btn--secondary {
+  --plate: var(--red-deep);
+  --rim: var(--cream);
+  color: var(--cream);
+}
+
+html[data-cta='e'] .hero__ctas .btn::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  height: 7px;
+  background:
+    radial-gradient(closest-side, #8d9399 70%, transparent 85%) left / 7px 7px no-repeat,
+    radial-gradient(closest-side, #8d9399 70%, transparent 85%) right / 7px 7px no-repeat;
+}
+
+html[data-cta='e'] .hero__ctas .btn--primary::after {
+  content: 'Toronto' / '';
+  position: absolute;
+  top: 9px;
+  left: 0;
+  right: 0;
+  font-size: 0.5625rem;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-align: center;
+  color: var(--red-primary);
+}
+
+html[data-cta='e'] .hero__ctas .btn:hover {
+  background: var(--plate);
+  color: var(--black);
+  translate: 0 -1px;
+}
+
+html[data-cta='e'] .hero__ctas .btn--secondary:hover {
+  color: var(--cream);
+}
+
+/* ---------- B1 · Chip pills ----------------------------------------------
+   B as a matched pair: both buttons are pills, and each chip rides at the
+   end of its label, after the last word, so on a phone it follows that word
+   onto the second line rather than taking a column of its own. Book is
+   white with a red chip; See Packages is outlined, with a white chip
+   pointing down the page. */
+html[data-cta='b1'] .hero__ctas {
+  gap: 0.875rem;
+  align-items: center;
+}
+
+html[data-cta='b1'] .hero__ctas .btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5625rem 0.5625rem 0.5625rem 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-cta='b1'] .hero__ctas .btn--secondary {
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 2px var(--white);
+}
+
+html[data-cta='b1'] .hero__cta-end {
+  white-space: nowrap;
+}
+
+html[data-cta='b1'] .hero__cta-end::after {
+  content: '';
+  display: inline-block;
+  width: 1.75em;
+  height: 1.75em;
+  margin-left: 0.625em;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--red-primary) var(--i-right-white) center / 50% no-repeat;
+  transition: translate var(--transition-reduced) ease;
+}
+
+html[data-cta='b1'] .hero__ctas .btn--secondary .hero__cta-end::after {
+  background: var(--white) var(--i-down-red) center / 50% no-repeat;
+}
+
+html[data-cta='b1'] .hero__ctas .btn--primary:hover .hero__cta-end::after {
+  translate: 3px 0;
+}
+
+html[data-cta='b1'] .hero__ctas .btn--secondary:hover {
+  background: rgb(255 255 255 / 0.16);
+  color: var(--white);
+}
+
+html[data-cta='b1'] .hero__ctas .btn--secondary:hover .hero__cta-end::after {
+  translate: 0 3px;
+}
+
+/* ---------- B2 · Tiles ----------------------------------------------------
+   Soft-cornered tiles, both filled: Book in white, See Packages in the deep
+   red, each label on the left and its arrow on the right, one width on
+   desktop so they read as a pair. */
+html[data-cta='b2'] .hero__ctas {
+  gap: 0.75rem;
+}
+
+html[data-cta='b2'] .hero__ctas .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-width: 14rem;
+  border: 0;
+  border-radius: 14px;
+  padding: 1.125rem 1.25rem 1.125rem 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+}
+
+html[data-cta='b2'] .hero__ctas .btn::after {
+  content: '';
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: currentColor;
+  mask: var(--i-right) center / contain no-repeat;
+  transition: translate var(--transition-reduced) ease;
+}
+
+html[data-cta='b2'] .hero__ctas .btn--secondary {
+  background: var(--red-deep);
+  color: var(--cream);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14);
+}
+
+html[data-cta='b2'] .hero__ctas .btn--secondary::after {
+  mask-image: var(--i-down);
+}
+
+html[data-cta='b2'] .hero__ctas .btn--primary:hover::after {
+  translate: 3px 0;
+}
+
+html[data-cta='b2'] .hero__ctas .btn--secondary:hover {
+  background: #730819;
+  color: var(--cream);
+}
+
+html[data-cta='b2'] .hero__ctas .btn--secondary:hover::after {
+  translate: 0 3px;
+}
+
+/* ---------- C1 · Guide signs ---------------------------------------------
+   C as real guide signs: mixed case in the body face, as a highway sign is
+   lettered, the label on the left and a solid sign arrow on the right,
+   inside a border line. Book in the About page's sign blue, See Packages a
+   white sign. */
+html[data-cta='c1'] .hero__ctas {
+  gap: 1rem;
+}
+
+html[data-cta='c1'] .hero__ctas .btn {
+  --sign: #164a91;
+  --ink: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 0;
+  border-radius: 9px;
+  padding: 1rem 1.125rem 1rem 1.375rem;
+  background: var(--sign);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 4px var(--sign), inset 0 0 0 6px var(--ink), 0 3px 0 rgb(0 0 0 / 0.25);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+}
+
+html[data-cta='c1'] .hero__ctas .btn--secondary {
+  --sign: var(--white);
+  --ink: var(--black);
+}
+
+html[data-cta='c1'] .hero__ctas .btn::after {
+  content: '';
+  flex: none;
+  width: 1.375rem;
+  height: 1.375rem;
+  background-color: currentColor;
+  mask: var(--i-sign-right) center / contain no-repeat;
+}
+
+html[data-cta='c1'] .hero__ctas .btn--secondary::after {
+  mask-image: var(--i-sign-down);
+}
+
+html[data-cta='c1'] .hero__ctas .btn:hover {
+  background: var(--sign);
+  color: var(--ink);
+  translate: 0 -1px;
+}
+
+/* ---------- C2 · Yellow sign ----------------------------------------------
+   Book as a yellow warning sign, a black border line and capitals, with a
+   solid arrow riding after the last word; See Packages its opposite, a
+   black sign lettered in the same yellow. */
+html[data-cta='c2'] .hero__ctas {
+  gap: 1rem;
+}
+
+html[data-cta='c2'] .hero__ctas .btn {
+  --sign: #ffc72c;
+  --ink: var(--black);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9px;
+  padding: 1.0625rem 1.5rem;
+  background: var(--sign);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 4px var(--sign), inset 0 0 0 6.5px var(--ink), 0 3px 0 rgb(0 0 0 / 0.25);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+}
+
+html[data-cta='c2'] .hero__ctas .btn--secondary {
+  --sign: var(--black);
+  --ink: #ffc72c;
+}
+
+html[data-cta='c2'] .hero__cta-end {
+  white-space: nowrap;
+}
+
+html[data-cta='c2'] .hero__cta-end::after {
+  content: '';
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-left: 0.4em;
+  vertical-align: -0.08em;
+  background-color: currentColor;
+  mask: var(--i-sign-right) center / contain no-repeat;
+}
+
+html[data-cta='c2'] .hero__ctas .btn--secondary .hero__cta-end::after {
+  mask-image: var(--i-sign-down);
+}
+
+html[data-cta='c2'] .hero__ctas .btn:hover {
+  background: var(--sign);
+  color: var(--ink);
+  translate: 0 -1px;
+}
+
+/* ---------- E1 · Embossed plate -------------------------------------------
+   E refined: a raised rim line just inside a white edge, lettering with a
+   pressed-metal highlight, two screws, and TORONTO along the top of both
+   plates, so the pair reads as plates at phone size too. See Packages is
+   the deep-red plate. */
+html[data-cta='e1'] .hero__ctas {
+  gap: 1rem;
+}
+
+html[data-cta='e1'] .hero__ctas .btn {
+  --plate: linear-gradient(#ffffff 0%, #f4f5f6 55%, #e3e5e8 100%);
+  --edge: #ffffff;
+  --rim: #1a1a1a;
+  --ink: #151515;
+  --tag: var(--red-primary);
+  --screw: #8d9399;
+  --emboss: 0 1px 0 rgb(255 255 255 / 0.9), 0 -1px 0 rgb(0 0 0 / 0.12);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14.5rem;
+  border: 0;
+  border-radius: 10px;
+  padding: 1.5rem 2.25rem 0.875rem;
+  background: var(--plate);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 3px var(--edge), inset 0 0 0 5px var(--rim), 0 0 0 1px rgb(0 0 0 / 0.2), 0 3px 0 rgb(0 0 0 / 0.25);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.14em;
+  text-shadow: var(--emboss);
+}
+
+html[data-cta='e1'] .hero__ctas .btn--secondary {
+  --plate: linear-gradient(#a50e28 0%, #8a0a1f 60%, #6f0818 100%);
+  --edge: #9c0c25;
+  --rim: var(--cream);
+  --ink: var(--cream);
+  --tag: rgb(253 248 242 / 0.85);
+  --screw: #c9a3a9;
+  --emboss: 0 1px 0 rgb(0 0 0 / 0.35), 0 -1px 0 rgb(255 255 255 / 0.12);
+}
+
+/* The two screws, near the top corners. */
+html[data-cta='e1'] .hero__ctas .btn::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 13px;
+  right: 13px;
+  height: 7px;
+  background:
+    radial-gradient(closest-side, var(--screw) 70%, transparent 85%) left / 7px 7px no-repeat,
+    radial-gradient(closest-side, var(--screw) 70%, transparent 85%) right / 7px 7px no-repeat;
+}
+
+html[data-cta='e1'] .hero__ctas .btn::after {
+  content: 'Toronto' / '';
+  position: absolute;
+  top: 9px;
+  left: 0;
+  right: 0;
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: 0.32em;
+  text-align: center;
+  text-shadow: none;
+  color: var(--tag);
+}
+
+html[data-cta='e1'] .hero__ctas .btn:hover {
+  background: var(--plate);
+  color: var(--ink);
+  translate: 0 -1px;
+}
+
+/* ---------- E2 · L and P plates -------------------------------------------
+   Learner plates: Book wears a big red L, as on a learner's car, and See
+   Packages a P, the plate that comes after it. The letter sits in its own
+   square to the left of the label. */
+html[data-cta='e2'] .hero__ctas {
+  gap: 1rem;
+}
+
+html[data-cta='e2'] .hero__ctas .btn {
+  --plate: var(--white);
+  --ink: var(--black);
+  --mark: var(--red-primary);
+  --rule: rgb(0 0 0 / 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.625rem 1.5rem 0.625rem 0.75rem;
+  background: var(--plate);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--rule), 0 3px 0 rgb(0 0 0 / 0.22);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+}
+
+html[data-cta='e2'] .hero__ctas .btn--secondary {
+  --plate: var(--red-deep);
+  --ink: var(--cream);
+  --mark: var(--cream);
+  --rule: rgb(255 255 255 / 0.22);
+}
+
+html[data-cta='e2'] .hero__ctas .btn::before {
+  content: 'L' / '';
+  flex: none;
+  box-sizing: border-box;
+  width: 3rem;
+  padding-right: 0.75rem;
+  border-right: 1.5px solid var(--rule);
+  font-size: 2.25rem;
+  line-height: 1;
+  text-align: center;
+  color: var(--mark);
+}
+
+html[data-cta='e2'] .hero__ctas .btn--secondary::before {
+  content: 'P' / '';
+}
+
+html[data-cta='e2'] .hero__ctas .btn:hover {
+  background: var(--plate);
+  color: var(--ink);
+  translate: 0 -1px;
+}
+
+/* ---------- Phones ------------------------------------------------------
+   Last in the file, so they win over each look's desktop rules. On a phone
+   each button is one group, its label and its icon, centred in the button
+   with the same gap between them in every look, so the space either side
+   of the group is even whatever the words. Where the label is two lines
+   they share a left edge, except on the plates and the yellow sign, whose
+   capitals are centred as a plate's or a sign's are. The font is today's
+   phone size, 12px at 320px up to 13px from 372px: the buttons get shorter
+   as the screen gets wider, and anything bigger crowds two lines against
+   the top and bottom. */
+@media (max-width: 767px) {
+  /* Every button fills its block, as today, with the phone grid's own gap
+     over the middle road rather than the looks' desktop gaps. */
+  html[data-cta] .hero__ctas {
+    align-items: stretch;
+    gap: 0 calc(var(--ctas-road) + 2 * var(--ctas-margin));
+  }
+
+  /* As specific as each look's own rules, so these beat the desktop ones
+     above and the per-look ones below beat these. */
+  html:is([data-cta='b'], [data-cta='c'], [data-cta='e'], [data-cta='b1'], [data-cta='b2'], [data-cta='c1'], [data-cta='c2'], [data-cta='e1'], [data-cta='e2']) .hero__ctas .btn {
+    justify-content: center;
+    min-width: 0;
+    font-size: clamp(0.75rem, 3.5vw, 0.8125rem);
+    line-height: 1.2;
+  }
+
+  /* B: the chip stands beside the label, at the pill's widest. */
+  html[data-cta='b'] .hero__ctas .btn {
+    gap: 0.4em;
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+  }
+
+  html[data-cta='b'] .hero__ctas .btn::after {
+    width: 1.375em;
+    height: 1.375em;
+    background-size: 50%;
+  }
+
+  /* C: centred capitals with the arrow beside them, a size smaller like
+     the yellow sign's, since its capitals are as wide. */
+  html[data-cta='c'] .hero__ctas .btn {
+    gap: 0.4em;
+    border-radius: 8px;
+    padding: 0.25rem 0.5rem;
+    box-shadow: inset 0 0 0 3px var(--sign), inset 0 0 0 5px var(--edge), 0 3px 0 rgb(0 0 0 / 0.22);
+    font-size: clamp(0.6875rem, 3.4vw, 0.8125rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  html[data-cta='c'] .hero__ctas .btn::after {
+    width: 1em;
+    height: 1em;
+  }
+
+  /* E: the screws, and TORONTO on Book, in a band of their own along the
+     top, and the lettering centred in the rest, at the same height on both
+     plates. */
+  html[data-cta='e'] .hero__ctas .btn {
+    border-radius: 7px;
+    padding: 16px 0.375rem 5px;
+    box-shadow: inset 0 0 0 3.5px var(--rim), 0 2px 0 rgb(0 0 0 / 0.25);
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+
+  html[data-cta='e'] .hero__ctas .btn::before {
+    top: 8px;
+    left: 7px;
+    right: 7px;
+    height: 4px;
+    background-size: 4px 4px;
+  }
+
+  html[data-cta='e'] .hero__ctas .btn--primary::after {
+    top: 6px;
+    font-size: 0.5rem;
+    letter-spacing: 0.24em;
+  }
+
+  /* B1: the chip after the last word, on a softer corner than a full pill
+     (below), whose curved ends would pinch it. */
+  html[data-cta='b1'] .hero__ctas .btn {
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+  }
+
+  html[data-cta='b1'] .hero__cta-end::after {
+    width: 1.375em;
+    height: 1.375em;
+    margin: -0.25em 0 -0.25em 0.3em;
+  }
+
+  html[data-cta='b2'] .hero__ctas .btn,
+  html[data-cta='c1'] .hero__ctas .btn,
+  html[data-cta='e2'] .hero__ctas .btn {
+    gap: 0.45em;
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+  }
+
+  html[data-cta='b2'] .hero__ctas .btn {
+    border-radius: 10px;
+  }
+
+  html[data-cta='b2'] .hero__ctas .btn::after,
+  html[data-cta='c1'] .hero__ctas .btn::after {
+    width: 1em;
+    height: 1em;
+  }
+
+  html[data-cta='c1'] .hero__ctas .btn {
+    border-radius: 7px;
+    box-shadow: inset 0 0 0 3px var(--sign), inset 0 0 0 4.5px var(--ink), 0 2px 0 rgb(0 0 0 / 0.25);
+    line-height: 1.1;
+  }
+
+  /* C2: the capitals are centred and the arrow stands beside them, rather
+     than after the last word, which pulled the two lines off centre. Its
+     capitals are the widest label, so it's a size smaller below 383px:
+     11px at 320px. */
+  html[data-cta='c2'] .hero__ctas .btn {
+    gap: 0.4em;
+    border-radius: 7px;
+    padding: 0.25rem 0.5rem;
+    box-shadow: inset 0 0 0 3px var(--sign), inset 0 0 0 5px var(--ink), 0 2px 0 rgb(0 0 0 / 0.25);
+    font-size: clamp(0.6875rem, 3.4vw, 0.8125rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  html[data-cta='c2'] .hero__cta-end::after {
+    display: none;
+  }
+
+  html[data-cta='c2'] .hero__ctas .btn::after {
+    content: '';
+    flex: none;
+    width: 0.8em;
+    height: 0.8em;
+    background-color: currentColor;
+    mask: var(--i-sign-right) center / contain no-repeat;
+  }
+
+  html[data-cta='c2'] .hero__ctas .btn--secondary::after {
+    mask-image: var(--i-sign-down);
+  }
+
+  /* E1: TORONTO and the screws in a band of their own along the top, clear
+     of the rim, and the lettering centred in the rest. */
+  html[data-cta='e1'] .hero__ctas .btn {
+    border-radius: 7px;
+    padding: 16px 0.375rem 5px;
+    box-shadow: inset 0 0 0 2px var(--edge), inset 0 0 0 3.5px var(--rim), 0 0 0 1px rgb(0 0 0 / 0.2), 0 2px 0 rgb(0 0 0 / 0.25);
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+
+  html[data-cta='e1'] .hero__ctas .btn::before {
+    top: 8px;
+    left: 7px;
+    right: 7px;
+    height: 4px;
+    background-size: 4px 4px;
+  }
+
+  html[data-cta='e1'] .hero__ctas .btn::after {
+    top: 6px;
+    font-size: 0.5rem;
+    letter-spacing: 0.24em;
+  }
+
+  html[data-cta='e2'] .hero__ctas .btn {
+    border-radius: 7px;
+  }
+
+  html[data-cta='e2'] .hero__ctas .btn::before {
+    width: 1rem;
+    padding-right: 0;
+    border-right: 0;
+    font-size: 1.375rem;
+  }
+}
+
+@media (max-width: 479px) {
+  /* Both labels break before their last word, "Book a / Lesson" and "See /
+     Packages", so the two buttons always match. */
+  html[data-cta] .hero__cta-end {
+    display: block;
+  }
+
+  html[data-cta='b1'] .hero__ctas .btn {
+    border-radius: 18px;
+  }
+}
+
+/* The picker: a pill bar along the bottom of the window, over everything,
+   the cookie banner and the skip link included, and clear of the iPhone's
+   home bar. */
+.cta-looks {
+  position: fixed;
+  z-index: 2147483647;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  padding: 4px;
+  border-radius: 20px;
+  background: rgb(10 10 10 / 0.85);
+  font: 600 12px/1 var(--font-body);
+}
+
+.cta-looks a {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: var(--white);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+html:not([data-cta]) .cta-looks [data-look='a'],
+html[data-cta='a'] .cta-looks [data-look='a'],
+html[data-cta='b'] .cta-looks [data-look='b'],
+html[data-cta='c'] .cta-looks [data-look='c'],
+html[data-cta='e'] .cta-looks [data-look='e'],
+html[data-cta='b1'] .cta-looks [data-look='b1'],
+html[data-cta='b2'] .cta-looks [data-look='b2'],
+html[data-cta='c1'] .cta-looks [data-look='c1'],
+html[data-cta='c2'] .cta-looks [data-look='c2'],
+html[data-cta='e1'] .cta-looks [data-look='e1'],
+html[data-cta='e2'] .cta-looks [data-look='e2'] {
+  background: var(--white);
+  color: var(--black);
+}
+
+@media (max-width: 599px) {
+  .cta-looks span {
+    display: none;
+  }
+}
