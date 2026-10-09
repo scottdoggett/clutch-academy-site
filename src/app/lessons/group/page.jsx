@@ -9,7 +9,7 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Group Manual Driving Lessons in Toronto | Clutch Academy',
   description:
-    'Learn to drive manual alongside a friend — fun, supportive group stick shift lessons on real Toronto roads. 2 hours, $180 + HST. Book online.',
+    'Learn to drive manual with a friend. Group stick shift lessons on real Toronto roads, with Sam coaching. 2 hours, $180 + HST. Book online.',
   alternates: { canonical: '/lessons/group' },
 }
 
@@ -33,9 +33,9 @@ export const metadata = {
 // These carry over the placeholder bullets already shown on the live site's
 // group cards.
 const INCLUDED = [
-  'Learn with a friend in a supportive, low-pressure setting',
-  'Take turns at the wheel — watching is learning too',
-  'Great for first-timers who want the moral support',
+  'Learn with a friend, in a low-pressure lesson',
+  'Take turns at the wheel, and pick things up while you watch',
+  'A good fit for first-timers who want moral support',
 ]
 
 // PENDING: Sam to approve. Written September 28, 2026, when this page gained
@@ -88,15 +88,13 @@ export default function GroupLessonsPage() {
             Group Manual Lessons
           </h1>
           <p className="lesson-hero__lead">
-            Group manual driving lessons in Toronto for people who’d rather
-            not do it alone: grab a friend, share the nerves, and learn the
-            clutch together in a fun, supportive environment — on real roads,
-            with Sam coaching every turn at the wheel.
+            Group manual driving lessons in Toronto, for people who’d rather
+            not do it alone. Bring a friend, share the nerves, and learn the
+            clutch together on real roads. Sam coaches every turn at the wheel.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="lesson-hero__pull">
-            Most students arrive nervous — and leave wondering what they were
-            nervous about. Bringing a friend makes that even easier.
+            Most students arrive nervous. Bringing a friend helps.
           </p>
           <p className="lesson-hero__price">
             $180
@@ -194,8 +192,8 @@ export default function GroupLessonsPage() {
             <Link href="/lessons/individual">individual lesson</Link> or the{' '}
             <Link href="/lessons/manual-foundations">
               Manual Foundations Package
-            </Link>{' '}
-            — or{' '}
+            </Link>
+            . Or{' '}
             <Link href="/manual-driving-lessons">
               compare all lesson options
             </Link>

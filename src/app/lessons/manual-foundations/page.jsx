@@ -9,7 +9,7 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Manual Foundations Package — 3 Lessons | Clutch Academy',
   description:
-    'Learn to drive manual in Toronto from zero: a three-lesson progression from clutch control to traffic, hill starts, and independent driving. $240 + HST.',
+    'Learn to drive manual in Toronto from zero. Three lessons take you from clutch control to traffic, hill starts, and independent driving. $240 + HST.',
   alternates: { canonical: '/lessons/manual-foundations' },
 }
 
@@ -23,17 +23,17 @@ const CURRICULUM = [
   {
     n: 1,
     title: 'Clutch control, bite point, starts & stops',
-    desc: 'Somewhere quiet to begin: what the clutch actually does, finding the bite point, smooth takeoffs, and controlled stops — repeated until they feel natural.',
+    desc: 'You start somewhere quiet with what the clutch does and how to find the bite point. Then smooth takeoffs and controlled stops, repeated until they feel natural.',
   },
   {
     n: 2,
     title: 'Traffic, intersections, hill starts',
-    desc: 'Real Toronto roads: reading traffic, stopping and starting at intersections, and the skill everyone worries about — starting on a hill without rolling back.',
+    desc: 'You move onto real Toronto roads to read traffic and handle stops and starts at intersections. Then hill starts without rolling back, the part everyone worries about.',
   },
   {
     n: 3,
     title: 'Independent driving, smoother shifting',
-    desc: 'You drive, Sam coaches. Longer stretches of independent driving with smoother, quicker shifts — finishing road-confident, not just lesson-confident.',
+    desc: 'You drive, Sam coaches. Longer stretches of independent driving and smoother, quicker shifts, so you finish ready to drive on your own.',
   },
 ]
 
@@ -78,13 +78,13 @@ export default function ManualFoundationsPage() {
           <p className="lesson-hero__lead">
             The structured way to learn to drive manual in Toronto, built for
             complete beginners. Three one-on-one lessons take you from your
-            first touch of the clutch to driving real roads independently —
-            each one picking up exactly where the last left off.
+            first touch of the clutch to driving real roads on your own. Each
+            one picks up where the last left off.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="lesson-hero__pull">
-            Most students arrive nervous — and leave wondering what they were
-            nervous about.
+            Most students arrive nervous. Sam expects that and goes at your
+            pace.
           </p>
           <p className="lesson-hero__price">
             $240
@@ -124,7 +124,7 @@ export default function ManualFoundationsPage() {
           </ol>
           <p className="lesson-block__note">
             Every lesson is one-on-one in a manual hatchback, on
-            real Toronto roads. A valid G2 or G licence is required.
+            real Toronto roads. You need a valid G2 or G licence.
           </p>
         </div>
       </section>
@@ -138,16 +138,16 @@ export default function ManualFoundationsPage() {
           </header>
           <ul className="lesson-block__list">
             <li>
-              You’ve never driven a stick shift — this package assumes zero
-              experience and builds from the ground up.
+              You’ve never driven a stick shift. This package assumes you’re
+              starting from zero.
             </li>
             <li>
-              You want structure: a planned progression instead of piecing
-              together one-off lessons.
+              You want a planned progression instead of piecing together
+              one-off lessons.
             </li>
             <li>
-              You want to finish genuinely road-confident — most beginners
-              feel confident after three lessons.
+              You want to come out confident on the road. Most beginners feel
+              that way after three lessons.
             </li>
           </ul>
         </div>
@@ -195,14 +195,14 @@ export default function ManualFoundationsPage() {
             Book This Package
           </BookButton>
           <p className="lesson-next__links">
-            Want downtown, highway, and rush-hour mastery on top of the
-            foundations? Step up to{' '}
+            Want to drive downtown, on the highway, and in rush hour too? Step
+            up to the{' '}
             <Link href="/lessons/manual-confidence">
               Complete Manual Confidence Package
             </Link>
-            . Already driven manual before? A{' '}
+            . Driven manual before? A{' '}
             <Link href="/lessons/individual">single lesson</Link> may be all
-            you need — or{' '}
+            you need. Or{' '}
             <Link href="/manual-driving-lessons">
               compare all lesson options
             </Link>

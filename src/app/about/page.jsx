@@ -8,7 +8,7 @@ import './about.css'
 export const metadata = {
   title: 'About Clutch Academy | Manual Driving School in Toronto',
   description:
-    'Why Sam Anthony started Clutch Academy — calm, patient, judgment-free manual driving lessons on real Toronto roads, tailored to your pace.',
+    'Why Sam Anthony started Clutch Academy, and how he teaches manual driving lessons on real Toronto roads at your pace, with no judgment.',
   alternates: { canonical: '/about' },
 }
 
@@ -19,22 +19,22 @@ const FEARS = [
   {
     fear: '“What if I stall in the middle of an intersection?”',
     answer:
-      'You will stall — everyone does, and it’s part of the plan. We practice the calm reset early: clutch in, restart, breathe, go. After a few repetitions it stops being scary and starts being routine.',
+      'You will stall. Everyone does, and it’s part of the plan. We practice the reset early: clutch in, restart, breathe, go. After a few tries it’s routine.',
   },
   {
     fear: '“I’ve literally never touched a stick shift.”',
     answer:
-      'Perfect — that’s exactly who the first lesson is built for. We start somewhere quiet with what the clutch actually does, find the bite point, and get you moving within minutes. No lecture, no assumptions.',
+      'That’s who the first lesson is for. We start somewhere quiet with what the clutch does, find the bite point, and get you moving within minutes. No lecture.',
   },
   {
     fear: '“Hills terrify me.”',
     answer:
-      'They terrify everyone at first, so we build up to them deliberately. By the time you meet a real Toronto hill, you’ll have a step-by-step technique to hold, start, and go — no rolling back, no panic.',
+      'They terrify everyone at first, so we work up to them slowly. By the time you meet a real Toronto hill, you’ll know how to hold, start, and go without rolling back.',
   },
   {
     fear: '“Will you get frustrated with me?”',
     answer:
-      'No. Patience isn’t a slogan here — it’s the teaching style. Every stall, missed shift, and do-over is expected. You get one-on-one coaching and as many repetitions as you need, without the judgment.',
+      'No. Sam expects every stall, missed shift, and do-over. You get one-on-one coaching and as many tries as you need, and nobody judges you for needing them.',
   },
 ]
 
@@ -158,9 +158,8 @@ export default function AboutPage() {
             <p className="section-header__eyebrow">No judgment, ever</p>
             <h2 id="fears-heading">What Lessons Are Really Like</h2>
             <p className="section-header__lead">
-              Most students arrive nervous and leave wondering what they were
-              nervous about. Here’s what the worries actually look like from
-              the driver’s seat.
+              Most students arrive nervous. Here’s what the usual worries look
+              like once you’re in the driver’s seat.
             </p>
           </header>
           <div className="about-fears__grid">

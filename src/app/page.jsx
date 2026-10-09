@@ -19,7 +19,7 @@ export const metadata = {
         url: '/og-image.png?v=2',
         width: 1200,
         height: 630,
-        alt: 'Clutch Academy — manual transmission driving lessons in Toronto',
+        alt: 'Clutch Academy, manual transmission driving lessons in Toronto',
       },
     ],
   },
@@ -130,7 +130,7 @@ const SCHEMA_GRAPH = {
       '@id': 'https://clutchacademy.ca/#offer-3pack',
       name: 'Manual Foundations Package (3 Lessons)',
       description:
-        'Three one-hour lessons: progression from clutch basics to road-confident driving.',
+        'Three one-hour lessons that take you from clutch basics to driving real roads on your own.',
       price: '240.00',
       priceCurrency: 'CAD',
       category: 'Driving lesson package',

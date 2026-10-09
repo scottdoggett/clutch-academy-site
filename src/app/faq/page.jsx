@@ -46,9 +46,9 @@ export default function FaqPage() {
               Frequently Asked Questions
             </h1>
             <p className="section-header__lead">
-              Everything you need to know before your first manual lesson.
-              Still unsure? <Link href="/contact">Get in touch</Link>{' '}
-              and we&apos;ll get back within 24 hours.
+              What people usually ask before their first manual lesson. Still
+              unsure? <Link href="/contact">Get in touch</Link>{' '}
+              and we&apos;ll get back to you within 24 hours.
             </p>
           </header>
 

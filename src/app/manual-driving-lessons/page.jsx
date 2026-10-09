@@ -21,7 +21,7 @@ const PACKAGES = [
     who: 'Best as a refresher, or a first introduction to driving stick.',
     points: [
       'One-on-one instruction on real Toronto roads',
-      'Tailored to your starting level — zero experience is fine',
+      'Starts where you are, even with zero experience',
     ],
     price: '$90',
     unit: '/ hour + HST',
@@ -49,10 +49,10 @@ const PACKAGES = [
   {
     tag: 'Group · With a Friend',
     title: 'Group Manual Lessons',
-    who: 'Learn alongside a friend in a fun, supportive environment.',
+    who: 'Learn with a friend and take turns at the wheel.',
     points: [
       'Share the experience and split the nerves',
-      'Great low-pressure first exposure to the clutch',
+      'A low-pressure first go at the clutch',
     ],
     price: '$180',
     unit: '/ 2 hours + HST',
@@ -85,22 +85,22 @@ const PACKAGES = [
 // that carries the name inside the sentence.
 const CHOOSER = [
   {
-    if: 'You’ve never touched a stick shift',
+    if: 'If you’ve never touched a stick shift',
     lead: 'start with the',
     href: '/lessons/manual-foundations',
   },
   {
-    if: 'You’ve driven manual before and need a refresher',
+    if: 'If you’ve driven manual before and need a refresher',
     lead: 'book an',
     href: '/lessons/individual',
   },
   {
-    if: 'You want downtown, highway, and rush-hour mastery',
+    if: 'If you want to drive downtown, on the highway, and in rush hour',
     lead: 'go for the',
     href: '/lessons/manual-confidence',
   },
   {
-    if: 'You’d rather learn with a friend',
+    if: 'If you’d rather learn with a friend',
     lead: 'try',
     href: '/lessons/group',
   },
@@ -231,7 +231,7 @@ export default function LessonsOverviewPage() {
                 <li key={c.href} className="hub-choose__item">
                   {GEAR_BULLET}
                   <span>
-                    {c.if} —{' '}
+                    {c.if},{' '}
                     <Link href={c.href}>
                       {c.lead} {pkg.title}
                     </Link>
@@ -243,8 +243,8 @@ export default function LessonsOverviewPage() {
           </ul>
           <p className="hub-choose__aside">
             Still weighing it up? The <Link href="/faq">FAQ</Link> covers
-            licensing, what to wear, cancellation, and more — or{' '}
-            <Link href="/about">read how Sam teaches</Link> first.
+            licensing, what to wear, cancellation, and more. Or start with{' '}
+            <Link href="/about">how Sam teaches</Link>.
           </p>
         </div>
       </section>

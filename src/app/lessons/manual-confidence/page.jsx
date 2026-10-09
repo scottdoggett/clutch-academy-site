@@ -9,7 +9,7 @@ import { faqSubset } from '../../../lib/faqs'
 export const metadata = {
   title: 'Complete Manual Confidence Package — 5 Lessons | Clutch Academy',
   description:
-    'Highway and city manual lessons in Toronto: five one-on-one sessions covering downtown driving, highway merging, rush-hour traffic, advanced hill starts, and parking. $400 + HST.',
+    'Highway and city manual lessons in Toronto. Five one-on-one sessions: downtown, highway merging, rush hour, advanced hill starts, and parking. $400 + HST.',
   alternates: { canonical: '/lessons/manual-confidence' },
 }
 
@@ -22,11 +22,11 @@ export const metadata = {
 const SKILLS = [
   {
     title: 'Downtown driving',
-    desc: 'City traffic at its densest — tight streets, constant stops, and shifting that has to happen without thinking about it.',
+    desc: 'The city at its busiest: tight streets, constant stops, and shifts you make without thinking.',
   },
   {
     title: 'Highway merging',
-    desc: 'Confident acceleration through the gears, timing the merge, and holding highway speed comfortably.',
+    desc: 'Accelerating through the gears, timing the merge, and settling in at highway speed.',
   },
   {
     title: 'Rush-hour traffic',
@@ -34,7 +34,7 @@ const SKILLS = [
   },
   {
     title: 'Advanced hill starts',
-    desc: 'Steeper grades, tighter spots, cars close behind — hill starts that hold up under real pressure.',
+    desc: 'Hill starts on steeper grades, in tighter spots, with a car close behind you.',
   },
   {
     title: 'Parking',
@@ -42,7 +42,7 @@ const SKILLS = [
   },
   {
     title: 'Personalized coaching',
-    desc: 'Five sessions shaped around how you learn — extra reps where you need them, faster progression where you don’t.',
+    desc: 'Five sessions built around how you learn, with extra reps where you need them and less time where you don’t.',
   },
 ]
 
@@ -91,8 +91,8 @@ export default function ManualConfidencePage() {
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="lesson-hero__pull">
-            This is the package for finishing the job: not just moving the
-            car, but genuine confidence anywhere.
+            The package to take if you want to be confident wherever you
+            drive.
           </p>
           <p className="lesson-hero__price">
             $400
@@ -131,8 +131,8 @@ export default function ManualConfidencePage() {
           <p className="lesson-block__note">
             New to manual? The first lessons cover clutch control, the bite
             point, and starts and stops before any of this. Every session is
-            one-on-one in a manual hatchback, on real Toronto roads. A valid G2
-            or G licence is required.
+            one-on-one in a manual hatchback, on real Toronto roads. You need a
+            valid G2 or G licence.
           </p>
         </div>
       </section>
@@ -146,15 +146,15 @@ export default function ManualConfidencePage() {
           </header>
           <ul className="lesson-block__list">
             <li>
-              You don’t just want to get the car moving — you want to be
-              comfortable downtown, on the highway, and in rush hour.
+              You want to be comfortable downtown, on the highway, and in rush
+              hour.
             </li>
             <li>
               You’re planning to own or drive a manual regularly, and want it
               second nature before it has to be.
             </li>
             <li>
-              You’d rather master it once, with one coach across five
+              You’d rather learn it properly once, with one coach across five
               sessions, than patch gaps later.
             </li>
           </ul>
@@ -203,13 +203,13 @@ export default function ManualConfidencePage() {
             Book This Package
           </BookButton>
           <p className="lesson-next__links">
-            Not sure you need all five?{' '}
+            Not sure you need all five? The{' '}
             <Link href="/lessons/manual-foundations">
               Manual Foundations Package
             </Link>{' '}
-            is the three-lesson beginner progression, and a{' '}
+            is three lessons for beginners, and a{' '}
             <Link href="/lessons/individual">single lesson</Link> works as a
-            taster — or{' '}
+            taster. Or{' '}
             <Link href="/manual-driving-lessons">
               compare all lesson options
             </Link>

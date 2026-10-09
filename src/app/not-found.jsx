@@ -10,8 +10,8 @@ export default function NotFound() {
     <section className="placeholder-hero" aria-labelledby="page-heading">
       <h1 id="page-heading">Page not found</h1>
       <p>
-        That page doesn&apos;t exist — it may have moved during the site
-        rebuild. Everything bookable lives under our lessons overview.
+        That page doesn&apos;t exist. It may have moved when we rebuilt the
+        site. You&apos;ll find every lesson under Manual driving lessons below.
       </p>
       <ul>
         <li>

@@ -159,7 +159,7 @@ const SIGNS = [
   {
     key: 'book-online',
     title: 'Book at any hour',
-    line: 'Book and pay online — at 1 a.m., if that’s when you decide.',
+    line: 'Book and pay online whenever you decide, even at 1 a.m.',
     box: [33, 13, 134, 120],
     post: 115,
     // A blue service sign, with a booked day as its pictogram.

@@ -11,22 +11,22 @@ export const FAQS = [
   {
     id: 'license',
     q: "Do I need a driver's license to take lessons?",
-    a: 'Yes — a valid G2 or G license is required for all lessons.',
+    a: 'Yes. You need a valid G2 or G license for every lesson.',
   },
   {
     id: 'never-driven',
-    q: "I've never driven manual before — is that okay?",
-    a: "Absolutely. Most students start as complete beginners. Lessons are tailored to your level, so you'll learn step by step without feeling overwhelmed.",
+    q: "I've never driven manual before. Is that okay?",
+    a: 'Yes. Most students start as complete beginners. Sam works from your level and adds one skill at a time.',
   },
   {
     id: 'synonyms',
     q: "What's the difference between manual, stick shift, and standard?",
-    a: "Nothing — they're three names for the same thing: a car you shift yourself with a clutch. Whether you call it manual, stick shift, or standard transmission, that's exactly what you'll learn to drive here.",
+    a: "Nothing. They're three names for the same thing, a car you shift yourself with a clutch. Whether you call it manual, stick shift, or standard transmission, that's what you'll learn to drive here.",
   },
   {
     id: 'location',
     q: 'Where do lessons take place?',
-    a: 'Lessons take place in Toronto. We typically start in a quieter area to build confidence, then transition to real-road driving. Selection of meeting location available at booking.',
+    a: 'Lessons take place in Toronto. We usually start somewhere quiet to build confidence, then move onto real roads. You pick the meeting spot when you book.',
   },
   {
     id: 'how-many',
@@ -36,12 +36,12 @@ export const FAQS = [
   {
     id: 'wear',
     q: 'What should I wear?',
-    a: 'Wear comfortable clothing and thin-soled shoes — this helps you feel the clutch and pedals more precisely. No sandals or open-toe shoes.',
+    a: 'Wear comfortable clothes and thin-soled shoes. Thin soles let you feel the clutch and pedals better. No sandals or open-toe shoes.',
   },
   {
     id: 'pay',
     q: 'How do I pay?',
-    a: 'Payment is securely collected at the time of your booking using Stripe. All major credit and debit cards are accepted.',
+    a: 'You pay securely through Stripe when you book. We accept all major credit and debit cards.',
   },
   {
     id: 'cancellation',
@@ -54,12 +54,12 @@ export const FAQS = [
   {
     id: 'car',
     q: 'What car will I be learning on?',
-    a: "You'll learn in a manual-transmission hatchback — a great car for learning thanks to its smooth clutch and forgiving feel.",
+    a: "You'll learn in a manual-transmission hatchback. Its clutch is smooth and forgiving, which makes it a good car to learn on.",
   },
   {
     id: 'gift',
     q: 'Can I buy a lesson as a gift?',
-    a: 'Yes — lessons can be purchased for someone else. Just include their name when booking or reach out after purchase.',
+    a: 'Yes. You can buy lessons for someone else. Add their name when you book, or get in touch after you buy.',
   },
 ]
 

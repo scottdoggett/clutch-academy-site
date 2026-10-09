@@ -7,7 +7,7 @@ import './contact.css'
 export const metadata = {
   title: 'Contact Clutch Academy | Manual Driving Lessons Toronto',
   description:
-    'Reach Clutch Academy by phone, email, Instagram, or Facebook. Payment is collected securely online when you book your manual driving lesson.',
+    'Reach Clutch Academy by phone, email, Instagram, or Facebook. You pay securely online when you book your manual driving lesson.',
   alternates: { canonical: '/contact' },
 }
 
@@ -35,7 +35,7 @@ export default function ContactPage() {
             </BookButton>
             <p className="contact-hero__payment-note">
               <span>
-                Payment collected securely at time of booking, not in person.
+                You pay securely when you book, not in person.
               </span>
               <span>All cards accepted.</span>
             </p>
@@ -60,9 +60,9 @@ export default function ContactPage() {
             <div className="contact-policies__item">
               <dt>Secure payment</dt>
               <dd>
-                Payment is securely collected at the time of your booking
-                using Stripe — there’s nothing to settle in person. All major
-                credit and debit cards are accepted.
+                You pay securely through Stripe when you book, so there’s
+                nothing to settle in person. We accept all major credit and
+                debit cards.
               </dd>
             </div>
             <div className="contact-policies__item">

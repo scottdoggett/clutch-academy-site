@@ -21,10 +21,10 @@ const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 // over the placeholder bullets already shown on the live site's pricing card;
 // confirm before launch.
 const INCLUDED = [
-  'One-on-one instruction, tailored to your starting level',
+  'One-on-one instruction that starts at your level',
   'Clutch control basics and finding the bite point',
   'First-gear starts, stops, and real-road practice',
-  'Personalized feedback on exactly what to practice next',
+  'Personal feedback on what to practice next',
 ]
 
 // Four situations a visitor can recognise themselves in. They were named,
@@ -32,9 +32,9 @@ const INCLUDED = [
 // shape and this section became the bullet list the other three use.
 const WHO = [
   'You learned manual years ago and want the muscle memory back before it matters.',
-  'You’re renting a car in Europe this summer — where manual is often the default — and want to arrive ready.',
-  'You’ve never driven stick and want a real first introduction before committing to a package.',
-  'You have a specific skill to iron out — hill starts, smoother shifting, downshifting — and one focused session will do it.',
+  'You’re renting a car in Europe, where manual is often the default, and want to arrive ready.',
+  'You’ve never driven stick and want to try it before committing to a package.',
+  'You want to fix one thing, like hill starts, smoother shifting, or downshifting, in a single focused session.',
 ]
 
 // Real quotes from the Google-review set, chosen because both describe a
@@ -74,13 +74,13 @@ export default function IndividualLessonPage() {
           <p className="lesson-hero__lead">
             One hour, one-on-one, on real Toronto roads. The individual
             lesson is the manual driving refresher Toronto drivers book when the
-            skill has gone rusty — and the easiest first introduction if
-            you’ve never touched a stick shift.
+            skill has gone rusty, and the easiest first lesson if you’ve never
+            touched a stick shift.
           </p>
           {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
           <p className="lesson-hero__pull">
-            Most students arrive nervous — and leave wondering what they were
-            nervous about.
+            Most students arrive nervous. Sam expects that and goes at your
+            pace.
           </p>
           <p className="lesson-hero__price">
             $90
@@ -111,8 +111,8 @@ export default function IndividualLessonPage() {
             ))}
           </ul>
           <p className="lesson-block__note">
-            Taught in a manual hatchback. A valid G2 or G licence
-            is required.
+            Taught in a manual hatchback. You need a valid G2 or G
+            licence.
           </p>
         </div>
       </section>
@@ -178,7 +178,7 @@ export default function IndividualLessonPage() {
             <Link href="/lessons/manual-foundations">
               Manual Foundations Package
             </Link>{' '}
-            walks you from clutch control to independent driving — or{' '}
+            walks you from clutch control to independent driving. Or{' '}
             <Link href="/manual-driving-lessons">
               compare all lesson options
             </Link>

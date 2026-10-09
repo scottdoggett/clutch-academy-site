@@ -39,13 +39,6 @@ export default function HowItWorks() {
             <h2 id="how-heading" data-anim="headline">
               How It Works
             </h2>
-            <p
-              className="section-header__lead"
-              data-anim="rise"
-              data-anim-delay="0.3"
-            >
-              Four steps, and you only have to think about the first two.
-            </p>
           </header>
 
           <section className="first-lesson" aria-labelledby="first-lesson-heading">

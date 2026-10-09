@@ -40,7 +40,7 @@ export default function Nav() {
       <Link
         href="/"
         className="nav__brand"
-        aria-label="Clutch Academy — home"
+        aria-label="Clutch Academy home"
         onClick={() => setMenuOpen(false)}
       >
         <img src="/logo.svg" alt="Clutch Academy" className="nav__logo" />
