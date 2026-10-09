@@ -42,6 +42,7 @@ export default function RoadLayer({ layout, className }) {
         '--tick-gap': `${tick.gap}px`,
         '--stripe': `${crosswalk.stripe}px`,
         '--stripe-space': `${crosswalk.space}px`,
+        '--round': `${Math.round(roads.fillet)}px`,
       }}
     >
       {bands.map((p) => (

@@ -10,7 +10,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { CONFIG } from './config.js'
 import { buildGraph, checkGraph, roadsFor, segmentsOf } from './graph.js'
-import { hideRule, laneMinimum, offenders, pieceRect, resolveClearance, resolveMap, roadPieces } from './layout.js'
+import { SEAM, hideRule, laneMinimum, offenders, pieceRect, resolveClearance, resolveMap, roadPieces } from './layout.js'
 
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const wide = read('./layouts/wide.json')
@@ -272,7 +272,7 @@ const BUTTON_CLEAR = 6 - 1
 
 test('on phones, each button sits in a block of its own, with a road on every side', () => {
   const road = roadsFor(compact).main
-  const round = roadsFor(compact).fillet
+  const round = Math.round(roadsFor(compact).fillet)
   const covered = coverage(compact)
   for (const s of phoneSizes) {
     const label = s.viewport.join('×')
@@ -336,7 +336,7 @@ test('the road layer has a road and ticks for every segment, a box for every jun
 
 const overlaps = (a, b) => a.x0 < b.x1 - 1e-6 && a.x1 > b.x0 + 1e-6 && a.y0 < b.y1 - 1e-6 && a.y1 > b.y0 + 1e-6
 
-test('every block corner at a junction is rounded, and each round sits in its corner, out of the roads, at any recorded size', () => {
+test('every block corner at a junction is rounded, and each round sits in its corner, reaching only just under its two roads, at any recorded size', () => {
   const PAIRS = [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']]
   for (const layout of [wide, medium, compact]) {
     const graph = buildGraph(layout)
@@ -350,15 +350,25 @@ test('every block corner at a junction is rounded, and each round sits in its co
     const rect = (p) => pieceRect(p, b.width, b.height)
     const roads = [...bands, ...junctions].map(rect)
     const graph = buildGraph(b.layout, { width: b.width, height: b.height })
-    const round = roadsFor(b.layout).fillet
+    const round = Math.round(roadsFor(b.layout).fillet)
     for (const f of fillets) {
-      const r = rect(f)
-      assert.ok(Math.abs(r.x1 - r.x0 - round) < 1e-6 && Math.abs(r.y1 - r.y0 - round) < 1e-6)
+      const full = rect(f)
+      assert.ok(Math.abs(full.x1 - full.x0 - round - SEAM) < 1e-6 && Math.abs(full.y1 - full.y0 - round - SEAM) < 1e-6)
+      // Less the strips it reaches under its roads by, on the junction's
+      // sides, it's the round's square, on no road.
+      const east = f.corner.endsWith('e')
+      const south = f.corner.startsWith('s')
+      const r = {
+        x0: full.x0 + (east ? SEAM : 0),
+        x1: full.x1 - (east ? 0 : SEAM),
+        y0: full.y0 + (south ? SEAM : 0),
+        y1: full.y1 - (south ? 0 : SEAM),
+      }
       for (const q of roads) assert.ok(!overlaps(r, q), `${b.label}: the ${f.corner} round at ${f.node} is on a road`)
       // Its inner corner is the junction box's corner.
       const n = graph.nodes.find((m) => m.id === f.node)
-      const x = f.corner.endsWith('e') ? r.x0 - n.box.x1 : n.box.x0 - r.x1
-      const y = f.corner.startsWith('s') ? r.y0 - n.box.y1 : n.box.y0 - r.y1
+      const x = east ? r.x0 - n.box.x1 : n.box.x0 - r.x1
+      const y = south ? r.y0 - n.box.y1 : n.box.y0 - r.y1
       assert.ok(Math.abs(x) < 1e-6 && Math.abs(y) < 1e-6, `${b.label}: the ${f.corner} round at ${f.node} is off its corner`)
     }
   }

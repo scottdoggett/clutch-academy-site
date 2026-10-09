@@ -7,11 +7,31 @@
 }
 
 .roads > span {
+  --left: calc(var(--x, 0) * 100% + var(--dx, 0) * 1px);
+  --top: calc(var(--y, 0) * 100% + var(--dy, 0) * 1px);
+  --width: calc(var(--w, 0) * 100% + var(--dw, 0) * 1px);
+  --height: calc(var(--h, 0) * 100% + var(--dh, 0) * 1px);
   position: absolute;
-  left: calc(var(--x, 0) * 100% + var(--dx, 0) * 1px);
-  top: calc(var(--y, 0) * 100% + var(--dy, 0) * 1px);
-  width: calc(var(--w, 0) * 100% + var(--dw, 0) * 1px);
-  height: calc(var(--h, 0) * 100% + var(--dh, 0) * 1px);
+  left: var(--left);
+  top: var(--top);
+  width: var(--width);
+  height: var(--height);
+}
+
+/* Every edge on a whole CSS pixel, so on a 2x or 3x screen every edge is
+   on a whole device pixel too. A road at 50% of a 375px box less 12px
+   starts at 175.5px, between pixels on a 3x phone, and pieces that meet
+   there snap to different pixels: a rounded corner stepped a pixel short of
+   its road. Each piece's far edge is rounded, not its size, so two pieces
+   that meet still meet. Browsers without round() keep the exact edges
+   above. */
+@supports (width: round(1.5px, 1px)) {
+  .roads > span {
+    left: round(var(--left), 1px);
+    top: round(var(--top), 1px);
+    width: calc(round(var(--left) + var(--width), 1px) - round(var(--left), 1px));
+    height: calc(round(var(--top) + var(--height), 1px) - round(var(--top), 1px));
+  }
 }
 
 .roads__band,
@@ -110,13 +130,15 @@
   background-repeat: space no-repeat;
 }
 
-/* Rounded block corners: white, less a quarter circle centred on the
-   corner furthest from the junction. */
+/* Rounded block corners: white, less a quarter circle of the round's
+   radius centred on the corner furthest from the junction. The piece is a
+   pixel bigger than the round on its two road sides (layout.js SEAM), so
+   the radius is given rather than taken from the piece's size. */
 .roads__fillet {
   --fx: 0%;
   --fy: 0%;
   background: radial-gradient(
-    circle farthest-side at var(--fx) var(--fy),
+    circle var(--round) at var(--fx) var(--fy),
     transparent calc(100% - 0.75px),
     var(--white) 100%
   );

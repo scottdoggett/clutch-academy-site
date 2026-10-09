@@ -127,6 +127,9 @@ export function resolveMap(layout, { width, height, copy, clearance }) {
 
 const JUNCTION = new Set(['cross', 'tee', 'corner'])
 
+// How far a block corner's round reaches under its two roads, px.
+export const SEAM = 1
+
 export function roadPieces(layout, roads = roadsFor(layout)) {
   // At 1×1, node positions come out as fractions of the box, while junction
   // boxes, which are made of road widths, are still px.
@@ -183,9 +186,16 @@ export function roadPieces(layout, roads = roadsFor(layout)) {
 
   // Rounded block corners: a square the size of the round in each corner
   // between two roads at a junction, white less a quarter circle
-  // (RoadLayer.css). It goes when either of its two roads does.
+  // (RoadLayer.css). It goes when either of its two roads does. Each one
+  // reaches SEAM px under its two roads: where a road edge falls between
+  // device pixels, as at 375px on a 3x phone, the round and the road round
+  // to different pixels, and an exact fit leaves a red hairline between
+  // them.
   const fillets = []
-  const r = roads.fillet
+  // A whole number of px, so with every edge on a whole pixel (RoadLayer.css)
+  // the curve ends exactly on its roads' edges: 12px, or 7px on the phone
+  // map rather than 7.2.
+  const r = Math.round(roads.fillet)
   for (const n of graph.nodes) {
     if (!JUNCTION.has(n.kind)) continue
     for (const [a, b] of [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']]) {
@@ -198,10 +208,10 @@ export function roadPieces(layout, roads = roadsFor(layout)) {
         node: n.id,
         seg: n.arms[a].id,
         seg2: n.arms[b].id,
-        x: [n.nx, east ? n.hx : -n.hx - r],
-        y: [n.ny, south ? n.hy : -n.hy - r],
-        w: [0, r],
-        h: [0, r],
+        x: [n.nx, east ? n.hx - SEAM : -n.hx - r],
+        y: [n.ny, south ? n.hy - SEAM : -n.hy - r],
+        w: [0, r + SEAM],
+        h: [0, r + SEAM],
       })
     }
   }
