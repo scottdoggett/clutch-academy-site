@@ -36,7 +36,7 @@ reviewed. **Work on `overhaul`. Never commit directly to `main`.**
 `docs/spec/archive/` holds the retired single-page spec and the rebuild's
 planning docs. **Don't work from anything in there.**
 
-## Current state (September 25, 2026)
+## Current state (October 9, 2026)
 
 - **All 9 routes are built with real content**: `/`, `/about`,
   `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
@@ -72,8 +72,18 @@ planning docs. **Don't work from anything in there.**
   uniform grids at Sam's asking, with a medium map of fewer columns below
   1200px, and on phones the two buttons moved inside the roads, one to a
   block. The same day the roads got rounded block corners and grey
-  markings. The spec's §Handoff says where it is, how
-  Scott reviews, the open questions and what bit last time.
+  markings, and every road edge was then put on a whole pixel so no
+  hairline shows at the corners on a 3x phone. The hero's two buttons have
+  ten looks on trial in a development-only picker (`?cta=` on the
+  homepage, `src/components/home/CtaLooks.jsx`) for Scott and his partner
+  to choose from; the picker goes once one is chosen. The spec's §Handoff
+  says where it is, how Scott reviews, the open questions and what bit
+  last time.
+- **October 9: a plain-language pass over all the copy.** No em dashes and
+  no filler in body copy, bullets, FAQ answers, meta descriptions or alt
+  text, on every route and in `privacy.html`, `booked.html` and
+  `llms.txt`. Customer quotes, Sam's About story and the headings were
+  left alone. `07-status.md` lists what it changed and what it found.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 
@@ -142,6 +152,10 @@ planning docs. **Don't work from anything in there.**
   and every GSAP animation goes under `gsap.matchMedia(MOTION_OK)` so reduced
   motion gets the final static state. Never hide content in CSS for a JS
   entrance to reveal.
+- **No em dashes in site copy, and plain words.** Use a period or a comma.
+  Short, warm, second person, saying what happens; cut quips rather than
+  polish them. Customer quotes and Sam's own words are exempt.
+  `03-content-and-pricing.md` §Copy rules 6.
 - **Pending inputs** are `{/* PENDING: ... */}` / `❓ BLOCKED` comments —
   `grep -rn "PENDING\|BLOCKED" src/ public/` lists all outstanding client
   inputs. Never invent content that conflicts with the brand: no invented

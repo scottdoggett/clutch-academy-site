@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** October 7, 2026.
+**Last updated:** October 9, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -20,7 +20,8 @@ being rebuilt as a small city with traffic and a car you can drive**
 the roads, the traffic, a car you can drive over the whole page with a
 manual or automatic gearbox, a dashboard along the bottom of the window,
 tyre marks, and traffic that's bumped out of its lane when you hit it,
-with sparks and smoke. Phase 7, performance and fallbacks, is left.
+with sparks and smoke. Phase 7, performance and fallbacks, is left, and
+the hero's two buttons have ten looks on trial in the dev server.
 Everything else that remains before cutover is verification and client
 sign-off. The other caveat: **the July QA pass no longer reflects
 the build**, so re-running it is now a cutover requirement rather than a
@@ -200,6 +201,18 @@ accepted on September 24.
   same white roads (`hero-drive.md` §Decisions 33). The road layer grew by
   110 elements, about 1.1KB gzipped. 96 tests pass; checked in headless
   Chrome at 1440×900, 1100×520, 768×1024 and 390×844.
+- **No hairline at the rounded corners, after October 8:** at 375px on a
+  3x phone some rounds and their roads landed on different device pixels,
+  with a red line between them. Every road edge now snaps to a whole pixel,
+  the round is a whole number of px (7 on phones rather than 7.2), and each
+  reaches a pixel under its roads (`hero-drive.md` §Things that bit). The
+  test that keeps rounds off the roads allows that pixel. 96 tests.
+- **The buttons' looks, on trial:** ten looks for the hero's two buttons,
+  for Scott and his partner to pick from, in a development-only picker
+  (`?cta=` on the homepage, `src/components/home/CtaLooks.jsx`).
+  Production still shows today's buttons. The chosen look moves into
+  `Hero.css` and the picker is deleted (`hero-drive.md` §Open questions
+  10).
 - **Phase 7, still to build:** save-data, WebGL-failure handling,
   disposal, performance (now with particles and knocked cars in it) and
   the bundle report. Its phones and touch part was done early, in Phase 4:
@@ -207,6 +220,47 @@ accepted on September 24.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.
+
+## Recently completed — October 8–9, 2026 (phones and copy)
+
+- **The fall-sale banner on phones** is two centred rows at every phone
+  width: the flag and the pitch, then the price and the saving. Below
+  440px the pitch goes. Estimated at 61px for first paint, from 76px at
+  390px (`03-content-and-pricing.md` §The fall sale).
+- **The reviews strip's cards fit their quotes.** One shared height, the
+  fewest lines the longest quote needs, and each card only as wide as its
+  quote then needs, so a long review makes a wide card, not a tall one.
+  The reviewer and the stars share the top row (`02-architecture.md`).
+  "Read more reviews on Google" now fits one line below 360px too.
+- **The strip carries every review, October 9.** All 43 Google reviews
+  with words (the 44th is five stars and no text), up from 15, copied
+  verbatim and checked against the profile. Eleven long ones stop after a
+  whole sentence, so no quote outruns the longest whole one and no card
+  gets taller. Matthew Hartford's is the one four-star review, and its card
+  shows four stars. Its second paragraph, a suggestion to get "a 'learning
+  driver' sign" and "an emergency break installed", is left off: Sam's
+  call whether it goes on. The strip's drift is now set per card, so it
+  keeps its old pace (~60px/s) with nearly three times the cards.
+- **How It Works lost its lead.** "Four steps, and you only have to think
+  about the first two" was rewritten twice and then cut, at Scott's word.
+- **A plain-language pass over the copy, October 9**, at Scott's asking:
+  every em dash out of the body copy, bullets, FAQ answers, meta
+  descriptions and alt text on all nine routes, `privacy.html`,
+  `booked.html` and `llms.txt`, and the filler with them. The rule is
+  `03-content-and-pricing.md` §Copy rules 6. Worth knowing:
+  - The package pages' pull line is now "Most students arrive nervous. Sam
+    expects that and goes at your pace." on Individual and Foundations, and
+    "…Bringing a friend helps." on Group. Confidence's is "The package to
+    take if you want to be confident wherever you drive."
+  - The hub's chooser is still four plain sentences, now "If you've never
+    touched a stick shift, start with the Manual Foundations Package."
+  - "This summer" is gone from Individual's Europe line.
+  - `llms.txt` said "Group Lesson (2 hours)"; it's "Group Manual Lessons"
+    now. The October 7 rename had missed it.
+  - Untouched: every customer quote, Sam's About story, the "why manual"
+    line from the client brief, the cancellation answer (item 6), headings,
+    titles and eyebrows, and the homepage hero's copy (its fixture).
+  - Build, lint and 96 tests clean.
 
 ## Recently completed — October 7, 2026 (site review, first changes)
 
@@ -553,14 +607,15 @@ These are the actual blockers. Most need Sam.
 | 3 | **Google Ads conversion label** | `public/booked.html` | Empty string ⇒ Ads conversions are a silent no-op. Account-side fix. |
 | 4 | **Confidence guarantee — dropped from the rebuild** | `/lessons/manual-confidence`, `src/app/page.jsx` | ✅ Resolved by removal (Sept 21, 2026). The terms were never written, so the claim is gone from the hero lead and the homepage Offer schema. `main` still advertises it — if Sam wants it back, the terms have to come first. |
 | 5 | **Package inclusions** | `/lessons/individual`, `/lessons/group` | Current bullets are the live site's placeholders. Sam owes final 3–5 each. |
-| 6 | **Cancellation-policy final wording** | `src/lib/faqs.js` (`cancellation`) | Current text is the live site's. Editing it there propagates everywhere. |
+| 6 | **Cancellation-policy final wording** | `src/lib/faqs.js` (`cancellation`), `public/booked.html` | Current text is the live site's. Editing it in `faqs.js` propagates to every page, but not to `booked.html`, whose fine print ("Cancellations are free up to 24 hours after booking your lesson") leaves out the FAQ's other condition, at least 24 hours before the lesson. |
 | 7 | **Dedicated testimonials** | `/about` | Every quote on the site is a real Google review. Sam may supply dedicated ones; there's a `PENDING` slot. |
 | 8 | **Fonts now actually render** | Site-wide | Plus Jakarta Sans + Inter were referenced but never loaded on the old site — it silently fell back to system fonts. `next/font` loads them, so the rebuild *looks different*. Per the tokens' clear intent, but nobody has confirmed it with Sam. |
 | 9 | **Search Console verification token** | `src/app/layout.jsx` | Stubbed `PENDING`. Sam-side. |
 | 10 | **Slug keyword audit** | Routes | 🟡 Slugs were never deliberately audited. Cheap to change now, expensive once Ads final URLs point at them. |
 | 11 | **New line in Sam's voice** | `src/components/home/AboutTeaser.jsx` | "Everyone stalls while they're learning. Nobody's grading you, so we keep it relaxed, and most people end up having fun." Written in the September copy pass; Sam hasn't approved it. |
 | 12 | **Homepage meta description lags the copy** | `src/app/page.jsx` (`metadata`) | The on-page copy was rewritten in September; the description and OG/Twitter text weren't. Its facts are still right; the wording is the old voice. |
-| 13 | **Group page's "Who it's for" lines** | `src/app/lessons/group/page.jsx` (`WHO`) | Written September 28, 2026, when the page took the other package pages' shape. Each restates the hub's group card or chooser wording, but Sam hasn't seen them. `PENDING`. |
+| 13 | **Group page's "Who it's for" lines** | `src/app/lessons/group/page.jsx` (`WHO`) | Written September 28, 2026, when the page took the other package pages' shape, and reworded in the October 9 copy pass with the same meaning. Sam hasn't seen them. `PENDING`; the comment above them still quotes the hub card's pre-October 9 wording. |
+| 14 | **"Ontario residents" and PIPEDA** | `public/privacy.html` | The policy says "Ontario residents have additional rights under PIPEDA", but PIPEDA is federal law. Legal wording, so the October 9 pass left it. Whoever owns the policy should fix it. |
 
 ### From the Site 2.0 review doc — still needing clarification
 
@@ -582,17 +637,22 @@ later.
 - **Package pages:** the right half of every hero and closing band is
   empty at desktop (photos pending); a summary card (price, length, what's
   included, Book) could fill it. The heroes' leads read as written for
-  search, and three share the pull line "Most students arrive nervous…".
+  search. The pull line was rewritten on October 9, but Individual and
+  Foundations still share it word for word.
 - **Calendly:** every Book button opens the same link, so a visitor who
   chose a package picks it again in Calendly. Needs per-package links from
   Sam (`useCalendly.js` already plans for them).
-- **Copy:** an em-dash pass on every page but the homepage; "renting a car
-  in Europe this summer" on Individual; "licence" vs "license" (FAQ and How
-  It Works say "license"); the cancellation answer contradicts itself
-  ("after 24 hours of booking"), so Sam's wording (item 6) matters more.
-- **Phones:** the reviews strip's 64px edge fade washes out the first words
-  of each quote; the footer's nine stacked links run about a screen and a
-  half.
+- **Copy:** ✅ the em-dash pass and "this summer", October 9 (above).
+  Still open: "licence" vs "license" (the package pages' notes say
+  "licence"; the FAQ, How It Works and `booked.html` say "license"); the
+  cancellation answer contradicts itself ("after 24 hours of booking"), so
+  Sam's wording (item 6) matters more; and five page titles and the hub's
+  eyebrow ("Manual · Stick Shift · Standard — same lessons") still carry
+  an em dash, Scott's call. Sam's About story and the "why manual" line
+  keep theirs until Sam signs off on a change.
+- **Phones:** ✅ both fixed in the October 7 phone pass (above): the
+  reviews strip's edge fade is 1.25rem on phones, and the footer is about
+  half a screen.
 - **Hub:** the 1–4 numbers on the cards read as a sequence; the homepage's
   "Compare every lesson option" lands on cards, not a comparison.
 - **FAQ:** two columns of accordions; one column in groups would read more
@@ -604,6 +664,10 @@ later.
 - **The 404's heading is off the column.** It sits at 176px at 1440, the
   column at 112px, so the page breaks the one-left-edge rule
   (`.placeholder-hero`). Found October 7.
+- **The homepage's Offer schema has no group lesson.** `src/app/page.jsx`
+  lists Offers for three packages but not Group Manual Lessons, and the
+  comment above them still says they "describe the OLD packages/prices",
+  which stopped being true with the winter prices. Found October 9.
 
 Nothing else outstanding. Both entries that stood here on August 16 — the off-centre
 content blocks and the hub's missing booking CTA — were fixed on August 18; see
@@ -626,8 +690,8 @@ table.
 
 | Check | Status |
 |---|---|
-| Build + lint | ✅ Clean as of October 7, 2026 |
-| `npm test` | ✅ 92 of 92, October 7, 2026 |
+| Build + lint | ✅ Clean as of October 9, 2026 |
+| `npm test` | ✅ 96 of 96, October 9, 2026 |
 | Hero road maps (`npm test`) | ✅ 31 tests: both maps connected, no dead ends, no U-turns, whole ticks only, crossings in place, nothing within 48px of the copy at 32 recorded sizes (September 24) |
 | Hero roads in Chrome | ✅ 360, 390, 768, 1280, 1440, 1920px; every road piece within 0.007px of its tested geometry (September 24) |
 | Hero roads in Safari | Not checked, but no longer a known risk: the SVG dash-length concern went with the SVG. Covered by the pre-launch real-device pass. |

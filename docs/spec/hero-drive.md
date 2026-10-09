@@ -61,6 +61,17 @@ for Phase 7.
   look: of six tried side by side, Scott picked rounded block corners and
   grey markings (§Decisions 33). The grids await his next look (§Open
   questions 9).
+- **Since October 8**: a red hairline showed between some rounded corners
+  and their roads on a 3x phone. Every road edge now lands on a whole
+  pixel and each round reaches a pixel under its roads (§Drawing the roads,
+  §Things that bit). And the two buttons have ten looks on trial, for Scott
+  and his partner to pick from: a development-only picker,
+  `src/components/home/CtaLooks.jsx` and `CtaLooks.css`, switched by
+  `?cta=` on the homepage, with A as today's buttons. Production doesn't
+  load it. The labels are wrapped in `.hero__cta-label` and
+  `.hero__cta-end` spans for the looks to style, and nothing else styles
+  them. Once a look is picked it moves into `Hero.css` and the picker goes
+  (§Open questions 10).
 - Commits: Phases 1 and 2 as `8bd1a72` and `f922e2e`; Phases 3 to 5 as
   `14bdbd5` and `1d5b5a0`; the whole page as `cd5517f` and `f2a72f4`; the
   knob fix, the tyre marks and the treadmill as `fb7ab4c`, `88a81bf` and
@@ -495,7 +506,10 @@ In Chrome, a rammed car knocked across a junction with sparks.
    1200px switch between six columns and four, the blocks still tall on a
    portrait tablet (169×256px at 768×1024), six cars on the phone band's two
    rows, and the 48px of red kept between the subhead and the first road.
-10. Settled, for the record: the side street's short blocks (§Decisions 17).
+10. **The buttons' look** (§Handoff): ten on trial in the dev server,
+   `?cta=a` (today's) to `?cta=e2`: arrow chips, tiles, road signs and
+   licence plates. Scott and his partner pick one.
+11. Settled, for the record: the side street's short blocks (§Decisions 17).
    In windows about 600 to 730px tall, a car stopped beside it still sits on
    the zebra crossing, and those blocks have no centre ticks.
 
@@ -693,6 +707,12 @@ Traps:
   a container query `(width < 1em)` whose em is the strip's own font size,
   set to one tile. That's how the threshold follows the zoom without a number
   in the CSS.
+- **Edges between device pixels leave hairlines.** At 375px on a 3x phone,
+  a rounded corner and its road snapped to different device pixels and
+  showed a red line between them. So `RoadLayer.css` rounds every road
+  edge to a whole CSS px with `round()`, the round's radius is a whole px,
+  and each round reaches `SEAM` (1px, `layout.js`) under its two roads.
+  Anything new laid edge to edge in the road layer needs the same.
 - **The dev server** is usually already running on :3000 from Scott's own
   session. Reuse it. `npm run build` is safe alongside it, because dev builds
   into `.next/dev`.
@@ -1170,7 +1190,12 @@ Every piece sits at a fraction of its box plus a pixel offset, from custom
 properties: `left: calc(var(--x) * 100% + var(--dx) * 1px)`, and the same for
 top, width and height. So a 40px road is 40px and a crossing sits 3px clear
 of its junction at any size, CSS rescales everything for free, and no
-JavaScript is involved. Five kinds of piece, painted in this order:
+JavaScript is involved. Where the browser has CSS `round()`, every edge then
+snaps to a whole CSS px (October 2026). Each piece's left and top are
+rounded, and its far edge rather than its size, so two pieces that meet
+still meet. Unrounded, a road at 50% of a 375px box less 12px starts at
+175.5px, between device pixels on a 3x phone, and two pieces meeting there
+can land a pixel apart. Five kinds of piece, painted in this order:
 
 | Piece | What it is |
 |---|---|
@@ -1178,7 +1203,7 @@ JavaScript is involved. Five kinds of piece, painted in this order:
 | Junction box | White, as big as the junction really is. With every road one width that's always a square, 40×40, or 24×24 on the phone map; while side streets were narrower it was 24×40 where one met a main road. Mostly it lands on road that's already white; at a corner it fills the outside of the bend. |
 | Centre ticks | One strip per segment, from the crossing (or box edge) at one end to the other. Each tile is one 8px tick with 5px of gap either side, and `background-repeat: space` draws only whole tiles and spreads them evenly. A tick is never cut short, and every run starts and ends the same way. A run too short for even one whole tick, as between two crossings on the shortest blocks, draws none: the strip is a size container, and a container query hides the `::before` the ticks are drawn on. The query is "narrower than 1em", with the strip's font size set to one tile, because a container query can't read a custom property but does measure em against the container. So it follows the map's zoom with no number repeated in the CSS. |
 | Zebra crossing | See §Rules for the map. Drawn the same way as the ticks, one stripe per tile. |
-| Round | A square the size of the round (`roads.fillet`, 12px) in each block corner between two roads at a junction, white less a quarter circle centred on its far corner, so the block's corner reads as rounded. Tested to sit exactly on the junction box's corner and on no road, at every recorded size. It carries both its roads (`data-seg`, `data-seg2`) and hides with either. |
+| Round | A square the size of the round (`roads.fillet` to the nearest whole px: 12px, or 7px on the phone map rather than 7.2) in each block corner between two roads at a junction, white less a quarter circle centred on its far corner, so the block's corner reads as rounded. It reaches `SEAM` (1px) under each of its two roads, so no hairline can open between them. Tested to sit exactly on the junction box's corner, and on no road but for that pixel, at every recorded size. It carries both its roads (`data-seg`, `data-seg2`) and hides with either. |
 
 Tested at every recorded size: no tick touches a junction box or crossing,
 and no crossing touches another. Since the uniform grid (§Decisions 30),

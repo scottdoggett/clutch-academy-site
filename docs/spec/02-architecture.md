@@ -94,9 +94,11 @@ src/
 │   ├── WasPrice.jsx            # The struck-out pre-sale price beside a price
 │   ├── AnalyticsLoader.jsx     # Loads pixels only after consent
 │   ├── ReviewsMarquee.jsx      # Google-review strip: GSAP drift + drag/swipe,
-│   │                           # static swipeable list under reduced motion
+│   │                           # static swipeable list under reduced motion;
+│   │                           # fitCards() sizes each card to its quote
 │   ├── home/                   # Hero, Reviews, HowItWorks, PackagesTeaser,
-│   │                           # AboutTeaser — homepage sections
+│   │                           # AboutTeaser — homepage sections; CtaLooks,
+│   │                           # the hero buttons' looks on trial (dev only)
 │   ├── hero/                   # The homepage hero's city (hero-drive.md):
 │   │                           # road maps in layouts/, graph.js, layout.js,
 │   │                           # the server-rendered RoadLayer, HeroStage
@@ -207,6 +209,15 @@ three trust points) used to close About, the hub, the FAQ, and all four package
 pages; it was removed everywhere in August 2026. The homepage "What Students Are
 Saying" section — marquee plus a Google badge — is a different component and
 remains.
+
+The strip's cards are sized to their quotes (October 2026). They share one
+height, the fewest lines the longest quote needs at the widest a card may be
+(`--card-max`), and each card is as narrow as its own quote allows at that
+height, so a long review gets a wide card rather than a tall one. CSS
+estimates each width from the quote's length (`--chars`) for first paint;
+`fitCards()` in `ReviewsMarquee.jsx` then measures every quote and sets
+`--fit`, again on any change of the strip's width and once the fonts load.
+The reviewer and the stars share the card's top row.
 
 ## Single sources of truth
 

@@ -35,6 +35,9 @@ lower prices are presented as a limited-time sale.
   for a limited time. Lessons now from $90." and, beside a price tag, "Save
   up to $70 on lesson packages" ($470 to $400, the biggest drop). It slides
   away on scroll. No end date yet; add one to the copy when Sam sets it.
+  On phones it's two centred rows, the flag and the pitch and then the
+  price and the saving. Below 440px the pitch goes, leaving "FALL SALE ·
+  Lessons now from $90." over the saving (October 2026, `overhaul` only).
 - **Struck-out old prices and a Save tag** beside every price: homepage
   cards, hub cards and the four package heroes. $110, $300, $470 and $220,
   what each package cost until October 5, so Save $20, $60, $70 and $40.
@@ -89,8 +92,9 @@ banner announced the August switch; it auto-expired and was removed.
 
 On October 5, 2026 winter rates took prices and lesson length back to the
 pre-August offering, with one 2-hour group at $180 (`f8645c4` on `main`,
-ported to `overhaul` October 6). `main` announces it with a "Winter rates"
-banner that slides away on scroll (`a82df9d`); `overhaul` has no banner.
+ported to `overhaul` October 6). `main` announced it with a "Winter rates"
+banner that slides away on scroll (`a82df9d`), renamed "Fall sale"
+(`75e2646`), and `overhaul` took the banner on October 7 (§The fall sale).
 
 The group offering is **one option**, a 2-hour session. The 1-hour group
 retired on August 1 hasn't come back; if it does, it is an addition.
@@ -177,7 +181,7 @@ Per-page subsets:
 To add an FAQ: append to the array. The page, the subsets, and the structured
 data all follow.
 
-The `synonyms` entry ("manual, stick shift, standard — what's the difference?")
+The `synonyms` entry ("What's the difference between manual, stick shift, and standard?")
 is there for search as much as for students; people search all three terms.
 
 ## Payment & cancellation
@@ -198,9 +202,25 @@ final wording — see `07-status.md`.
    or inclusions. Flag the gap `PENDING` instead.
 2. **Every testimonial is a real Google review.** Quoted verbatim, attributed to
    the reviewer's name as it appears on the profile. No review on the site is
-   presented as describing a group lesson, because none of them does.
+   presented as describing a group lesson, because none of them does. Since
+   October 9, 2026 the homepage strip has every review with words in it
+   (`src/lib/reviews.js` says how long ones are cut and why); a card shows
+   the review's own stars.
 3. **Prices are always "+ HST".**
 4. **Use the synonyms.** Manual, stick shift, and standard all appear
    deliberately.
 5. **Sam's words stay Sam's words.** Where he supplied copy — the About story —
    edit only with his sign-off.
+6. **No em dashes in site copy, and plain words** (Scott, October 9, 2026).
+   Every body paragraph, bullet, FAQ answer, meta description and alt text
+   went through one pass that took out the em dashes and the filler
+   ("tailored", "genuinely", "supportive environment", "not just X, but
+   Y"). Use a period or a comma. Write short, warm and in the second
+   person, and say what happens. Scott cuts quips rather than polishing
+   them: How It Works' lead, "Four steps, and you only have to think about
+   the first two", went altogether. Exempt: customer quotes (rule 2), Sam's
+   words (rule 5), and the "why manual" line on `/about`, which is quoted
+   from the client brief. Headings, page titles and eyebrows weren't part
+   of the pass. Five page titles (`/faq`, the Foundations and Confidence
+   pages, `privacy.html`, `booked.html`) and the hub's eyebrow still carry
+   one, waiting on Scott.
