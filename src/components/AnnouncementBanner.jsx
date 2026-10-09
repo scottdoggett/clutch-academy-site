@@ -73,9 +73,15 @@ export default function AnnouncementBanner() {
     >
       <p className="announcement-banner__copy">
         <span className="announcement-banner__flag">Fall sale</span>
+        {/* Two sentences, so a phone can set them on rows of their own
+            (AnnouncementBanner.css). */}
         <span className="announcement-banner__msg">
-          We&apos;ve downshifted our prices for a limited time. Lessons now from{' '}
-          <strong>$90</strong>.
+          <span className="announcement-banner__pitch">
+            We&apos;ve downshifted our prices for a limited time.
+          </span>{' '}
+          <span className="announcement-banner__price">
+            Lessons now from <strong>$90</strong>.
+          </span>
         </span>
         {/* The biggest drop on a struck-out price (src/lib/sale.js): the
             five-lesson package, $470 to $400. */}

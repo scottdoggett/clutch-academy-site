@@ -53,9 +53,18 @@
     padding-top: 0.75rem;
   }
 
-  /* One line at 320px and up; at full size the label wrapped to two. */
+  /* One line; at full size the label wrapped to two. */
   .reviews__footer .btn {
     font-size: 0.8125rem;
     padding-inline: 1rem;
+  }
+}
+
+/* Below 360px it still wrapped, by about 6px: tighter here, one line at
+   320px too. */
+@media (max-width: 359px) {
+  .reviews__footer .btn {
+    padding-inline: 0.75rem;
+    letter-spacing: 0.05em;
   }
 }
