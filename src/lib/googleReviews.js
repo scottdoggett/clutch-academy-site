@@ -6,9 +6,10 @@
 // reviews land on the profile, update reviewCount (and rating, if it ever
 // moves) in this one spot.
 //
-// Review QUOTES live in src/components/ReviewsMarquee.jsx.
+// Review QUOTES live in src/lib/reviews.js.
 // October 7, 2026: 44 reviews, 43 of them five stars and one four, which
-// Google shows as 5.0 (the mean is 4.98).
+// Google shows as 5.0 (the mean is 4.98). Still 44 on October 9; the four is
+// Matthew Hartford's.
 const googleReviews = {
   rating: 5,
   reviewCount: 44, // per the profile, October 7, 2026
