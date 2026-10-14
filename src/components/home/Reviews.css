@@ -1,6 +1,6 @@
 /* Home reviews section footer. The beige band and its red header type come
-   from `.section--light` in globals.css; the marquee itself (and the
-   review-card styles) live in src/components/ReviewsMarquee.css. */
+   from `.section--light` in globals.css; the marquee itself lives in
+   src/components/ReviewsMarquee.css and the cards in ReviewCard.css. */
 /* The footer's top border, as its own element so it can Draw in. */
 .reviews__rule {
   height: 1px;
@@ -13,33 +13,42 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  padding-top: 1rem;
+  padding-top: 1.25rem;
   flex-shrink: 0;
 }
 
+/* Score first (October 14): the big 5.0, and beside it the stars over the
+   review count, both lines together as tall as the number. */
 .reviews__badge {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.25rem 0.625rem;
+  gap: 0.75rem;
 }
 
-.reviews__badge-label {
+.reviews__badge-score {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-small);
-  letter-spacing: var(--letter-caps);
-  text-transform: uppercase;
-  color: var(--red-deep);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 4vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: var(--letter-tight);
+  color: var(--red-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.reviews__badge-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
 }
 
 .reviews__badge-stars {
   font-size: var(--text-body-lg);
+  line-height: 1.1;
   letter-spacing: 0.1em;
   color: var(--star-gold);
 }
 
-.reviews__badge-score {
+.reviews__badge-count {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-small);
@@ -47,14 +56,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Phones: the score above and the button the full width of the column
+   under it, so its edges line up with the rule and the cards. */
 @media (max-width: 767px) {
   .reviews__footer {
-    justify-content: flex-start;
-    padding-top: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   /* One line; at full size the label wrapped to two. */
   .reviews__footer .btn {
+    text-align: center;
     font-size: 0.8125rem;
     padding-inline: 1rem;
   }

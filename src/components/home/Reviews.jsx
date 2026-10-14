@@ -5,8 +5,7 @@ import googleReviews from '../../lib/googleReviews'
 // Home "What Students Are Saying" section: header + the shared review
 // marquee + the Google-rating footer. A beige band (`section--light` in
 // globals.css flips its header type and button to red). Review quotes live in
-// src/components/ReviewsMarquee.jsx; rating/count numbers in
-// src/lib/googleReviews.js.
+// src/lib/reviews.js; rating/count numbers in src/lib/googleReviews.js.
 export default function Reviews() {
   return (
     <section className="section section--light" id="reviews" aria-labelledby="reviews-heading">
@@ -38,19 +37,24 @@ export default function Reviews() {
           {/* Stars/count derive from the shared numbers module so the badge
               can never disagree with the homepage aggregateRating schema.
               The score is on show, not just for screen readers: the count is
-              what makes five stars believable (October 2026 review). */}
+              what makes five stars believable (October 2026 review). Laid
+              out score first, like Google's own summary: the big number,
+              then the stars over the count beside it (October 14). */}
           <div className="reviews__badge">
-            <span className="reviews__badge-label">Google reviews</span>
-            <span className="reviews__badge-stars" aria-hidden="true">
-              {'★'.repeat(Math.round(googleReviews.rating))}
-            </span>
             <span className="reviews__badge-score" aria-hidden="true">
-              {googleReviews.rating.toFixed(1)} · {googleReviews.reviewCount}{' '}
-              reviews
+              {googleReviews.rating.toFixed(1)}
+            </span>
+            <span className="reviews__badge-detail" aria-hidden="true">
+              <span className="reviews__badge-stars">
+                {'★'.repeat(Math.round(googleReviews.rating))}
+              </span>
+              <span className="reviews__badge-count">
+                {googleReviews.reviewCount} Google reviews
+              </span>
             </span>
             <span className="visually-hidden">
               Rated {googleReviews.rating.toFixed(1)} out of 5 from{' '}
-              {googleReviews.reviewCount} reviews
+              {googleReviews.reviewCount} Google reviews
             </span>
           </div>
           <a
