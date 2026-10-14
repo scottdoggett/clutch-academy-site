@@ -120,7 +120,7 @@ ships verbatim from `public/` and is served at `/booked` via a rewrite in
 On load it fires, once per booking:
 
 - GA4 `purchase`
-- Google Ads `conversion`
+- Google Ads `conversion` (skipped while the label is empty, below)
 - Meta `Purchase`
 - TikTok `CompletePayment`
 
@@ -147,8 +147,8 @@ setting — without those parameters every booking collapses into one bucket.
 
 ### ❓ Google Ads conversions are currently a no-op
 
-`GOOGLE_ADS_CONVERSION_LABEL` in `booked.html` is an **empty string**. The Ads
-conversion fires against nothing. GA4 `purchase` works, Meta and TikTok work —
+`GOOGLE_ADS_CONVERSION_LABEL` in `booked.html` is an **empty string**, so the
+Ads conversion call is skipped. GA4 `purchase` works, Meta and TikTok work —
 Ads does not.
 
 Fixing it is account-side: create the conversion action in the Google Ads UI,
@@ -160,4 +160,7 @@ and don't let anyone optimise campaigns against it.
 
 When you change pricing, also change `priceForEvent()` and `DEFAULT_VALUE`.
 When you add a CTA, give it a new `source`. When you add a platform, gate it
-behind consent in `AnalyticsLoader` — never load it in `layout.jsx`.
+behind consent in `AnalyticsLoader` — never load it in `layout.jsx`. Add its
+hosts to the Content-Security-Policy in `next.config.mjs` too, or the browser
+blocks it with nothing to see but a console error (`06-deployment.md`
+§Security headers).

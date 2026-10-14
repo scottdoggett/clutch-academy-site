@@ -20,6 +20,7 @@ Archived August 16, 2026.
 | `07-overhaul-build-plan.md` | The 13-phase plan for the Vite → Next.js rebuild | Every phase has now run; outcomes recorded in `07-status.md` |
 | `08-overhaul-reference.md` | Sitemap, per-page content, pricing table, SEO targets, migration map | Absorbed into the current `02`/`03`/`04` |
 | `09-handoff-status.md` | Build state as of July 2026 | Superseded by `07-status.md`; its Aug-1 checklist has since been executed |
+| `Stuff Scott Needs.docx` | Sam's copy for the single-page site, April 29, 2026: hero options, bio, first lesson, draft reviews, FAQ | Applied to the old site, then superseded by the rebuild's copy. It names the car and offers e-transfer and PayPal, both since dropped. Moved here October 13, 2026 |
 
 ## Two things worth knowing before you read any of it
 
@@ -28,9 +29,10 @@ Archived August 16, 2026.
   entire layer was deleted in the rebuild. If you find a document enthusing
   about `useShiftTransition`, `ScrollTrigger`, or `window.__PRERENDER__`, you
   are reading history.
-- **Prices in these files are wrong.** They describe the pre-August-1 offering
-  ($90 / $240 / $400, group $90–$180). Current pricing is in
-  `03-content-and-pricing.md`.
+- **Don't take prices from these files.** They describe the pre-August-1
+  offering ($90 / $240 / $400, group $90–$180). The October 2026 winter rates
+  came back to the same numbers, but with one 2-hour group format. Current
+  pricing is in `03-content-and-pricing.md`.
 
 The client brief that drove the rebuild
 (`../Clutch_Academy_Website_Revamp_Brief_July2026.pdf`) is a source document,

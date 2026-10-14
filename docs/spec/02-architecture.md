@@ -17,9 +17,10 @@ How the `overhaul` build is put together. For the deployed shape of things
   `HeroStage` loads that lazily once the page is idle, so it's a chunk of its
   own, about 138KB gzipped, off the critical path.
 - **planck.js** 1.5.0, added September 24, 2026 for driving the hero's black
-  car. Only `src/components/hero/drive/` imports it, loaded when the Drive
-  button is hovered, focused or pressed, as its own 49KB chunk. Phones and
-  touch screens never load it.
+  car. Only `src/components/hero/drive/` imports it, loaded when the Test
+  drive button is hovered, focused or pressed, as a chunk of its own with
+  the driving code, about 55KB gzipped (October 9 build). Phones and touch
+  screens never load it.
 - **Tests run on Node's built-in `node:test`** (`npm test`), not a framework.
   They cover the hero's pure modules. No routing library, no state library.
   The dependency list is deliberately short, seven packages: Next, React,
@@ -54,7 +55,7 @@ canonical, and has exactly one `<h1>`.
 | `/lessons/group` | Group Manual Lessons | Ads + organic landing page |
 | `/about` | About Sam | Trust — the origin story in Sam's own words |
 | `/faq` | FAQ | Rendered from the shared FAQ array; source of the FAQPage schema |
-| `/contact` | Contact | Channels, hours, payment & cancellation |
+| `/contact` | Contact | Channels, payment & cancellation |
 | — | 404 (`not-found.jsx`) | Noindexed, links back into the site |
 
 Two static pages ship verbatim from `public/` and are reached through rewrites,
@@ -83,7 +84,7 @@ src/
 │   └── lessons/{individual,manual-foundations,manual-confidence,group}/
 │
 ├── components/
-│   ├── Nav.jsx                 # Sticky nav, mobile toggle, section-aware
+│   ├── Nav.jsx                 # Fixed nav, mobile toggle, section-aware
 │   │                           # active state, Book Now CTA
 │   ├── Footer.jsx              # Brand, contact, Explore sitemap, social
 │   ├── Breadcrumbs.jsx         # Trail + BreadcrumbList JSON-LD
@@ -97,8 +98,7 @@ src/
 │   │                           # static swipeable list under reduced motion;
 │   │                           # fitCards() sizes each card to its quote
 │   ├── home/                   # Hero, Reviews, HowItWorks, PackagesTeaser,
-│   │                           # AboutTeaser — homepage sections; CtaLooks,
-│   │                           # the hero buttons' looks on trial (dev only)
+│   │                           # AboutTeaser — homepage sections
 │   ├── hero/                   # The homepage hero's city (hero-drive.md):
 │   │                           # road maps in layouts/, graph.js, layout.js,
 │   │                           # the server-rendered RoadLayer, HeroStage
@@ -133,6 +133,7 @@ src/
 │   ├── gsap.js                 # GSAP + plugin registration, MOTION_OK
 │   ├── motion.js               # Motion values and the six data-anim types
 │   ├── motionPrepaint.js       # Inline script: hero states before first paint
+│   ├── sale.js                 # Fall-sale switch, pre-sale prices, savings
 │   └── treadmill.js            # The reviews strip as a treadmill for the hero's car
 │
 └── styles/
@@ -298,7 +299,7 @@ weren't there, so its road map and tests don't change (`Hero.css`).
 - **Client components are the exception.** Most pages are server components;
   `'use client'` appears only where interaction demands it (Nav, BookButton,
   ConsentBanner, AnnouncementBanner, AnalyticsLoader, ContactCard,
-  ReviewsMarquee, SiteMotion).
+  ReviewsMarquee, SiteMotion, HeroStage).
   Animated sections stay server components: they opt in with `data-anim`
   attributes that `SiteMotion` reads.
 - **Nav active state is section-aware.** `/lessons/*` keeps the Lessons item
@@ -309,7 +310,7 @@ weren't there, so its road map and tests don't change (`Hero.css`).
   is scarce or padding would drag an underline away from its text, grow the hit
   area with an absolutely positioned overlay instead — see the nav toggle and
   `ContactCard`. Inline links inside a sentence are exempt (WCAG 2.5.8), and
-  breadcrumbs sit at 28px, past the 24px AA floor.
+  breadcrumbs sit at about 33px, past the 24px AA floor.
 - **The mobile nav bar must stay one row.** It is `flex-wrap: nowrap`, the open
   menu is an absolutely positioned dropdown, and the logo shrinks to absorb the
   squeeze. A wrapped bar grows past `--nav-height`, which every page reserves as

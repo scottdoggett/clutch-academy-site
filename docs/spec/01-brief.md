@@ -43,8 +43,8 @@ exclusively.
 
 1. **Renting a manual car on a European trip.** Specifically flagged by the
    client to emphasise — many European rentals are manual-only or materially
-   cheaper in manual. This shows up as its own scenario card on
-   `/lessons/individual`.
+   cheaper in manual. This shows up as its own line in the "Who it's for"
+   list on `/lessons/individual`.
 2. Enthusiast interest — car culture, sports cars.
 3. Owning, or about to own, a manual car.
 4. The skill for its own sake.

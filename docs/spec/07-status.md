@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** October 9, 2026.
+**Last updated:** October 14, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -20,8 +20,7 @@ being rebuilt as a small city with traffic and a car you can drive**
 the roads, the traffic, a car you can drive over the whole page with a
 manual or automatic gearbox, a dashboard along the bottom of the window,
 tyre marks, and traffic that's bumped out of its lane when you hit it,
-with sparks and smoke. Phase 7, performance and fallbacks, is left, and
-the hero's two buttons have ten looks on trial in the dev server.
+with sparks and smoke. Phase 7, performance and fallbacks, is left.
 Everything else that remains before cutover is verification and client
 sign-off. The other caveat: **the July QA pass no longer reflects
 the build**, so re-running it is now a cutover requirement rather than a
@@ -207,12 +206,26 @@ accepted on September 24.
   the round is a whole number of px (7 on phones rather than 7.2), and each
   reaches a pixel under its roads (`hero-drive.md` §Things that bit). The
   test that keeps rounds off the roads allows that pixel. 96 tests.
-- **The buttons' looks, on trial:** ten looks for the hero's two buttons,
-  for Scott and his partner to pick from, in a development-only picker
-  (`?cta=` on the homepage, `src/components/home/CtaLooks.jsx`).
-  Production still shows today's buttons. The chosen look moves into
-  `Hero.css` and the picker is deleted (`hero-drive.md` §Open questions
-  10).
+- **The buttons' look, B1, October 14:** of ten looks tried in a
+  development-only picker, Scott chose B1: sentence-case pills, each with
+  a round chip riding after the last word, a red chip with an arrow on
+  Book a Lesson and a white one pointing down on See Packages, which is
+  outlined. It's in `Hero.css`; `CtaLooks.jsx` and `CtaLooks.css` are
+  deleted. The pills are shorter than the old buttons, so from 768px the
+  copy block is 9 to 12px shorter and `copy-rects.json` was re-recorded
+  (headless Chrome, all 35 sizes): every copy box sits inside its old one,
+  the phone rows are unchanged, and the short windows hide the same roads
+  as before. 96 tests (`hero-drive.md` §Decisions 34).
+- **No roads on phones, October 14:** Scott found the roads made the phone
+  hero too busy. Below 768px the hero is now just the copy and its two
+  buttons, side by side under the subhead as they were before October 8,
+  in the B1 look, 44px tall with each label on one line from 320px. The
+  traffic chunk never loads on phones, and a desktop window narrowed past
+  768px clears its cars until it widens again. The phone map, its config,
+  its five tests and the fixture's phone rows are deleted. Checked in
+  Chrome at 320 to 767px, and through 1440, 390 and 1440px. 90 tests, lint
+  and build clean. Not yet committed or seen by Scott (`hero-drive.md`
+  §Decisions 35).
 - **Phase 7, still to build:** save-data, WebGL-failure handling,
   disposal, performance (now with particles and knocked cars in it) and
   the bundle report. Its phones and touch part was done early, in Phase 4:
@@ -220,6 +233,66 @@ accepted on September 24.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.
+
+## Recently completed — October 14, 2026 (security headers, the rating)
+
+- **Security headers.** securityheaders.com gave the live site a D: it sent
+  none of Content-Security-Policy, X-Frame-Options, X-Content-Type-Options,
+  Referrer-Policy and Permissions-Policy. All five are now on every
+  response from `next.config.mjs` (`06-deployment.md` §Security headers).
+  Tested on a production build, and on the live site's own pages served
+  locally with the same headers, with every violation logged: the pages,
+  the Google tag and Ads remarketing, the Meta and TikTok pixels after
+  consent, Calendly's popup, and the hero's traffic and driving. The only
+  blocks were the two meant ones, another site framing ours. The test
+  caught two hosts the guides miss: Ads remarketing loads a script from
+  `googleads.g.doubleclick.net`, and the Meta pixel sends a copy of each
+  event through its own Conversions API Gateway.
+- ⚠️ **Not on the live site yet.** That needs the same headers in
+  `vercel.json` on `main`. The change is written and checked against `main`
+  but not applied, since it changes what customers get: Scott's call.
+- **Found on the way:** the live domain sends `clutchacademy.ca` to `www`
+  (a 307 from Vercel's domain settings), the reverse of `next.config.mjs`,
+  while every canonical tag names the bare domain. `06-deployment.md` said
+  the domain settings agreed with the config; the cutover runbook now says
+  what to flip.
+- **The Google rating under the strip goes score first.** On a phone the
+  score fell onto a line of its own and the button stopped three quarters
+  across. Now a big 5.0 sits with the stars and "44 Google reviews"
+  stacked beside it, and on phones the button runs the full width of the
+  column underneath. Desktop keeps the score left and the button right.
+  Scott picked it from three layouts (the others were one line with a text
+  link, and everything centred).
+
+## Recently completed — October 13, 2026 (stale files and references)
+
+- **Removed from `public/`:** `hero-section.jpeg` and `.webp` (the homepage
+  hero's photo until September 24), `headshot.webp` (the Vite site's
+  `<picture>` fallback; `next/image` makes its own from `headshot.jpeg`) and
+  `lessons-car.png` (the hub's intro-hero photo until August 16, which shows
+  the car's make). Nothing referenced them; they're in git.
+- **`Stuff Scott Needs.docx`**, Sam's April copy for the single-page site,
+  moved to `archive/`.
+- **Kept on purpose:** `logo2.svg` (the wide wordmark `og-image.png` was
+  made from) and `icon.svg` (the favicon mark without its white backing).
+  Nothing references either; they're the only vector copies.
+- **Stale references fixed** across the spec, `seo.md`,
+  `google-ads-mapping.md`, Sam's two SEO guides (winter prices, 44 reviews,
+  the dropped guarantee) and code comments: archived-doc numbering ("08 §7"),
+  `index.html` and the prerender, retired source tags, renamed files and
+  classes, old prices. `seo.md`'s "no stale pricing" check was flagging
+  today's prices; it now looks for the August ones.
+- **Dead code:** `.gate__plate` (the hub's July hero) and five tokens from the
+  gear-era design and the old rating badge. `booked.html`'s copy of
+  `--chrome` was still `#d9d9d9`, which fails AA on the red; it's `#e4e4e4`
+  like `tokens.css`.
+- **The sitemap's `lastmod`** went from August 16 to October 9 on every
+  route, after the October prices and copy pass.
+- **Still open, not changed:** `llms.txt` links
+  `calendly.com/clutchacademy-ibca` while every Book button opens
+  `calendly.com/d/d3mm-v7p-mf9`; `privacy.html` says "Last updated:
+  2026-05-12" though its wording changed October 9; and Sam's next-steps
+  guide still has May to August ranking targets and a 90-day calendar.
 
 ## Recently completed — October 8–9, 2026 (phones and copy)
 
@@ -614,7 +687,7 @@ These are the actual blockers. Most need Sam.
 | 10 | **Slug keyword audit** | Routes | 🟡 Slugs were never deliberately audited. Cheap to change now, expensive once Ads final URLs point at them. |
 | 11 | **New line in Sam's voice** | `src/components/home/AboutTeaser.jsx` | "Everyone stalls while they're learning. Nobody's grading you, so we keep it relaxed, and most people end up having fun." Written in the September copy pass; Sam hasn't approved it. |
 | 12 | **Homepage meta description lags the copy** | `src/app/page.jsx` (`metadata`) | The on-page copy was rewritten in September; the description and OG/Twitter text weren't. Its facts are still right; the wording is the old voice. |
-| 13 | **Group page's "Who it's for" lines** | `src/app/lessons/group/page.jsx` (`WHO`) | Written September 28, 2026, when the page took the other package pages' shape, and reworded in the October 9 copy pass with the same meaning. Sam hasn't seen them. `PENDING`; the comment above them still quotes the hub card's pre-October 9 wording. |
+| 13 | **Group page's "Who it's for" lines** | `src/app/lessons/group/page.jsx` (`WHO`) | Written September 28, 2026, when the page took the other package pages' shape, and reworded in the October 9 copy pass with the same meaning. Sam hasn't seen them. `PENDING`. |
 | 14 | **"Ontario residents" and PIPEDA** | `public/privacy.html` | The policy says "Ontario residents have additional rights under PIPEDA", but PIPEDA is federal law. Legal wording, so the October 9 pass left it. Whoever owns the policy should fix it. |
 
 ### From the Site 2.0 review doc — still needing clarification
@@ -665,9 +738,9 @@ later.
   column at 112px, so the page breaks the one-left-edge rule
   (`.placeholder-hero`). Found October 7.
 - **The homepage's Offer schema has no group lesson.** `src/app/page.jsx`
-  lists Offers for three packages but not Group Manual Lessons, and the
-  comment above them still says they "describe the OLD packages/prices",
-  which stopped being true with the winter prices. Found October 9.
+  lists Offers for three packages but not Group Manual Lessons. Found
+  October 9. (The comment above them said they "describe the OLD
+  packages/prices"; it was corrected on October 13.)
 
 Nothing else outstanding. Both entries that stood here on August 16 — the off-centre
 content blocks and the hub's missing booking CTA — were fixed on August 18; see
@@ -690,8 +763,8 @@ table.
 
 | Check | Status |
 |---|---|
-| Build + lint | ✅ Clean as of October 9, 2026 |
-| `npm test` | ✅ 96 of 96, October 9, 2026 |
+| Build + lint | ✅ Clean as of October 14, 2026 |
+| `npm test` | ✅ 90 of 90, October 14, 2026 |
 | Hero road maps (`npm test`) | ✅ 31 tests: both maps connected, no dead ends, no U-turns, whole ticks only, crossings in place, nothing within 48px of the copy at 32 recorded sizes (September 24) |
 | Hero roads in Chrome | ✅ 360, 390, 768, 1280, 1440, 1920px; every road piece within 0.007px of its tested geometry (September 24) |
 | Hero roads in Safari | Not checked, but no longer a known risk: the SVG dash-length concern went with the SVG. Covered by the pre-launch real-device pass. |

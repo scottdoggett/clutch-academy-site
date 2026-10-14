@@ -14,8 +14,8 @@ All prices **+ HST**. Keep that explicit on every price display.
 | Complete Manual Confidence Package | 5 × 1 hr | **$400** | `/lessons/manual-confidence` |
 | Group Manual Lessons | 2 hr | **$180** | `/lessons/group` |
 
-**Savings maths**, shown on the package pages — recompute these if the
-individual rate ever changes:
+**Savings maths** against single lessons, stated in `public/llms.txt` —
+recompute these if the individual rate ever changes:
 
 - Foundations: 3 × $90 = $270, less $240 → **save $30**
 - Confidence: 5 × $90 = $450, less $400 → **save $50**
@@ -23,8 +23,9 @@ individual rate ever changes:
 At $80 a lesson, the three- and five-packs now cost the same per lesson.
 The package heroes say "$80 a lesson"; the homepage and hub cards put "$80
 each" in the card's one-liner, which keeps their price rows level with the
-single and group cards. The savings above against single lessons aren't
-shown anywhere while the fall sale runs: its savings are (§The fall sale).
+single and group cards. The savings above against single lessons appear
+only in `llms.txt` while the fall sale runs; the pages show the sale's
+savings instead (§The fall sale).
 
 ### The fall sale (on `overhaul` from October 7, 2026)
 
@@ -105,8 +106,15 @@ Changing a price means changing all of these:
 
 - `src/components/home/PackagesTeaser.jsx` — homepage teaser cards
 - `src/app/manual-driving-lessons/page.jsx` — the `PACKAGES` array
-- All four `src/app/lessons/*/page.jsx` — hero price lines and savings notes
-- `src/app/page.jsx` — the `Offer` entries in the homepage JSON-LD graph
+- All four `src/app/lessons/*/page.jsx` — hero price lines and meta
+  descriptions
+- "$80 each" / "$80 a lesson" on the two packs: the homepage and hub cards'
+  one-liners and the Foundations and Confidence heroes
+- `src/lib/sale.js` — `PRICE`, from which the sale's savings are worked out
+- `src/components/AnnouncementBanner.jsx` — "Lessons now from $90" and
+  "Save up to $70"
+- `src/app/page.jsx` — the homepage meta, Open Graph and Twitter
+  descriptions ("from $90"), and the `Offer` entries in the JSON-LD graph
 - `public/booked.html` — `priceForEvent()` and `DEFAULT_VALUE`, which set the
   conversion value reported to GA4, Ads, Meta, and TikTok
 - `public/llms.txt` — the services list
@@ -123,7 +131,7 @@ rule and report $240 for a $180 group booking. (It first went in to stop a
 ### `/` Homepage
 Hero → Reviews → How It Works → package teasers → About teaser. Positioning and
 social proof up top; the detail lives on the package pages. The About teaser
-links out with "More about the story behind Clutch Academy".
+links out with "How Clutch Academy started".
 
 ### `/manual-driving-lessons` Lessons hub
 The comparison page and the internal-linking spine. It opens **straight on the

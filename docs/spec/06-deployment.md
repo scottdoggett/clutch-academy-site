@@ -41,7 +41,7 @@ this way until cutover.
 
 | Branch | State |
 |---|---|
-| `main` | Live Vite site. Carries the August-1 pricing switch (`308317c`, July 31, 2026). |
+| `main` | Live Vite site. Carries the October 5 winter pricing (`f8645c4`) and the fall-sale banner (`a82df9d` to `4eff398`). |
 | `overhaul` | The Next.js rebuild. Where all current work happens. |
 | `development` | Exists on the remote; not part of the current workflow. |
 
@@ -56,8 +56,11 @@ migration; don't reintroduce it.
 
 **Redirects** — canonicalise to the apex domain, 308 permanent:
 `www.clutchacademy.ca`, `clutchacademy.com`, and `www.clutchacademy.com` all →
-`https://clutchacademy.ca`. These are *also* configured at the Vercel domain
-level; they're kept in the repo so the behaviour survives a hosting move.
+`https://clutchacademy.ca`. They're kept in the repo so the behaviour survives
+a hosting move. ⚠️ The live domain's Vercel settings do the reverse today: on
+October 14, 2026, `clutchacademy.ca` answered with a 307 to
+`www.clutchacademy.ca`. Against this config that would loop (the trap below),
+so cutover flips it (step 7).
 
 ⚠️ **A known trap, learned the hard way on the Vite site:** a host redirect in
 project config can fight Vercel's own domain-dashboard redirect. When the
@@ -81,6 +84,56 @@ Next serves its own hashed bundles from `/_next/static` with immutable caching
 built in, which is why there's no `/assets/*` rule any more — that was Vite's
 hashed output directory.
 
+### Security headers
+
+Added October 14, 2026, after securityheaders.com graded the live site a D
+for sending none of them. Every response carries five:
+
+| Header | Value | Why |
+|---|---|---|
+| `Content-Security-Policy` | Built in `next.config.mjs` | Only the hosts listed may run scripts, take data, or frame something on the page |
+| `X-Frame-Options` | `SAMEORIGIN` | Other sites can't frame ours (clickjacking) |
+| `X-Content-Type-Options` | `nosniff` | Browsers take each file's declared type |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Other sites see only our domain, not the page |
+| `Permissions-Policy` | Camera, microphone, location, USB, serial, HID, MIDI and screen capture off | None are used |
+
+What the CSP has to allow, and why:
+
+- **Every outside host the site talks to:** the Google tag for GA4 and
+  Ads, the Meta and TikTok pixels, and Calendly. Add a new tag's hosts
+  here, or the browser blocks it with only a console error to show for it.
+- **Two hosts the vendors' CSP guides miss,** found by testing: Ads
+  remarketing loads a script from `googleads.g.doubleclick.net`, and the
+  Meta pixel sends a copy of each event through a Conversions API Gateway
+  on two hosts of its own. Those two come from the pixel's config at
+  `connect.facebook.net/signals/config/<pixel id>`. If the gateway is set
+  up again, check its hosts there.
+- **`'unsafe-inline'` for scripts.** Next writes each page's data as inline
+  scripts, and the consent bootstrap and `booked.html` are inline. The site
+  is static, so there's no per-request nonce to use instead.
+- **Images from any https host,** because the Ads tags ping a different
+  Google domain per country.
+- **Both of our own hostnames in `frame-src` and `frame-ancestors`.** After
+  a booking Calendly loads `/booked` inside its frame on our page, from
+  whichever host its redirect names. Blocking it there would lose every
+  conversion. The same reason rules out `X-Frame-Options: DENY`.
+- **Payment is left on** in the Permissions-Policy, since Calendly takes
+  cards through Stripe at booking.
+
+`next dev` adds `'unsafe-eval'` (React uses it in development) and
+websockets for hot reload. Everything else matches production.
+
+**To check a change,** run a production build (`npm run build && npm run
+start`), open it in an ordinary Chrome window, and watch the console for
+"Refused to" errors while you load a page, accept consent and open
+Calendly. Don't load `/booked` with consent given: it fires real
+conversions. The Chrome extension's console reader doesn't show CSP
+errors.
+
+`main` needs the same five in its `vercel.json` for the live site to have
+them. As of October 14 that change is written but not applied
+(`07-status.md`).
+
 ## Cutover runbook
 
 What "go live with the rebuild" actually takes. Nothing here has been done yet.
@@ -99,7 +152,10 @@ What "go live with the rebuild" actually takes. Nothing here has been done yet.
    the real domain.
 6. **Merge `overhaul` → `main`.** Expect a large diff: two frameworks.
 7. **Point the live Vercel project at the Next.js build** — framework preset,
-   build command, output. This is the step most likely to bite.
+   build command, output. This is the step most likely to bite. In the same
+   project's domain settings, make `clutchacademy.ca` the primary domain and
+   send `www` to it. Today it's the other way round, which would loop
+   against `next.config.mjs`.
 8. **Verify in production:** the three host redirects, `/booked` with a real
    test booking, GA4 realtime, `/privacy`, and fetch the sitemap in Search
    Console.

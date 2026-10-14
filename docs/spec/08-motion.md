@@ -142,7 +142,8 @@ descenders.
 
 ✅ **DECIDED:** every section `h2` gets Headline. The hero `h1` doesn't: it's
 an LCP candidate, so it takes the hero timeline's transform-only rise instead
-(§The hero).
+(§The hero). Nor does the homepage About teaser's `h2`, which is styled as an
+eyebrow and Rises (§Homepage map).
 
 ### 4. Draw — `data-anim="draw"`
 
@@ -156,8 +157,8 @@ from one thing to the next, the way the step rules already imply.
 For photos. The image fades in while scaling from `1.06 → 1` inside its own
 frame (the frame gets `overflow: hidden`, so the box never changes size),
 `DUR_SLOW`, `EASE_IN`. The photo arrives and comes to rest. Used for Sam's
-headshot and lesson-page photos. The homepage hero had a photo with Settle
-until September 24, 2026.
+headshot on the homepage; lesson-page photos take it when they arrive. The
+homepage hero had a photo with Settle until September 24, 2026.
 
 ### 6. Drift — `data-anim="drift"`
 
@@ -178,10 +179,11 @@ to scroll into, and hiding it after hydration makes a visible flash (it paints,
 disappears, then animates in).
 
 - **Starting states come from CSS, set before first paint.** A one-line inline
-  script in `<head>` (beside the Consent Mode bootstrap in `layout.jsx`) adds
-  `motion-ok` to `<html>` when `prefers-reduced-motion` is not `reduce`. CSS
-  under `.motion-ok .hero` sets the hero's starting states, and GSAP animates
-  from there once it loads.
+  script first in `<body>` (`MOTION_PREPAINT`, beside the Consent Mode
+  bootstrap in `layout.jsx`) sets `data-motion="ok"` on `<html>` when
+  `prefers-reduced-motion` is not `reduce`. CSS under
+  `html[data-motion='ok']:not([data-motion-ready])` sets the `[data-hero]`
+  starting states, and GSAP animates from there once it loads.
 - **A failsafe CSS animation forces the final state after 1.5s**, so if GSAP
   never loads (blocked script, slow network) the hero still appears. This and
   rule 1 are why nothing else on the site hides content in CSS.
@@ -217,13 +219,13 @@ disappears, then animates in).
     gate's rule: back to neutral, across, into the slot. Under reduced
     motion it's in the new gear at once.
   - A grind shakes the shifter sideways for 0.3s (keyframes, each on
-    `power2.out`), and the numeral turns black for 0.4s. It's the site's one
-    shake, and it's allowed because a grind is a mistake. §The idea keeps
-    jolts out everywhere else for the same reason. Under reduced motion the
-    black numeral does the job alone.
-  - The rev bar and the takeover ring aren't GSAP. The engine draws them
-    every frame. Under reduced motion the ring doesn't grow; it shows at
-    full size for its second.
+    `power2.out`), and the numeral turns the brand red for 0.4s. It's the
+    site's one shake, and it's allowed because a grind is a mistake. §The
+    idea keeps jolts out everywhere else for the same reason. Under reduced
+    motion the red numeral does the job alone.
+  - The rev arc and the takeover ring aren't GSAP. HeroStage writes the arc
+    every frame and the engine draws the ring. Under reduced motion the ring
+    doesn't grow; it shows at full size for its second.
   - Smoke and sparks (`hero-drive.md` §Smoke, §Effects) aren't GSAP:
     particles the engine draws every frame, each living under two seconds.
     They show under reduced motion too, like the tyre marks: they come from

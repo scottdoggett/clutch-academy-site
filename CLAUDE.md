@@ -68,15 +68,16 @@ planning docs. **Don't work from anything in there.**
   lane on a crash, with sparks and smoke. **Phase 7** (performance and
   fallbacks) is what's left. The code is in `src/components/hero/`, the
   traffic in its lazy `engine/` chunk and the driving in its lazy `drive/`
-  chunk, tested with `npm test` (96 tests). On October 8 the maps became
+  chunk, tested with `npm test` (90 tests). On October 8 the maps became
   uniform grids at Sam's asking, with a medium map of fewer columns below
-  1200px, and on phones the two buttons moved inside the roads, one to a
-  block. The same day the roads got rounded block corners and grey
+  1200px. The same day the roads got rounded block corners and grey
   markings, and every road edge was then put on a whole pixel so no
-  hairline shows at the corners on a 3x phone. The hero's two buttons have
-  ten looks on trial in a development-only picker (`?cta=` on the
-  homepage, `src/components/home/CtaLooks.jsx`) for Scott and his partner
-  to choose from; the picker goes once one is chosen. The spec's §Handoff
+  hairline shows at the corners on a 3x phone. On October 14 the hero's
+  two buttons took B1 of ten looks tried in a development-only picker:
+  sentence-case pills with a round chip after the last word. It's in
+  `Hero.css`, and the picker is deleted. Later that day the roads came
+  off phones altogether, as too busy: below 768px the hero is the copy
+  and its two buttons, and the traffic never loads there. The spec's §Handoff
   says where it is, how Scott reviews, the open questions and what bit
   last time.
 - **October 9: a plain-language pass over all the copy.** No em dashes and
@@ -120,7 +121,10 @@ planning docs. **Don't work from anything in there.**
   copy. Never fork FAQ copy.
 - **Redirects/rewrites/headers** live in `next.config.mjs` (`vercel.json` is
   deleted on this branch): `.com`/`www` → apex, `/booked` + `/privacy`
-  rewrites, cache headers.
+  rewrites, cache headers, and the security headers. Its Content-Security-Policy
+  lists every outside host, so **a new tag, pixel or embed needs its hosts
+  added there**, or the browser blocks it silently (`06-deployment.md`
+  §Security headers).
 
 ## Conventions
 

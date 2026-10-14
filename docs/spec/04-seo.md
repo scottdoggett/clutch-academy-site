@@ -90,7 +90,7 @@ schema.
 
 | File | Purpose |
 |---|---|
-| `public/robots.txt` | Allows everything, then **explicitly allows 16 AI crawlers** — GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, CCBot, Bytespider, Amazonbot, Meta-ExternalAgent, cohere-ai and others. This is a deliberate business decision for maximum discoverability in AI assistants, not an oversight. Points at the sitemap. |
+| `public/robots.txt` | Allows everything, then **explicitly allows 15 AI crawlers** — GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, CCBot, Bytespider, Amazonbot, Meta-ExternalAgent, cohere-ai and others. This is a deliberate business decision for maximum discoverability in AI assistants, not an oversight. Points at the sitemap. |
 | `public/sitemap.xml` | All 9 canonical URLs with `lastmod`. Update `lastmod` when content changes materially. |
 | `public/llms.txt` | Mintlify-style plain-language summary for LLM crawlers: services and prices, service area, booking, contact, requirements, curriculum, cancellation, instructor. **Prices live here too** — update on any pricing change. |
 | `public/site.webmanifest` + icons | Home-screen install |
