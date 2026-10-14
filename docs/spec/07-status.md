@@ -224,8 +224,8 @@ accepted on September 24.
   768px clears its cars until it widens again. The phone map, its config,
   its five tests and the fixture's phone rows are deleted. Checked in
   Chrome at 320 to 767px, and through 1440, 390 and 1440px. 90 tests, lint
-  and build clean. Not yet committed or seen by Scott (`hero-drive.md`
-  §Decisions 35).
+  and build clean. Pushed October 14 (`d3198d7`), not yet seen by Scott
+  (`hero-drive.md` §Decisions 35).
 - **Phase 7, still to build:** save-data, WebGL-failure handling,
   disposal, performance (now with particles and knocked cars in it) and
   the bundle report. Its phones and touch part was done early, in Phase 4:
