@@ -73,8 +73,7 @@ export function tyreSmoke(emit, x, y, strength, rnd) {
   })
 }
 
-// Four puffs from each rear wheel over 0.3s: an over-rev downshift, or
-// grinding into the wrong direction.
+// Four puffs from each rear wheel over 0.3s: an over-rev downshift.
 export function rearBurst(emit, wheels, rnd) {
   for (const w of [wheels[2], wheels[3]]) {
     for (let i = 0; i < 4; i++) {

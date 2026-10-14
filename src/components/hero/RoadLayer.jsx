@@ -11,8 +11,8 @@ import './RoadLayer.css'
 // Paint order: white roads, white junction boxes, grey centre ticks, grey
 // zebra crossings, and the white rounds on the blocks' corners.
 //
-// data-piece, data-seg and data-node are what HeroStage uses to hide a
-// segment the headline check has taken out.
+// data-piece, data-seg, data-seg2 and data-node are what HeroStage uses to
+// hide a segment the headline check has taken out.
 
 // Enough precision for a sub-pixel position on a 2560px screen, and no more.
 const num = (v) => Math.round(v * 1e5) / 1e5
@@ -28,7 +28,7 @@ const place = ({ x, y, w, h }) => {
 }
 
 export default function RoadLayer({ layout, className }) {
-  // The map's own road sizes, zoomed out on phones (CONFIG.layout.zoom).
+  // The map's own road sizes, at its zoom (CONFIG.layout.zoom).
   const roads = roadsFor(layout)
   const { bands, boxes, ticks, walks, fillets } = roadPieces(layout, roads)
   const { tick, crosswalk } = roads

@@ -8,11 +8,10 @@ import { CONFIG } from './config.js'
 import { buildGraph, checkGraph } from './graph.js'
 
 const load = (name) => JSON.parse(readFileSync(new URL(`./layouts/${name}.json`, import.meta.url), 'utf8'))
-const LAYOUTS = { wide: load('wide'), medium: load('medium'), compact: load('compact') }
+const LAYOUTS = { wide: load('wide'), medium: load('medium') }
 const SIZE = {
   wide: { width: 1440, height: 836 },
   medium: { width: 1024, height: 704 },
-  compact: { width: 390, height: LAYOUTS.compact.band },
 }
 
 // A plus sign: one main road across, one down, crossing in the middle.
@@ -50,7 +49,7 @@ const size = { width: 400, height: 400 }
 const angle = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 const near = (a, b, eps = 1e-6) => Math.abs(a - b) < eps
 
-test('both layouts build with nothing wrong', () => {
+test('every layout builds with nothing wrong', () => {
   for (const [name, layout] of Object.entries(LAYOUTS)) {
     const graph = buildGraph(layout, SIZE[name])
     assert.deepEqual(checkGraph(graph, layout), [], name)
@@ -66,7 +65,7 @@ test('every junction is a cross, a T or a corner, and every road end is a juncti
   }
 })
 
-test('both layouts have crosses and Ts, so traffic meets both', () => {
+test('every layout has crosses and Ts, so traffic meets both', () => {
   for (const [name, layout] of Object.entries(LAYOUTS)) {
     const kinds = new Set(buildGraph(layout, SIZE[name]).nodes.map((n) => n.kind))
     assert.ok(kinds.has('cross'), `${name} has no 4-way cross`)

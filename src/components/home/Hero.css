@@ -65,15 +65,74 @@
   max-width: 48ch;
 }
 
+/* The two buttons, chosen from ten looks tried in October 2026 (B1,
+   hero-drive.md §Decisions 34): sentence-case pills, each with a round chip
+   riding after its last word, so on a phone the chip follows that word onto
+   the second line rather than taking a column of its own. Book is white with
+   a red chip; See Packages is outlined, with a white chip pointing down the
+   page, since it scrolls there. In Hero.jsx, .hero__cta-label keeps each
+   label one flex item on phones and .hero__cta-end carries the chip. */
 .hero__ctas {
+  --cta-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --cta-arrow-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C8102E' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6'/%3E%3C/svg%3E");
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.hero__ctas .btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5625rem 0.5625rem 0.5625rem 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.hero__ctas .btn--secondary {
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 2px var(--white);
+}
+
+.hero__ctas .btn--secondary:hover {
+  background: rgb(255 255 255 / 0.16);
+  color: var(--white);
+}
+
+.hero__cta-end {
+  white-space: nowrap;
+}
+
+.hero__cta-end::after {
+  content: '';
+  display: inline-block;
+  width: 1.75em;
+  height: 1.75em;
+  margin-left: 0.625em;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--red-primary) var(--cta-arrow-right) center / 50% no-repeat;
+  transition: translate var(--transition-reduced) ease;
+}
+
+.hero__ctas .btn--secondary .hero__cta-end::after {
+  background: var(--white) var(--cta-arrow-down) center / 50% no-repeat;
+}
+
+.hero__ctas .btn--primary:hover .hero__cta-end::after {
+  translate: 3px 0;
+}
+
+.hero__ctas .btn--secondary:hover .hero__cta-end::after {
+  translate: 0 3px;
 }
 
 /* ---------- Roads (src/components/hero/RoadLayer.jsx) -------------------
-   Two maps are in the HTML and CSS shows one. The same media query picks the
-   map for the traffic in JS, so the two never disagree. */
+   Two maps are in the HTML and CSS shows the one that fits, or neither on
+   phones. The same media queries pick the map for the traffic in JS, so the
+   two never disagree. */
 .hero__roads {
   position: absolute;
   inset: 0;
@@ -82,8 +141,7 @@
 }
 
 .hero__roads--wide,
-.hero__roads--medium,
-.hero__streets {
+.hero__roads--medium {
   display: none;
 }
 
@@ -118,35 +176,13 @@
   }
 }
 
-/* Phones: the copy is as wide as the screen, so the roads get a band of
-   their own under it, always --hero-band tall (set in Hero.jsx from
-   layouts/compact.json). The hero is just the copy and the band, not the
-   whole first screen: on a tall phone a band that grew to fill the screen
-   read as too long (September 24 review). The band is full-bleed and flush
-   with the hero's bottom, and its top margin is the roads' 48px clearance
-   from the subhead, so no road can come closer to the text at any size.
-
-   The buttons sit inside the band's grid (October 8 review): one to a block
-   in its top row, with a road on every side and the cars driving round
-   them. The copy is a size smaller than on tablets. */
+/* Phones: no roads and no traffic (October 14 review: they made the hero
+   too busy). The hero is just the copy and its two buttons, with the
+   section's own padding, as tall as they are rather than the whole first
+   screen. The copy is a size smaller than on tablets. */
 @media (max-width: 767px) {
   .hero {
-    flex-direction: column;
     min-height: 0;
-    padding-bottom: 0;
-  }
-
-  /* So the buttons are placed against the hero, which the band spans, rather
-     than the padded copy column. */
-  .hero__inner {
-    position: static;
-  }
-
-  .hero__streets {
-    display: block;
-    position: relative;
-    flex: 0 0 var(--hero-band);
-    margin: 48px calc(-1 * var(--section-pad-x)) 0;
   }
 
   .hero__copy {
@@ -165,45 +201,32 @@
     font-size: 1rem;
   }
 
-  /* The two blocks from the band's top road to its second, between the
-     outer columns: the box's edges are those roads' edges, and its padding
-     and the gap over the middle road keep each button --ctas-margin clear
-     of the roads round its block. The band is flush with the hero's bottom,
-     so the box is placed from there. */
+  /* The two buttons side by side under the subhead, halves of the column,
+     as they were before the roads came to phones. Capped, so on a big phone
+     or a small tablet they don't stretch into long bars. */
   .hero__ctas {
-    --ctas-margin: clamp(6px, 2.5vw, 12px);
-    position: absolute;
-    z-index: 1;
-    left: calc(var(--ctas-x0) * 100% + var(--ctas-road) / 2);
-    right: calc((1 - var(--ctas-x1)) * 100% + var(--ctas-road) / 2);
-    bottom: calc((1 - var(--ctas-y1)) * var(--hero-band) + var(--ctas-road) / 2);
-    height: calc((var(--ctas-y1) - var(--ctas-y0)) * var(--hero-band) - var(--ctas-road));
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 calc(var(--ctas-road) + 2 * var(--ctas-margin));
-    padding: var(--ctas-margin);
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    max-width: 26rem;
   }
 
-  /* Each button fills its block, less the margin. Below 480px the labels
-     take two lines, "Book a / Lesson" and "See / Packages": the padding
-     leaves 6.5em for the words, room for "Packages" and not for either
-     label whole, so the two always break alike. */
+  /* Each label and its chip on one line, centred in the button as one
+     group, 44px tall. The font is 12px at 320px, where Book a Lesson only
+     just fits, up to 15px from about 395px. */
   .hero__ctas .btn {
+    flex: 1 1 0;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: 0.25rem max(0.375rem, calc(50% - 3.25em));
-    font-size: clamp(0.75rem, 3.4vw, 0.8125rem);
-    line-height: 1.2;
-    text-align: center;
-    text-wrap: balance;
+    min-height: 44px;
+    padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+    font-size: clamp(0.75rem, 3.8vw, 0.9375rem);
   }
-}
 
-/* From 480px both labels fit on one line. */
-@media (min-width: 480px) and (max-width: 767px) {
-  .hero__ctas .btn {
-    padding-inline: 0.375rem;
+  .hero__cta-end::after {
+    width: 1.5em;
+    height: 1.5em;
+    margin: -0.25em 0 -0.25em 0.35em;
   }
 }

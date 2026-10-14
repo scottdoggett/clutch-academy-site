@@ -7,9 +7,10 @@
 //
 // The engine is told three things from outside: which map and where it is
 // (setMap, from HeroStage's debounced resize check, which also knows which
-// segments the runtime rules have hidden), and whether it may move (play)
-// or must stand still at the seeded start (park). It pauses on its own when
-// the hero is off screen or the tab is hidden.
+// segments the runtime rules have hidden), or that there's none (a window
+// narrowed to phone width, where the hero has no roads), and whether it may
+// move (play) or must stand still at the seeded start (park). It pauses on
+// its own when the hero is off screen or the tab is hidden.
 //
 // From Phase 4 it can also hand the black car to a visitor: startDrive()
 // takes a driver from the drive chunk (drive/index.js), which it never
@@ -78,7 +79,7 @@ export function createEngine({ hero, host }) {
   }
 
   const { step, maxSteps } = CONFIG.world
-  let map = null // { name, layout, box, hidden, graph, count }
+  let map = null // { name, layout, box, key, graph, count }
   let sim = null
   let playing = false
   let onScreen = true
@@ -178,6 +179,7 @@ export function createEngine({ hero, host }) {
   // so can its marks. Marks fading, or smoke still in the air, keep it
   // going while the hero is on screen, even with the traffic parked.
   const running = () =>
+    !!sim &&
     (driver || view === 'page' || ((playing || clock < marksUntil || clock < fxUntil) && onScreen)) &&
     !document.hidden &&
     !disposed &&
@@ -197,9 +199,6 @@ export function createEngine({ hero, host }) {
     if (driver.state === 'done') endDrive()
   }
 
-  // Before a frame's steps: the window measured, and the page's walls kept
-  // up with it. If the page isn't where it was left, the visitor scrolled it
-  // (wheel, trackpad, scrollbar): that wins, and the follow holds off.
   // The reviews strip, in the hero's px, as it is this frame.
   function measureBelt() {
     const el = treadmill.el
@@ -216,6 +215,9 @@ export function createEngine({ hero, host }) {
     }
   }
 
+  // Before a frame's steps: the window measured, and the page's walls kept
+  // up with it. If the page isn't where it was left, the visitor scrolled it
+  // (wheel, trackpad, scrollbar): that wins, and the follow holds off.
   function beforeSteps() {
     if (view !== 'page') return
     measure()
@@ -365,10 +367,25 @@ export function createEngine({ hero, host }) {
   const engine = {
     canvas,
 
-    // name: 'wide', 'medium' or 'compact'. box: where the layout's box is inside the
+    // name: 'wide' or 'medium'. box: where the layout's box is inside the
     // hero, CSS px. hidden: segments the headline check has taken out.
-    setMap({ name, box, hidden = [] }) {
-      if (disposed || box.width <= 0 || box.height <= 0) return
+    // null: no map (phones), so no cars, and the loop stops.
+    setMap(next) {
+      if (disposed) return
+      if (!next) {
+        if (!map) return
+        if (driver) endDrive()
+        if (view === 'page') toHero()
+        map = null
+        sim = null
+        clearMarks()
+        canvas.style.display = 'none'
+        sync()
+        return
+      }
+      const { name, box, hidden = [] } = next
+      if (box.width <= 0 || box.height <= 0) return
+      canvas.style.display = ''
       // Mid-drive the canvas is over the window, and stays there.
       if (view === 'hero') place(box)
       const key = hidden.join()
@@ -385,8 +402,8 @@ export function createEngine({ hero, host }) {
       clearMarks()
       // A new map starts over from the seeded start; the same map at a new
       // size keeps every car on its lane, as far along it. Driving ends if
-      // the map changes (there's no driving on the phone map), and carries
-      // on inside new walls if it's only resized.
+      // the map changes, and carries on inside new walls if it's only
+      // resized.
       if (same && sim) {
         sim.rescale(graph, count)
         driver?.resize(box, navTop())
@@ -415,8 +432,8 @@ export function createEngine({ hero, host }) {
 
     // Hand the black car to a visitor. makeDriver is createDriver from the
     // drive chunk. onControl: the car is theirs (straight away, or once it
-    // has come in from off screen). onExit: Esc, or focus leaving the hero;
-    // the caller ends the drive with stopDrive(). onEnd: the car is back in
+    // has come in from off screen). onExit: Esc, or focus leaving the driving
+    // layer; the caller ends the drive with stopDrive(). onEnd: the car is back in
     // traffic, or the drive was cut short (the map changed). onFrame: called
     // with the driver's telemetry after every frame drawn, for the driving
     // display. mode: the gearbox's, 'auto' or 'manual'. area: the driving
@@ -424,7 +441,7 @@ export function createEngine({ hero, host }) {
     // the keys are heard. With the last drive's knocked cars still settling,
     // its driver takes the new drive on the same world.
     startDrive(makeDriver, { mode, area, onControl, onExit, onEnd: ended, onFrame: frameHook }) {
-      if (disposed || !sim || map?.name === 'compact' || !area) return false
+      if (disposed || !sim || !area) return false
       if (driver && driver.state !== 'settling') return false
       onEnd = ended
       onFrame = frameHook

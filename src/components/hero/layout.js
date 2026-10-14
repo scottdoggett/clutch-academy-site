@@ -85,9 +85,9 @@ export function laneMinimum(layout) {
 
 const byId = (p, q) => (p.id < q.id ? -1 : p.id > q.id ? 1 : 0)
 
-// Both runtime rules. copy is the headline block in the layout's box, or
-// nothing where the map can't come near it (the phone band). tight lists
-// any lane still too short once nothing more can safely go.
+// Both runtime rules. copy is the headline block in the layout's box; left
+// out, only the room rule runs. tight lists any lane still too short once
+// nothing more can safely go.
 export function resolveMap(layout, { width, height, copy, clearance }) {
   const first = copy ? resolveClearance(layout, { width, height, copy, clearance }) : null
   let hidden = first?.hidden ?? []

@@ -1,6 +1,6 @@
-// Every tunable for the hero's city: roads and traffic now, the car and the
-// gearbox as those phases land (docs/spec/hero-drive.md §Config). Nothing
-// else in src/components/hero/ picks its own number.
+// Every tunable for the hero's city: the roads, the traffic, the car, its
+// gearbox, knocks, effects and tyre marks (docs/spec/hero-drive.md §Config).
+// Nothing else in src/components/hero/ picks its own number.
 //
 // Units: anything physical is SI (metres, seconds, m/s) and anything drawn
 // is CSS pixels. world.pxPerM is the one conversion between them.
@@ -29,7 +29,8 @@ export const CONFIG = {
     // Every road is one width since the September 24 review; the brief's
     // side streets at 60% read as too busy. Side streets stay their own
     // kind because they cut through blocks rather than being part of the
-    // base grid (layouts/wide.json), and must end on a road at both ends.
+    // grid, and must end on a road at both ends. No map has one since the
+    // uniform grids of October 8.
     side: 40, // px
     tick: { width: 2, length: 8, gap: 10 }, // the grey centre line, px
     // The zebra crossing on every road into a cross or a T, px: grey
@@ -44,8 +45,8 @@ export const CONFIG = {
 
   layout: {
     // From heroQuery the roads cover the whole hero, with the copy in its
-    // left half, and Drive is offered. Below it (phones) the roads move to a
-    // band under the subhead, with the buttons inside it (Hero.css). From
+    // left half, and Drive is offered. Below it (phones) there are no roads
+    // and no traffic, just the copy and its buttons (October 14). From
     // wideQuery that's the wide map's six columns; between the two, the
     // medium map's four, so a tablet's or a small laptop's blocks aren't
     // squeezed (October 2026). CSS and JS share these queries, and each map's
@@ -56,21 +57,17 @@ export const CONFIG = {
     // How long the hero has to stop resizing before the city re-measures.
     resizeDebounce: 150, // ms
     // How far each map is zoomed out: every road size above, and from Phase
-    // 3 the cars, times this. The phone band is small enough that full-size
-    // roads left almost no road between one junction and the next.
-    zoom: { wide: 1, medium: 1, compact: 0.6 },
+    // 3 the cars, times this. The phone map was drawn at 0.6 until it went
+    // (October 14); both maps left are at full size.
+    zoom: { wide: 1, medium: 1 },
   },
 
   // Ambient traffic (engine/traffic.js). Speeds, accelerations and gaps are
-  // SI; the engine converts them at pxPerM times the map's zoom, so phone
-  // cars cover 0.6 as many px per second, like their roads.
+  // SI; the engine converts them at pxPerM times the map's zoom.
   traffic: {
     pxPerCar: 90_000, // one car per this many px² of the layout's box
     min: 6,
     max: 16,
-    // Phones: the uniform grid (October 2026) has room for six, enough to
-    // keep cars going round the buttons. The merged map's band jammed at six.
-    compactMin: 6,
     cruiseKmh: [36, 44], // each car picks its own cruise from this range
     turnKmh: 15,
     accel: 2.5, // m/s²
@@ -90,9 +87,7 @@ export const CONFIG = {
     blackTop: 0.35,
   },
 
-  // The black car under a visitor's control (drive/). Everything SI. Phase 4
-  // drives it with a stand-in automatic (`auto`), which Phase 5's gearbox
-  // replaces.
+  // The black car under a visitor's control (drive/). Everything SI.
   player: {
     mass: 1200, // kg
     maxSteerDeg: 38, // front wheels' lock at walking pace
@@ -159,8 +154,8 @@ export const CONFIG = {
     defaultMode: 'auto', // until the visitor picks, and then remembered
   },
 
-  // A car that has left the lanes finding its way back (drive/): for now
-  // the black car when driving ends. Phase 6 adds knocked cars.
+  // A car that has left the lanes finding its way back (drive/): the black
+  // car, and the cars it knocks.
   recovery: {
     rejoinKmh: 10, // for the last few car lengths into its lane
     // Further off, up to this, so a car left in the middle of a block or

@@ -6,7 +6,8 @@
 // Pure, like graph.js: no DOM and no three.js, so the headless test runs it
 // in Node. Positions are CSS px in the layout's box, x right and y down. The
 // config's SI values are converted once, at pxPerM times the map's zoom, so
-// phone cars are 0.6 size and cover 0.6 as many px a second.
+// a map drawn smaller would have smaller, slower cars to match its roads.
+// Both maps are at full zoom since the phone map went (October 14).
 //
 // A car is its nose on a piece of road, either a lane or a movement through
 // a junction, at distance s along it, and its body takes up the car length
@@ -36,8 +37,7 @@ export function mulberry32(seed) {
 
 // How many cars a map gets: one per pxPerCar of its box, within limits.
 export function carCount(layout, width, height, t = CONFIG.traffic) {
-  const min = layout.name === 'compact' ? t.compactMin : t.min
-  return clamp(Math.round((width * height) / t.pxPerCar), min, t.max)
+  return clamp(Math.round((width * height) / t.pxPerCar), t.min, t.max)
 }
 
 // The car and the rules of the road in px and seconds, for one map.
@@ -128,7 +128,7 @@ export function touchesBox(p, box, length, width, pad = 0) {
 
 // graph: from buildGraph(), with any hidden segments already taken out.
 // count: how many cars (carCount()). The first car is the black one, which
-// drives as ordinary traffic until Phase 4 lets a visitor take it over.
+// drives as ordinary traffic until a visitor takes it over.
 export function createTraffic(graph, layout, { count, seed = CONFIG.world.seed } = {}) {
   const u = unitsFor(layout)
   const t = CONFIG.traffic
@@ -145,8 +145,9 @@ export function createTraffic(graph, layout, { count, seed = CONFIG.world.seed }
   const cars = []
   let target = count
   let time = 0
-  // Cars off the lanes, as { x, y, a } px poses: the one a visitor is
-  // driving, and one finding its way back. Traffic stops for them (below).
+  // Cars off the lanes, as { x, y, a } px poses: the black car while it's
+  // driven or finding its way back, and any cars it knocked out of their
+  // lanes. Traffic stops for them (below).
   let bodies = []
 
   // ---------- The map ---------------------------------------------------
@@ -162,9 +163,9 @@ export function createTraffic(graph, layout, { count, seed = CONFIG.world.seed }
 
   // The room a car needs on `lane` before it may enter the junction behind
   // it: enough to stop with its tail boxClear past the box. A block too
-  // short for that (a 1280×600 window, either side of the wide map's side
-  // street) needs only as far as its stop point, which still clears the
-  // box. Asking for more there left a car waiting for good. It never asks
+  // short for that (as either side of the wide map's side street was in a
+  // 1280×600 window, before the uniform grids of October 8) needs only as
+  // far as its stop point, which still clears the box. Asking for more there left a car waiting for good. It never asks
   // for less than the whole car: a lane shorter than that is one the
   // runtime rules in layout.js should have hidden, and a car let into it
   // would hold the box behind it for good.

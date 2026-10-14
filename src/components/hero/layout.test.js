@@ -15,7 +15,6 @@ import { SEAM, hideRule, laneMinimum, offenders, pieceRect, resolveClearance, re
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const wide = read('./layouts/wide.json')
 const medium = read('./layouts/medium.json')
-const compact = read('./layouts/compact.json')
 const rects = read('./__fixtures__/copy-rects.json')
 
 // A car's length and one tick with its gap, px, on a given map. Both shrink
@@ -26,24 +25,15 @@ const tileOn = (layout) => {
   return tick.length + tick.gap
 }
 
-// Which layout a recorded size gets, and the box that layout is drawn in.
-// From 768px a map covers the whole hero: the wide one from 1200px, the
-// medium one below.
+// Which layout a recorded size gets. From 768px a map covers the whole
+// hero: the wide one from 1200px, the medium one below. Phones have none
+// (October 14).
 const HERO_FROM = 768
 const WIDE_FROM = 1200
 const heroSizes = rects.sizes.filter((s) => s.viewport[0] >= HERO_FROM)
-const phoneSizes = rects.sizes.filter((s) => s.viewport[0] < HERO_FROM)
 const mapFor = (s) => (s.viewport[0] >= WIDE_FROM ? wide : medium)
 const HERO_MAPS = [wide, medium]
-const boxes = [
-  ...heroSizes.map((s) => ({ layout: mapFor(s), width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') })),
-  ...phoneSizes.map((s) => ({
-    layout: compact,
-    width: s.band[2] - s.band[0],
-    height: s.band[3] - s.band[1],
-    label: `${s.viewport.join('×')} band`,
-  })),
-]
+const boxes = heroSizes.map((s) => ({ layout: mapFor(s), width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') }))
 
 const copyOf = (s) => ({ x0: s.copy[0], y0: s.copy[1], x1: s.copy[2], y1: s.copy[3] })
 const required = (s) =>
@@ -54,27 +44,16 @@ test('each map starts where CSS switches to it', () => {
   assert.equal(CONFIG.layout.wideQuery, `(min-width: ${WIDE_FROM}px)`)
   assert.equal(wide.media, CONFIG.layout.wideQuery)
   assert.equal(medium.media, `${CONFIG.layout.heroQuery} and (max-width: ${WIDE_FROM - 1}px)`)
-  assert.equal(compact.media, `(max-width: ${HERO_FROM - 1}px)`)
   // Hero.css shows each whole-hero map's road layer under the map's own query.
   const css = readFileSync(new URL('../home/Hero.css', import.meta.url), 'utf8')
   for (const layout of HERO_MAPS) assert.ok(css.includes(`@media ${layout.media} {`), `Hero.css has no @media ${layout.media}`)
-})
-
-test('on phones, the street band starts 48px under the copy, is the map\'s height, and fills the hero to its edges', () => {
-  assert.ok(phoneSizes.length >= 6)
-  for (const s of phoneSizes) {
-    const [l, t, r, b] = s.band
-    assert.ok(t - s.copy[3] >= CONFIG.roads.clearance, `${s.viewport.join('×')}: band is ${t - s.copy[3]}px under the copy`)
-    assert.deepEqual([l, r, b], [0, s.hero[0], s.hero[1]], s.viewport.join('×'))
-    assert.equal(b - t, compact.band, s.viewport.join('×'))
-  }
 })
 
 test('every road is the same width, side streets included', () => {
   assert.equal(CONFIG.roads.side, CONFIG.roads.main)
 })
 
-test('both maps work at every recorded size', () => {
+test('every map works at every recorded size', () => {
   for (const b of boxes) {
     const graph = buildGraph(b.layout, b)
     assert.deepEqual(checkGraph(graph, b.layout), [], b.label)
@@ -247,79 +226,8 @@ test('downtown blocks are never squeezed: at every recorded size, columns are 16
   t.diagnostic(`tightest: ${tightest.gap.toFixed(0)}px at ${tightest.where}`)
 })
 
-test('the phone map is a uniform grid too, with nothing above its top road', () => {
-  const { xs, ys } = compact.grid
-  evenlySpaced(xs)
-  evenlySpaced(ys)
-  const covered = coverage(compact)
-  // Every row runs edge to edge, and every column from the top row off the
-  // bottom. Nothing goes up past the top row, into the gap under the copy.
-  for (const y of ys) assert.ok(covered('h', y, 0, 1), `row ${y} has a gap`)
-  for (const x of xs) assert.ok(covered('v', x, ys[0], 1), `column ${x} has a gap`)
-  for (const n of compact.nodes) assert.ok(n.y >= ys[0], `${n.id} is above the top road`)
-  assert.equal(compact.roads.filter((r) => r.kind === 'side').length, 0)
-  // The buttons' two blocks: the top row, either side of the middle column.
-  const { x0, x1, y0, y1 } = compact.ctas
-  assert.deepEqual([x0, x1, y0, y1], [xs[0], xs.at(-1), ys[0], ys[1]])
-  assert.equal(xs.length, 3)
-  assert.ok(Math.abs(xs[1] - (x0 + x1) / 2) < 1e-9, 'the middle column splits the two blocks evenly')
-})
-
-// The least red between a button and the roads round its block, px: the
-// low end of --ctas-margin in Hero.css, less a pixel for the fixture's
-// rounding.
-const BUTTON_CLEAR = 6 - 1
-
-test('on phones, each button sits in a block of its own, with a road on every side', () => {
-  const road = roadsFor(compact).main
-  const round = Math.round(roadsFor(compact).fillet)
-  const covered = coverage(compact)
-  for (const s of phoneSizes) {
-    const label = s.viewport.join('×')
-    const [, top, width] = s.band
-    const height = compact.band
-    assert.equal(s.ctas.length, 2, label)
-    const cells = s.ctas.map(([l, t, r, b]) => {
-      // The grid lines either side of the button's centre, px in the band.
-      const cx = (l + r) / 2
-      const cy = (t + b) / 2 - top
-      const i = compact.grid.xs.findIndex((x, k, xs) => x * width < cx && cx < xs[k + 1] * width)
-      const j = compact.grid.ys.findIndex((y, k, ys) => y * height < cy && cy < ys[k + 1] * height)
-      assert.ok(i >= 0 && j >= 0, `${label}: a button is outside the grid's blocks`)
-      const [xa, xb] = [compact.grid.xs[i], compact.grid.xs[i + 1]]
-      const [ya, yb] = [compact.grid.ys[j], compact.grid.ys[j + 1]]
-      const clear = Math.min(
-        l - (xa * width + road / 2),
-        xb * width - road / 2 - r,
-        t - top - (ya * height + road / 2),
-        yb * height - road / 2 - (b - top),
-      )
-      assert.ok(clear >= BUTTON_CLEAR, `${label}: a button comes within ${clear}px of a road`)
-      // The rounds on the block's corners (RoadLayer.css) come nearer a
-      // button's corners than the roads do. Within a round's square, the
-      // road is outside the circle centred on the square's inner corner, so
-      // a button corner inside that circle is clear by the rest of it.
-      const inner = { x0: xa * width + road / 2, x1: xb * width - road / 2, y0: ya * height + road / 2, y1: yb * height - road / 2 }
-      for (const [px, py] of [[l, t - top], [r, t - top], [l, b - top], [r, b - top]]) {
-        const left = px - inner.x0 < inner.x1 - px
-        const upper = py - inner.y0 < inner.y1 - py
-        const dx = left ? px - inner.x0 : inner.x1 - px
-        const dy = upper ? py - inner.y0 : inner.y1 - py
-        if (dx >= round || dy >= round) continue
-        const gap = round - Math.hypot(round - dx, round - dy)
-        assert.ok(gap >= BUTTON_CLEAR, `${label}: a button's corner comes within ${gap.toFixed(1)}px of a rounded corner`)
-      }
-      for (const [axis, line, from, to] of [['h', ya, xa, xb], ['h', yb, xa, xb], ['v', xa, ya, yb], ['v', xb, ya, yb]]) {
-        assert.ok(covered(axis, line, from, to), `${label}: a button's block is open on one side`)
-      }
-      return `${i},${j}`
-    })
-    assert.notEqual(cells[0], cells[1], `${label}: both buttons are in one block`)
-  }
-})
-
 test('the road layer has a road and ticks for every segment, a box for every junction, a crossing on every road into a cross or T', () => {
-  for (const layout of [wide, medium, compact]) {
+  for (const layout of HERO_MAPS) {
     const { bands, boxes, ticks, walks } = roadPieces(layout)
     const graph = buildGraph(layout)
     const segs = graph.segments.length
@@ -338,7 +246,7 @@ const overlaps = (a, b) => a.x0 < b.x1 - 1e-6 && a.x1 > b.x0 + 1e-6 && a.y0 < b.
 
 test('every block corner at a junction is rounded, and each round sits in its corner, reaching only just under its two roads, at any recorded size', () => {
   const PAIRS = [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']]
-  for (const layout of [wide, medium, compact]) {
+  for (const layout of HERO_MAPS) {
     const graph = buildGraph(layout)
     const corners = graph.nodes
       .filter((n) => ['cross', 'tee', 'corner'].includes(n.kind))
@@ -410,14 +318,14 @@ test('crossings and ticks never run into each other or into a junction, at any r
 })
 
 test('each crossing spans its road, sits just clear of the junction, and has whole stripes', () => {
-  for (const layout of [wide, medium, compact]) {
+  for (const layout of HERO_MAPS) {
     const roads = roadsFor(layout)
     const { gap, depth, stripe, space } = roads.crosswalk
     for (const kind of ['main', 'side']) {
       const stripes = roads[kind] / (stripe + space)
       assert.ok(Math.abs(stripes - Math.round(stripes)) < 1e-9, `${layout.name} ${kind} road takes ${stripes} stripes`)
     }
-    const size = { wide: { width: 1440, height: 836 }, medium: { width: 1024, height: 704 }, compact: { width: 390, height: compact.band } }[layout.name]
+    const size = { wide: { width: 1440, height: 836 }, medium: { width: 1024, height: 704 } }[layout.name]
     const graph = buildGraph(layout, size)
     for (const w of roadPieces(layout).walks) {
       const r = pieceRect(w, size.width, size.height)
@@ -438,26 +346,6 @@ test('the stripes are thin: a quarter of each stripe tile, and a road takes 5', 
   assert.equal(stripe / (stripe + space), 0.25)
   assert.equal(CONFIG.roads.main / (stripe + space), 5)
   assert.equal(CONFIG.roads.side / (stripe + space), 5)
-})
-
-test('phones draw the same map zoomed out: every road size scaled, the clearance not', () => {
-  const k = CONFIG.layout.zoom.compact
-  assert.ok(k > 0 && k < 1)
-  assert.equal(roadsFor(wide).zoom, 1)
-  assert.equal(roadsFor(medium).zoom, 1)
-  const r = roadsFor(compact)
-  assert.equal(r.main, CONFIG.roads.main * k)
-  assert.equal(r.side, CONFIG.roads.side * k)
-  assert.deepEqual(r.tick, { width: 2 * k, length: 8 * k, gap: 10 * k })
-  assert.equal(r.crosswalk.depth, CONFIG.roads.crosswalk.depth * k)
-  assert.equal(r.clearance, CONFIG.roads.clearance)
-  // The drawing and the graph both use the zoomed sizes.
-  const { bands } = roadPieces(compact)
-  const sizes = (list) => [...new Set(list)].sort((a, b) => a - b)
-  const widths = sizes(bands.map((p) => Math.max(p.w[1], p.h[1])))
-  assert.deepEqual(widths, sizes([r.side, r.main]))
-  const g = buildGraph(compact, { width: 390, height: 240 })
-  assert.deepEqual(sizes(g.segments.map((sg) => sg.width)), sizes([r.side, r.main]))
 })
 
 test('the CSS that hides a too-short run of ticks follows the zoom instead of a fixed size', () => {
@@ -495,9 +383,6 @@ test('at every recorded size, every lane already has room for a car, so the room
     const { hidden, tight } = resolveMap(mapFor(s), { width: s.hero[0], height: s.hero[1], copy: copyOf(s) })
     assert.deepEqual(hidden, [], s.viewport.join('×'))
     assert.deepEqual(tight, [], s.viewport.join('×'))
-  }
-  for (const b of boxes.filter((x) => x.layout === compact)) {
-    assert.deepEqual(resolveMap(compact, b).hidden, [], b.label)
   }
 })
 

@@ -14,17 +14,15 @@ import { carCount, createTraffic, overlap } from './traffic.js'
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
 const wide = read('../layouts/wide.json')
 const medium = read('../layouts/medium.json')
-const compact = read('../layouts/compact.json')
 
 const DT = CONFIG.world.step
 const MINUTES = 5
 const STILL_MAX = 15 // s: every car moves at least this often
 
-// A desktop, a portrait tablet, and a phone's street band.
+// A desktop and a portrait tablet. Phones have no map (October 14).
 const SIZES = [
   { layout: wide, width: 1440, height: 716 },
   { layout: medium, width: 768, height: 960 },
-  { layout: compact, width: 390, height: compact.band },
 ]
 const label = (s) => `${s.layout.name} ${s.width}×${s.height}`
 
@@ -76,18 +74,6 @@ test('the car count follows the box, within its limits', () => {
   assert.equal(carCount(wide, 1440, 716), Math.round((1440 * 716) / t.pxPerCar))
   assert.equal(carCount(wide, 768, 400), t.min)
   assert.equal(carCount(wide, 2560, 1376), t.max)
-  assert.equal(carCount(compact, 390, 343), t.compactMin)
-})
-
-test('phone cars are drawn and driven at the phone map\'s zoom', () => {
-  const k = roadsFor(compact).zoom
-  const w = simFor(SIZES[0]).sim.units
-  const c = simFor(SIZES[2]).sim.units
-  assert.equal(w.length, CONFIG.car.length * CONFIG.world.pxPerM)
-  assert.ok(Math.abs(c.length - w.length * k) < 1e-9)
-  assert.ok(Math.abs(c.width - w.width * k) < 1e-9)
-  assert.ok(Math.abs(c.cruise[1] - w.cruise[1] * k) < 1e-9)
-  assert.ok(Math.abs(c.decel - w.decel * k) < 1e-9)
 })
 
 test('the start is seeded: same map, same seed, same cars', () => {
@@ -289,11 +275,9 @@ test('traffic drives around the segments the runtime rules hide, in the short wi
 })
 
 test('at every recorded size, a car can be let onto every lane out of a junction', () => {
-  const sizes = rects.sizes.map((s) =>
-    s.band
-      ? { layout: compact, width: s.band[2] - s.band[0], height: s.band[3] - s.band[1], label: s.viewport.join('×') }
-      : { layout: s.viewport[0] >= 1200 ? wide : medium, width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') },
-  )
+  const sizes = rects.sizes
+    .filter((s) => s.viewport[0] >= 768)
+    .map((s) => ({ layout: s.viewport[0] >= 1200 ? wide : medium, width: s.hero[0], height: s.hero[1], label: s.viewport.join('×') }))
   for (const size of sizes) {
     const { graph, sim } = simFor(size, { count: 0 })
     for (const lane of graph.lanes.filter((l) => l.from.stop)) {

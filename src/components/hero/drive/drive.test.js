@@ -155,7 +155,7 @@ test('traffic stops for the car parked in its way, and never runs into it', () =
   assert.ok(stoppedBehind > 0, 'nothing ever waited')
 })
 
-test('asked to rejoin, the car finds its own way back into traffic (Phase 6 will use this)', (t) => {
+test('asked to rejoin, the car finds its own way back into traffic (as knocked cars do)', (t) => {
   const times = []
   let fellBack = 0
   for (const size of [{}, { width: 768, height: 960 }, { width: 1920, height: 1016 }]) {

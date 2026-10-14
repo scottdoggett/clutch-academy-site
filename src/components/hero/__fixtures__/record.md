@@ -24,10 +24,13 @@ measures 15px narrower than in a normal macOS Chrome, whose scrollbars
 overlay.
 
 Keep the size list in step with the fixture. The required sizes are the
-1280, 1440 and 1920px rows at 680px of viewport height and up.
+1280, 1440 and 1920px rows at 680px of viewport height and up. Nothing
+under 768px wide is recorded: phones have no roads since October 14, so
+there's nothing for their copy to clear.
 
-`short.sizes` holds windows too short for the whole wide map, which the
-runtime rules thin out: 844×390, 932×430 and 1100×520. Measure them with
+`short.sizes` holds windows too short for the whole map (all three get the
+medium map), which the runtime rules thin out: 844×390, 932×430 and
+1100×520. Measure them with
 the same script, with only those three in `sizes`, and paste the rows into
 `short.sizes` instead.
 
@@ -36,7 +39,6 @@ document.body.innerHTML = ''
 window.__rows = []
 ;(async () => {
   const sizes = [
-    [320, 568], [360, 640], [360, 740], [375, 667], [390, 844], [412, 915], [430, 932], [600, 960],
     [768, 1024], [820, 1180], [834, 1194],
     [900, 700], [1000, 700], [1024, 768], [1024, 1366], [1180, 820],
     [1280, 600], [1280, 680], [1280, 720], [1280, 800], [1366, 660], [1366, 768],
@@ -65,13 +67,6 @@ window.__rows = []
     }
     const row = { viewport: [w, h], hero: [Math.round(hb.width), Math.round(hb.height)] }
     row.copy = rect(d.querySelector('.hero__copy'))
-    // Phones only: the street band the compact map is drawn in, and the two
-    // buttons that sit inside it.
-    const band = d.querySelector('.hero__streets')
-    if (getComputedStyle(band).display !== 'none') {
-      row.band = rect(band)
-      row.ctas = [...d.querySelectorAll('.hero__ctas .btn')].map(rect)
-    }
     window.__rows.push(row)
     f.remove()
   }

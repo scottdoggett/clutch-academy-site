@@ -3,9 +3,9 @@
 // segment, and the movements a car may make from one lane to the next.
 //
 // Pure: no DOM and no three.js, so Node's test runner can load it. Positions
-// are CSS pixels in the layout's own box (the hero, or the street band under
-// the CTAs), x right and y down. Headings are radians from +x, which on a
-// y-down screen is clockwise. Traffic keeps right.
+// are CSS pixels in the layout's own box (the hero), x right and y down.
+// Headings are radians from +x, which on a y-down screen is clockwise.
+// Traffic keeps right.
 
 import { CONFIG } from './config.js'
 

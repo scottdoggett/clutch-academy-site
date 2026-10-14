@@ -7,8 +7,6 @@ import { DUR_BASE, DUR_QUICK, EASE_IN, HERO_SETTLED } from '@/lib/motion'
 import { CONFIG } from './config.js'
 import DriveButton from './DriveButton'
 import { hideRule, resolveMap } from './layout.js'
-// Only the whole-hero maps sit near the copy; the phone band clears it by
-// construction, so its map doesn't need to ship to the client for this.
 import wideMap from './layouts/wide.json'
 import mediumMap from './layouts/medium.json'
 
@@ -21,8 +19,7 @@ const SETTLE_FAILSAFE = 1500
 
 // Drive needs a keyboard and a whole-hero map, wide or medium
 // (docs/spec/hero-drive.md §Phones, touch and reduced motion): a fine
-// pointer that can hover, as the About page's shift gate tests for, and
-// 768px up.
+// pointer that can hover, and 768px up.
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 
 // The driving display (the speedometer, the dock and the shifter), only
@@ -101,7 +98,7 @@ function whenSettled(hero, fn) {
 }
 
 // The hero's client side, sitting over the copy (docs/spec/hero-drive.md
-// §Layers). Two jobs so far:
+// §Layers). Three jobs:
 //
 // 1. The runtime rules (§Keeping clear of the headline, §Room for a car):
 //    measure the copy, and hide any road segment that comes within 48px of
@@ -112,10 +109,12 @@ function whenSettled(hero, fn) {
 //    phone on its side, or zoomed type.
 //
 // 2. The traffic (§Ambient traffic). The engine and three.js load as their
-//    own chunk once the page is idle, and only where WebGL works. The canvas
-//    covers the hero on the wide and medium maps and the street band on
-//    phones. The cars fade in once, after the hero's entrance, and drive;
-//    under reduced motion they're drawn parked and never move.
+//    own chunk once the page is idle, only where WebGL works and only from
+//    768px: phones have no roads (October 14 review), so they never load
+//    it. The canvas covers the hero. The cars fade in once, after the
+//    hero's entrance, and drive; under reduced motion they're drawn parked
+//    and never move. A window narrowed below 768px takes the map away, and
+//    the cars with it, until it widens again.
 //
 // 3. Test drive (§Play mode). A pill in the bottom-right corner, once the
 //    cars are showing, on screens with a keyboard and a whole-hero map.
@@ -176,8 +175,7 @@ export default function HeroStage() {
       wide: hero?.querySelector('.roads[data-layout="wide"]'),
       medium: hero?.querySelector('.roads[data-layout="medium"]'),
     }
-    const streets = hero?.querySelector('.hero__streets')
-    if (!hero || !copy || !layers.wide || !layers.medium || !streets) return
+    if (!hero || !copy || !layers.wide || !layers.medium) return
 
     const whole = window.matchMedia(CONFIG.layout.heroQuery)
     const wide = window.matchMedia(CONFIG.layout.wideQuery)
@@ -187,7 +185,7 @@ export default function HeroStage() {
     let engine = null
     let mm = null
     // The map the traffic should drive, kept for the engine if it isn't
-    // loaded yet.
+    // loaded yet. None on phones.
     let map = null
 
     const check = () => {
@@ -197,9 +195,9 @@ export default function HeroStage() {
       let tight = []
       const h = hero.getBoundingClientRect()
       // From 768px the roads cover the hero, the wide map from 1200px and
-      // the medium one below; on phones they're in their own band under the
-      // subhead, clear of the copy by construction.
+      // the medium one below. Phones have none.
       const name = whole.matches ? (wide.matches ? 'wide' : 'medium') : null
+      map = null
       if (name) {
         const c = copy.getBoundingClientRect()
         const result = resolveMap(HERO_MAPS[name], {
@@ -211,13 +209,6 @@ export default function HeroStage() {
         blocked = result.blocked
         tight = result.tight
         map = { name, box: { x: 0, y: 0, width: h.width, height: h.height }, hidden: result.hidden }
-      } else {
-        const s = streets.getBoundingClientRect()
-        map = {
-          name: 'compact',
-          box: { x: s.left - h.left, y: s.top - h.top, width: s.width, height: s.height },
-          hidden: [],
-        }
       }
       engine?.setMap(map)
       // Only the layer on screen has anything hidden; the other is cleared.
@@ -251,7 +242,6 @@ export default function HeroStage() {
     const ro = new ResizeObserver(later)
     ro.observe(hero)
     ro.observe(copy)
-    ro.observe(streets)
     whole.addEventListener('change', check)
     wide.addEventListener('change', check)
     check()
@@ -259,7 +249,7 @@ export default function HeroStage() {
     document.fonts?.ready.then(check)
 
     // The traffic. three.js is WebGL2 only.
-    const cancelIdle = whenIdle(async () => {
+    const loadTraffic = async () => {
       if (!live || !window.WebGL2RenderingContext) return
       try {
         const { createEngine } = await import('./engine/index.js')
@@ -306,13 +296,23 @@ export default function HeroStage() {
       // Under reduced motion the handler above never runs, and the cars are
       // simply there.
       if (!window.matchMedia(MOTION_OK).matches) setShown(true)
-    })
+    }
+    // From 768px only: once the page is idle if the window is that wide, or
+    // when it first widens to it.
+    let cancelIdle = null
+    const load = () => {
+      if (cancelIdle || !whole.matches) return
+      cancelIdle = whenIdle(loadTraffic)
+    }
+    whole.addEventListener('change', load)
+    load()
 
     return () => {
       live = false
       clearTimeout(timer)
-      cancelIdle()
+      cancelIdle?.()
       ro.disconnect()
+      whole.removeEventListener('change', load)
       whole.removeEventListener('change', check)
       wide.removeEventListener('change', check)
       mm?.revert()
@@ -386,8 +386,8 @@ export default function HeroStage() {
   }, [])
 
   // A grind: the shifter shakes sideways for a moment, and the numeral goes
-  // black. Under reduced motion there's no shake; the numeral holds black
-  // for 0.4s instead.
+  // the brand red. Under reduced motion there's no shake; the numeral holds
+  // red for 0.4s instead.
   const grind = useCallback(() => {
     clearTimeout(grindTimer.current)
     setGrinding(true)

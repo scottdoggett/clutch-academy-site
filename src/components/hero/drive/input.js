@@ -1,6 +1,6 @@
 // The keyboard while driving (docs/spec/hero-drive.md §Keys, §Focus).
 //
-// Keys only count while focus is on the gear display, in the driving layer,
+// Keys only count while focus is on the dash's dock, in the driving layer,
 // which is what makes single-letter controls acceptable under WCAG 2.1.4:
 // they're heard there, not on the window. W throttle, S brake (in R they swap), A and D or ←
 // and → steer, ↑ and ↓ shift up and down a gear, either Shift is the clutch
@@ -18,7 +18,7 @@ const keyOf = (e) => e.key.toLowerCase()
 // focus where it is, so clicking it to focus it doesn't end the game.
 const CONTROL = 'a[href], button, input, select, textarea, iframe, [tabindex]:not([tabindex="-1"])'
 
-// area: the driving layer, which holds the gear display. controls: from
+// area: the driving layer, which holds the dash. controls: from
 // createControls() in player.js. onExit: Esc, or focus leaving the layer.
 // onShift(±1): ↑ or ↓. onToggleMode: M.
 export function createInput(area, { controls, onExit, onShift, onToggleMode }) {
