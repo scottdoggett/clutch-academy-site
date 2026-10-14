@@ -13,8 +13,8 @@ export const metadata = {
   alternates: { canonical: '/lessons/manual-confidence' },
 }
 
-// Keyword target (08 §4): "highway + city manual lessons Toronto"
-// (supporting: highway lessons, hill starts, city driving).
+// Keyword target (04-seo.md §Per-route targets): "highway + city manual
+// lessons Toronto" (supporting: highway lessons, hill starts, city driving).
 // Pricing is the October 2026 winter offering: $400 + HST, five one-hour lessons.
 
 // The six skills, verbatim from the brief. Descriptions add only light,
@@ -89,7 +89,7 @@ export default function ManualConfidencePage() {
             and finish with everything the city can throw at a clutch:
             downtown, merging, rush hour, hills and parking.
           </p>
-          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
             The package to take if you want to be confident wherever you
             drive.

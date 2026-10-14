@@ -13,7 +13,8 @@ export const metadata = {
   alternates: { canonical: '/lessons/manual-foundations' },
 }
 
-// Keyword target (08 §4): "learn to drive manual Toronto" (beginners).
+// Keyword target (04-seo.md §Per-route targets): "learn to drive manual
+// Toronto" (beginners).
 // Pricing is the October 2026 winter offering: $240 + HST, three one-hour lessons.
 
 // The three-lesson progression, from the brief. Descriptions elaborate only
@@ -81,7 +82,7 @@ export default function ManualFoundationsPage() {
             first touch of the clutch to driving real roads on your own. Each
             one picks up where the last left off.
           </p>
-          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
             Most students arrive nervous. Sam expects that and goes at your
             pace.

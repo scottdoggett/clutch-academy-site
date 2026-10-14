@@ -157,8 +157,7 @@ img {
    Replaces the gear-section wrappers: plain blocks in document flow with
    consistent padding. Only the first section clears the fixed nav. */
 .section {
-  /* Named so a full-bleed child can cancel them exactly (the hero's street
-     band on phones). */
+  /* Named so a full-bleed child can cancel them exactly. */
   --section-pad-y: clamp(2.5rem, 6vw, 5rem);
   --section-pad-x: clamp(1.25rem, 4vw, 4rem);
   padding: var(--section-pad-y) var(--section-pad-x);
@@ -293,9 +292,8 @@ img {
   outline-color: var(--red-primary);
 }
 
-/* Stub-page hero for the Phase 3 route placeholders (About, FAQ, packages…);
-   each gets replaced as Phases 5-7 land its real content. Clears the fixed
-   nav via --nav-height. */
+/* The 404 page's hero (not-found.jsx). Clears the fixed nav via
+   --nav-height. */
 .placeholder-hero {
   min-height: 70vh;
   display: flex;
@@ -373,7 +371,7 @@ img {
   object-fit: cover;
 }
 
-/* Stub-page link lists (lessons hub, 404) — legible on the brand red. */
+/* The 404's link list — legible on the brand red. */
 /* Each link is a 44px row; the rows supply the spacing. */
 .placeholder-hero ul {
   list-style: none;

@@ -1,8 +1,8 @@
-// Single source of truth for the site FAQ, ported verbatim from the
-// pre-overhaul Faq section. The /faq page renders the full list AND
-// generates its FAQPage JSON-LD from this same array (Phase 7), while each
-// lesson page surfaces a relevant subset by id — so on-page copy and
-// structured data can't drift.
+// Single source of truth for the site FAQ, first ported from the
+// pre-overhaul Faq section and reworded in the October 9, 2026 copy pass.
+// The /faq page renders the full list AND generates its FAQPage JSON-LD from
+// this same array (Phase 7), while each lesson page surfaces a relevant
+// subset by id — so on-page copy and structured data can't drift.
 //
 // Neither duration switch (60 -> 75 min on August 1, back to 60 in October
 // 2026) needed edits here: the answers talk in lesson counts, not durations. If duration copy is ever added, it belongs in
@@ -45,7 +45,7 @@ export const FAQS = [
   },
   {
     id: 'cancellation',
-    // PENDING: final cancellation-policy wording from Sam (08 §7). This is
+    // PENDING: final cancellation-policy wording from Sam (07-status.md item 6). This is
     // the wording currently live on the site; it renders on /faq, /contact,
     // and the package-page FAQ subsets — updating it here updates them all.
     q: 'What is your cancellation policy?',

@@ -225,8 +225,9 @@ export function applyMotion(root, { small = false, desktop = false } = {}) {
 // Markup: [data-hero-root] around the hero, and data-hero="eyebrow" |
 // "headline" | "sub" | "ctas" | "photo" | "caption" on its pieces.
 //
-// The headline and photo are the LCP candidates, so neither ever goes
-// transparent: the headline only travels, the photo only scales. The CTAs
+// The headline (and a photo, if a hero has one) are the LCP candidates, so
+// neither ever goes transparent: the headline only travels, the photo only
+// scales. The CTAs
 // fade on opacity alone (not autoAlpha), so they stay clickable the whole
 // time (rule 10).
 //

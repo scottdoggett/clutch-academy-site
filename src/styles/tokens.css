@@ -23,12 +23,9 @@
   --road-line: #8F8F8F;
   --road-crossing: #CFCFCF;
 
-  /* Google-rating badge (home reviews section). Star gold is Google's own
-     review-star colour; both star tones are decorative (aria-hidden).
-     --ink-muted is body text on cream surfaces — 7.1:1 on --cream. */
+  /* Review stars (home reviews section and review cards). Star gold is
+     Google's own review-star colour, decorative (aria-hidden). */
   --star-gold: #FBBC04;
-  --star-track: #DADCE0;
-  --ink-muted: #55504B;
 
   /* Typography — display (Plus Jakarta Sans) and body (Inter). The
      --font-jakarta / --font-inter variables are set on <html> by next/font
@@ -38,7 +35,6 @@
   --font-body: var(--font-inter, 'Inter'), sans-serif;
 
   /* Type Scale */
-  --text-gear: clamp(4rem, 12vw, 10rem);
   --text-display-xl: clamp(2.5rem, 6vw, 5rem);
   --text-display-lg: clamp(2rem, 4vw, 3.5rem);
   --text-body-lg: clamp(1.125rem, 1.5vw, 1.375rem);
@@ -51,9 +47,7 @@
   --leading-body: 1.6;
 
   /* Spacing */
-  --gear-indicator-size: clamp(80px, 10vw, 160px);
   --gear-indicator-padding: clamp(24px, 3vw, 40px);
-  --gear-indicator-stroke: 3px;
   --nav-bar-height: 64px;
   /* Height of a fixed announcement strip above the nav, when one is present.
      0 by default. While the fall sale's AnnouncementBanner is mounted
@@ -67,10 +61,4 @@
      entrances, the hero — takes its values from src/lib/motion.js instead
      (docs/spec/08-motion.md §Values). */
   --transition-reduced: 150ms;
-}
-
-@media (max-width: 767px) {
-  :root {
-    --gear-indicator-stroke: 2px;
-  }
 }

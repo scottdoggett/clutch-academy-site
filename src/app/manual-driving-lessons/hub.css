@@ -102,7 +102,7 @@
   gap: 0.625rem;
 }
 
-/* The card's position on the hero shift gate. */
+/* The card's place in the row, 1 to 4. */
 .hub-card__gear {
   width: 1.625rem;
   height: 1.625rem;
@@ -363,12 +363,6 @@
   font-size: 0.9375rem;
 }
 
-/* ---------- Responsive --------------------------------------------------- */
-@media (max-width: 899px) {
-  .gate__plate {
-    max-width: 300px;
-  }
-}
 
 @media (max-width: 767px) {
   /* Chooser: a shade tighter, and a smaller bullet so it stays subordinate to
@@ -540,4 +534,3 @@
     padding: 0.625rem 1rem;
   }
 }
-

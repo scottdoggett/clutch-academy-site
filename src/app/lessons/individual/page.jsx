@@ -13,12 +13,13 @@ export const metadata = {
   alternates: { canonical: '/lessons/individual' },
 }
 
-// Keyword target (08 §4): "manual driving refresher Toronto".
+// Keyword target (04-seo.md §Per-route targets): "manual driving refresher
+// Toronto".
 // Pricing is the October 2026 winter offering: 1 hour · $90 + HST.
 const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 
-// PENDING: SINGLE-LESSON INCLUSIONS — final 3–5 bullets from Sam. These carry
-// over the placeholder bullets already shown on the live site's pricing card;
+// PENDING: SINGLE-LESSON INCLUSIONS — final 3–5 bullets from Sam. These are
+// placeholders, expanded from the three on the live site's pricing card;
 // confirm before launch.
 const INCLUDED = [
   'One-on-one instruction that starts at your level',
@@ -77,7 +78,7 @@ export default function IndividualLessonPage() {
             skill has gone rusty, and the easiest first lesson if you’ve never
             touched a stick shift.
           </p>
-          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
             Most students arrive nervous. Sam expects that and goes at your
             pace.

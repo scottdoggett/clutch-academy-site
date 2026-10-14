@@ -111,8 +111,9 @@ const CHOOSER = [
 // rather than 1.75 because it renders at 20px where those render at 24 and the
 // thinner line goes wispy.
 //
-// A flat H shift-pattern was tried first, since the hero and the card chips
-// already use the gate as a motif. At bullet size it just read as the letter H.
+// A flat H shift-pattern was tried first, since the hub's old hero and the
+// card chips used the gate as a motif then. At bullet size it just read as
+// the letter H.
 const GEAR_BULLET = (
   <svg
     className="hub-choose__bullet"
@@ -165,8 +166,7 @@ export default function LessonsOverviewPage() {
               >
                 {p.badge && <span className="hub-card__badge">{p.badge}</span>}
                 <div className="hub-card__top">
-                  {/* Chip number = the card's position on the hero shift
-                      gate, so the two indexes read as one system. */}
+                  {/* Chip number = the card's place in the row, 1 to 4. */}
                   <span className="hub-card__gear" aria-hidden="true">
                     {p.tier}
                   </span>

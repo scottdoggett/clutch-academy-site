@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import './Footer.css'
 
-// Full sitemap (08 §1) — the footer doubles as the site-wide internal-linking
-// block, so every route is listed, package pages included. The list fills
-// two columns down-then-across, five rows deep: the site's pages, then the
-// four packages under their full names, in the package cards' order.
+// Full sitemap (02-architecture.md §Routes) — the footer doubles as the
+// site-wide internal-linking block, so every route is listed, package pages
+// included. The list fills two columns down-then-across, five rows deep: the
+// site's pages, then the four packages under their full names, in the
+// package cards' order.
 const QUICK_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Lessons Overview', href: '/manual-driving-lessons' },

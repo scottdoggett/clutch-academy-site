@@ -11,9 +11,9 @@ export const metadata = {
   alternates: { canonical: '/contact' },
 }
 
-// ❓ Open decision (08 §7): info-card only vs. reinstating a contact form.
-// Current state stays info-card — the same contract as the live site's
-// Reverse section. Revisit if Sam wants a form.
+// Info card only, no contact form — the same contract as the live site's
+// Reverse section. A form was an open question in the rebuild's planning
+// (docs/spec/archive/08-overhaul-reference.md §7). Revisit if Sam wants one.
 export default function ContactPage() {
   const [cancellation] = faqSubset(['cancellation'])
 

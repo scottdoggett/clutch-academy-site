@@ -54,7 +54,7 @@ for p in / /manual-driving-lessons /lessons/individual /lessons/manual-foundatio
 done
 
 # AI-crawler readability: body copy must be present without JS
-curl -s localhost:$P/lessons/individual | grep -c 'Seventy-five minutes'
+curl -s localhost:$P/lessons/individual | grep -c 'One hour, one-on-one'
 
 # One h1 per route
 curl -s localhost:$P/about | grep -o '<h1' | wc -l
@@ -80,8 +80,9 @@ curl -s localhost:$P/ | grep -c 'analytics.tiktok.com'   # expect 0
 # Consent must default to denied
 curl -s localhost:$P/ | grep -o "analytics_storage: 'denied'" | head -1
 
-# No stale pricing anywhere in the build
-grep -rlE '\$(90|180|240|400)\b' .next/server/app/ || echo "clean"
+# No stale pricing anywhere in the build. The fall sale shows $110 / $300 /
+# $470 / $220 struck out on purpose; these are the August prices and formats.
+grep -rlE '\$(109|219|299|469)\b|75-minute|2\.5-hour' .next/server/app/ || echo "clean"
 
 # Host redirects (308 → apex)
 curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: www.clutchacademy.ca' localhost:$P/
@@ -147,8 +148,9 @@ gates its storage instead.
 ## Common pitfalls
 
 **The `booked.html` price-rule order.** Group must be tested before the
-five-pack. `"2.5"` matches the five-pack's `\b5\b` pattern, so a reversed order
-reports $469 for a $219 group booking. This has bitten once already.
+five-pack. When the group was 2.5 hours, `"2.5"` matched the five-pack's
+`\b5\b` pattern, and a reversed order reported $469 for a $219 group booking.
+That bit once. Keep group first.
 
 **Redirect loops between config and dashboard.** A host redirect in project
 config can fight Vercel's domain-dashboard redirect — with `www` set as Primary

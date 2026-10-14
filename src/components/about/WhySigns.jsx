@@ -20,8 +20,8 @@ import './WhySigns.css'
 // Decorative: each SVG is aria-hidden, and its words say the same thing.
 //
 // PENDING: Sam to approve the titles, and "Manual is all we teach". The
-// lines under them are the ones the old shift gate carried, which were also
-// awaiting his approval.
+// lines under them are the ones the old shift gate carried (one reworded on
+// October 9), which were also awaiting his approval.
 
 const signFace = Overpass({
   subsets: ['latin'],

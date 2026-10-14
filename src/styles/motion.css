@@ -18,8 +18,8 @@
 /* The hero's starting states, applied before first paint on a first load
    (html[data-motion="ok"] comes from MOTION_PREPAINT). SiteMotion sets
    data-motion-ready in the same frame it starts the hero timeline, which
-   switches these off. The headline and photo are LCP candidates, so they're
-   offset but never transparent. */
+   switches these off. The headline (and a photo, if a hero has one) are LCP
+   candidates, so they're offset but never transparent. */
 html[data-motion='ok']:not([data-motion-ready]) [data-hero='eyebrow'],
 html[data-motion='ok']:not([data-motion-ready]) [data-hero='sub'],
 html[data-motion='ok']:not([data-motion-ready]) [data-hero='ctas'],

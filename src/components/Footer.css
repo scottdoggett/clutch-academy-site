@@ -1,6 +1,5 @@
-/* The footer intentionally exits the gear-red field. Per design system
-   spec: dark background, cream text, no hover animations beyond standard
-   link underlines. Not part of the gear metaphor. */
+/* The footer sits on --red-dark, apart from the red and beige bands above
+   it: cream text, no hover animations beyond standard link underlines. */
 .footer {
   background-color: var(--red-dark);
   color: var(--cream);

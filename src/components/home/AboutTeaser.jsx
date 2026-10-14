@@ -5,7 +5,7 @@ import headshot from '../../../public/headshot.jpeg'
 import './AboutTeaser.css'
 
 // Homepage About teaser, ported from the gear-5 About section: introduce Sam,
-// then route to /about for the full story (Phase 5 builds that page out).
+// then route to /about for the full story.
 //
 // Motion (docs/spec/08-motion.md): the headshots Settle inside frames, the
 // text Rises in order beside them, the stats Stagger.

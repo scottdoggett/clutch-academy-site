@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import BookButton from './BookButton'
 import './Nav.css'
 
-// Top-level pages only (08-overhaul-reference §1); the lessons hub links out
+// Top-level pages only (02-architecture.md §Routes); the lessons hub links out
 // to the four package pages, and the footer lists the full sitemap.
 // `section` lists the path prefixes a link owns. Lessons owns the hub *and*
 // every package page under /lessons/*, so the nav underline stays lit while a

@@ -2,7 +2,7 @@
 
 Apply these in the Google Ads UI (account `AW-18196514948`). The site work is
 done; nothing below requires a code change except the **conversion label**
-(item 1). Prepared July 8, 2026; prices and timing updated August 16, 2026.
+(item 1). Prepared July 8, 2026; prices updated October 7, 2026.
 
 ⚠️ **The final URLs below live on the `overhaul` branch, which is not yet on
 clutchacademy.ca.** Don't point live ads at them until the rebuild is deployed
@@ -35,8 +35,8 @@ Until then, Ads can alternatively import the GA4 `purchase` event
 value + consent-mode modeling.
 
 Also note: booked.html derives conversion **value** from the Calendly event
-name using the current prices (110/300/470/220, since the September 21, 2026
-rounding). Any future price change has to update that mapping too.
+name using the current prices (90/240/400/180, the winter rates from October
+5, 2026). Any future price change has to update that mapping too.
 
 ## 2. Campaign / ad-group final URLs
 
@@ -92,7 +92,7 @@ if per-person/per-pair is still unresolved.
 |---|---|---|---|---|
 | `Individual Lesson` | `$90` | per lesson (1 hr) | `One-on-one, one hour` | `/lessons/individual` |
 | `Manual Foundations` | `$240` | per package (3 lessons) | `Beginner 3-lesson path` | `/lessons/manual-foundations` |
-| `Manual Confidence` | `$400` | per package (5 lessons) | `Flagship 5-lesson path` | `/lessons/manual-confidence` |
+| `Manual Confidence` | `$400` | per package (5 lessons) | `From zero to the highway` | `/lessons/manual-confidence` |
 | `Group Lesson` | `$180` | per lesson (2 hr) | `Learn with a friend` | `/lessons/group` |
 
 All prices + HST (Ads price assets don't display tax — keep landing-page

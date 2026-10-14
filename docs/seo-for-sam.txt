@@ -1,6 +1,6 @@
 CLUTCH ACADEMY — SEO OVERVIEW FOR THE OWNER
 ============================================
-Last updated: August 16, 2026
+Last updated: October 13, 2026
 
 Hey Sam — this is the plain-English version of what's happening with
 your website's SEO. No tech jargon. Read it once, keep it handy, and
@@ -73,8 +73,8 @@ WHAT WE'VE DONE FOR YOU (THE HIGHLIGHTS)
 3. LISTED YOUR BUSINESS INFO IN A FORMAT GOOGLE LOVES
    Behind the scenes we tell Google things like:
    - You're a driving school in Toronto
-   - Your packages and prices: $109 single lesson (75 min), $299 for
-     three lessons, $469 for five, $219 for a 2.5-hour group lesson
+   - Your packages and prices: $90 for a one-hour lesson, $240 for
+     three lessons, $400 for five, $180 for a 2-hour group lesson
    - Sam Anthony is the founder and instructor
    - Your phone, email, Instagram, Facebook, and Google Business
      Profile
@@ -90,7 +90,7 @@ WHAT WE'VE DONE FOR YOU (THE HIGHLIGHTS)
 
 5. OPENED THE DOOR TO AI ASSISTANTS DELIBERATELY
    Most sites either block AI crawlers or ignore them. We explicitly
-   welcome sixteen of them — ChatGPT, Claude, Perplexity, Google's AI,
+   welcome fifteen of them — ChatGPT, Claude, Perplexity, Google's AI,
    Apple's, and others — and we publish a plain-language summary file
    just for them. When someone asks ChatGPT "where can I learn stick
    shift in Toronto", we want you in that answer.
@@ -105,18 +105,19 @@ WHAT WE'VE DONE FOR YOU (THE HIGHLIGHTS)
    people who genuinely aren't sure.
 
 7. MADE IT FAST AND ACCESSIBLE
-   The site scores 100/100 on Google's accessibility and SEO audits
-   across every page. Accessibility is a ranking factor and, more
-   importantly, it means the site works for everyone.
+   The site scored 100/100 on Google's accessibility and SEO audits
+   across every page in July, and gets checked again before launch.
+   Accessibility is a ranking factor and, more importantly, it means
+   the site works for everyone.
 
 
 WHERE YOU STAND RIGHT NOW
 =========================
 
-The good news: your Google reviews went from about 10 in May to 33,
-at a 5.0 average. That was the single most important thing on your
-list, and you did it. It's the biggest reason your local ranking can
-move.
+The good news: your Google reviews went from about 10 in May to 44
+by October, at a 5.0 average. That was the single most important
+thing on your list, and you did it. It's the biggest reason your
+local ranking can move.
 
 The honest part: technical SEO is largely a solved problem for you
 now. The remaining gap between you and the top of the local results
@@ -160,8 +161,9 @@ Small stuff, but it's holding up the launch:
   - The exact wording of your cancellation policy
   - What's included in the individual and group lessons — 3 to 5
     bullet points each
-  - The terms of the "confidence guarantee" mentioned on the
-    five-lesson page
+  - Whether you want the "confidence guarantee" back. It's on your
+    current site but not the new one, because its terms were never
+    written down. If you want it, send the terms.
   - Whether group pricing is per person or per pair
   - Real photos from actual lessons, if you have any
   - A look at the new site to confirm the fonts and your About story

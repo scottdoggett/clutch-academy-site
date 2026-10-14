@@ -194,9 +194,9 @@ export default function AboutPage() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      {/* PENDING: dedicated student testimonials from Sam (08 §7 — real
-          quotes only, no invented reviews). When they land, they slot in
-          here as a quote strip alongside the rating block. */}
+      {/* PENDING: dedicated student testimonials from Sam (07-status.md
+          item 7 — real quotes only, no invented reviews). When they land,
+          they slot in here as a quote strip. */}
       {/* ---------- Route out to the package pages ---------- */}
       <section
         className="section about-next"

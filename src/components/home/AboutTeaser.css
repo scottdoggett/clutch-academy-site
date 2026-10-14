@@ -87,9 +87,8 @@
 }
 
 /* space-between pins each value to the bottom of the (stretched) grid row, so
-   the three values share a baseline even when one label wraps to two lines and
-   its neighbours don't — which is exactly what happens at phone widths, where
-   "Lesson style" and "Response time" wrap but "Territory" doesn't. */
+   the three values share a baseline even if one label wraps to two lines and
+   its neighbours don't. */
 .about__stat {
   display: flex;
   flex-direction: column;

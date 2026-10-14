@@ -18,13 +18,12 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
 
     <!-- Google Analytics 4 + Google Ads (gtag.js) with Consent Mode v2
-         (default-deny), mirroring the main site (index.html). This page is the
-         post-payment confirmation, so after the pageview the conversion script
-         at the end of <body> also fires a `purchase` (GA4) and a Google Ads
-         conversion. gtag queues under default-deny and flushes once the
-         visitor's stored consent (set on the main site) is read as granted. No
-         __PRERENDER__ guard is needed — booked.html ships verbatim from /public
-         and is never run through the prerender snapshot. -->
+         (default-deny), mirroring the main site (src/app/layout.jsx). This
+         page is the post-payment confirmation, so after the pageview the
+         conversion script at the end of <body> also fires a `purchase` (GA4)
+         and a Google Ads conversion. gtag queues under default-deny and
+         flushes once the visitor's stored consent (set on the main site) is
+         read as granted. booked.html ships verbatim from /public. -->
     <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
@@ -55,7 +54,7 @@
       } catch (_) {}
       gtag('js', new Date())
       gtag('config', 'G-5E5GEN5N59', { anonymize_ip: true })
-      // Google Ads conversion tag — same library, second config (see index.html).
+      // Google Ads conversion tag — same library, second config (see src/app/layout.jsx).
       gtag('config', 'AW-18196514948')
     </script>
     <script
@@ -75,7 +74,7 @@
         --red-deep: #8a0a1f;
         --cream: #fdf8f2;
         --white: #ffffff;
-        --chrome: #d9d9d9;
+        --chrome: #e4e4e4;
         --black: #0a0a0a;
         --font-display: 'Plus Jakarta Sans', sans-serif;
         --font-body: 'Inter', sans-serif;

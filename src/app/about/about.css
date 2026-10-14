@@ -39,10 +39,9 @@
 }
 
 /* ---------- Why Students Choose ------------------------------------ */
-/* The section itself is a component: WhySticker or WhySigns in
-   src/components/about/, the two candidates that replaced the shift gate
-   on September 28, 2026. What stays here is its centred header, which
-   both use. */
+/* The section itself is a component: WhySigns in src/components/about/,
+   which replaced the shift gate (chosen September 29, 2026). What stays here
+   is its centred header. */
 /* Two lines, "Why Students Choose" over "Clutch Academy". The shared header's
    60ch cap is measured in the body font and lands at ~534px, which broke the
    heading over three lines; lifting the cap entirely ran it onto one very wide
@@ -52,7 +51,7 @@
    sits between "Why Students Choose" at 666px and "Why Students Choose Clutch"
    at 875px — the break can only fall where we want it, with or without
    balance. Both sides scale with the font, so it holds at every size.
-   Scoped to this section: it's the only centred heading on the site. */
+   Scoped to this section. */
 .about-why .section-header {
   max-width: none;
 }

@@ -130,7 +130,7 @@
 
 @media (max-width: 767px) {
   /* nowrap, and the open menu is taken out of flow below — together these keep
-     the bar exactly --nav-height tall. It used to wrap: at 375px and below the
+     the bar exactly --nav-bar-height tall. It used to wrap: at 375px and below the
      row (logo 189 + toggle + Book Now) didn't fit, Book Now dropped to a second
      line, and the bar grew to 113px while every page still reserved 64px for
      it — so the fixed bar sat on top of the first heading. */

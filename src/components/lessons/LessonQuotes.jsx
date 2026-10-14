@@ -3,9 +3,10 @@ import './lessons.css'
 
 // A package page's pair of Google-review quotes, drawn as the homepage's
 // review cards (src/components/ReviewCard.css) on the page's beige reviews
-// band. The star row is a fixed five, not per-quote data, and decorative, as
-// it is on the homepage. Since October 2026 one review on the profile is four
-// stars (googleReviews.js), so check a review's own rating before quoting it.
+// band. The star row is a fixed five, not per-quote data, and decorative (the
+// homepage strip draws each review's own rating). Since October 2026 one
+// review on the profile is four stars (googleReviews.js), so check a review's
+// own rating before quoting it.
 export default function LessonQuotes({ quotes }) {
   return (
     <div className="lesson-quotes">

@@ -13,14 +13,14 @@ export const metadata = {
   alternates: { canonical: '/lessons/group' },
 }
 
-// Keyword target (08 §4): "group manual driving lessons Toronto" /
-// learn-with-a-friend.
+// Keyword target (04-seo.md §Per-route targets): "group manual driving
+// lessons Toronto" / learn-with-a-friend.
 //
 // Group format: one 2-hour group at $180 + HST, the October 2026 winter
 //    offering (live on main in f8645c4). The brief mentioned 1-hour and
-//    2.5-hour options; August 1 shipped a single 2.5-hour group at $220, and
-//    winter pricing replaced it with this one. A 1-hour option would be an
-//    addition.
+//    2.5-hour options; August 1 shipped a single 2.5-hour group at $219
+//    (rounded to $220 on September 21), and winter pricing replaced it with
+//    this one. A 1-hour option would be an addition.
 // ❓ BLOCKED: whether group pricing is per person or per pair — copy below
 //    deliberately avoids claiming either. Confirm with Sam before launch.
 //
@@ -29,9 +29,9 @@ export const metadata = {
 // It repeated the hero's price and booking, so it went when the four package
 // pages took one shape, and its source tag was retired (05-analytics.md).
 
-// PENDING: GROUP-LESSON INCLUSIONS — final 3–5 bullets from Sam (08 §7).
-// These carry over the placeholder bullets already shown on the live site's
-// group cards.
+// PENDING: GROUP-LESSON INCLUSIONS — final 3–5 bullets from Sam (07-status.md item 5).
+// These are placeholders, expanded from the three on the live site's group
+// card.
 const INCLUDED = [
   'Learn with a friend, in a low-pressure lesson',
   'Take turns at the wheel, and pick things up while you watch',
@@ -40,10 +40,10 @@ const INCLUDED = [
 
 // PENDING: Sam to approve. Written September 28, 2026, when this page gained
 // the "Who it's for" section the other three have. Nothing here is a new
-// claim: each line restates the hub's group card and chooser ("Learn
-// alongside a friend", "Share the experience and split the nerves", "Great
-// low-pressure first exposure to the clutch", "You'd rather learn with a
-// friend").
+// claim: each line restates the hub's group card and chooser ("Learn with a
+// friend and take turns at the wheel", "Share the experience and split the
+// nerves", "A low-pressure first go at the clutch", "If you'd rather learn
+// with a friend").
 const WHO = [
   'You’d rather learn with a friend than on your own.',
   'You want someone to share the experience with and split the nerves.',
@@ -92,7 +92,7 @@ export default function GroupLessonsPage() {
             not do it alone. Bring a friend, share the nerves, and learn the
             clutch together on real roads. Sam coaches every turn at the wheel.
           </p>
-          {/* PENDING: real lesson photo for this page (08 §7 pending assets). */}
+          {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
             Most students arrive nervous. Bringing a friend helps.
           </p>

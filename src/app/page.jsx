@@ -32,9 +32,10 @@ export const metadata = {
   },
 }
 
-// DrivingSchool / Offer / Person structured data, carried over verbatim from
-// the pre-overhaul index.html. Offers still describe the OLD packages/prices —
-// the Phase 10 pricing switch updates them together with the on-page copy.
+// DrivingSchool / Offer / Person structured data, first carried over from the
+// pre-overhaul index.html. The Offers carry the October 2026 winter prices for
+// three packages; Group Manual Lessons has none yet (docs/spec/07-status.md,
+// Known bugs).
 const SCHEMA_GRAPH = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -92,8 +93,8 @@ const SCHEMA_GRAPH = {
       ],
       // Wired to the shared Business Profile numbers module so the markup can
       // never drift from the visible badges. Whether aggregateRating should
-      // exist at all is still the open flag in 09 §5.3 — this only keeps it
-      // accurate while it does.
+      // exist at all is still open item 2 in docs/spec/07-status.md — this
+      // only keeps it accurate while it does.
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: googleReviews.rating.toFixed(1),
