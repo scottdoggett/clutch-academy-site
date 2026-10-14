@@ -57,10 +57,10 @@ migration; don't reintroduce it.
 **Redirects** — canonicalise to the apex domain, 308 permanent:
 `www.clutchacademy.ca`, `clutchacademy.com`, and `www.clutchacademy.com` all →
 `https://clutchacademy.ca`. They're kept in the repo so the behaviour survives
-a hosting move. ⚠️ The live domain's Vercel settings do the reverse today: on
-October 14, 2026, `clutchacademy.ca` answered with a 307 to
-`www.clutchacademy.ca`. Against this config that would loop (the trap below),
-so cutover flips it (step 7).
+a hosting move. The live project's domain settings agree: since October 14,
+2026, `clutchacademy.ca` connects to Production and `www` 308s to it,
+keeping the path and query string. Before that it was the reverse, which
+would have looped against this config (the trap below).
 
 ⚠️ **A known trap, learned the hard way on the Vite site:** a host redirect in
 project config can fight Vercel's own domain-dashboard redirect. When the
@@ -152,10 +152,10 @@ What "go live with the rebuild" actually takes. Nothing here has been done yet.
    the real domain.
 6. **Merge `overhaul` → `main`.** Expect a large diff: two frameworks.
 7. **Point the live Vercel project at the Next.js build** — framework preset,
-   build command, output. This is the step most likely to bite. In the same
-   project's domain settings, make `clutchacademy.ca` the primary domain and
-   send `www` to it. Today it's the other way round, which would loop
-   against `next.config.mjs`.
+   build command, output. This is the step most likely to bite. Leave the
+   project's domain settings as they are (`clutchacademy.ca` on Production,
+   `www` 308 to it, since October 14). Setting `www` as primary again would
+   loop against `next.config.mjs`.
 8. **Verify in production:** the three host redirects, `/booked` with a real
    test booking, GA4 realtime, `/privacy`, and fetch the sitemap in Search
    Console.

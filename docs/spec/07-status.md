@@ -251,11 +251,14 @@ accepted on September 24.
 - ⚠️ **Not on the live site yet.** That needs the same headers in
   `vercel.json` on `main`. The change is written and checked against `main`
   but not applied, since it changes what customers get: Scott's call.
-- **Found on the way:** the live domain sends `clutchacademy.ca` to `www`
-  (a 307 from Vercel's domain settings), the reverse of `next.config.mjs`,
-  while every canonical tag names the bare domain. `06-deployment.md` said
-  the domain settings agreed with the config; the cutover runbook now says
-  what to flip.
+- **The live domain now serves `clutchacademy.ca`, and `www` redirects to
+  it.** Until October 14 it was the reverse: Vercel's domain settings sent
+  `clutchacademy.ca` to `www` with a 307, against `next.config.mjs` and
+  every canonical tag, and it would have looped at cutover. Scott flipped
+  it that day: `clutchacademy.ca` connects to Production, and `www` 308s to
+  it, keeping the path and query string (checked with curl). Visitors who
+  answered the consent banner on `www` are asked once more, since the
+  choice is stored per host.
 - **The Google rating under the strip goes score first.** On a phone the
   score fell onto a line of its own and the button stopped three quarters
   across. Now a big 5.0 sits with the stars and "44 Google reviews"
