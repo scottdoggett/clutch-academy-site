@@ -237,14 +237,16 @@
     line-height: 1.4;
   }
 
+  /* Every card makes the same choice: the price column is one width in all
+     four (below) and the CTA's label never wraps, so either all four CTAs
+     fit beside their prices (from 390px) or all four take a full-width row
+     underneath. A CTA that shrank and wrapped its own label did it in some
+     cards and not others, since the price blocks differ in width. */
   .teaser-card__foot {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* nowrap on purpose: letting the row wrap put the CTA on its own line and
-       gave back the row this layout saves. The CTA shrinks and wraps its own
-       label instead, which costs nothing — it is already 44px tall. */
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 0.375rem;
   }
@@ -252,13 +254,15 @@
   /* Unit stacks under the number instead of sitting beside it: inline, the
      price block was wide enough to push the CTA onto its own row, which cost
      the row this layout exists to save. */
+  /* The widest price block, "/ 5 lessons + HST" under $400 and its old
+     price, measures 124px. */
   .teaser-card__price {
     padding-top: 0;
     font-size: 1.75rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.125rem;
-    flex-shrink: 0;
+    flex: 0 0 8rem;
   }
 
   .teaser-card__unit {
@@ -297,17 +301,19 @@
     margin-top: 0.25rem;
   }
 
+  /* Tighter tracking and side padding than elsewhere, so "See details &
+     book" fits beside the price from 390px. */
   .teaser-card__cta {
     margin-top: 0;
-    flex: 1 1 auto;
-    min-width: 0;
+    flex: 1 0 auto;
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
     font-size: 0.8125rem;
-    letter-spacing: 0.08em;
-    padding: 0.625rem 1rem;
+    letter-spacing: 0.05em;
+    padding: 0.625rem;
   }
 }
 
