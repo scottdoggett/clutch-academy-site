@@ -47,7 +47,8 @@ lower prices are presented as a limited-time sale.
 - **One saving per card.** The tags replaced the savings against single
   lessons on October 7, at Scott's word: the "Save $50" corner badge on
   Confidence's homepage card and the heroes' "save $30" / "save $50" are
-  gone. The only corner badge left is Foundations' "Recommended".
+  gone. The only corner badge left is "Recommended", on Confidence since
+  November 5, 2026.
 - **To end the sale**, set `FALL_SALE` to `false` in `src/lib/sale.js`. The
   banner and every struck-out price go, and the header clearance drops back
   to the nav.
@@ -65,15 +66,34 @@ lower prices are presented as a limited-time sale.
   Confidence Package. That includes the footer, breadcrumbs, cross-links and
   the Offer schema. Short forms only where a length limit forces them (Ads
   sitelinks, ≤25 characters).
-- **One featured package: Foundations**, with the "Recommended" badge, the
-  highlighted card and the white button, and the only corner badge on any
-  card. There is no "Best Value" (both
+- **One featured package: Complete Manual Confidence** (Sam, November 5,
+  2026; it was Foundations from October 7 until then). It has the
+  "Recommended" badge, the highlighted card and the white button on the hub
+  and homepage cards, "Recommended" in its page's eyebrow, and the only
+  corner badge on any card. There is no "Best Value" (both
   packs cost $80 a lesson), no "Most Popular" (there's no booking data
   behind it, and neither label was ever on the live site) and no "flagship"
   or "premium".
 - **Confidence starts from zero** (Scott, October 7): someone who has never
   driven manual can book it, and its first lessons cover the Foundations
-  basics. The page says so in its eyebrow, lead and skills note.
+  basics. The page says so in its lead, skills note, closing eyebrow ("From
+  zero to second nature") and meta description. Its hero eyebrow said
+  "Starts From Zero" until November 5, 2026, when "Recommended" took that
+  slot.
+- **Confidence is pitched on technique, not destinations** (Sam, November 5,
+  2026): "Five hours to build your skills and refine your technique", with
+  two extra hours of coached practice beyond the basics, smoother downshifts
+  and rev-matching, gear selection, shift timing and clutch control. The
+  old promise of downtown, highway and rush-hour driving is gone from every
+  page, the schema and `llms.txt`. Don't bring it back.
+- **Sam isn't named as the instructor outside `/about`** (Sam, November 5,
+  2026). He wants Clutch Academy to read as more than a one-man show, and
+  may hire an instructor. Copy, meta descriptions, alt text and schema say
+  "we" or "your instructor". `/about` names him as founder and lead
+  instructor. The homepage's "A message from the founder" card is his own
+  signed note, so his name and first person stay there. The homepage
+  schema lists him as `founder` only, no longer as an employee. Customer
+  quotes stay as written.
 - **Don't name the car, and make no claim about instructor licensing,
   insurance or an instructor brake** (Scott, October 7). The copy says "a
   manual hatchback" and stops there.
@@ -137,7 +157,8 @@ links out with "How Clutch Academy started".
 The comparison page and the internal-linking spine. It opens **straight on the
 packages** — the intro hero with the training car was removed in August 2026, so
 "Four ways to learn" is the page's `<h1>`. Then: all four packages as cards
-(Manual Foundations flagged *Recommended*, the only badge), a "Pick by
+(Complete Manual Confidence flagged *Recommended*, the only badge, since
+November 5, 2026), a "Pick by
 where you are today" chooser that routes by situation rather than by price, and
 a closing Book CTA.
 
@@ -148,18 +169,24 @@ a signpost and was reverted to text on August 20.
 
 ### `/lessons/*` Package pages
 Each one, in the same order since September 28, 2026: breadcrumbs → hero with
-price and Book CTA → what's included → who it's for → real Google review
-quotes → a five-question FAQ subset → next steps. (This file used to put who
+price and Book CTA → what's included → who it's for → next steps. (This file used to put who
 it's for first; only `/lessons/individual` did, and two of the other three
-led with what's included, so that order won.)
+led with what's included, so that order won.) Until November 5, 2026 a band
+of real Google review quotes and a five-question FAQ subset ("Quick
+answers") sat before next steps. Sam asked for both to go on Individual,
+Foundations and Confidence, and Group lost them too so the four pages keep
+one shape. Don't add them back without asking him.
 These are Ads destinations; they must stand alone for someone who has never seen
 the homepage. (The review strip that used to close them was removed sitewide in
 August 2026 — see `02-architecture.md`.)
 
 ### `/about`
-Sam's origin story, **in his own words** — supplied in the Site 2.0 review doc,
-August 2026. Do not rewrite it without asking him. Then: why students choose
-Clutch Academy, the common-fears section, why learn manual, and package links.
+Since November 5, 2026: why students choose Clutch Academy (five road signs,
+the page's h1), the common-fears section, Sam's origin story, then package
+links. The origin story is **in his own words**, supplied in the Site 2.0
+review doc, August 2026. Do not rewrite it without asking him. It led the page
+until Sam asked for it to move down to just above the package links, and the
+"Why Learn Manual Driving" section was removed at the same time.
 
 ### `/faq`
 Renders the full FAQ array and emits the FAQPage schema.
@@ -171,13 +198,15 @@ payment & cancellation block.
 ## FAQ — the single source
 
 `src/lib/faqs.js` is the only place FAQ copy exists. It renders `/faq`,
-generates the FAQPage JSON-LD, supplies each package page's subset, and provides
-`/contact`'s cancellation text. **Never fork this copy into a page.**
+generates the FAQPage JSON-LD, and provides `/contact`'s cancellation text.
+**Never fork this copy into a page.** Until November 5, 2026 it also fed each
+package page a five-question subset. Those sections are gone (§Package
+pages), and the table below records what they held.
 
 Ten entries, by id: `license`, `never-driven`, `synonyms`, `location`,
 `how-many`, `wear`, `pay`, `cancellation`, `car`, `gift`.
 
-Per-page subsets:
+Per-page subsets, until November 5, 2026:
 
 | Page | Subset |
 |---|---|
@@ -186,8 +215,8 @@ Per-page subsets:
 | `/lessons/manual-confidence` | synonyms, location, pay, cancellation, gift |
 | `/lessons/group` | license, never-driven, wear, pay, gift |
 
-To add an FAQ: append to the array. The page, the subsets, and the structured
-data all follow.
+To add an FAQ: append to the array. The page and the structured data both
+follow.
 
 The `synonyms` entry ("What's the difference between manual, stick shift, and standard?")
 is there for search as much as for students; people search all three terms.
@@ -199,10 +228,12 @@ person. **All major credit and debit cards are accepted.** E-transfer and PayPal
 were removed as accepted methods in August 2026; if you find that wording
 anywhere, it's stale.
 
-**Cancellation:** cancellations at least 24 hours before the lesson are eligible
-for a full refund; cancellations after 24 hours of booking, or less than 24
-hours before the lesson, are charged in full. ❓ Sam has been asked to confirm
-final wording — see `07-status.md`.
+**Cancellation** (Sam's final wording, November 5, 2026): "To receive a full
+refund, you must cancel within 24 hours of making your booking and at least
+24 hours before your lesson's scheduled start time. If either condition isn't
+met, your booking is non-refundable." He bolded "and". The site renders it
+plain, because FAQ answers are plain strings. It's in `faqs.js`, with
+`booked.html` and `llms.txt` saying the same thing in their own words.
 
 ## Copy rules
 
@@ -226,9 +257,9 @@ final wording — see `07-status.md`.
    Y"). Use a period or a comma. Write short, warm and in the second
    person, and say what happens. Scott cuts quips rather than polishing
    them: How It Works' lead, "Four steps, and you only have to think about
-   the first two", went altogether. Exempt: customer quotes (rule 2), Sam's
-   words (rule 5), and the "why manual" line on `/about`, which is quoted
-   from the client brief. Headings, page titles and eyebrows weren't part
+   the first two", went altogether. Exempt: customer quotes (rule 2) and
+   Sam's words (rule 5). Headings, page titles and eyebrows weren't part
    of the pass. Five page titles (`/faq`, the Foundations and Confidence
-   pages, `privacy.html`, `booked.html`) and the hub's eyebrow still carry
-   one, waiting on Scott.
+   pages, `privacy.html`, `booked.html`) still carry one, waiting on Scott.
+   The hub's eyebrow ("Manual · Stick Shift · Standard — same lessons") had
+   one too, until Scott had it removed on November 11, 2026.

@@ -25,11 +25,18 @@ Homepage title pattern is established and should be kept:
 | `/manual-driving-lessons` | stick shift lessons Toronto | learn manual in Toronto, manual lesson packages |
 | `/lessons/individual` | manual driving refresher Toronto | first stick shift lesson, one-on-one |
 | `/lessons/manual-foundations` | learn to drive manual Toronto | beginner manual lessons |
-| `/lessons/manual-confidence` | highway manual lessons Toronto | hill starts, city driving, rush hour |
+| `/lessons/manual-confidence` | ⚠️ highway manual lessons Toronto (stale since November 5, 2026; see below) | hill starts, city driving, rush hour |
 | `/lessons/group` | group manual lessons Toronto | learn stick with a friend |
 | `/about` | — (trust page) | Sam Anthony, manual instructor Toronto |
 | `/faq` | — | manual lesson questions, licence requirements |
 | `/contact` | — | book manual lesson Toronto |
+
+⚠️ **Confidence's target no longer matches the page.** Sam repositioned the
+package on November 5, 2026, to refining technique: downshifts,
+rev-matching, gear selection and clutch control. It no longer mentions the
+highway, city driving or rush hour. The page doesn't use the old keyword,
+and the new one is Scott's to pick (`07-status.md`, Open from Sam's November
+5 feedback).
 
 ⚠️ **The hub's H1 no longer carries the keyword.** `/manual-driving-lessons`
 used to open with `Manual Driving Lesson Packages in Toronto`; that whole intro

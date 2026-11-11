@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** October 14, 2026.
+**Last updated:** November 10, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -10,9 +10,10 @@ this file disagrees with another doc about current state, this file wins.
 The Next.js rebuild is **complete and unmerged**. All 9 routes carry real
 content, analytics and consent are wired, and the October winter pricing has
 been applied to both branches. It is deployed to its own Vercel project for
-review while `main` keeps serving customers the original Vite site. Three rounds
-of client review — August 16 (copy and structure), August 18 (layout, mobile,
-package cards) and August 20 (the hub's chooser) — have been applied, and in
+review while `main` keeps serving customers the original Vite site. Four rounds
+of client review have been applied: August 16 (copy and structure), August 18
+(layout, mobile, package cards), August 20 (the hub's chooser), and Sam's
+November 5 notes on the review deployment (below). In
 September the homepage got a redesign pass: beige light sections, rewritten
 copy, and GSAP motion. One piece is still being built: **the homepage hero is
 being rebuilt as a small city with traffic and a car you can drive**
@@ -233,6 +234,102 @@ accepted on September 24.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.
+
+## Recently completed — November 10, 2026 (Sam's November 5 feedback)
+
+Sam marked up the review deployment page by page ("Website Overhaul -
+Feedback", November 5, 2026). Scott settled four open points: About's 4th
+sign goes; Recommended moves to Confidence sitewide; Confidence's new pitch
+replaces the old one everywhere; and Group loses its reviews and Quick
+answers like the other three. Not committed yet. Lint, the 90 tests and
+`next build` pass. Nobody has looked at it in a browser yet.
+
+- **Sam isn't named as the instructor outside `/about`.** He wants the
+  site to read as more than a one-man show, and may hire an instructor.
+  "Sam expects", "Sam coaches", "with Sam" and "founder-instructor Sam
+  Anthony" are now "we" or "your instructor" in the copy, meta, alt text,
+  `llms.txt` and `booked.html`. The homepage schema lists him as `founder`
+  only (the `employee` entry and "Lead Instructor" title are gone). Real
+  review quotes keep his name. Rule in `03-content-and-pricing.md` §Names,
+  labels and claims.
+- **Recommended is Confidence's now**, on the hub card, the homepage card
+  and its page eyebrow ("Private · 5 Lessons · Recommended", which replaced
+  "Starts From Zero"). Foundations lost the badge, the white button and its
+  eyebrow word.
+- **Confidence is pitched on technique**, from Sam's mockups. On the hub card:
+  "Five hours to build your skills and refine your technique", plus three
+  new bullets. On its page: six new "What you'll master" cards, in Sam's
+  words. The lead, meta, Who it's for line and closing eyebrow ("From zero
+  to second nature") now follow the new pitch, and so do the homepage card,
+  the hub chooser, the homepage Offer schema, About's link and `llms.txt`.
+  It still says beginners can start there. No page promises downtown,
+  highway or rush-hour driving any more.
+- **Package pages:** the reviews band and Quick answers are gone from all
+  four, and so are `LessonQuotes` and `LessonFaq`. Each page imports
+  `lessons.css` itself now. Individual got Sam's new lead, and its
+  "real-road practice" bullet became "reversing". Foundations' closing line
+  is now Sam's pitch for Confidence.
+- **Homepage founder card:** the eyebrow is "A message from the founder" (Sam
+  wrote "owner/founder"; "founder" matches his text). The body is his three
+  paragraphs, word for word, and the role line is "Founder". This replaces
+  the September line in his voice that he never approved (item 11).
+- **About:**
+  - "Why Learn Manual Driving" is gone.
+  - The story moved down to sit above Pick where to start.
+  - The signs lost "Just you and Sam", leaving five, and three of them
+    changed: "At your pace", "Various driving scenarios" and "Book at any
+    hour" without the 1 a.m.
+  - With the story no longer first, the signs band is the page's h1 and its
+    first section. It went red, because the story's headshot needs the red
+    band and the bands have to alternate. The order is now signs (red),
+    What Lessons Are Really Like (beige), story (red), Pick where to start
+    (beige).
+  - **The signs' entrance motion is off,** because they're above the fold
+    now and the reveal would hide painted content and clip the h1
+    (`08-motion.md` §About map).
+  - Scott should look at the red signs, the one-column list below 1024px
+    and the beige Pick where to start.
+- **Cancellation is Sam's final wording** (item 6): a full refund needs both
+  a cancellation within 24 hours of booking and at least 24 hours before the
+  lesson. It's in `faqs.js` (so `/faq`, its JSON-LD and `/contact`),
+  `booked.html` and `llms.txt`. His bold "and" isn't carried, since FAQ
+  answers are plain strings.
+
+### Open from Sam's November 5 feedback
+
+- **Confidence's keyword target** (`04-seo.md` §Per-route targets) is
+  "highway manual lessons Toronto", supported by "hill starts, city driving,
+  rush hour", and the page no longer says any of it. It needs a new target
+  (Scott's call). There's a comment at the top of the page.
+- **The "Various driving scenarios" sign is still the no-parking sign**,
+  which made sense next to "not an empty parking lot". A hill or curve
+  sign would fit the new line. That's for Sam or Scott to decide. The
+  two signs Sam didn't mention, "Manual is all we teach" and "Stalls
+  expected", are still waiting on him.
+- **"The person you'll meet at your lesson"** is in Sam's own founder
+  message. It sits oddly with his wish to seem like more than one
+  instructor, but it's his text, so it stays until he says otherwise. The
+  same goes for Confidence's "with one coach across five sessions".
+- **Real roads in a single beginner lesson.** Sam's reason for the reversing
+  bullet was that a beginner rarely gets onto real roads in one session.
+  Yet his new Individual lead says "on real Toronto roads", Individual's
+  meta and Group's copy promise real roads, and the package notes say every
+  lesson is on real roads. Worth asking him which way it should go.
+- **Foundations links less.** Its closing paragraph used to link a single
+  lesson and the hub. Sam's replacement links only Confidence, so the page
+  reaches Individual and the hub through the breadcrumbs and nav only.
+
+## Recently completed — October 15, 2026 (package card buttons)
+
+- **The package cards' buttons match on phones.** On Scott's phone (402px)
+  "See details & book" sat on one line in the $90 and $180 cards and two in
+  the $240 and $400 ones: the button took whatever room its price block
+  left, and those differ in width. Now every price block is one width and
+  the label never wraps, so all four cards match. The button sits beside
+  the price from 390px (375px on the hub, whose "See full details" is
+  shorter) and on a full-width row under it below that. Same change on the
+  hub's cards. Measured in headless Chrome at 320 to 767px on both pages
+  (`02-architecture.md` §Package cards).
 
 ## Recently completed — October 14, 2026 (security headers, the rating)
 
@@ -683,12 +780,12 @@ These are the actual blockers. Most need Sam.
 | 3 | **Google Ads conversion label** | `public/booked.html` | Empty string ⇒ Ads conversions are a silent no-op. Account-side fix. |
 | 4 | **Confidence guarantee — dropped from the rebuild** | `/lessons/manual-confidence`, `src/app/page.jsx` | ✅ Resolved by removal (Sept 21, 2026). The terms were never written, so the claim is gone from the hero lead and the homepage Offer schema. `main` still advertises it — if Sam wants it back, the terms have to come first. |
 | 5 | **Package inclusions** | `/lessons/individual`, `/lessons/group` | Current bullets are the live site's placeholders. Sam owes final 3–5 each. |
-| 6 | **Cancellation-policy final wording** | `src/lib/faqs.js` (`cancellation`), `public/booked.html` | Current text is the live site's. Editing it in `faqs.js` propagates to every page, but not to `booked.html`, whose fine print ("Cancellations are free up to 24 hours after booking your lesson") leaves out the FAQ's other condition, at least 24 hours before the lesson. |
+| 6 | **Cancellation-policy final wording** | `src/lib/faqs.js` (`cancellation`), `public/booked.html` | ✅ Resolved November 10, 2026 with Sam's November 5 wording, in `faqs.js`, `booked.html` and `llms.txt` (above). `main` still has the old text. |
 | 7 | **Dedicated testimonials** | `/about` | Every quote on the site is a real Google review. Sam may supply dedicated ones; there's a `PENDING` slot. |
 | 8 | **Fonts now actually render** | Site-wide | Plus Jakarta Sans + Inter were referenced but never loaded on the old site — it silently fell back to system fonts. `next/font` loads them, so the rebuild *looks different*. Per the tokens' clear intent, but nobody has confirmed it with Sam. |
 | 9 | **Search Console verification token** | `src/app/layout.jsx` | Stubbed `PENDING`. Sam-side. |
 | 10 | **Slug keyword audit** | Routes | 🟡 Slugs were never deliberately audited. Cheap to change now, expensive once Ads final URLs point at them. |
-| 11 | **New line in Sam's voice** | `src/components/home/AboutTeaser.jsx` | "Everyone stalls while they're learning. Nobody's grading you, so we keep it relaxed, and most people end up having fun." Written in the September copy pass; Sam hasn't approved it. |
+| 11 | **New line in Sam's voice** | `src/components/home/AboutTeaser.jsx` | ✅ Resolved November 10, 2026: the card's whole message is now Sam's own November 5 text, and this line is gone. |
 | 12 | **Homepage meta description lags the copy** | `src/app/page.jsx` (`metadata`) | The on-page copy was rewritten in September; the description and OG/Twitter text weren't. Its facts are still right; the wording is the old voice. |
 | 13 | **Group page's "Who it's for" lines** | `src/app/lessons/group/page.jsx` (`WHO`) | Written September 28, 2026, when the page took the other package pages' shape, and reworded in the October 9 copy pass with the same meaning. Sam hasn't seen them. `PENDING`. |
 | 14 | **"Ontario residents" and PIPEDA** | `public/privacy.html` | The policy says "Ontario residents have additional rights under PIPEDA", but PIPEDA is federal law. Legal wording, so the October 9 pass left it. Whoever owns the policy should fix it. |
@@ -699,9 +796,9 @@ Raised with the client, not yet answered:
 
 | Item | The problem |
 |---|---|
-| "Update cancellation policy" | The screenshot supplied is character-identical to the current text. No new wording was given. |
+| "Update cancellation policy" | ✅ Answered November 5, 2026: Sam gave new wording (item 6). |
 | Move Payment & cancellation from Contact → FAQ | `/faq` already renders payment *and* cancellation answers from `faqs.js`. Moving the Contact block there duplicates them. Replace the FAQ entries, or add a distinct styled section? |
-| Highlight Complete Confidence "like Foundations" | Move the featured treatment from Foundations to Confidence, or feature both? ⚠️ On October 7 Foundations became the *only* featured package, at Scott's word, which goes the other way from this request. Still open with the client: if Sam wants Confidence featured, it's one `featured`/`badge` change in `PackagesTeaser.jsx` and the hub. |
+| Highlight Complete Confidence "like Foundations" | ✅ Answered November 5, 2026: Sam asked for Recommended on the 5-lesson box. Confidence is now the one featured package, and Foundations isn't. |
 | "Social logo in footer" | Instagram/Facebook glyphs, or the Clutch Academy brand mark? The phrasing points both ways. |
 
 ### Open from the October 7 review
@@ -720,12 +817,12 @@ later.
   Sam (`useCalendly.js` already plans for them).
 - **Copy:** ✅ the em-dash pass and "this summer", October 9 (above).
   Still open: "licence" vs "license" (the package pages' notes say
-  "licence"; the FAQ, How It Works and `booked.html` say "license"); the
-  cancellation answer contradicts itself ("after 24 hours of booking"), so
-  Sam's wording (item 6) matters more; and five page titles and the hub's
-  eyebrow ("Manual · Stick Shift · Standard — same lessons") still carry
-  an em dash, Scott's call. Sam's About story and the "why manual" line
-  keep theirs until Sam signs off on a change.
+  "licence"; the FAQ, How It Works and `booked.html` say "license"); and
+  five page titles still carry an em dash, Scott's call (the hub's eyebrow
+  that had one was removed on November 11). Sam's About story
+  keeps its em dashes until Sam signs off on a change. (The self-contradicting
+  cancellation answer was replaced on November 10, and the "why manual"
+  section was removed.)
 - **Phones:** ✅ both fixed in the October 7 phone pass (above): the
   reviews strip's edge fade is 1.25rem on phones, and the footer is about
   half a screen.

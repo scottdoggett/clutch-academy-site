@@ -112,13 +112,11 @@ src/
 │   │                           # and their node:test suites
 │   ├── motion/
 │   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
-│   ├── ReviewCard.css          # The review card: homepage strip + package pages
+│   ├── ReviewCard.css          # The review card in the homepage strip
 │   ├── about/
 │   │   └── WhySigns.jsx        # /about's reasons, as a street of road signs
 │   └── lessons/
-│       ├── LessonFaq.jsx       # Renders an FAQ subset by id
-│       ├── LessonQuotes.jsx    # A package page's review quotes, as review cards
-│       └── lessons.css         # Shared package-page styles
+│       └── lessons.css         # Shared package-page styles, imported by each page
 │
 ├── hooks/
 │   └── useCalendly.js          # openCalendly(source) + CALENDLY_URL
@@ -188,9 +186,15 @@ labelled "What's included":
 
 Both cards wrap price + CTA in a `__foot` element. On phones it's a row (a
 full-width card is wide and short, so stacking them wasted a row per card); at
-desktop it's `display: contents`, so the column layout is untouched. The row is
-deliberately `nowrap` — letting it wrap put the CTA on its own line and gave
-back the row the layout exists to save.
+desktop it's `display: contents`, so the column layout is untouched. Every
+card's price column is the same width (8rem; the widest price block is 124px)
+and the CTA's label never wraps, so all four cards in a set make the same
+choice: CTA beside the price where both fit, CTA on a full-width row under it
+where they don't. The homepage cards ("See details & book") fit side by side
+from 390px, the hub's ("See full details") from 375px. Until October 15, 2026
+the row was `nowrap` and the CTA shrank and wrapped its label instead, which
+put some cards' labels on two lines and others on one, because the price blocks
+differ in width.
 
 The hub's "Pick by where you are today" chooser is **not** cards. It's four
 plain sentences, each hanging off a gear-lever bullet, with the package it points
@@ -226,7 +230,7 @@ Duplicating any of these is a bug:
 
 | Thing | Lives in | Feeds |
 |---|---|---|
-| FAQ copy | `src/lib/faqs.js` | `/faq`, its FAQPage JSON-LD, every package-page FAQ subset, `/contact`'s cancellation text |
+| FAQ copy | `src/lib/faqs.js` | `/faq`, its FAQPage JSON-LD, `/contact`'s cancellation text (package pages had FAQ subsets until November 5, 2026) |
 | Google rating + review count | `src/lib/googleReviews.js` | The homepage reviews badge and the homepage `aggregateRating` |
 | Quoted Google reviews | `src/lib/reviews.js` | The homepage reviews strip |
 | Booking CTA behaviour | `src/components/BookButton.jsx` | Every Book button on the site |
@@ -246,16 +250,18 @@ to every other route on September 28, 2026:
 
 | Route | Red | Beige |
 |---|---|---|
-| `/` | Hero, How It Works, Meet Your Instructor | Reviews, pricing |
-| Package pages | Hero, who it's for, Quick answers | What's included, the reviews, the closing CTA |
+| `/` | Hero, How It Works, A message from the founder | Reviews, pricing |
+| Package pages | Hero, who it's for | What's included, the closing CTA |
 | `/manual-driving-lessons` | The packages, the closing CTA | Pick by where you are today |
-| `/about` | The story, What Lessons Are Really Like, Pick where to start | Why Students Choose Clutch Academy, Why Learn Manual Driving |
+| `/about` | Why Students Choose Clutch Academy (the signs, first), the story | What Lessons Are Really Like, Pick where to start |
 | `/faq` | The questions | The closing CTA |
 | `/contact` | The book CTA and contact card | Payment & cancellation |
 
-On the package pages what's included is always red cards on the beige, and
-the reviews are the homepage's review cards (`LessonQuotes`, sharing
-`ReviewCard.css` with the homepage strip).
+On the package pages what's included is always red cards on the beige. Until
+November 5, 2026 they also had a band of review quotes (`LessonQuotes`, on
+`ReviewCard.css`) and a "Quick answers" FAQ subset (`LessonFaq`). Sam had
+both removed, and the two components are deleted. Each page now imports
+`lessons.css` itself, since it used to arrive through them.
 
 A button placed on the beige itself adds `btn--on-light` (solid red with an
 inner white ring); every closing Book CTA on beige has it. Buttons inside the
@@ -314,7 +320,12 @@ weren't there, so its road map and tests don't change (`Hero.css`).
 - **The mobile nav bar must stay one row.** It is `flex-wrap: nowrap`, the open
   menu is an absolutely positioned dropdown, and the logo shrinks to absorb the
   squeeze. A wrapped bar grows past `--nav-height`, which every page reserves as
-  fixed, so the bar lands on top of the first heading.
+  fixed, so the bar lands on top of the first heading. Below 768px the bar is
+  52px (`--nav-bar-height` in `tokens.css`; 64px from 768px up), set as its
+  height, with no vertical padding. That was Scott's call on November 11,
+  2026. Before that it was 69px against a 64px reservation. The Book button
+  looks about 32px tall but takes 44px of taps through an `::after` overlay,
+  as the toggle does.
 - **Don't set `touch-action` on horizontal scrollers.** `pan-x` reads like "this
   pans horizontally" but declares horizontal panning to be the *only* gesture
   the element handles, so vertical drags over it are swallowed and the page

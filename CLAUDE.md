@@ -85,6 +85,12 @@ planning docs. **Don't work from anything in there.**
   text, on every route and in `privacy.html`, `booked.html` and
   `llms.txt`. Customer quotes, Sam's About story and the headings were
   left alone. `07-status.md` lists what it changed and what it found.
+- **November 10: Sam's November 5 feedback is applied, uncommitted.**
+  Sam isn't named as the instructor outside `/about`. Recommended moved to
+  Confidence, which is now pitched on technique rather than highway driving.
+  The package pages lost their reviews and Quick answers. `/about` was
+  reordered, and the cancellation policy is final. `07-status.md` lists the
+  changes and the questions they opened.
 - **Not yet merged or deployed to the real domain.** Remaining work is
   verification and client sign-off, not building — see `07-status.md`.
 
@@ -117,8 +123,8 @@ planning docs. **Don't work from anything in there.**
   mobile-host fix; every CTA goes through `src/components/BookButton.jsx` with a
   per-placement `source` tag (full map in `docs/spec/05-analytics.md`).
 - **FAQ single source**: `src/lib/faqs.js` renders `/faq`, generates its FAQPage
-  JSON-LD, feeds package-page subsets, and supplies `/contact` cancellation
-  copy. Never fork FAQ copy.
+  JSON-LD, and supplies `/contact` cancellation copy. Never fork FAQ copy.
+  (The package pages' FAQ subsets were removed on November 5, 2026.)
 - **Redirects/rewrites/headers** live in `next.config.mjs` (`vercel.json` is
   deleted on this branch): `.com`/`www` → apex, `/booked` + `/privacy`
   rewrites, cache headers, and the security headers. Its Content-Security-Policy
@@ -169,10 +175,16 @@ planning docs. **Don't work from anything in there.**
   unresolved flag (`07-status.md` #2), not a precedent.
 - **One name per package, one featured package.** Individual Manual Lesson,
   Manual Foundations Package, Group Manual Lessons, Complete Manual
-  Confidence Package, everywhere. Foundations alone is featured
-  ("Recommended"); no "Best Value", "Most Popular" or "flagship". Don't name
-  the car or claim instructor licensing, insurance or an instructor brake.
-  `03-content-and-pricing.md` §Names, labels and claims.
+  Confidence Package, everywhere. Complete Manual Confidence alone is
+  featured ("Recommended"), since Sam's November 5, 2026 feedback; it was
+  Foundations before that. No "Best Value", "Most Popular" or "flagship".
+  Don't name the car or claim instructor licensing, insurance or an
+  instructor brake. `03-content-and-pricing.md` §Names, labels and claims.
+- **Sam isn't named as the instructor** outside `/about`. He asked on
+  November 5, 2026: the site should read as more than a one-man show. Copy,
+  meta descriptions, alt text and schema say "we" or "your instructor".
+  `/about` names him as founder and lead instructor, and the homepage
+  founder message is his own signed note. Customer quotes stay as written.
 - After completing each numbered step in a multi-step task, **pause and report
   progress** before continuing.
 - If a doc conflicts with the code, with itself, or with what the developer

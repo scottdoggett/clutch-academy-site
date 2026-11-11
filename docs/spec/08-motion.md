@@ -248,11 +248,17 @@ What each section gets on the first pass:
 | What Students Are Saying | Header: Headline + Rise. The strip Rises as one block, and the cards don't stagger (rule 3, the marquee is already moving). Footer: its top border (`.reviews__rule`) Draws, then the footer Rises. |
 | How It Works | Header: Headline + Rise. "What to Expect" bullets: Stagger (tight). The steps' top border (`.steps__divider`) Draws, the steps Stagger, and each step's rule Draws as its number lands. |
 | Straightforward pricing | Header: Headline + Rise. Cards: Stagger, after the header. "Compare every lesson option" link: Rise. |
-| Meet Your Instructor | Headshot (both the desktop and phone copies): Settle. Heading, name, role and bio: Rise, in that order. Stats: Stagger. Buttons: Rise. |
+| A message from the founder (was Meet Your Instructor until November 5, 2026) | Headshot (both the desktop and phone copies): Settle. Heading, name, role and bio: Rise, in that order. Stats: Stagger. Buttons: Rise. |
 
 ## About map
 
-The one section on `/about` with motion so far, added September 29, 2026:
+**`/about` has no motion since November 10, 2026.** Its one animated section,
+the road signs, became the page's first band and its h1 when Sam's story moved
+down. Above the fold, the scroll reveal would hide painted content and the
+Headline mask would clip the h1, so its `data-anim` attributes came off. To
+bring an entrance back, use the hero mechanism (`data-hero-root`,
+`data-hero="eyebrow"`, `data-hero="headline"`). That's Scott's call. What it
+had, added September 29, 2026:
 
 | Section | Motion |
 |---|---|
