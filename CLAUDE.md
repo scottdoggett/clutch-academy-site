@@ -85,7 +85,8 @@ planning docs. **Don't work from anything in there.**
   text, on every route and in `privacy.html`, `booked.html` and
   `llms.txt`. Customer quotes, Sam's About story and the headings were
   left alone. `07-status.md` lists what it changed and what it found.
-- **November 10: Sam's November 5 feedback is applied, uncommitted.**
+- **November 10: Sam's November 5 feedback is applied, committed and
+  pushed to `origin/overhaul`.**
   Sam isn't named as the instructor outside `/about`. Recommended moved to
   Confidence, which is now pitched on technique rather than highway driving.
   The package pages lost their reviews and Quick answers. `/about` was

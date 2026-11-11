@@ -241,8 +241,10 @@ Sam marked up the review deployment page by page ("Website Overhaul -
 Feedback", November 5, 2026). Scott settled four open points: About's 4th
 sign goes; Recommended moves to Confidence sitewide; Confidence's new pitch
 replaces the old one everywhere; and Group loses its reviews and Quick
-answers like the other three. Not committed yet. Lint, the 90 tests and
-`next build` pass. Nobody has looked at it in a browser yet.
+answers like the other three. Committed as `dac7a5d` and pushed to
+`origin/overhaul` on November 11, so it's on the review deployment, along
+with the 52px phone nav (`c67d48b`) and the card buttons (`39045de`). Lint,
+the 90 tests and `next build` pass. Scott is checking it in his dev server.
 
 - **Sam isn't named as the instructor outside `/about`.** He wants the
   site to read as more than a one-man show, and may hire an instructor.
