@@ -10,8 +10,9 @@ import './PackagesTeaser.css'
 // link to; prices are the October 2026 winter offering (one-hour lessons, a
 // two-hour group), matching the live site (f8645c4 on main).
 //
-// One featured package, sitewide: Foundations, with the Recommended badge,
-// the only corner badge. The fall sale's savings are tags beside each struck-
+// One featured package, sitewide: Complete Manual Confidence (Foundations
+// until Sam's November 5, 2026 feedback), with the Recommended badge, the
+// only corner badge. The fall sale's savings are tags beside each struck-
 // out price (WasPrice). Both packs cost $80 a lesson, so neither is "Best
 // Value". The per-lesson price sits in the one-liner, where it doesn't move
 // the price rows out of line with the single and group cards.
@@ -35,8 +36,6 @@ const TEASERS = [
     href: '/lessons/manual-foundations',
     pkg: 'foundations',
     tier: 2,
-    featured: true,
-    badge: 'Recommended',
   },
   {
     tag: 'Group · With a Friend',
@@ -51,12 +50,14 @@ const TEASERS = [
   {
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence Package',
-    desc: 'Five lessons at $80 each, from zero to downtown, highway merging, hills and rush hour.',
+    desc: 'Five lessons at $80 each. Build your skills from zero and refine your technique.',
     price: '$400',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
     pkg: 'confidence',
     tier: 4,
+    featured: true,
+    badge: 'Recommended',
   },
 ]
 

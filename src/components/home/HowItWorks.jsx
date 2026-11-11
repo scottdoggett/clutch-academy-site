@@ -19,7 +19,7 @@ const STEPS = [
   {
     n: 4,
     title: 'Drive it yourself',
-    desc: 'Sam sits beside you and coaches at whatever pace you need.',
+    desc: 'Your instructor sits beside you and coaches at whatever pace you need.',
   },
 ]
 

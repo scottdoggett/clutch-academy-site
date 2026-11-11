@@ -7,7 +7,7 @@ import googleReviews from '../lib/googleReviews'
 
 export const metadata = {
   description:
-    'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads, with founder-instructor Sam Anthony. Book your first lesson online.',
+    'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads, at your pace. Book your first lesson online.',
   alternates: { canonical: '/' },
   openGraph: {
     url: 'https://clutchacademy.ca/',
@@ -46,7 +46,7 @@ const SCHEMA_GRAPH = {
       alternateName: 'Clutch Academy Manual Driving Lessons',
       url: 'https://clutchacademy.ca/',
       description:
-        'Manual transmission driving school in Toronto. One-on-one lessons on real roads with founder-instructor Sam Anthony.',
+        'Manual transmission driving school in Toronto. One-on-one lessons on real roads, at your pace.',
       image: 'https://clutchacademy.ca/og-image.png?v=2',
       logo: 'https://clutchacademy.ca/logo.svg',
       telephone: '+1-437-223-1153',
@@ -112,7 +112,10 @@ const SCHEMA_GRAPH = {
         { '@id': 'https://clutchacademy.ca/#offer-3pack' },
         { '@id': 'https://clutchacademy.ca/#offer-confidence-5pack' },
       ],
-      employee: [{ '@id': 'https://clutchacademy.ca/#instructor-sam' }],
+      // Founder, not employee or instructor: Sam, November 5, 2026 (the site
+      // shouldn't read as a one-man show; /about is the one place that says
+      // lead instructor).
+      founder: { '@id': 'https://clutchacademy.ca/#founder' },
     },
     {
       '@type': 'Offer',
@@ -143,7 +146,7 @@ const SCHEMA_GRAPH = {
       '@id': 'https://clutchacademy.ca/#offer-confidence-5pack',
       name: 'Complete Manual Confidence Package (5 Lessons)',
       description:
-        'Five one-hour lessons covering downtown driving, highway merging, hill starts, and rush-hour practice.',
+        'Five one-hour lessons, from your first shift to smoother downshifts, rev-matching, gear selection, shift timing and clutch control.',
       price: '400.00',
       priceCurrency: 'CAD',
       category: 'Driving lesson package',
@@ -152,10 +155,9 @@ const SCHEMA_GRAPH = {
     },
     {
       '@type': 'Person',
-      '@id': 'https://clutchacademy.ca/#instructor-sam',
+      '@id': 'https://clutchacademy.ca/#founder',
       name: 'Samuel Anthony',
-      jobTitle: 'Founder & Lead Instructor',
-      worksFor: { '@id': 'https://clutchacademy.ca/#business' },
+      jobTitle: 'Founder',
     },
   ],
 }

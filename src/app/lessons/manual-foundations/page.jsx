@@ -2,9 +2,7 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
-import LessonFaq from '../../../components/lessons/LessonFaq'
-import LessonQuotes from '../../../components/lessons/LessonQuotes'
-import { faqSubset } from '../../../lib/faqs'
+import '../../../components/lessons/lessons.css'
 
 export const metadata = {
   title: 'Manual Foundations Package — 3 Lessons | Clutch Academy',
@@ -34,24 +32,9 @@ const CURRICULUM = [
   {
     n: 3,
     title: 'Independent driving, smoother shifting',
-    desc: 'You drive, Sam coaches. Longer stretches of independent driving and smoother, quicker shifts, so you finish ready to drive on your own.',
+    desc: 'You drive, we coach. Longer stretches of independent driving and smoother, quicker shifts, so you finish ready to drive on your own.',
   },
 ]
-
-// Real quotes from the Google-review set — both describe the multi-lesson
-// progression this package is built around.
-const QUOTES = [
-  {
-    text: 'Used to think driving manual was super stressful, pure anxiety, lots of stalling, but one lesson with Sam and no more stalling, looking forward to learning smooth downshifts and hill starts in lessons 2 and 3!',
-    name: 'Obiora Ejiofor',
-  },
-  {
-    text: "Sam was fantastic throughout the whole process. He was patient with me on my first lesson and by the third, I feel ready to navigate in Europe driving standard. Can't recommend Clutch enough to anyone looking to learn standard.",
-    name: 'Erica Carnicelli',
-  },
-]
-
-const FAQ_IDS = ['never-driven', 'how-many', 'location', 'car', 'cancellation']
 
 export default function ManualFoundationsPage() {
   return (
@@ -70,9 +53,7 @@ export default function ManualFoundationsPage() {
         aria-labelledby="lesson-heading"
       >
         <div className="section__inner lesson-hero__inner">
-          <p className="section-header__eyebrow">
-            Private · 3 Lessons · Recommended
-          </p>
+          <p className="section-header__eyebrow">Private · 3 Lessons</p>
           <h1 id="lesson-heading" className="lesson-hero__headline">
             Manual Foundations Package
           </h1>
@@ -84,8 +65,7 @@ export default function ManualFoundationsPage() {
           </p>
           {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
-            Most students arrive nervous. Sam expects that and goes at your
-            pace.
+            Most students arrive nervous. We expect that and go at your pace.
           </p>
           <p className="lesson-hero__price">
             $240
@@ -154,31 +134,6 @@ export default function ManualFoundationsPage() {
         </div>
       </section>
 
-      {/* ---------- Real reviews ---------- */}
-      <section
-        className="section section--light"
-        aria-labelledby="quotes-heading"
-      >
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">From the Google reviews</p>
-            <h2 id="quotes-heading">The progression, in students’ words</h2>
-          </header>
-          <LessonQuotes quotes={QUOTES} />
-        </div>
-      </section>
-
-      {/* ---------- FAQ subset ---------- */}
-      <section className="section" aria-labelledby="faq-heading">
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">Good to know</p>
-            <h2 id="faq-heading">Quick answers</h2>
-          </header>
-          <LessonFaq items={faqSubset(FAQ_IDS)} />
-        </div>
-      </section>
-
       {/* ---------- Final CTA + cross-links ---------- */}
       <section
         className="section section--light"
@@ -196,22 +151,15 @@ export default function ManualFoundationsPage() {
             Book This Package
           </BookButton>
           <p className="lesson-next__links">
-            Want to drive downtown, on the highway, and in rush hour too? Step
-            up to the{' '}
+            Want to feel at home behind the wheel of a manual? Choose the{' '}
             <Link href="/lessons/manual-confidence">
               Complete Manual Confidence Package
-            </Link>
-            . Driven manual before? A{' '}
-            <Link href="/lessons/individual">single lesson</Link> may be all
-            you need. Or{' '}
-            <Link href="/manual-driving-lessons">
-              compare all lesson options
-            </Link>
-            .
+            </Link>{' '}
+            for two extra hours to smooth out your downshifts, learn
+            rev-matching, and make driving stick feel second nature.
           </p>
         </div>
       </section>
-
     </>
   )
 }

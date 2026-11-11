@@ -22,7 +22,7 @@ export default function Reviews() {
             data-anim="rise"
             data-anim-delay="0.3"
           >
-            Toronto drivers who learned stick with Sam, in their own words.
+            Toronto drivers who learned stick with us, in their own words.
           </p>
         </header>
 

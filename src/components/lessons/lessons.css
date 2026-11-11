@@ -1,13 +1,14 @@
-/* Shared styles for the four package pages. Every page has the same six
-   sections, on the homepage's alternating bands:
+/* Shared styles for the four package pages, which each import this file.
+   Every page has the same four sections, on the homepage's alternating bands:
 
    hero              red    eyebrow, h1, lead, pull, price, Book
    what's included   beige  red cards (the numbered curriculum on Foundations,
                             .lesson-included on the other three), the note
    who it's for      red    .lesson-block__list
-   reviews           beige  LessonQuotes, the homepage's review cards
-   quick answers     red    LessonFaq
    next steps        beige  Book CTA and cross-links (.lesson-next, globals.css)
+
+   The review quotes and the FAQ subset that sat between who it's for and
+   next steps came off all four pages on November 5, 2026, at Sam's asking.
 
    Section headings use the site's shared .section-header scale. */
 
@@ -229,107 +230,13 @@
   letter-spacing: var(--letter-tight);
 }
 
-/* ---------- Real student quotes ----------------------------------------- */
-/* Uncapped so the grid fills its 1200px .section__inner and lines up with the
-   heading above it — see .hub-cards for the same correction. The cards are
-   the homepage's review cards (LessonQuotes.jsx, ReviewCard.css). */
-.lesson-quotes {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-/* ---------- FAQ subset --------------------------------------------------- */
-/* Rules span the full section column; the answers stay readable via their own
-   65ch cap rather than a container cap that pushed the block off-centre. */
-.lesson-faq {
-  display: flex;
-  flex-direction: column;
-}
-
-.lesson-faq__item {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.lesson-faq__item:last-of-type {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* The /faq accordion's affordance (faq.css): a + that turns to × when open.
-   The browser's own marker hung outside the column at desktop and vanished
-   on phones, where the row is a flex box, so nothing said the rows open. */
-.lesson-faq__question {
-  list-style: none;
-  cursor: pointer;
-  padding: 0.875rem 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1rem, 1.4vw, 1.125rem);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  line-height: 1.2;
-}
-
-.lesson-faq__question::-webkit-details-marker {
-  display: none;
-}
-
-.lesson-faq__question::after {
-  content: '+';
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 1.375rem;
-  line-height: 1;
-  transition: transform var(--transition-reduced) ease;
-  flex-shrink: 0;
-  color: var(--chrome);
-}
-
-.lesson-faq__item[open] .lesson-faq__question::after {
-  transform: rotate(45deg);
-  color: var(--white);
-}
-
-.lesson-faq__question:focus-visible {
-  outline: 2px solid var(--white);
-  outline-offset: 2px;
-}
-
-.lesson-faq__answer {
-  margin: 0;
-  padding: 0 0 1rem;
-  color: var(--cream);
-  line-height: 1.55;
-  max-width: 65ch;
-}
-
-.lesson-faq__more {
-  margin: 1rem 0 0;
-  color: var(--cream);
-}
-
-.lesson-faq__more a {
-  color: var(--white);
-  font-weight: 600;
-  text-underline-offset: 3px;
-}
-
-.lesson-faq__more a:focus-visible {
-  outline: 2px solid var(--white);
-  outline-offset: 2px;
-}
-
 /* .lesson-next (final CTA + cross-links) lives in globals.css — it's used
    by the FAQ and Contact pages too, which don't load this stylesheet. */
 
 /* ---------- Responsive ---------------------------------------------------- */
 @media (max-width: 767px) {
   .lesson-included,
-  .lesson-included:has(> :nth-child(3):last-child),
-  .lesson-quotes {
+  .lesson-included:has(> :nth-child(3):last-child) {
     grid-template-columns: 1fr;
   }
 
@@ -338,14 +245,5 @@
      moved the break onto the hyphen instead. */
   .lesson-included__line {
     text-wrap: balance;
-  }
-
-  /* Match the /faq accordion: a 44px row for a thumb. */
-  .lesson-faq__question {
-    min-height: 44px;
-  }
-
-  .lesson-faq__question::after {
-    font-size: 1.125rem;
   }
 }

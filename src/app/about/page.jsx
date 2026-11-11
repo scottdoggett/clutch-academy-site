@@ -8,7 +8,7 @@ import './about.css'
 export const metadata = {
   title: 'About Clutch Academy | Manual Driving School in Toronto',
   description:
-    'Why Sam Anthony started Clutch Academy, and how he teaches manual driving lessons on real Toronto roads at your pace, with no judgment.',
+    'How Clutch Academy started, and how we teach manual driving lessons on real Toronto roads, at your pace, with no judgment.',
   alternates: { canonical: '/about' },
 }
 
@@ -34,16 +34,8 @@ const FEARS = [
   {
     fear: '“Will you get frustrated with me?”',
     answer:
-      'No. Sam expects every stall, missed shift, and do-over. You get one-on-one coaching and as many tries as you need, and nobody judges you for needing them.',
+      'No. We expect every stall, missed shift, and do-over. You get one-on-one coaching and as many tries as you need, and nobody judges you for needing them.',
   },
-]
-
-// Verbatim copy supplied in the brief ("Why Learn Manual Driving").
-const WHY_MANUAL = [
-  'In many parts of the world, learning to drive stick — also known as stick shift or manual — is actually just learning to drive.',
-  'While manual transmissions have become an increasingly uncommon part of Canadian culture, they’re still very prominent in most other parts of the world. Knowing how to drive one could save your life one day.',
-  'Plus, it’s a much more engaging driving experience, opens you up to a lot more choices for your next car, and actually makes you a better driver as a whole, even with an automatic.',
-  'Most importantly: You’ll look cool doing it.',
 ]
 
 const PACKAGE_LINKS = [
@@ -60,7 +52,7 @@ const PACKAGE_LINKS = [
   {
     href: '/lessons/manual-confidence',
     label: 'Complete Manual Confidence Package',
-    desc: 'Five lessons, from zero to downtown, the highway and rush hour.',
+    desc: 'Five lessons, from the basics to smoother downshifts and rev-matching.',
   },
   {
     href: '/lessons/group',
@@ -72,18 +64,48 @@ const PACKAGE_LINKS = [
 export default function AboutPage() {
   return (
     <>
-      {/* ---------- The personal story ---------- */}
+      {/* ---------- Why Students Choose Clutch Academy ----------
+          The opening band since November 5, 2026, and the page's h1. Bands
+          run red, beige, red, beige: WhySigns, What Lessons Are Really
+          Like, the story, Pick where to start. */}
+      <WhySigns />
+
+      {/* ---------- What Lessons Are Really Like ---------- */}
       <section
-        className="section section--first about-story"
-        aria-labelledby="about-heading"
+        className="section section--light about-fears"
+        aria-labelledby="fears-heading"
       >
+        <div className="section__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">No judgment, ever</p>
+            <h2 id="fears-heading">What Lessons Are Really Like</h2>
+            <p className="section-header__lead">
+              Most students arrive nervous. Here’s what the usual worries look
+              like once you’re in the driver’s seat.
+            </p>
+          </header>
+          <div className="about-fears__grid">
+            {FEARS.map((f) => (
+              <article key={f.fear} className="about-fears__card">
+                <h3 className="about-fears__fear">{f.fear}</h3>
+                <p className="about-fears__answer">{f.answer}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- The personal story ----------
+          Third since November 5, 2026, straight above Pick where to start.
+          It stays on the red: the headshot multiplies onto it (.tinted-photo
+          in globals.css). */}
+      <section className="section about-story" aria-labelledby="story-heading">
         <div className="section__inner about-story__grid">
           <div className="about-story__visual">
             <Image
               className="tinted-photo about-story__photo"
               src={headshot}
               alt="Sam Anthony, founder and lead instructor of Clutch Academy"
-              priority
               sizes="(max-width: 767px) 75vw, 380px"
             />
           </div>
@@ -92,9 +114,9 @@ export default function AboutPage() {
             <p className="section-header__eyebrow">
               Sam Anthony · Founder &amp; Lead Instructor
             </p>
-            <h1 id="about-heading" className="about-story__headline">
+            <h2 id="story-heading" className="about-story__headline">
               The story behind Clutch Academy
-            </h1>
+            </h2>
 
             {/* Origin story supplied by Sam in the Site 2.0 review doc
                 (August 2026) — this is his own wording, not drafted copy.
@@ -139,56 +161,8 @@ export default function AboutPage() {
             </p>
 
             <BookButton source="about_page" className="btn btn--primary">
-              Book a Lesson with Sam
+              Book a Lesson
             </BookButton>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- Why Students Choose Clutch Academy ---------- */}
-      <WhySigns />
-
-      {/* ---------- What Lessons Are Really Like ---------- */}
-      <section
-        className="section about-fears"
-        aria-labelledby="fears-heading"
-      >
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">No judgment, ever</p>
-            <h2 id="fears-heading">What Lessons Are Really Like</h2>
-            <p className="section-header__lead">
-              Most students arrive nervous. Here’s what the usual worries look
-              like once you’re in the driver’s seat.
-            </p>
-          </header>
-          <div className="about-fears__grid">
-            {FEARS.map((f) => (
-              <article key={f.fear} className="about-fears__card">
-                <h3 className="about-fears__fear">{f.fear}</h3>
-                <p className="about-fears__answer">{f.answer}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- Why Learn Manual Driving (brief copy, verbatim) ------- */}
-      <section
-        className="section section--light about-manual"
-        aria-labelledby="why-manual-heading"
-      >
-        <div className="section__inner about-manual__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">Worth learning</p>
-            <h2 id="why-manual-heading">Why Learn Manual Driving</h2>
-          </header>
-          <div className="about-manual__copy">
-            {WHY_MANUAL.map((para) => (
-              <p key={para.slice(0, 24)} className="about-manual__para">
-                {para}
-              </p>
-            ))}
           </div>
         </div>
       </section>
@@ -199,7 +173,7 @@ export default function AboutPage() {
           they slot in here as a quote strip. */}
       {/* ---------- Route out to the package pages ---------- */}
       <section
-        className="section about-next"
+        className="section section--light about-next"
         aria-labelledby="about-next-heading"
       >
         <div className="section__inner">

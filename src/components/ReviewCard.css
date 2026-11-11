@@ -1,8 +1,8 @@
-/* The review card, shared by the homepage's moving strip (ReviewsMarquee) and
-   the package pages' quote pairs (lessons/LessonQuotes). Both sit on a beige
-   band: cream paper, a red rule across the top, gold stars, the quote in the
-   darkest red for long-read comfort (15:1), and the reviewer's initial in a
-   red disc. */
+/* The review card in the homepage's moving strip (ReviewsMarquee). The
+   package pages' quote pairs (lessons/LessonQuotes) used it too, until they
+   were removed on November 5, 2026. It sits on a beige band: cream paper, a
+   red rule across the top, gold stars, the quote in the darkest red for
+   long-read comfort (15:1), and the reviewer's initial in a red disc. */
 .review-card {
   position: relative;
   padding: clamp(1.25rem, 2vw, 1.75rem);

@@ -2,14 +2,12 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
-import LessonFaq from '../../../components/lessons/LessonFaq'
-import LessonQuotes from '../../../components/lessons/LessonQuotes'
-import { faqSubset } from '../../../lib/faqs'
+import '../../../components/lessons/lessons.css'
 
 export const metadata = {
   title: 'Group Manual Driving Lessons in Toronto | Clutch Academy',
   description:
-    'Learn to drive manual with a friend. Group stick shift lessons on real Toronto roads, with Sam coaching. 2 hours, $180 + HST. Book online.',
+    'Learn to drive manual with a friend. Group stick shift lessons on real Toronto roads, coached as you take turns at the wheel. 2 hours, $180 + HST. Book online.',
   alternates: { canonical: '/lessons/group' },
 }
 
@@ -50,22 +48,6 @@ const WHO = [
   'You’re new to the clutch and want a low-pressure first go at it.',
 ]
 
-// Real quotes from the Google-review set — chosen for the fun, supportive
-// experience this page sells (no review names a group lesson specifically,
-// so none is presented as one).
-const QUOTES = [
-  {
-    text: 'I had the best time learning how to drive manual with Sam. He has great customer service and wonderful tips for driving with a stick. Thank you Clutch team!!!',
-    name: 'Dakota Abell',
-  },
-  {
-    text: 'Had such a positive experience! Very professional, calm, and efficient. Would definitely recommend!',
-    name: 'Hannah Bance',
-  },
-]
-
-const FAQ_IDS = ['license', 'never-driven', 'wear', 'pay', 'gift']
-
 export default function GroupLessonsPage() {
   return (
     <>
@@ -90,7 +72,8 @@ export default function GroupLessonsPage() {
           <p className="lesson-hero__lead">
             Group manual driving lessons in Toronto, for people who’d rather
             not do it alone. Bring a friend, share the nerves, and learn the
-            clutch together on real roads. Sam coaches every turn at the wheel.
+            clutch together on real roads. Your instructor coaches every turn at
+            the wheel.
           </p>
           {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
@@ -143,31 +126,6 @@ export default function GroupLessonsPage() {
               <li key={line}>{line}</li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      {/* ---------- Real reviews ---------- */}
-      <section
-        className="section section--light"
-        aria-labelledby="quotes-heading"
-      >
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">From the Google reviews</p>
-            <h2 id="quotes-heading">The experience, in students’ words</h2>
-          </header>
-          <LessonQuotes quotes={QUOTES} />
-        </div>
-      </section>
-
-      {/* ---------- FAQ subset ---------- */}
-      <section className="section" aria-labelledby="faq-heading">
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">Good to know</p>
-            <h2 id="faq-heading">Quick answers</h2>
-          </header>
-          <LessonFaq items={faqSubset(FAQ_IDS)} />
         </div>
       </section>
 

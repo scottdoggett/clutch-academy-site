@@ -1,5 +1,7 @@
 /* The About page's reasons as a street of road signs (WhySigns.jsx), on the
-   page's first beige band.
+   page's opening band, the brand red. It stood on the beige until November
+   2026, when it became the first band and the page has to open on the red
+   (docs/spec/02-architecture.md §Styling).
 
    The sign colours are the road's, not the brand's: sign yellow, service
    blue, galvanised post. They stay here rather than in tokens.css because
@@ -33,13 +35,14 @@
   margin: 0;
   font-size: clamp(1.0625rem, 1.35vw, 1.25rem);
   line-height: 1.15;
-  color: var(--red-primary);
+  color: var(--white);
   text-wrap: balance;
 }
 
+/* Solid cream, not faded white: muted text on the brand red. */
 .why-signs__line {
   margin: 0.375rem 0 0;
-  color: var(--red-dark);
+  color: var(--cream);
   font-size: 0.9375rem;
   line-height: 1.45;
   text-wrap: balance;
@@ -74,7 +77,7 @@
 }
 
 /* The shadow is warm, from the same dark red as the rest of the site's, so
-   the signs sit on the beige rather than floating over it. */
+   the signs sit on the red rather than floating over it. */
 .why-signs__sign {
   position: relative;
   z-index: 1;
@@ -92,9 +95,11 @@
    words sit above it, in the open air that a shorter post leaves.
 
    The posts run on 24px past the ground, and the row clips its own bottom
-   edge only. That's the entrance's rise (docs/spec/08-motion.md, Stagger):
-   a sign that comes up 24px still meets the ground, so it grows out of the
-   street instead of lifting off it. */
+   edge only. That was for the entrance's rise (docs/spec/08-motion.md,
+   Stagger): a sign that comes up 24px still meets the ground, so it grows
+   out of the street instead of lifting off it. The band has no motion since
+   it became the page's first (WhySigns.jsx), and this is kept so an
+   entrance can come back without it. */
 @media (min-width: 1024px) {
   .section.about-why {
     padding-bottom: 0;
@@ -102,7 +107,7 @@
 
   .why-signs {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     align-items: end;
     column-gap: clamp(0.75rem, 1.5vw, 1.5rem);
     clip-path: inset(-100vh -100vw 0 -100vw);
@@ -136,16 +141,17 @@
 }
 
 /* ---------- The list (below 1024px) ---------------------------------------
-   Six posts to one ground line would squeeze the words to a few letters a
-   line, so each sign stands on a short post beside its words, two to a row,
-   one on phones. */
+   Five posts to one ground line would squeeze the words to a few letters a
+   line, so each sign stands on a short post beside its words, one to a row.
+   Two to a row left the fifth sign alone on the last, so it's one column at
+   every width here, capped and centred under the centred header. */
 @media (max-width: 1023px) {
   .why-signs {
     --s: 0.55;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem 2.5rem;
-    max-width: 820px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    max-width: 34rem;
     margin-inline: auto;
   }
 
@@ -172,7 +178,7 @@
     height: 5px;
     transform: translateX(-50%);
     border-radius: 50%;
-    background-color: rgba(74, 5, 16, 0.16);
+    background-color: rgba(74, 5, 16, 0.32);
   }
 
   .why-signs__text {
@@ -188,7 +194,6 @@
 
 @media (max-width: 599px) {
   .why-signs {
-    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 }
@@ -196,7 +201,8 @@
 /* ---------- The sign parts ------------------------------------------------ */
 .why-sign__white {
   fill: var(--sign-white);
-  /* A white sign needs an edge on a light ground. */
+  /* A faint rim, as a real sign's pressed edge has. It was needed on the
+     beige; on the red it only keeps the white face crisp. */
   stroke: rgba(10, 10, 10, 0.14);
   stroke-width: 1;
 }

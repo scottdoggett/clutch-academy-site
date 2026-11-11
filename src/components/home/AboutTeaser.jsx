@@ -17,20 +17,22 @@ export default function AboutTeaser() {
           <Image
             className="tinted-photo about__photo"
             src={headshot}
-            alt="Sam Anthony, founder and lead instructor"
+            alt="Sam Anthony, founder of Clutch Academy"
             sizes="(max-width: 767px) 280px, 380px"
           />
         </div>
 
         <div className="about__text">
           <h2 className="about__eyebrow" id="about-heading" data-anim="rise">
-            Meet Your Manual Driving Instructor
+            A message from the founder
           </h2>
           <h3 className="about__name" data-anim="rise" data-anim-delay="0.1">
             Samuel Anthony
           </h3>
+          {/* Founder only: "lead instructor" is for /about (Sam, November 5,
+              2026: not a one-man show, and he may hire an instructor). */}
           <p className="about__role" data-anim="rise" data-anim-delay="0.2">
-            Founder · Lead Instructor
+            Founder
           </p>
 
           <div
@@ -47,15 +49,19 @@ export default function AboutTeaser() {
             />
           </div>
 
+          {/* Sam's own words (November 5, 2026), verbatim. */}
           <p className="about__bio" data-anim="rise" data-anim-delay="0.3">
-            Hey, I'm Sam, and I run Clutch Academy.</p>
-          <p className="about__bio" data-anim="rise" data-anim-delay="0.3">
-            I teach manual one step at a time, on real Toronto roads, at the pace
-            you set.
+            Hey, I’m Sam, the founder of Clutch Academy and the person you’ll
+            meet at your lesson.
           </p>
           <p className="about__bio" data-anim="rise" data-anim-delay="0.3">
-            Everyone stalls while they're learning. Nobody's grading you, so we
-            keep it relaxed, and most people end up having fun.
+            I started Clutch Academy because driving manual makes even an
+            ordinary drive more fun, and I love helping people discover that
+            for themselves.
+          </p>
+          <p className="about__bio" data-anim="rise" data-anim-delay="0.3">
+            We’ll take it one step at a time, from finding the bite point to
+            making your first smooth shift.
           </p>
 
           <dl className="about__stats" data-anim="stagger" data-anim-delay="0.4">

@@ -1,8 +1,10 @@
 // Single source of truth for the site FAQ, first ported from the
 // pre-overhaul Faq section and reworded in the October 9, 2026 copy pass.
 // The /faq page renders the full list AND generates its FAQPage JSON-LD from
-// this same array (Phase 7), while each lesson page surfaces a relevant
-// subset by id — so on-page copy and structured data can't drift.
+// this same array (Phase 7), and /contact takes the cancellation answer by id
+// through faqSubset(), so on-page copy and structured data can't drift. The
+// package pages carried subsets too until November 2026; they no longer
+// render any.
 //
 // Neither duration switch (60 -> 75 min on August 1, back to 60 in October
 // 2026) needed edits here: the answers talk in lesson counts, not durations. If duration copy is ever added, it belongs in
@@ -16,7 +18,7 @@ export const FAQS = [
   {
     id: 'never-driven',
     q: "I've never driven manual before. Is that okay?",
-    a: 'Yes. Most students start as complete beginners. Sam works from your level and adds one skill at a time.',
+    a: 'Yes. Most students start as complete beginners. We work from your level and add one skill at a time.',
   },
   {
     id: 'synonyms',
@@ -45,11 +47,12 @@ export const FAQS = [
   },
   {
     id: 'cancellation',
-    // PENDING: final cancellation-policy wording from Sam (07-status.md item 6). This is
-    // the wording currently live on the site; it renders on /faq, /contact,
-    // and the package-page FAQ subsets — updating it here updates them all.
+    // Sam's final wording, November 5, 2026 (07-status.md item 6). It renders
+    // on /faq (and its JSON-LD) and /contact, so updating it here updates
+    // both. Sam bolded the "and": answers are plain strings, so it renders
+    // plain everywhere.
     q: 'What is your cancellation policy?',
-    a: 'Cancellations made at least 24 hours before the scheduled lesson are eligible for a full refund. Cancellations made after 24 hours of booking or less than 24 hours before the lesson will be charged in full.',
+    a: "To receive a full refund, you must cancel within 24 hours of making your booking and at least 24 hours before your lesson's scheduled start time. If either condition isn't met, your booking is non-refundable.",
   },
   {
     id: 'car',

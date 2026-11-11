@@ -1,10 +1,11 @@
 import { Overpass } from 'next/font/google'
 import './WhySigns.css'
 
-// "Why Students Choose Clutch Academy" as a street of six road signs. From
+// "Why Students Choose Clutch Academy" as a street of five road signs, and
+// the About page's opening band, so its heading is the page's h1. From
 // 1024px they stand in one row, every post running down to the bottom of the
 // band and each sign at its own height, with its words in the open space
-// above it. Below that, each sign sits beside its words in a list.
+// above it. Below that, each sign sits beside its words in a single list.
 //
 // The signs are drawn to Ontario's conventions (white regulatory, yellow
 // warning, blue service, the red prohibition ring) and lettered in Overpass,
@@ -19,9 +20,19 @@ import './WhySigns.css'
 //
 // Decorative: each SVG is aria-hidden, and its words say the same thing.
 //
-// PENDING: Sam to approve the titles, and "Manual is all we teach". The
-// lines under them are the ones the old shift gate carried (one reworded on
-// October 9), which were also awaiting his approval.
+// No motion since November 2026. The heading took the section-h2 Headline
+// and the signs a Stagger while this band sat below the story. As the first
+// band they're above the fold, where a scroll reveal hides what's already
+// painted, and the h1 is an LCP candidate a mask would clip
+// (docs/spec/08-motion.md, §Headline and §The hero).
+//
+// Sam reviewed the signs on November 5, 2026: he reworded At your pace's and
+// Book at any hour's lines, retitled Real Toronto roads as Various driving
+// scenarios, and cut Just you and Sam (no instructor's name outside the
+// story). PENDING: "Manual is all we teach" and "Stalls expected", titles
+// and lines, which his notes didn't mention. PENDING too: the no-parking
+// sign was drawn for "Real Toronto roads, not an empty parking lot" and
+// doesn't match its new title.
 
 const signFace = Overpass({
   subsets: ['latin'],
@@ -59,8 +70,9 @@ function Legend({ x = 100, y, size, width, tone = 'black', children }) {
 }
 
 // Left to right along the street. The post lengths are all different, and
-// they alternate tall and short so no two neighbours' words sit at the same
-// height.
+// they alternate tall and short (odd signs tall, which WhySigns.css relies
+// on) so no two neighbours' words sit at the same height. Re-balanced for
+// five on November 5, 2026.
 const SIGNS = [
   {
     key: 'manual-only',
@@ -86,28 +98,11 @@ const SIGNS = [
     ),
   },
   {
-    key: 'one-on-one',
-    title: 'Just you and Sam',
-    line: 'Nobody in the back seat waiting a turn.',
-    box: [11, 47, 178, 66],
-    post: 90,
-    // Ontario's one-way sign, lettered for a different kind of one.
-    sign: (
-      <>
-        <rect className="why-sign__black" x="12" y="48" width="176" height="64" rx="7" />
-        <rect className="why-sign__border why-sign__border--white" x="17" y="53" width="166" height="54" rx="4.5" />
-        <path className="why-sign__arrow" d="M26 66H146V57L174 80L146 103V94H26Z" />
-        <Legend x={86} y={87} size={19} width={108}>ONE-ON-ONE</Legend>
-        <Bolts top={50.5} bottom={109.5} />
-      </>
-    ),
-  },
-  {
     key: 'your-pace',
     title: 'At your pace',
-    line: 'No sighing. No raised voice. No clock-watching.',
+    line: 'We’ll never push you past your comfort level.',
     box: [45, 7, 110, 148],
-    post: 230,
+    post: 60,
     // Ontario's MAXIMUM speed sign, with the limit set by you.
     sign: (
       <>
@@ -125,7 +120,7 @@ const SIGNS = [
     title: 'Stalls expected',
     line: 'Stall it thirty times. Nobody is counting.',
     box: [24, 4, 152, 152],
-    post: 60,
+    post: 230,
     // A yellow warning diamond. The thick yellow stroke with round joins is
     // what rounds its corners.
     sign: (
@@ -140,10 +135,10 @@ const SIGNS = [
   },
   {
     key: 'no-parking',
-    title: 'Real Toronto roads',
-    line: 'Downtown traffic and real hills, not an empty parking lot.',
+    title: 'Various driving scenarios',
+    line: 'Hills, downshifting, rev-matching.',
     box: [43, 9, 114, 126],
-    post: 185,
+    post: 90,
     // No parking: the one sign here in the brand's own red.
     sign: (
       <>
@@ -159,9 +154,9 @@ const SIGNS = [
   {
     key: 'book-online',
     title: 'Book at any hour',
-    line: 'Book and pay online whenever you decide, even at 1 a.m.',
+    line: 'Book and pay online whenever you decide.',
     box: [33, 13, 134, 120],
-    post: 115,
+    post: 185,
     // A blue service sign, with a booked day as its pictogram.
     sign: (
       <>
@@ -182,20 +177,18 @@ const SIGNS = [
 export default function WhySigns() {
   return (
     <section
-      className={`section section--light about-why ${signFace.variable}`}
+      className={`section section--first about-why ${signFace.variable}`}
       aria-labelledby="why-choose-heading"
     >
       <div className="section__inner">
         <header className="section-header section-header--center">
-          <p className="section-header__eyebrow" data-anim="rise">
-            Six signs you’re in the right place
+          <p className="section-header__eyebrow">
+            Five signs you’re in the right place
           </p>
-          <h2 id="why-choose-heading" data-anim="headline">
-            Why Students Choose Clutch Academy
-          </h2>
+          <h1 id="why-choose-heading">Why Students Choose Clutch Academy</h1>
         </header>
 
-        <ul className="why-signs" data-anim="stagger" data-anim-delay="0.35">
+        <ul className="why-signs">
           {SIGNS.map(({ key, title, line, box, post, sign }) => (
             <li
               key={key}

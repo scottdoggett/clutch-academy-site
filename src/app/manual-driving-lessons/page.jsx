@@ -43,8 +43,6 @@ const PACKAGES = [
     href: '/lessons/manual-foundations',
     pkg: 'foundations',
     tier: 2,
-    featured: true,
-    badge: 'Recommended',
   },
   {
     tag: 'Group · With a Friend',
@@ -63,17 +61,20 @@ const PACKAGES = [
   {
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence Package',
-    who: 'From zero to downtown, the highway and rush hour, at $80 a lesson.',
+    // Tagline and bullets are Sam's own wording (November 5, 2026 feedback).
+    who: 'Five hours to build your skills and refine your technique.',
     points: [
-      'Downtown driving, highway merging, rush-hour traffic',
-      'Advanced hill starts and parking',
-      'Personalized coaching throughout',
+      'Two extra hours of coached practice beyond the basics',
+      'Smoother downshifts and when to rev-match',
+      'Better gear selection, shift timing and clutch control',
     ],
     price: '$400',
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
     pkg: 'confidence',
     tier: 4,
+    featured: true,
+    badge: 'Recommended',
   },
 ]
 
@@ -95,7 +96,7 @@ const CHOOSER = [
     href: '/lessons/individual',
   },
   {
-    if: 'If you want to drive downtown, on the highway, and in rush hour',
+    if: 'If you’re starting from zero and want more than the basics, like smoother downshifts and rev-matching',
     lead: 'go for the',
     href: '/lessons/manual-confidence',
   },
@@ -143,12 +144,10 @@ export default function LessonsOverviewPage() {
       >
         <div className="section__inner">
           <header className="section-header">
-            <p className="section-header__eyebrow">
-              Manual · Stick Shift · Standard — same lessons
-            </p>
             {/* This is the page's h1: the intro hero that used to carry it was
                 removed in August 2026 so the page opens straight on the
-                packages. */}
+                packages. Its eyebrow, "Manual · Stick Shift · Standard — same
+                lessons", came off on November 11, 2026, at Scott's word. */}
             <h1 id="hub-packages-heading">Four ways to learn</h1>
             <p className="section-header__lead">
               Each package has its own page with full details, pricing, and
@@ -244,7 +243,7 @@ export default function LessonsOverviewPage() {
           <p className="hub-choose__aside">
             Still weighing it up? The <Link href="/faq">FAQ</Link> covers
             licensing, what to wear, cancellation, and more. Or start with{' '}
-            <Link href="/about">how Sam teaches</Link>.
+            <Link href="/about">how we teach</Link>.
           </p>
         </div>
       </section>

@@ -2,9 +2,7 @@ import Link from 'next/link'
 import BookButton from '../../../components/BookButton'
 import WasPrice from '../../../components/WasPrice'
 import Breadcrumbs from '../../../components/Breadcrumbs'
-import LessonFaq from '../../../components/lessons/LessonFaq'
-import LessonQuotes from '../../../components/lessons/LessonQuotes'
-import { faqSubset } from '../../../lib/faqs'
+import '../../../components/lessons/lessons.css'
 
 export const metadata = {
   title: 'Individual Manual Driving Lesson in Toronto | Clutch Academy',
@@ -16,15 +14,16 @@ export const metadata = {
 // Keyword target (04-seo.md §Per-route targets): "manual driving refresher
 // Toronto".
 // Pricing is the October 2026 winter offering: 1 hour · $90 + HST.
-const FAQ_IDS = ['license', 'how-many', 'car', 'wear', 'pay']
 
 // PENDING: SINGLE-LESSON INCLUSIONS — final 3–5 bullets from Sam. These are
 // placeholders, expanded from the three on the live site's pricing card;
-// confirm before launch.
+// confirm before launch. On November 5, 2026 Sam changed the third from
+// "real-road practice" to "reversing": a complete beginner rarely gets onto
+// real roads in a single session.
 const INCLUDED = [
   'One-on-one instruction that starts at your level',
   'Clutch control basics and finding the bite point',
-  'First-gear starts, stops, and real-road practice',
+  'First-gear starts, stops, and reversing',
   'Personal feedback on what to practice next',
 ]
 
@@ -36,19 +35,6 @@ const WHO = [
   'You’re renting a car in Europe, where manual is often the default, and want to arrive ready.',
   'You’ve never driven stick and want to try it before committing to a package.',
   'You want to fix one thing, like hill starts, smoother shifting, or downshifting, in a single focused session.',
-]
-
-// Real quotes from the Google-review set, chosen because both describe a
-// first/single lesson experience.
-const QUOTES = [
-  {
-    text: 'I have never driven a manual car before taking a lesson with Sam. Even after 1 session, Sam quickly was able to teach me the basics and I was comfortable enough to go driving on my own without him.',
-    name: 'Cole Janostin',
-  },
-  {
-    text: "Did my first lesson last week with Sam, he was calm and patient around my nerves. Stalled twice on a hill and he didn't flinch. Finally feel like I actually get the clutch. Worth every dollar.",
-    name: 'Sol',
-  },
 ]
 
 export default function IndividualLessonPage() {
@@ -73,15 +59,13 @@ export default function IndividualLessonPage() {
             Individual Manual Lesson
           </h1>
           <p className="lesson-hero__lead">
-            One hour, one-on-one, on real Toronto roads. The individual
-            lesson is the manual driving refresher Toronto drivers book when the
-            skill has gone rusty, and the easiest first lesson if you’ve never
-            touched a stick shift.
+            One hour, one-on-one, on real Toronto roads. The individual lesson
+            is a great refresher if you’re a little rusty, or a first taste of
+            driving stick if you’ve never tried it before.
           </p>
           {/* PENDING: real lesson photo for this page (07-status.md §Pending assets). */}
           <p className="lesson-hero__pull">
-            Most students arrive nervous. Sam expects that and goes at your
-            pace.
+            Most students arrive nervous. We expect that and go at your pace.
           </p>
           <p className="lesson-hero__price">
             $90
@@ -130,31 +114,6 @@ export default function IndividualLessonPage() {
               <li key={line}>{line}</li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      {/* ---------- Real reviews ---------- */}
-      <section
-        className="section section--light"
-        aria-labelledby="quotes-heading"
-      >
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">From the Google reviews</p>
-            <h2 id="quotes-heading">After one lesson</h2>
-          </header>
-          <LessonQuotes quotes={QUOTES} />
-        </div>
-      </section>
-
-      {/* ---------- FAQ subset ---------- */}
-      <section className="section" aria-labelledby="faq-heading">
-        <div className="section__inner">
-          <header className="section-header">
-            <p className="section-header__eyebrow">Good to know</p>
-            <h2 id="faq-heading">Quick answers</h2>
-          </header>
-          <LessonFaq items={faqSubset(FAQ_IDS)} />
         </div>
       </section>
 
