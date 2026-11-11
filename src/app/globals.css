@@ -37,8 +37,13 @@ html {
 body {
   min-height: 100vh;
   /* Defensive: keep third-party fixed-position widgets (Calendly popup)
-     from forcing the page to scroll horizontally on mobile. */
+     from forcing the page to scroll horizontally on mobile. clip, not
+     hidden: hidden makes <body> a scroll container, and the nav's
+     position: sticky (Nav.css) would then stick to <body>, which never
+     scrolls, instead of the window. It clips the same. Browsers without
+     clip (Safari before 16) keep hidden; there the nav scrolls away. */
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ---------- Mobile Calendly: custom container we fully control --------

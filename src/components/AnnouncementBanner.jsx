@@ -4,17 +4,25 @@ import { useEffect, useRef } from 'react'
 import './AnnouncementBanner.css'
 
 // Fall-sale notice (src/lib/sale.js), ported from the live site (main's
-// AnnouncementBanner at 4eff398). A thin strip above the nav that slides away
-// as the page scrolls. It's in the server-rendered HTML, so crawlers read it
+// AnnouncementBanner at 4eff398). A thin strip above the nav that scrolls
+// away with the page. It's in the server-rendered HTML, so crawlers read it
 // too; app/layout.jsx mounts it only while FALL_SALE is on.
+//
+// Scrolling is the browser's own, with no script: the strip sits in the
+// page's flow and scrolls like any content, and the nav under it is
+// position: sticky, so it rides up behind the strip and parks at the top
+// (Nav.css). Until November 11, 2026 a scroll listener moved both, through a
+// --header-shift variable on <html>. On phones that ran a frame or more
+// behind the finger, because iOS scrolls on another thread, and it restyled
+// the whole page every frame. The bar jittered on every swipe.
 export default function AnnouncementBanner() {
   const bannerRef = useRef(null)
 
   // Publish the strip's real height to --announcement-height so every
-  // --nav-height-based clearance (sections, nav offset) tracks it exactly
-  // across breakpoints and copy wrapping. Until this runs, the estimate in
-  // AnnouncementBanner.css holds the nav below the strip. The inline value is
-  // removed on unmount.
+  // --nav-height-based clearance (sections, the nav's negative margin) tracks
+  // it exactly across breakpoints and copy wrapping. Until this runs, the
+  // estimate in AnnouncementBanner.css holds. The inline value is removed on
+  // unmount.
   useEffect(() => {
     const el = bannerRef.current
     if (!el) return
@@ -30,38 +38,6 @@ export default function AnnouncementBanner() {
     return () => {
       observer.disconnect()
       root.style.removeProperty('--announcement-height')
-    }
-  }, [])
-
-  // Ride-up-and-lock: as the page scrolls, shift the banner AND the nav up in
-  // lockstep (both read the shared --header-shift var) until the banner has
-  // slid fully out of view and the nav is parked at the top. Clamped to the
-  // banner's own height, so once you've scrolled past it the nav stays locked
-  // in place. Both stay position: fixed.
-  useEffect(() => {
-    const el = bannerRef.current
-    if (!el) return
-
-    const root = document.documentElement
-    let raf = 0
-
-    const update = () => {
-      raf = 0
-      const max = el.offsetHeight
-      const shift = Math.min(Math.max(window.scrollY, 0), max)
-      root.style.setProperty('--header-shift', `${shift}px`)
-    }
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update)
-    }
-
-    update() // seed initial value (handles a reload mid-page)
-    window.addEventListener('scroll', onScroll, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-      root.style.removeProperty('--header-shift')
     }
   }, [])
 

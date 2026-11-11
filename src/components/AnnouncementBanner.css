@@ -19,12 +19,13 @@
   }
 }
 
+/* In the page's flow, so it scrolls away with the page natively, the first
+   thing in <body>. The nav sits under it and is sticky (Nav.css). Positioned
+   with a z-index so it paints over the top of <main>, which starts at the
+   top of the page underneath it: just above the nav (z-index: 100), well
+   below the Calendly and consent modals. */
 .announcement-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  /* Just above the nav (z-index: 100); well below the Calendly/consent modals. */
+  position: relative;
   z-index: 101;
   display: flex;
   align-items: center;
@@ -34,10 +35,6 @@
   color: var(--red-deep);
   text-align: center;
   border-bottom: 1px solid rgba(138, 10, 31, 0.15);
-  /* Ride up with the page on scroll (see AnnouncementBanner.jsx). The nav
-     reads the same var, so the two move as one. Falls back to 0 pre-JS. */
-  transform: translateY(calc(-1 * var(--header-shift, 0px)));
-  will-change: transform;
 }
 
 .announcement-banner__copy {
