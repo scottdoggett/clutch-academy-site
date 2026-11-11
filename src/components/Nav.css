@@ -134,9 +134,13 @@
      row (logo 189 + toggle + Book Now) didn't fit, Book Now dropped to a second
      line, and the bar grew to 113px while every page still reserved 64px for
      it — so the fixed bar sat on top of the first heading. */
+  /* No vertical padding: the bar is --nav-bar-height (52px on phones,
+     tokens.css), and the controls are centred in it. Their 44px hit areas
+     fit inside, and the visible Book button is smaller than that. */
   .nav {
     flex-wrap: nowrap;
-    padding: 0.75rem 0.75rem;
+    height: var(--nav-bar-height);
+    padding: 0 0.75rem;
   }
 
   /* The logo absorbs the squeeze; the two controls keep their size. */
@@ -147,11 +151,12 @@
 
   /* An explicit preferred width matters: logo.svg is `width=100% height=100%`
      with only a viewBox, so it has no intrinsic pixel size — `width: auto`
-     plus `max-width: 100%` collapsed it to 0. It renders at 189px where there
-     is room and scales down proportionally where there isn't. */
+     plus `max-width: 100%` collapsed it to 0. It renders at 160px (20px
+     tall; 189px until the slimmer bar of November 11, 2026) where there is
+     room and scales down proportionally where there isn't. */
   .nav__logo {
     height: auto;
-    width: 189px;
+    width: 160px;
     max-width: 100%;
     aspect-ratio: 755 / 96;
   }
@@ -162,13 +167,27 @@
     flex-shrink: 0;
   }
 
+  /* About 32px to the eye, which suits the 52px bar, but 44px to a thumb:
+     the overlay below adds the height without growing the button. */
   .nav__book {
+    position: relative;
     order: 3;
     margin-left: 0.5rem;
-    padding: 0.5rem 0.875rem;
-    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
     flex-shrink: 0;
     white-space: nowrap;
+  }
+
+  .nav__book::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
   }
 
   /* A dropdown panel rather than a wrapped row: out of flow, so opening the

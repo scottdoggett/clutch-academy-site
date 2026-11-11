@@ -62,3 +62,13 @@
      (docs/spec/08-motion.md §Values). */
   --transition-reduced: 150ms;
 }
+
+/* Phones get a slimmer bar (Scott, November 11, 2026). It was 64px here
+   while the bar itself came out 69px (44px controls plus 12px of padding
+   above and below), so it sat 5px over every page's clearance. Nav.css
+   now holds the phone bar to exactly this. */
+@media (max-width: 767px) {
+  :root {
+    --nav-bar-height: 52px;
+  }
+}
