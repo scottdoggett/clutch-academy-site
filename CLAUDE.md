@@ -149,8 +149,12 @@ planning docs. **Don't work from anything in there.**
   `margin-inline: var(--column-inset) auto`, or it re-centres inside the column
   and lands ~150px right of the nav and footer.
 - **Interactive targets are ≥44px**, and the mobile nav bar must stay one row —
-  it's `position: fixed` against a `--nav-height` every page reserves, so a
+  it overlays the page against a `--nav-height` every page reserves, so a
   wrapped bar covers the first heading. Details in `02-architecture.md`.
+- **The header moves with no script.** The sale strip scrolls with the page,
+  and the nav is `position: sticky` with a negative margin. Keep `<body>` at
+  `overflow-x: clip`, not `hidden`, and keep the nav a direct child of
+  `<body>`, or the nav stops sticking (`02-architecture.md` §Styling).
 - **Package cards** are one per row below 768px, with the hub card's bullets
   behind a phones-only `<details>` whose toggle is the whole card. Don't
   reintroduce a 2-up grid there — it was tried and rejected as too busy.

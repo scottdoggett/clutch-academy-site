@@ -1,6 +1,6 @@
 # 07 — Status
 
-**Last updated:** November 10, 2026.
+**Last updated:** November 11, 2026.
 
 Where the build actually is, and every question still waiting on a human. If
 this file disagrees with another doc about current state, this file wins.
@@ -234,6 +234,22 @@ accepted on September 24.
 - The first prototype of this feature, a different design that was never
   mounted, was kept on a local branch for the day and then deleted. It was
   never pushed; `hero-drive.md` §Where this started records what it was.
+
+## Recently completed — November 11, 2026 (security upgrade, smooth header)
+
+- **Next.js 16.2.10 → 16.4.6 and React 19.2.5 → 19.3.1.** React published a
+  critical React Server Components remote-code-execution advisory
+  (CVE-2026-126187, GHSA-xqc2-xf4c-x3h3), fixed in 19.3.1. Next bundles its
+  own copy of React's server code, so the Next upgrade is what fixes it here.
+  16.4.6's copy carries both new error messages the fix added, and 19.3.0's
+  doesn't. 16.2.10 also had critical Next advisories that were only patched in
+  16.4.1 and later. `npm audit fix` cleared the rest, so `npm audit` reports 0.
+  Lint, the 90 tests and `next build` pass.
+- **The fall-sale strip scrolls smoothly on phones.** It jittered on every
+  swipe because a scroll listener moved it and the nav. Now the strip scrolls
+  with the page and the nav is `position: sticky`, so the browser moves both
+  (`02-architecture.md` §Styling). Every heading measures where it was.
+  Scott to check on his phone.
 
 ## Recently completed — November 10, 2026 (Sam's November 5 feedback)
 

@@ -5,8 +5,11 @@ How the `overhaul` build is put together. For the deployed shape of things
 
 ## Stack
 
-- **Next.js 16.2** — App Router, every route statically generated at build time
-- **React 19.2**
+- **Next.js 16.4** — App Router, every route statically generated at build time.
+  16.4.6 since November 11, 2026, up from 16.2.10. 16.2 had critical
+  advisories that were only patched in 16.4.1 and later, and 16.4.6 bundles
+  the React Server Components fix for CVE-2026-126187.
+- **React 19.3** (19.3.1, the release with that fix)
 - **Plain CSS** — one stylesheet per component or route, plus design tokens.
   No Tailwind, no CSS-in-JS, no preprocessor.
 - **ESLint 9** with `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
@@ -91,7 +94,7 @@ src/
 │   ├── BookButton.jsx          # THE booking CTA — every one goes through it
 │   ├── ContactCard.jsx         # Channels with per-channel intent tracking
 │   ├── ConsentBanner.jsx       # Consent Mode v2 accept/decline
-│   ├── AnnouncementBanner.jsx  # Fall-sale strip above the nav; rides up on scroll
+│   ├── AnnouncementBanner.jsx  # Fall-sale strip above the nav; scrolls away
 │   ├── WasPrice.jsx            # The struck-out pre-sale price beside a price
 │   ├── AnalyticsLoader.jsx     # Loads pixels only after consent
 │   ├── ReviewsMarquee.jsx      # Google-review strip: GSAP drift + drag/swipe,
@@ -294,6 +297,24 @@ sets an estimated height per breakpoint for first paint and its script the
 measured one, so every `--nav-height` clearance follows. The homepage hero is
 the exception: it starts under the strip and sizes itself as if the strip
 weren't there, so its road map and tests don't change (`Hero.css`).
+
+**The header moves with no script** (since November 11, 2026). The strip is in
+the page's flow and scrolls away like any content. The nav is `position:
+sticky; top: 0`, so it rides up behind the strip and parks at the top. A
+negative bottom margin of `--nav-height` takes both back out of the flow, so
+`<main>` starts at the top of the page underneath them, exactly as when both
+were `fixed`. Measured at 390px and 1440px on four routes: every heading sits
+where it did. Before, a scroll listener moved both through a `--header-shift`
+variable on `<html>`. On phones that lagged the finger, because iOS scrolls on
+another thread, and it restyled the whole page every frame, so the strip
+jittered on every swipe. Two things keep sticky working:
+
+- **`<body>` clips with `overflow-x: clip`, never `hidden`.** `hidden` makes
+  `<body>` a scroll container, and the nav would stick to it instead of the
+  window, then scroll away with the page.
+- **The nav stays a direct child of `<body>`.** A sticky element only sticks
+  within its parent, so wrapping it in a `<header>` would end the sticking
+  where the wrapper ends.
 
 ## Conventions
 
