@@ -45,20 +45,6 @@ const PACKAGES = [
     tier: 2,
   },
   {
-    tag: 'Group · With a Friend',
-    title: 'Group Manual Lessons',
-    who: 'Learn with a friend and take turns at the wheel.',
-    points: [
-      'Share the experience and split the nerves',
-      'A low-pressure first go at the clutch',
-    ],
-    price: '$180',
-    unit: '/ 2 hours + HST',
-    href: '/lessons/group',
-    pkg: 'group',
-    tier: 3,
-  },
-  {
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence Package',
     // Tagline and bullets are Sam's own wording (November 5, 2026 feedback).
@@ -72,9 +58,23 @@ const PACKAGES = [
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
     pkg: 'confidence',
-    tier: 4,
+    tier: 3,
     featured: true,
     badge: 'Recommended',
+  },
+  {
+    tag: 'Group · With a Friend',
+    title: 'Group Manual Lessons',
+    who: 'Learn with a friend and take turns at the wheel.',
+    points: [
+      'Share the experience and split the nerves',
+      'A low-pressure first go at the clutch',
+    ],
+    price: '$180',
+    unit: '/ 2 hours + HST',
+    href: '/lessons/group',
+    pkg: 'group',
+    tier: 4,
   },
 ]
 

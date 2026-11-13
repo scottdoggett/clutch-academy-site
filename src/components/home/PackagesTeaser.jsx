@@ -38,16 +38,6 @@ const TEASERS = [
     tier: 2,
   },
   {
-    tag: 'Group · With a Friend',
-    title: 'Group Manual Lessons',
-    desc: 'Two hours with a friend, taking turns at the wheel.',
-    price: '$180',
-    unit: '/ 2 hours + HST',
-    href: '/lessons/group',
-    pkg: 'group',
-    tier: 3,
-  },
-  {
     tag: 'Private · 5 Lessons',
     title: 'Complete Manual Confidence Package',
     desc: 'Five lessons at $80 each. Build your skills from zero and refine your technique.',
@@ -55,9 +45,19 @@ const TEASERS = [
     unit: '/ 5 lessons + HST',
     href: '/lessons/manual-confidence',
     pkg: 'confidence',
-    tier: 4,
+    tier: 3,
     featured: true,
     badge: 'Recommended',
+  },
+  {
+    tag: 'Group · With a Friend',
+    title: 'Group Manual Lessons',
+    desc: 'Two hours with a friend, taking turns at the wheel.',
+    price: '$180',
+    unit: '/ 2 hours + HST',
+    href: '/lessons/group',
+    pkg: 'group',
+    tier: 4,
   },
 ]
 
