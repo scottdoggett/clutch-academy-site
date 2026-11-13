@@ -1,0 +1,232 @@
+/* Fill most of the first viewport without pinning: a tall-but-natural block
+   that scrolls away normally. Phones are the exception, below.
+
+   The hero is a stack of layers (docs/spec/hero-drive.md §Layers): the roads
+   under the copy, the copy, then the cars and the driving controls over it.
+   isolation keeps their z-indexes inside the hero, and clip keeps the roads
+   and cars from spilling into the next section without making the hero a
+   scroll container. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100svh - var(--nav-height));
+  /* A strip above the nav (the fall sale's AnnouncementBanner) moves the
+     hero down under it rather than over it, and the hero sizes itself as if
+     the strip weren't there. Its map, and the copy's clearance from the
+     roads (__fixtures__/copy-rects.json), stay exactly as tested, and once
+     the strip has slid away on scroll the hero sits where it always does.
+     Both resolve to the plain nav when there's no strip. */
+  --nav-height: var(--nav-bar-height);
+  margin-top: var(--announcement-height);
+}
+
+/* One column of copy, centred vertically in the hero. The cap is a reading
+   width; nothing centres the block, so it stays on the column's left edge. */
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 700px;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  margin: 0;
+}
+
+.hero__headline {
+  font-size: clamp(2.5rem, 5vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+  font-weight: 800;
+}
+
+.hero__subhead {
+  font-size: var(--text-body);
+  color: var(--cream);
+  margin: 0;
+  max-width: 48ch;
+}
+
+/* The two buttons, chosen from ten looks tried in October 2026 (B1,
+   hero-drive.md §Decisions 34): sentence-case pills, each with a round chip
+   riding after its last word, so on a phone the chip follows that word onto
+   the second line rather than taking a column of its own. Book is white with
+   a red chip; See Packages is outlined, with a white chip pointing down the
+   page, since it scrolls there. In Hero.jsx, .hero__cta-label keeps each
+   label one flex item on phones and .hero__cta-end carries the chip. */
+.hero__ctas {
+  --cta-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --cta-arrow-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C8102E' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6'/%3E%3C/svg%3E");
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.hero__ctas .btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5625rem 0.5625rem 0.5625rem 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.hero__ctas .btn--secondary {
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 2px var(--white);
+}
+
+.hero__ctas .btn--secondary:hover {
+  background: rgb(255 255 255 / 0.16);
+  color: var(--white);
+}
+
+.hero__cta-end {
+  white-space: nowrap;
+}
+
+.hero__cta-end::after {
+  content: '';
+  display: inline-block;
+  width: 1.75em;
+  height: 1.75em;
+  margin-left: 0.625em;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--red-primary) var(--cta-arrow-right) center / 50% no-repeat;
+  transition: translate var(--transition-reduced) ease;
+}
+
+.hero__ctas .btn--secondary .hero__cta-end::after {
+  background: var(--white) var(--cta-arrow-down) center / 50% no-repeat;
+}
+
+.hero__ctas .btn--primary:hover .hero__cta-end::after {
+  translate: 3px 0;
+}
+
+.hero__ctas .btn--secondary:hover .hero__cta-end::after {
+  translate: 0 3px;
+}
+
+/* ---------- Roads (src/components/hero/RoadLayer.jsx) -------------------
+   Two maps are in the HTML and CSS shows the one that fits, or neither on
+   phones. The same media queries pick the map for the traffic in JS, so the
+   two never disagree. */
+.hero__roads {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero__roads--wide,
+.hero__roads--medium {
+  display: none;
+}
+
+/* The map for the width, the same queries as the layouts' JSON and
+   CONFIG.layout. From 1200px the wide map's six columns; from 768px the
+   medium map's four, wider apart, so the blocks keep their shape on a
+   tablet or a small laptop. */
+@media (min-width: 1200px) {
+  .hero__roads--wide {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .hero__roads--medium {
+    display: block;
+  }
+}
+
+/* Tablets and up: the copy keeps to the left half of the hero and the city
+   fills the right half. The column is centred, so half of it ends exactly on
+   the hero's centre line at every width. The headline comes down to suit. */
+@media (min-width: 768px) {
+  .hero__copy {
+    max-width: 50%;
+  }
+
+  /* Two lines up to about 1500px, three above. The 36px floor keeps it to
+     two lines in a 768px tablet's 353px half-column. */
+  .hero__headline {
+    font-size: clamp(2.25rem, 4.4vw, 4.5rem);
+  }
+}
+
+/* Phones: no roads and no traffic (October 14 review: they made the hero
+   too busy). The hero is just the copy and its two buttons, with the
+   section's own padding, as tall as they are rather than the whole first
+   screen. The copy is a size smaller than on tablets. */
+@media (max-width: 767px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .hero__copy {
+    gap: 0.75rem;
+  }
+
+  .hero__eyebrow {
+    font-size: 0.75rem;
+  }
+
+  .hero__headline {
+    font-size: clamp(2.25rem, 10.5vw, 3.25rem);
+  }
+
+  .hero__subhead {
+    font-size: 1rem;
+  }
+
+  /* The two buttons side by side under the subhead, halves of the column,
+     as they were before the roads came to phones. Capped, so on a big phone
+     or a small tablet they don't stretch into long bars. */
+  .hero__ctas {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    max-width: 26rem;
+  }
+
+  /* Each label and its chip on one line, centred in the button as one
+     group, 44px tall. The font is 12px at 320px, where Book a Lesson only
+     just fits, up to 15px from about 395px. */
+  .hero__ctas .btn {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+    font-size: clamp(0.75rem, 3.8vw, 0.9375rem);
+  }
+
+  .hero__cta-end::after {
+    width: 1.5em;
+    height: 1.5em;
+    margin: -0.25em 0 -0.25em 0.35em;
+  }
+}

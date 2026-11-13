@@ -5,15 +5,36 @@
   --red-dark: #4A0510;
   --white: #FFFFFF;
   --cream: #FDF8F2;
-  --chrome: #D9D9D9;
+  /* Ground for the light sections (.section--light) — warmer than white.
+     Red text on it: --red-primary 4.99:1, --red-deep 8.3:1, --red-dark
+     13.5:1, all AA. Don't go darker without re-checking --red-primary. */
+  --beige: #FBE9DF;
+  /* Lifted from #D9D9D9 for WCAG AA: 4.64:1 on --red-primary (the old value
+     measured 4.18:1, failing small-text contrast on eyebrows/labels). */
+  --chrome: #E4E4E4;
   --black: #0A0A0A;
+  /* The homepage hero's traffic (docs/spec/hero-drive.md §Car look). It's
+     close to the red in lightness, so it separates by hue, and reads on the
+     white roads. The hero engine reads it at start; this is the only copy. */
+  --car-traffic: #2457C5;
+  /* The hero's road markings, grey on the white roads so the city reads as
+     texture behind the headline (October 2026): the centre line, and the
+     zebra crossings lighter still. Decorative (aria-hidden). */
+  --road-line: #8F8F8F;
+  --road-crossing: #CFCFCF;
 
-  /* Typography — Display (Plus Jakarta Sans) */
-  --font-display: 'Plus Jakarta Sans', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  /* Review stars (home reviews section and review cards). Star gold is
+     Google's own review-star colour, decorative (aria-hidden). */
+  --star-gold: #FBBC04;
+
+  /* Typography — display (Plus Jakarta Sans) and body (Inter). The
+     --font-jakarta / --font-inter variables are set on <html> by next/font
+     in app/layout.jsx (self-hosted, zero-CLS); the named families remain as
+     fallbacks for surfaces outside the app bundle (booked.html, privacy.html). */
+  --font-display: var(--font-jakarta, 'Plus Jakarta Sans'), sans-serif;
+  --font-body: var(--font-inter, 'Inter'), sans-serif;
 
   /* Type Scale */
-  --text-gear: clamp(4rem, 12vw, 10rem);
   --text-display-xl: clamp(2.5rem, 6vw, 5rem);
   --text-display-lg: clamp(2rem, 4vw, 3.5rem);
   --text-body-lg: clamp(1.125rem, 1.5vw, 1.375rem);
@@ -26,32 +47,28 @@
   --leading-body: 1.6;
 
   /* Spacing */
-  --gear-indicator-size: clamp(80px, 10vw, 160px);
   --gear-indicator-padding: clamp(24px, 3vw, 40px);
-  --gear-indicator-stroke: 3px;
   --nav-bar-height: 64px;
-  /* Height of the fixed announcement strip above the nav, when present. Kept
-     at 0 by default and set to the strip's real rendered height by
-     AnnouncementBanner (via ResizeObserver). Because --nav-height (below) is
-     the top-clearance token every section + gear indicator keys off, this is
-     the single value that makes the whole layout account for the strip — and
-     reverts to 0 automatically when the strip is unmounted. */
+  /* Height of a fixed announcement strip above the nav, when one is present.
+     0 by default. While the fall sale's AnnouncementBanner is mounted
+     (src/lib/sale.js), its CSS sets an estimate for first paint and its
+     script the measured height, so every --nav-height clearance follows. */
   --announcement-height: 0px;
   /* Total fixed-header clearance: nav bar plus any announcement strip. */
   --nav-height: calc(var(--nav-bar-height) + var(--announcement-height));
 
-  /* Transitions */
-  --transition-same-column: 0.8s;
-  --transition-h-crossing: 1.2s;
-  --transition-reverse-beat1: 0.6s;
-  --transition-reverse-beat2: 0.8s;
-
-  /* Reduced motion crossfade */
+  /* Hover, focus and press feedback (CSS transitions). Scripted motion —
+     entrances, the hero — takes its values from src/lib/motion.js instead
+     (docs/spec/08-motion.md §Values). */
   --transition-reduced: 150ms;
 }
 
+/* Phones get a slimmer bar (Scott, November 11, 2026). It was 64px here
+   while the bar itself came out 69px (44px controls plus 12px of padding
+   above and below), so it sat 5px over every page's clearance. Nav.css
+   now holds the phone bar to exactly this. */
 @media (max-width: 767px) {
   :root {
-    --gear-indicator-stroke: 2px;
+    --nav-bar-height: 52px;
   }
 }

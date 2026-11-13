@@ -1,0 +1,249 @@
+/* Shared styles for the four package pages, which each import this file.
+   Every page has the same four sections, on the homepage's alternating bands:
+
+   hero              red    eyebrow, h1, lead, pull, price, Book
+   what's included   beige  red cards (the numbered curriculum on Foundations,
+                            .lesson-included on the other three), the note
+   who it's for      red    .lesson-block__list
+   next steps        beige  Book CTA and cross-links (.lesson-next, globals.css)
+
+   The review quotes and the FAQ subset that sat between who it's for and
+   next steps came off all four pages on November 5, 2026, at Sam's asking.
+
+   Section headings use the site's shared .section-header scale. */
+
+/* ---------- Hero -------------------------------------------------------- */
+.lesson-hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  max-width: 900px;
+  margin-inline: var(--column-inset) auto;
+}
+
+.lesson-hero__headline {
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+  font-weight: 800;
+  max-width: 18ch;
+}
+
+.lesson-hero__lead {
+  color: var(--cream);
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 56ch;
+}
+
+/* The hero's one emotional beat — set apart from the lead, not repeated. */
+.lesson-hero__pull {
+  margin: 0;
+  color: var(--white);
+  font-size: 1.125rem;
+  line-height: 1.5;
+  font-weight: 600;
+  max-width: 44ch;
+}
+
+.lesson-hero__price {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lesson-hero__price-unit {
+  font-size: 0.35em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* Solid cream for AA contrast on the brand red — white-alpha blends
+     inherit the red's low-luminance G/B channels and keep failing 4.5:1. */
+  color: var(--cream);
+}
+
+/* ---------- Content blocks ---------------------------------------------- */
+.lesson-block__inner {
+  max-width: 900px;
+  margin-inline: var(--column-inset) auto;
+}
+
+/* Who it's for, on the red. */
+.lesson-block__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.lesson-block__list li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: var(--cream);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.lesson-block__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.625rem;
+  height: 2px;
+  background-color: var(--white);
+}
+
+/* The licence and car line under what's included, on the beige: a small
+   bordered utility line. --red-deep on the beige is 8.3:1. */
+.lesson-block__note {
+  margin: 1.25rem 0 0;
+  padding-left: 0.875rem;
+  border-left: 2px solid rgba(200, 16, 46, 0.35);
+  color: var(--red-deep);
+  font-size: var(--text-small);
+  line-height: 1.55;
+  max-width: 52ch;
+}
+
+/* ---------- Solid red cards on the beige band --------------------------- */
+/* What's included is a beige band, where the cards, like the homepage's
+   package cards, keep their own white type and stand out against it. Two
+   things change from the red ground: the titles are h3s that would otherwise
+   inherit the band's red and vanish into the card, so the card sets white,
+   and the card takes the review cards' soft warm shadow, since its white
+   hairline disappears on the beige. */
+.lesson-curriculum__item,
+.lesson-included__item {
+  color: var(--white);
+  box-shadow:
+    0 1px 0 rgba(74, 5, 16, 0.06),
+    0 12px 28px -16px rgba(74, 5, 16, 0.45);
+}
+
+/* ---------- Curriculum (Foundations: the numbered progression) ---------- */
+.lesson-curriculum {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  counter-reset: lesson;
+}
+
+.lesson-curriculum__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background-color: var(--red-deep);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lesson-curriculum__num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1;
+  /* Every number the same width, so the three titles start on one line:
+     "01" set narrower than "02" and pulled its title 8px left. */
+  font-variant-numeric: tabular-nums;
+  min-width: 1.3em;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+.lesson-curriculum__title {
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.125rem, 1.8vw, 1.375rem);
+  line-height: 1.15;
+}
+
+.lesson-curriculum__desc {
+  margin: 0;
+  color: var(--cream);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+/* ---------- Included grid (the other three packages) --------------------- */
+/* Unnumbered, since nothing here comes in an order. Confidence's cards carry
+   a skill and a line about it; Individual's and Group's carry one line each,
+   the placeholder inclusions still waiting on Sam, so they take .__line
+   rather than a heading. Two columns, or three when there are exactly three
+   cards, so Group's don't leave one alone on a second row. */
+.lesson-included {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.lesson-included:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lesson-included__item {
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background-color: var(--red-deep);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lesson-included__title {
+  /* Even lines, so a wrap lands between words, not after "low-". */
+  text-wrap: balance;
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.125rem, 1.8vw, 1.375rem);
+  line-height: 1.15;
+}
+
+.lesson-included__desc {
+  margin: 0;
+  color: var(--cream);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+.lesson-included__line {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.0625rem, 1.4vw, 1.125rem);
+  line-height: 1.35;
+  letter-spacing: var(--letter-tight);
+}
+
+/* .lesson-next (final CTA + cross-links) lives in globals.css — it's used
+   by the FAQ and Contact pages too, which don't load this stylesheet. */
+
+/* ---------- Responsive ---------------------------------------------------- */
+@media (max-width: 767px) {
+  .lesson-included,
+  .lesson-included:has(> :nth-child(3):last-child) {
+    grid-template-columns: 1fr;
+  }
+
+  /* Full-width cards on phones: even lines, so "low-pressure" isn't split
+     at its hyphen. Not at desktop, where the cards are narrow and balancing
+     moved the break onto the hyphen instead. */
+  .lesson-included__line {
+    text-wrap: balance;
+  }
+}

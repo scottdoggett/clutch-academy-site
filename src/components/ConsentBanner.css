@@ -37,6 +37,7 @@
   appearance: none;
   border: 1px solid transparent;
   border-radius: 0.5rem;
+  min-height: 44px;
   padding: 0.5rem 1rem;
   font-family: var(--font-display);
   font-weight: 700;

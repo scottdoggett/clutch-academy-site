@@ -1,0 +1,243 @@
+// The layouts in layouts/ turned into something to draw and something to
+// check: the road layer's pieces, and the headline clearance rule
+// (docs/spec/hero-drive.md §Keeping clear of the headline).
+//
+// Pure, like graph.js. The layout JSON is passed in rather than imported, so
+// Node's test runner and the Next bundler both load this file the same way.
+
+import { CONFIG } from './config.js'
+import { buildGraph, checkGraph, roadsFor } from './graph.js'
+
+// ---------- Clearance --------------------------------------------------
+
+// The strip of the box a segment's road covers, px, including the half
+// width past each end that its junction squares cover.
+export function segmentBand(seg) {
+  const h = seg.width / 2
+  return {
+    x0: Math.min(seg.a.x, seg.b.x) - h,
+    y0: Math.min(seg.a.y, seg.b.y) - h,
+    x1: Math.max(seg.a.x, seg.b.x) + h,
+    y1: Math.max(seg.a.y, seg.b.y) + h,
+  }
+}
+
+// Live segments whose road comes closer than `clearance` px to `rect`, the
+// headline block in the same box. Exactly `clearance` away is fine.
+export function offenders(graph, rect, clearance = CONFIG.roads.clearance) {
+  return graph.segments.filter((seg) => {
+    if (seg.hidden) return false
+    const b = segmentBand(seg)
+    return (
+      b.x0 < rect.x1 + clearance &&
+      b.x1 > rect.x0 - clearance &&
+      b.y0 < rect.y1 + clearance &&
+      b.y1 > rect.y0 - clearance
+    )
+  })
+}
+
+// The runtime rule: any segment too close to the headline is hidden, one at
+// a time and in id order, but only if the map still passes every check in
+// checkGraph() without it. Anything that can't go stays, and is reported.
+//
+// wide.json keeps every junction off the headline's envelope, so a segment
+// that crosses it runs from junction to junction and hiding it never strands
+// a stub. At the sizes the tests require, nothing is hidden at all.
+export function resolveClearance(layout, { width, height, copy, clearance = CONFIG.roads.clearance }) {
+  const full = buildGraph(layout, { width, height })
+  const bad = offenders(full, copy, clearance)
+    .map((s) => s.id)
+    .sort()
+  let hidden = []
+  const blocked = []
+  for (const id of bad) {
+    const trial = [...hidden, id]
+    const problems = checkGraph(buildGraph(layout, { width, height, hidden: trial }), layout)
+    if (problems.length) blocked.push(id)
+    else hidden = trial
+  }
+  const graph = hidden.length ? buildGraph(layout, { width, height, hidden }) : full
+  return { hidden, blocked, graph }
+}
+
+// ---------- Room for a car -----------------------------------------------
+// In a short enough window, like a laptop browser shrunk down or a phone on
+// its side (both over 768px wide, so both get this map), the blocks get so
+// short that a lane can't hold a car. Since the uniform grid (October 2026)
+// that takes a window shorter than any the tests record; the merged map's
+// side street got there at 600px. The crossings at either end run into
+// each other, and the traffic jams: a car let into a lane shorter than
+// itself stops with its tail in the junction behind and holds it for good.
+//
+// So a second runtime rule runs after the headline check. While any lane is
+// too short, it hides one road, and only if the map still passes every
+// check in checkGraph() without it and has fewer short lanes: first a side
+// street meeting a short lane, since hiding it turns its junctions into
+// plain straight road, then the short segment itself. At every size the
+// tests record from 600px of window height up, nothing is hidden.
+
+// The shortest a lane may be: a car and the clearance it keeps from the
+// junction behind (CONFIG.traffic.boxClear), at the map's zoom.
+export function laneMinimum(layout) {
+  return (CONFIG.car.length + CONFIG.traffic.boxClear) * CONFIG.world.pxPerM * roadsFor(layout).zoom
+}
+
+const byId = (p, q) => (p.id < q.id ? -1 : p.id > q.id ? 1 : 0)
+
+// Both runtime rules. copy is the headline block in the layout's box; left
+// out, only the room rule runs. tight lists any lane still too short once
+// nothing more can safely go.
+export function resolveMap(layout, { width, height, copy, clearance }) {
+  const first = copy ? resolveClearance(layout, { width, height, copy, clearance }) : null
+  let hidden = first?.hidden ?? []
+  let graph = first?.graph ?? buildGraph(layout, { width, height })
+  const min = laneMinimum(layout)
+  const shortOf = (g) => g.lanes.filter((l) => l.path.len < min)
+  let short = shortOf(graph)
+  while (short.length) {
+    const segs = [...new Set(short.map((l) => l.seg))].sort(byId)
+    const ends = new Set(segs.flatMap((sg) => [sg.a, sg.b]))
+    const sides = graph.segments.filter((sg) => !sg.hidden && sg.kind === 'side' && (ends.has(sg.a) || ends.has(sg.b)))
+    let next = null
+    for (const sg of [...sides.sort(byId), ...segs]) {
+      const trial = [...hidden, sg.id]
+      const g = buildGraph(layout, { width, height, hidden: trial })
+      if (checkGraph(g, layout).length || shortOf(g).length >= short.length) continue
+      next = { hidden: trial, graph: g }
+      break
+    }
+    if (!next) break
+    ;({ hidden, graph } = next)
+    short = shortOf(graph)
+  }
+  return { hidden, blocked: first?.blocked ?? [], tight: short.map((l) => l.id), graph }
+}
+
+// ---------- Drawing ------------------------------------------------------
+// The road layer (RoadLayer.jsx) is plain positioned elements, each placed at
+// a fraction of its box plus a pixel offset, e.g. left: calc(59.5% - 20px).
+// That keeps road widths, ticks and crossings in exact CSS px at any size,
+// with no JavaScript. A stretched SVG can't do that: it can't put a crossing
+// "3px clear of this junction, the width of the road", and it can't end a
+// road's ticks cleanly at the junction box.
+//
+// Every piece has x, y, w and h, each [fraction, px]: left is x[0] of the
+// box's width plus x[1] px, top is y[0] of its height plus y[1] px, and so on.
+
+const JUNCTION = new Set(['cross', 'tee', 'corner'])
+
+// How far a block corner's round reaches under its two roads, px.
+export const SEAM = 1
+
+export function roadPieces(layout, roads = roadsFor(layout)) {
+  // At 1×1, node positions come out as fractions of the box, while junction
+  // boxes, which are made of road widths, are still px.
+  const graph = buildGraph(layout, { roads })
+  const bands = []
+  const boxes = []
+  const ticks = []
+  const walks = []
+  const { gap: G, depth: D } = roads.crosswalk
+  const t = roads.tick.width
+
+  // How far a road's centre ticks stop short of node n along `axis`: the
+  // junction box, plus the crossing in front of it at a cross or a T.
+  const clear = (n, axis) =>
+    (JUNCTION.has(n.kind) ? (axis === 'h' ? n.hx : n.hy) : 0) + (n.stop ? G + D : 0)
+
+  for (const seg of graph.segments) {
+    const h = seg.axis === 'h'
+    const [a, b] = (h ? seg.a.nx < seg.b.nx : seg.a.ny < seg.b.ny) ? [seg.a, seg.b] : [seg.b, seg.a]
+    const half = seg.width / 2
+    const s0 = clear(a, seg.axis)
+    const s1 = clear(b, seg.axis)
+    if (h) {
+      bands.push({ kind: 'band', seg: seg.id, x: [a.nx, 0], y: [a.ny, -half], w: [b.nx - a.nx, 0], h: [0, seg.width] })
+      ticks.push({ kind: 'tick', axis: 'h', seg: seg.id, x: [a.nx, s0], y: [a.ny, -t / 2], w: [b.nx - a.nx, -s0 - s1], h: [0, t] })
+    } else {
+      bands.push({ kind: 'band', seg: seg.id, x: [a.nx, -half], y: [a.ny, 0], w: [0, seg.width], h: [b.ny - a.ny, 0] })
+      ticks.push({ kind: 'tick', axis: 'v', seg: seg.id, x: [a.nx, -t / 2], y: [a.ny, s0], w: [0, t], h: [b.ny - a.ny, -s0 - s1] })
+    }
+  }
+
+  // The junction box, white. Mostly it sits on road that's already white;
+  // at a corner it fills the outside of the bend.
+  for (const n of graph.nodes) {
+    if (!JUNCTION.has(n.kind)) continue
+    boxes.push({ kind: 'box', node: n.id, x: [n.nx, -n.hx], y: [n.ny, -n.hy], w: [0, 2 * n.hx], h: [0, 2 * n.hy] })
+  }
+
+  // Zebra crossings: on every road into a cross or a T, the full width of the
+  // road, just clear of the box. The stripes run the way the road does.
+  // Corners and straight runs have none, since traffic doesn't stop there.
+  for (const n of graph.nodes) {
+    if (!n.stop) continue
+    for (const [dir, seg] of Object.entries(n.arms)) {
+      const half = seg.width / 2
+      let at
+      if (dir === 'w') at = { x: [n.nx, -n.hx - G - D], y: [n.ny, -half], w: [0, D], h: [0, seg.width] }
+      else if (dir === 'e') at = { x: [n.nx, n.hx + G], y: [n.ny, -half], w: [0, D], h: [0, seg.width] }
+      else if (dir === 'n') at = { x: [n.nx, -half], y: [n.ny, -n.hy - G - D], w: [0, seg.width], h: [0, D] }
+      else at = { x: [n.nx, -half], y: [n.ny, n.hy + G], w: [0, seg.width], h: [0, D] }
+      walks.push({ kind: 'walk', axis: seg.axis, seg: seg.id, node: n.id, ...at })
+    }
+  }
+
+  // Rounded block corners: a square the size of the round in each corner
+  // between two roads at a junction, white less a quarter circle
+  // (RoadLayer.css). It goes when either of its two roads does. Each one
+  // reaches SEAM px under its two roads: where a road edge falls between
+  // device pixels, as at 375px on a 3x phone, the round and the road round
+  // to different pixels, and an exact fit leaves a red hairline between
+  // them.
+  const fillets = []
+  // A whole number of px, so with every edge on a whole pixel (RoadLayer.css)
+  // the curve ends exactly on its roads' edges: 12px, or 7px on the phone
+  // map rather than 7.2.
+  const r = Math.round(roads.fillet)
+  for (const n of graph.nodes) {
+    if (!JUNCTION.has(n.kind)) continue
+    for (const [a, b] of [['n', 'e'], ['e', 's'], ['s', 'w'], ['w', 'n']]) {
+      if (!n.arms[a] || !n.arms[b]) continue
+      const east = a === 'e' || b === 'e'
+      const south = a === 's' || b === 's'
+      fillets.push({
+        kind: 'fillet',
+        corner: (south ? 's' : 'n') + (east ? 'e' : 'w'),
+        node: n.id,
+        seg: n.arms[a].id,
+        seg2: n.arms[b].id,
+        x: [n.nx, east ? n.hx - SEAM : -n.hx - r],
+        y: [n.ny, south ? n.hy - SEAM : -n.hy - r],
+        w: [0, r + SEAM],
+        h: [0, r + SEAM],
+      })
+    }
+  }
+
+  return { bands, boxes, ticks, walks, fillets }
+}
+
+// A piece's box in px, in a layout box of width × height.
+export function pieceRect(p, width, height) {
+  const x = p.x[0] * width + p.x[1]
+  const y = p.y[0] * height + p.y[1]
+  return { x0: x, y0: y, x1: x + p.w[0] * width + p.w[1], y1: y + p.h[0] * height + p.h[1] }
+}
+
+// Which pieces come off once the headline check has hidden some segments:
+// the hidden segments' roads, ticks and crossings; a junction box left on a
+// straight run or on nothing; and a crossing at a node that's no longer a
+// stop, like a T that's lost its stem.
+export function hideRule(graph) {
+  const segs = new Set(graph.segments.filter((s) => s.hidden).map((s) => s.id))
+  const noBox = new Set(graph.nodes.filter((n) => n.kind === 'through' || n.kind === 'unused').map((n) => n.id))
+  const noStop = new Set(graph.nodes.filter((n) => !n.stop).map((n) => n.id))
+  return ({ kind, seg, seg2, node }) =>
+    kind === 'box'
+      ? noBox.has(node)
+      : kind === 'walk'
+        ? segs.has(seg) || noStop.has(node)
+        : segs.has(seg) || segs.has(seg2)
+}

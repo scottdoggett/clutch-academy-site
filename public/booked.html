@@ -18,13 +18,12 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
 
     <!-- Google Analytics 4 + Google Ads (gtag.js) with Consent Mode v2
-         (default-deny), mirroring the main site (index.html). This page is the
-         post-payment confirmation, so after the pageview the conversion script
-         at the end of <body> also fires a `purchase` (GA4) and a Google Ads
-         conversion. gtag queues under default-deny and flushes once the
-         visitor's stored consent (set on the main site) is read as granted. No
-         __PRERENDER__ guard is needed — booked.html ships verbatim from /public
-         and is never run through the prerender snapshot. -->
+         (default-deny), mirroring the main site (src/app/layout.jsx). This
+         page is the post-payment confirmation, so after the pageview the
+         conversion script at the end of <body> also fires a `purchase` (GA4)
+         and a Google Ads conversion. gtag queues under default-deny and
+         flushes once the visitor's stored consent (set on the main site) is
+         read as granted. booked.html ships verbatim from /public. -->
     <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
@@ -55,7 +54,7 @@
       } catch (_) {}
       gtag('js', new Date())
       gtag('config', 'G-5E5GEN5N59', { anonymize_ip: true })
-      // Google Ads conversion tag — same library, second config (see index.html).
+      // Google Ads conversion tag — same library, second config (see src/app/layout.jsx).
       gtag('config', 'AW-18196514948')
     </script>
     <script
@@ -75,7 +74,7 @@
         --red-deep: #8a0a1f;
         --cream: #fdf8f2;
         --white: #ffffff;
-        --chrome: #d9d9d9;
+        --chrome: #e4e4e4;
         --black: #0a0a0a;
         --font-display: 'Plus Jakarta Sans', sans-serif;
         --font-body: 'Inter', sans-serif;
@@ -378,15 +377,14 @@
           </li>
           <li>
             <span>
-              <strong>Payment's handled.</strong> You paid securely at booking,
-              so there's nothing to settle in person.
+              <strong>Payment's handled.</strong> You paid when you booked, so
+              there's nothing to settle in person.
             </span>
           </li>
           <li>
             <span>
-              <strong>Sam will be in touch.</strong> Your instructor reaches out
-              before the lesson to confirm details and answer any last
-              questions.
+              <strong>We'll be in touch.</strong> Expect a message before
+              the lesson to confirm details and answer any last questions.
             </span>
           </li>
         </ul>
@@ -397,15 +395,15 @@
         <ul class="steps">
           <li>
             <span>
-              <strong>Bring your licence.</strong> A valid G2 or G license is
-              required to get behind the wheel.
+              <strong>Bring your license.</strong> You need a valid G2 or G
+              license to get behind the wheel.
             </span>
           </li>
           <li>
             <span>
-              <strong>Dress for the pedals.</strong> Comfortable clothes and
-              thin-soled shoes — no sandals or open-toe — so you can feel the
-              clutch.
+              <strong>Dress for the pedals.</strong> Wear comfortable clothes
+              and thin-soled shoes so you can feel the clutch. No sandals or
+              open-toe shoes.
             </span>
           </li>
           <li>
@@ -417,7 +415,9 @@
         </ul>
         <p class="fineprint">
           Need a different time? Use the reschedule link in your confirmation
-          email. Cancellations are free up to 24 hours after booking your lesson.
+          email. You get a full refund if you cancel within 24 hours of booking
+          and at least 24 hours before your lesson starts. Otherwise your
+          booking is non-refundable.
         </p>
       </section>
 
@@ -574,8 +574,8 @@
         var CONSENT_KEY = 'clutch.consent.v1'
         var FIRED_PREFIX = 'clutch.booked.fired.'
         var CURRENCY = 'CAD'
-        // The 60-minute individual lesson is the entry price, so it's the safe
-        // default when the event name is missing or unrecognized.
+        // The 60-minute individual lesson is the most common booking, so it's
+        // the safe default when the event name is missing or unrecognized.
         var DEFAULT_VALUE = 90
         var META_PIXEL_ID = '2845684255788584'
         var TIKTOK_PIXEL_ID = 'D87LSEBC77UENKCNER8G'
@@ -659,18 +659,18 @@
 
         // PENDING: confirm the exact Calendly event-type names with Sam and
         // tighten this mapping. Until then we keyword-match the four packages
-        // (individual 60-min $90 / 3-pack $240 / 5-pack "Complete Confidence"
-        // $400 / group 2-hour $180) and fall back to $90. They all open one
-        // Calendly page today, so the event name is the only signal of which
-        // package was booked.
+        // (individual 60-min $90 / 3-pack $240 / 5-pack "Complete Manual
+        // Confidence" $400 / group 2-hour $180) and fall back to $90. They
+        // all open one Calendly page today, so the event name is the only
+        // signal of which package was booked.
         function priceForEvent(name) {
           var n = (name || '').toLowerCase()
           if (!n) return DEFAULT_VALUE
-          // Group first, so a group event whose name mentions a package can't
-          // fall through to the "pack" rule and misprice the conversion.
+          // Group is tested first, so a group event whose name mentions a
+          // package can't fall through to the "pack" rule and misprice it.
           if (/group|\b2\s*-?\s*h|two[\s-]*hour|120/.test(n)) return 180
-          // 5-lesson "Complete Confidence Package". Checked before the "pack"
-          // rule, which would otherwise swallow it.
+          // 5-lesson "Complete Manual Confidence". Checked before the "pack"
+          // rule, which would otherwise swallow a "5-Pack" name.
           if (/confidence|highway|five|\b5\b/.test(n)) return 400
           if (/3|three|pack/.test(n)) return 240 // private 3-pack
           return DEFAULT_VALUE // 60-minute individual lesson

@@ -1,0 +1,265 @@
+# 03 — Content & Pricing
+
+What each page says, what the packages cost, and the rules that keep copy from
+drifting.
+
+## Pricing — current, winter rates from October 5, 2026
+
+All prices **+ HST**. Keep that explicit on every price display.
+
+| Package | Duration | Price | Route |
+|---|---|---|---|
+| Individual Manual Lesson | 1 hr | **$90** | `/lessons/individual` |
+| Manual Foundations Package | 3 × 1 hr | **$240** | `/lessons/manual-foundations` |
+| Complete Manual Confidence Package | 5 × 1 hr | **$400** | `/lessons/manual-confidence` |
+| Group Manual Lessons | 2 hr | **$180** | `/lessons/group` |
+
+**Savings maths** against single lessons, stated in `public/llms.txt` —
+recompute these if the individual rate ever changes:
+
+- Foundations: 3 × $90 = $270, less $240 → **save $30**
+- Confidence: 5 × $90 = $450, less $400 → **save $50**
+
+At $80 a lesson, the three- and five-packs now cost the same per lesson.
+The package heroes say "$80 a lesson"; the homepage and hub cards put "$80
+each" in the card's one-liner, which keeps their price rows level with the
+single and group cards. The savings above against single lessons appear
+only in `llms.txt` while the fall sale runs; the pages show the sale's
+savings instead (§The fall sale).
+
+### The fall sale (on `overhaul` from October 7, 2026)
+
+Ported from the live site (`75e2646`, `a1bd04b`, `4eff398` on `main`): the
+lower prices are presented as a limited-time sale.
+
+- **The banner** above the nav: "FALL SALE · We've downshifted our prices
+  for a limited time. Lessons now from $90." and, beside a price tag, "Save
+  up to $70 on lesson packages" ($470 to $400, the biggest drop). It slides
+  away on scroll. No end date yet; add one to the copy when Sam sets it.
+  On phones it's two centred rows, the flag and the pitch and then the
+  price and the saving. Below 440px the pitch goes, leaving "FALL SALE ·
+  Lessons now from $90." over the saving (October 2026, `overhaul` only).
+- **Struck-out old prices and a Save tag** beside every price: homepage
+  cards, hub cards and the four package heroes. $110, $300, $470 and $220,
+  what each package cost until October 5, so Save $20, $60, $70 and $40.
+  At desktop the price, old price and tag share a line; on phones the tag
+  sits under the price and its unit, so the CTA beside them keeps its room.
+- **One saving per card.** The tags replaced the savings against single
+  lessons on October 7, at Scott's word: the "Save $50" corner badge on
+  Confidence's homepage card and the heroes' "save $30" / "save $50" are
+  gone. The only corner badge left is "Recommended", on Confidence since
+  November 5, 2026.
+- **To end the sale**, set `FALL_SALE` to `false` in `src/lib/sale.js`. The
+  banner and every struck-out price go, and the header clearance drops back
+  to the nav.
+- ⚠️ **Per hour, the old prices weren't higher.** They were for 75-minute
+  lessons and a 2.5-hour group: $110 for 75 minutes is $88 an hour against
+  today's $90, the old five-pack was $75 an hour against $80, and the group
+  $88 against $90. Only Foundations is level ($80). The struck-out prices
+  are real, but "Save up to $70" compares different lesson lengths. A
+  question for Sam.
+
+### Names, labels and claims (October 7, 2026)
+
+- **One name per package, everywhere a visitor reads it:** Individual Manual
+  Lesson, Manual Foundations Package, Group Manual Lessons, Complete Manual
+  Confidence Package. That includes the footer, breadcrumbs, cross-links and
+  the Offer schema. Short forms only where a length limit forces them (Ads
+  sitelinks, ≤25 characters).
+- **One featured package: Complete Manual Confidence** (Sam, November 5,
+  2026; it was Foundations from October 7 until then). It has the
+  "Recommended" badge, the highlighted card and the white button on the hub
+  and homepage cards, "Recommended" in its page's eyebrow, and the only
+  corner badge on any card. There is no "Best Value" (both
+  packs cost $80 a lesson), no "Most Popular" (there's no booking data
+  behind it, and neither label was ever on the live site) and no "flagship"
+  or "premium".
+- **Confidence starts from zero** (Scott, October 7): someone who has never
+  driven manual can book it, and its first lessons cover the Foundations
+  basics. The page says so in its lead, skills note, closing eyebrow ("From
+  zero to second nature") and meta description. Its hero eyebrow said
+  "Starts From Zero" until November 5, 2026, when "Recommended" took that
+  slot.
+- **Confidence is pitched on technique, not destinations** (Sam, November 5,
+  2026): "Five hours to build your skills and refine your technique", with
+  two extra hours of coached practice beyond the basics, smoother downshifts
+  and rev-matching, gear selection, shift timing and clutch control. The
+  old promise of downtown, highway and rush-hour driving is gone from every
+  page, the schema and `llms.txt`. Don't bring it back.
+- **Sam isn't named as the instructor outside `/about`** (Sam, November 5,
+  2026). He wants Clutch Academy to read as more than a one-man show, and
+  may hire an instructor. Copy, meta descriptions, alt text and schema say
+  "we" or "your instructor". `/about` names him as founder and lead
+  instructor. The homepage's "A message from the founder" card is his own
+  signed note, so his name and first person stay there. The homepage
+  schema lists him as `founder` only, no longer as an employee. Customer
+  quotes stay as written.
+- **Don't name the car, and make no claim about instructor licensing,
+  insurance or an instructor brake** (Scott, October 7). The copy says "a
+  manual hatchback" and stops there.
+- The Google rating (`src/lib/googleReviews.js`) shows in the homepage's
+  reviews band, "5.0 · 44 reviews" on October 7, 2026. Update the count
+  there. It was tried in the hero, beside the buttons, and taken out the
+  same day at Scott's word: keep it out of the hero.
+
+### History, so the diff makes sense
+
+The pre-August-1 offering was 60-minute lessons at $90, a $240 three-pack, a
+$400 five-pack, and group lessons at $90 (1 hr) / $180 (2 hr). On August 1,
+2026 lessons went to 75 minutes at $109 / $299 / $469 with a single 2.5-hour
+group at $219 (`308317c` on `main`, ported to `overhaul` August 16), and on
+September 21 those were rounded up to $110 / $300 / $470 / $220. A dated
+banner announced the August switch; it auto-expired and was removed.
+
+On October 5, 2026 winter rates took prices and lesson length back to the
+pre-August offering, with one 2-hour group at $180 (`f8645c4` on `main`,
+ported to `overhaul` October 6). `main` announced it with a "Winter rates"
+banner that slides away on scroll (`a82df9d`), renamed "Fall sale"
+(`75e2646`), and `overhaul` took the banner on October 7 (§The fall sale).
+
+The group offering is **one option**, a 2-hour session. The 1-hour group
+retired on August 1 hasn't come back; if it does, it is an addition.
+
+### Where prices appear
+
+Changing a price means changing all of these:
+
+- `src/components/home/PackagesTeaser.jsx` — homepage teaser cards
+- `src/app/manual-driving-lessons/page.jsx` — the `PACKAGES` array
+- All four `src/app/lessons/*/page.jsx` — hero price lines and meta
+  descriptions
+- "$80 each" / "$80 a lesson" on the two packs: the homepage and hub cards'
+  one-liners and the Foundations and Confidence heroes
+- `src/lib/sale.js` — `PRICE`, from which the sale's savings are worked out
+- `src/components/AnnouncementBanner.jsx` — "Lessons now from $90" and
+  "Save up to $70"
+- `src/app/page.jsx` — the homepage meta, Open Graph and Twitter
+  descriptions ("from $90"), and the `Offer` entries in the JSON-LD graph
+- `public/booked.html` — `priceForEvent()` and `DEFAULT_VALUE`, which set the
+  conversion value reported to GA4, Ads, Meta, and TikTok
+- `public/llms.txt` — the services list
+- Sam's Calendly event names, prices, and descriptions (outside the repo)
+- Google Ads price assets (see `../google-ads-mapping.md`)
+
+⚠️ **`booked.html` order matters.** The group rule is tested *first*, so a
+group event whose name mentions a package can't fall through to the `pack`
+rule and report $240 for a $180 group booking. (It first went in to stop a
+`"2.5"` in the 2.5-hour group's name matching the five-pack's `\b5\b`.)
+
+## Per-page content
+
+### `/` Homepage
+Hero → Reviews → How It Works → package teasers → About teaser. Positioning and
+social proof up top; the detail lives on the package pages. The About teaser
+links out with "How Clutch Academy started".
+
+### `/manual-driving-lessons` Lessons hub
+The comparison page and the internal-linking spine. It opens **straight on the
+packages** — the intro hero with the training car was removed in August 2026, so
+"Four ways to learn" is the page's `<h1>`. Then: all four packages as cards
+(Complete Manual Confidence flagged *Recommended*, the only badge, since
+November 5, 2026), a "Pick by
+where you are today" chooser that routes by situation rather than by price, and
+a closing Book CTA.
+
+The chooser is four plain sentences on gear-lever bullets, each stating a
+situation and linking the package that answers it. It was briefly four cards with
+their own Book Now and See More buttons (August 18, 2026); that read as heavy for
+a signpost and was reverted to text on August 20.
+
+### `/lessons/*` Package pages
+Each one, in the same order since September 28, 2026: breadcrumbs → hero with
+price and Book CTA → what's included → who it's for → next steps. (This file used to put who
+it's for first; only `/lessons/individual` did, and two of the other three
+led with what's included, so that order won.) Until November 5, 2026 a band
+of real Google review quotes and a five-question FAQ subset ("Quick
+answers") sat before next steps. Sam asked for both to go on Individual,
+Foundations and Confidence, and Group lost them too so the four pages keep
+one shape. Don't add them back without asking him.
+These are Ads destinations; they must stand alone for someone who has never seen
+the homepage. (The review strip that used to close them was removed sitewide in
+August 2026 — see `02-architecture.md`.)
+
+### `/about`
+Since November 5, 2026: why students choose Clutch Academy (five road signs,
+the page's h1), the common-fears section, Sam's origin story, then package
+links. The origin story is **in his own words**, supplied in the Site 2.0
+review doc, August 2026. Do not rewrite it without asking him. It led the page
+until Sam asked for it to move down to just above the package links, and the
+"Why Learn Manual Driving" section was removed at the same time.
+
+### `/faq`
+Renders the full FAQ array and emits the FAQPage schema.
+
+### `/contact`
+Booking CTA, contact card (text or call, email, Instagram, Facebook), and the
+payment & cancellation block.
+
+## FAQ — the single source
+
+`src/lib/faqs.js` is the only place FAQ copy exists. It renders `/faq`,
+generates the FAQPage JSON-LD, and provides `/contact`'s cancellation text.
+**Never fork this copy into a page.** Until November 5, 2026 it also fed each
+package page a five-question subset. Those sections are gone (§Package
+pages), and the table below records what they held.
+
+Ten entries, by id: `license`, `never-driven`, `synonyms`, `location`,
+`how-many`, `wear`, `pay`, `cancellation`, `car`, `gift`.
+
+Per-page subsets, until November 5, 2026:
+
+| Page | Subset |
+|---|---|
+| `/lessons/individual` | license, how-many, car, wear, pay |
+| `/lessons/manual-foundations` | never-driven, how-many, location, car, cancellation |
+| `/lessons/manual-confidence` | synonyms, location, pay, cancellation, gift |
+| `/lessons/group` | license, never-driven, wear, pay, gift |
+
+To add an FAQ: append to the array. The page and the structured data both
+follow.
+
+The `synonyms` entry ("What's the difference between manual, stick shift, and standard?")
+is there for search as much as for students; people search all three terms.
+
+## Payment & cancellation
+
+**Payment:** collected securely at booking via Stripe — nothing to settle in
+person. **All major credit and debit cards are accepted.** E-transfer and PayPal
+were removed as accepted methods in August 2026; if you find that wording
+anywhere, it's stale.
+
+**Cancellation** (Sam's final wording, November 5, 2026): "To receive a full
+refund, you must cancel within 24 hours of making your booking and at least
+24 hours before your lesson's scheduled start time. If either condition isn't
+met, your booking is non-refundable." He bolded "and". The site renders it
+plain, because FAQ answers are plain strings. It's in `faqs.js`, with
+`booked.html` and `llms.txt` saying the same thing in their own words.
+
+## Copy rules
+
+1. **Never invent content.** No fabricated reviews, bios, policies, guarantees,
+   or inclusions. Flag the gap `PENDING` instead.
+2. **Every testimonial is a real Google review.** Quoted verbatim, attributed to
+   the reviewer's name as it appears on the profile. No review on the site is
+   presented as describing a group lesson, because none of them does. Since
+   October 9, 2026 the homepage strip has every review with words in it
+   (`src/lib/reviews.js` says how long ones are cut and why); a card shows
+   the review's own stars.
+3. **Prices are always "+ HST".**
+4. **Use the synonyms.** Manual, stick shift, and standard all appear
+   deliberately.
+5. **Sam's words stay Sam's words.** Where he supplied copy — the About story —
+   edit only with his sign-off.
+6. **No em dashes in site copy, and plain words** (Scott, October 9, 2026).
+   Every body paragraph, bullet, FAQ answer, meta description and alt text
+   went through one pass that took out the em dashes and the filler
+   ("tailored", "genuinely", "supportive environment", "not just X, but
+   Y"). Use a period or a comma. Write short, warm and in the second
+   person, and say what happens. Scott cuts quips rather than polishing
+   them: How It Works' lead, "Four steps, and you only have to think about
+   the first two", went altogether. Exempt: customer quotes (rule 2) and
+   Sam's words (rule 5). Headings, page titles and eyebrows weren't part
+   of the pass. Five page titles (`/faq`, the Foundations and Confidence
+   pages, `privacy.html`, `booked.html`) still carry one, waiting on Scott.
+   The hub's eyebrow ("Manual · Stick Shift · Standard — same lessons") had
+   one too, until Scott had it removed on November 11, 2026.

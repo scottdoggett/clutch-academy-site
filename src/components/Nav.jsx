@@ -1,40 +1,50 @@
+'use client'
+
 import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import BookButton from './BookButton'
 import './Nav.css'
 
+// Top-level pages only (02-architecture.md §Routes); the lessons hub links out
+// to the four package pages, and the footer lists the full sitemap.
+// `section` lists the path prefixes a link owns. Lessons owns the hub *and*
+// every package page under /lessons/*, so the nav underline stays lit while a
+// visitor is reading a package's full details. Defaults to the link's own href.
 const NAV_LINKS = [
-  { label: 'Home', href: '#home', gear: 1 },
-  { label: 'Reviews', href: '#reviews', gear: 2 },
-  { label: 'Packages', href: '#packages', gear: 4 },
-  { label: 'About', href: '#about', gear: 5 },
-  { label: 'FAQ', href: '#faq', gear: 6 },
-  { label: 'Contact', href: '#book', gear: 'R' },
+  { label: 'Home', href: '/' },
+  {
+    label: 'Lessons',
+    href: '/manual-driving-lessons',
+    section: ['/manual-driving-lessons', '/lessons'],
+  },
+  { label: 'About', href: '/about' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
 ]
 
-export default function Nav({ currentGear = 1, onNavigate, onBookNow }) {
+// Home ('/') only ever matches exactly — the `p + '/'` guard means it can't
+// swallow every route.
+function inSection(pathname, link) {
+  return (link.section ?? [link.href]).some(
+    (p) => pathname === p || pathname.startsWith(p + '/')
+  )
+}
+
+export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
-
-  const handleClick = (e, gear) => {
-    e.preventDefault()
-    setMenuOpen(false)
-    if (onNavigate) onNavigate(gear)
-  }
-
-  const handleBookNow = (e) => {
-    e.preventDefault()
-    setMenuOpen(false)
-    if (onBookNow) onBookNow()
-  }
+  const pathname = usePathname()
 
   return (
     <nav className="nav" aria-label="Primary">
-      <a
-        href="#home"
+      <Link
+        href="/"
         className="nav__brand"
-        aria-label="Clutch Academy — home"
-        onClick={(e) => handleClick(e, 1)}
+        aria-label="Clutch Academy home"
+        onClick={() => setMenuOpen(false)}
       >
         <img src="/logo.svg" alt="Clutch Academy" className="nav__logo" />
-      </a>
+      </Link>
 
       <button
         className="nav__toggle"
@@ -52,21 +62,21 @@ export default function Nav({ currentGear = 1, onNavigate, onBookNow }) {
       >
         {NAV_LINKS.map((link) => (
           <li key={link.href} className="nav__item">
-            <a
+            <Link
               href={link.href}
-              className={`nav__link ${currentGear === link.gear ? 'nav__link--active' : ''}`}
-              aria-current={currentGear === link.gear ? 'true' : undefined}
-              onClick={(e) => handleClick(e, link.gear)}
+              className={`nav__link ${inSection(pathname, link) ? 'nav__link--active' : ''}`}
+              /* aria-current stays exact: on a package page the visitor is in
+                 the Lessons section but not *on* the Lessons hub page. */
+              aria-current={pathname === link.href ? 'page' : undefined}
+              onClick={() => setMenuOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
 
-      <button className="nav__book" onClick={handleBookNow}>
-        Book Now
-      </button>
+      <BookButton source="nav" className="nav__book" />
     </nav>
   )
 }

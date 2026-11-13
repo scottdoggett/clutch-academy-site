@@ -1,123 +1,231 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) working in this repository.
 
 # Clutch Academy Website
 
-Manual transmission driving school in Toronto. Single-page React site with a gear-shift animation metaphor. The original launch target was **May 1, 2026**; that date has now passed, so treat ongoing work as polish/iteration on a live or near-live build rather than greenfield scaffolding.
+Manual transmission driving school in Toronto. The site has been **rebuilt**
+from a single-page React/Vite/GSAP brochure into a conventional, SEO-focused,
+multi-page site on **Next.js 16 (App Router, React 19)**.
 
-## Spec vs. implementation
+## ⚠️ Two branches, two live deployments
 
-The build specification lives in `docs/spec/` and is still useful for *intent* (audience, content, brand voice, pending assets). Several decisions in the spec have been **superseded by the current code** — when the two disagree, the code wins. Notable drift to be aware of before quoting the spec:
+This repo builds **two different sites with two different frameworks**, each on
+its own Vercel project:
 
-- **Gear → section mapping has changed.** The spec's earlier ordering put About at gear 2 and HowItWorks at gear 3. The shipped order is `Home → Reviews → HowItWorks → Packages → About → Faq → Reverse` (see "Architecture" below). Reviews was previously at gear 5 — moving it forward to gear 2 was a deliberate ordering decision (social proof up high).
-- **Payment is now collected at booking time**, not in person. The Reverse section ("Payment collected at time of booking, not in person — All cards accepted"), FAQ #6 ("Payment is securely collected at the time of your booking using Stripe…"), and the Packages lead ("Pay securely at booking.") all reflect this.
-- **The Reverse contact form was removed** (commit `eea4250`) and replaced with a contact info card (phone, email, IG, FB). `index.html` still contains the hidden Netlify form-registration stub; it is unused by the rendered app.
-- **No analytics is wired up.** The spec recommends GA4; the code references it only in a comment in `useCalendly.js`.
+| Branch | Stack | Deployment |
+|---|---|---|
+| `main` | Vite + GSAP, single-page | **`clutchacademy.ca`** — the real, customer-facing site |
+| `overhaul` | Next.js 16, multi-page | A separate Vercel project, for showing the rebuild to reviewers |
 
-When loading spec files, start with `docs/spec/README.md` for the routing table and decision-state legend (✅ decided / 🟡 recommended / ❓ open / 📎 pending asset), then load only the file(s) relevant to the task.
+This is deliberate: `main` stays live and unbroken while the rebuild is
+reviewed. **Work on `overhaul`. Never commit directly to `main`.**
 
-## Stack
+`npm install` after switching branches — the dependency trees are different.
 
-- React 19 + Vite 8
-- GSAP 3 with `@gsap/react` (`useGSAP`), `ScrollTrigger`, and `ScrollToPlugin` — registered in `src/main.jsx`, gated behind `window.__PRERENDER__` so the build-time prerender captures clean static HTML
-- Calendly (popup widget) for bookings — script is **lazy-loaded** by `useCalendly.js` on first CTA click, not in `<head>`, to keep the prerendered HTML and critical-path payload small
-- Google Analytics 4 with Consent Mode v2 default-deny — initialized in `index.html`; `ConsentBanner.jsx` flips `analytics_storage` to granted
-- **Hosting: Vercel.** `vercel.json` defines the `.com → .ca` and `www.` redirects plus per-asset cache headers
-- Puppeteer (devDep only) for the build-time prerender script
+## Start here
 
-No testing or routing libraries are installed.
+1. **`docs/spec/07-status.md`** — where the build actually is, and every open
+   question. Read it before doing anything.
+2. `docs/spec/README.md` — the index and the routing table for the rest.
+3. `docs/spec/06-deployment.md` — the two-project setup, config, cutover runbook.
+4. **Working on the homepage hero?** `docs/spec/hero-drive.md` §Handoff says
+   exactly where the rebuild is, what to build next, how Scott reviews it, and
+   what bit last time. Read it before touching `src/components/hero/`.
 
-## Commands
+`docs/spec/archive/` holds the retired single-page spec and the rebuild's
+planning docs. **Don't work from anything in there.**
 
-- `npm run dev` — Vite dev server
-- `npm run build` — production build to `dist/` **and** runs `scripts/prerender.mjs` to snapshot fully-rendered HTML over `dist/index.html` and inject the FAQPage JSON-LD
-- `npm run preview` — preview production build locally
-- `npm run lint` — ESLint over the project
+## Current state (October 9, 2026)
+
+- **All 9 routes are built with real content**: `/`, `/about`,
+  `/manual-driving-lessons` (hub), `/lessons/{individual,manual-foundations,manual-confidence,group}`,
+  `/faq`, `/contact`, plus a custom 404.
+- **Pricing is the winter offering from October 5, 2026** — $90 / hour,
+  $240, $400, $180 / 2 hr, all + HST. Lessons are one hour again; the 75-minute
+  and 2.5-hour formats are gone. On both branches. Both also run a "Fall sale":
+  a banner above the nav that slides away on scroll, and each price shown
+  next to its pre-October price struck out. On `overhaul`, `src/lib/sale.js`
+  holds the old prices and the one switch that ends it.
+- **Three rounds of client review are applied.** August 16 was copy and
+  structure; August 18 was layout, mobile and the package cards; August 20 was
+  the hub's chooser — see `07-status.md`.
+- **September: a homepage redesign pass.** Reviews and pricing sit on beige
+  `.section--light` bands, the homepage copy was rewritten, and the homepage is
+  animated with GSAP under `docs/spec/08-motion.md`. On September 28 the
+  red/beige bands went to every other route too (map in `02-architecture.md`
+  §Styling). Other routes haven't had their motion pass yet.
+- **The July QA pass is stale.** It predates the August 18 layout rework and the
+  September motion work, so re-running Lighthouse across all 9 routes is a
+  cutover requirement now, not a formality.
+- **The homepage hero is being rebuilt** as a top-down city with traffic and a
+  drivable car. Spec: `docs/spec/hero-drive.md`, which works in seven phases
+  and stops for review after each. **Phases 1 to 6 are built, committed and
+  pushed to `origin/overhaul`**: the roads, ambient traffic, a black car
+  you can drive over the whole page with a manual or automatic gearbox, a
+  dash along the bottom of the window ("Test drive" to start it), tyre
+  marks, the reviews strip as a treadmill, and traffic bumped out of its
+  lane on a crash, with sparks and smoke. **Phase 7** (performance and
+  fallbacks) is what's left. The code is in `src/components/hero/`, the
+  traffic in its lazy `engine/` chunk and the driving in its lazy `drive/`
+  chunk, tested with `npm test` (90 tests). On October 8 the maps became
+  uniform grids at Sam's asking, with a medium map of fewer columns below
+  1200px. The same day the roads got rounded block corners and grey
+  markings, and every road edge was then put on a whole pixel so no
+  hairline shows at the corners on a 3x phone. On October 14 the hero's
+  two buttons took B1 of ten looks tried in a development-only picker:
+  sentence-case pills with a round chip after the last word. It's in
+  `Hero.css`, and the picker is deleted. Later that day the roads came
+  off phones altogether, as too busy: below 768px the hero is the copy
+  and its two buttons, and the traffic never loads there. The spec's §Handoff
+  says where it is, how Scott reviews, the open questions and what bit
+  last time.
+- **October 9: a plain-language pass over all the copy.** No em dashes and
+  no filler in body copy, bullets, FAQ answers, meta descriptions or alt
+  text, on every route and in `privacy.html`, `booked.html` and
+  `llms.txt`. Customer quotes, Sam's About story and the headings were
+  left alone. `07-status.md` lists what it changed and what it found.
+- **November 10: Sam's November 5 feedback is applied, committed and
+  pushed to `origin/overhaul`.**
+  Sam isn't named as the instructor outside `/about`. Recommended moved to
+  Confidence, which is now pitched on technique rather than highway driving.
+  The package pages lost their reviews and Quick answers. `/about` was
+  reordered, and the cancellation policy is final. `07-status.md` lists the
+  changes and the questions they opened.
+- **Not yet merged or deployed to the real domain.** Remaining work is
+  verification and client sign-off, not building — see `07-status.md`.
+
+## Stack & architecture
+
+- **Next.js App Router** (`src/app/`), fully static (`next build` prerenders
+  every route). No prerender scripts, no `window.__PRERENDER__` — that world is
+  gone.
+- **GSAP** (re-added September 2026 for homepage animation) is set up in
+  `src/lib/gsap.js`: import `gsap` / `ScrollTrigger` / `useGSAP` from there, not
+  the packages, and wrap every animation in `gsap.matchMedia(MOTION_OK)`.
+  **Read `docs/spec/08-motion.md` before animating anything** — it sets the
+  rules, the six allowed animation types, and the timing values.
+- **The homepage hero's city** (`src/components/hero/`) draws its traffic with
+  three.js (WebGL2) and drives the black car with planck.js. Both load lazily
+  in their own chunks, the traffic once the page is idle and the driving on
+  the Test drive pill's hover or focus, so neither is in the first load. The
+  simulation modules are pure (no three.js, no DOM) and tested with
+  `npm test`. `hero-drive.md` is the spec.
+- **Shared shell** in `src/app/layout.jsx`: fonts via `next/font` (Plus Jakarta
+  Sans + Inter), metadata defaults, inline Consent Mode v2 bootstrap
+  (deny-first) + gtag.js, skip link, the fall-sale AnnouncementBanner, Nav,
+  Footer, ConsentBanner, AnalyticsLoader.
+- **Analytics** (all consent-gated): GA4 `G-5E5GEN5N59`, Google Ads
+  `AW-18196514948`, Meta Pixel `2845684255788584`, TikTok Pixel. Pixels load
+  only after consent (`src/lib/consent.js` holds the storage key).
+  `public/booked.html` is the Calendly-redirect conversion page — **its Google
+  Ads conversion label is still empty (no-op)**.
+- **Calendly** popup via `src/hooks/useCalendly.js` — keep the iOS Safari
+  mobile-host fix; every CTA goes through `src/components/BookButton.jsx` with a
+  per-placement `source` tag (full map in `docs/spec/05-analytics.md`).
+- **FAQ single source**: `src/lib/faqs.js` renders `/faq`, generates its FAQPage
+  JSON-LD, and supplies `/contact` cancellation copy. Never fork FAQ copy.
+  (The package pages' FAQ subsets were removed on November 5, 2026.)
+- **Redirects/rewrites/headers** live in `next.config.mjs` (`vercel.json` is
+  deleted on this branch): `.com`/`www` → apex, `/booked` + `/privacy`
+  rewrites, cache headers, and the security headers. Its Content-Security-Policy
+  lists every outside host, so **a new tag, pixel or embed needs its hosts
+  added there**, or the browser blocks it silently (`06-deployment.md`
+  §Security headers).
 
 ## Conventions
 
-- **Use the `useGSAP` hook** from `@gsap/react` for all GSAP animation code — never raw `useEffect` with GSAP. This guarantees cleanup on unmount. The Reviews marquee uses `useEffect` because it's a `requestAnimationFrame` loop, not a GSAP timeline.
-- **Design tokens in CSS custom properties** (`src/styles/tokens.css`), not hardcoded values.
-- **Gear sections are components.** Each of the seven sections is its own component under `src/components/sections/`, wrapped by `GearSection`, which handles pinning, viewport-position alignment, and the per-gear scroll-triggered transition.
-- **Respect `prefers-reduced-motion`.** Both `GearSection` (matchMedia gate) and `Reviews` (early return) check this. Any new motion must follow suit.
-- **`useGSAP` over `useEffect` for animations**, but co-locate the timeline setup with the component that owns the animated DOM (per `GearSection`'s `mm.add(...)` blocks).
-
-## Architecture
-
-Single-page app where scroll position drives a gear-shift metaphor. Seven sections map to gear positions on an H-pattern shifter:
-
-```
-src/
-├── App.jsx              # Wires sections, owns currentGear state, scrollToGear,
-│                        # and the nav/CTA → Calendly handlers
-├── main.jsx             # Registers ScrollTrigger + ScrollToPlugin
-├── components/
-│   ├── Nav.jsx          # Sticky nav, mobile toggle, "Book Now" CTA
-│   ├── GearSection.jsx  # Wrapper: pinning + position + per-gear ScrollTrigger
-│   │                    # animation setup (no separate hook file)
-│   ├── GearIndicator.jsx
-│   ├── Footer.jsx
-│   └── sections/        # One component per gear
-│       ├── Home.jsx         # gear 1 — top-left
-│       ├── Reviews.jsx      # gear 2 — top-left
-│       ├── HowItWorks.jsx   # gear 3 — top-center
-│       ├── Packages.jsx     # gear 4 — top-center
-│       ├── About.jsx        # gear 5 — top-right
-│       ├── Faq.jsx          # gear 6 — top-right
-│       └── Reverse.jsx      # gear R — center; Book CTA + contact info card
-├── hooks/
-│   └── useCalendly.js   # openCalendly(): native popup on desktop, custom
-│                        # iframe host on mobile (iOS Safari sizing fix)
-└── styles/
-    ├── tokens.css       # CSS custom properties (colors, type scale, timings)
-    └── buttons.css      # Shared button utility classes
-```
-
-Key animation concepts (detailed in `docs/spec/06-design-system.md`):
-
-- **Three transition types**, all driven by `ScrollTrigger` pinning inside `GearSection.jsx`:
-  - **Same-column shifts** (1→2, 3→4, 5→6) — `setupSameColumnExit`: pins for a short scroll beat with no content motion.
-  - **H-crossing shifts** (2→3, 4→5) — `setupHCrossingExit` on the outgoing gear and `setupHCrossingEntry` on the incoming gear; content drops, slides laterally, and fades.
-  - **Reverse shift** (6→R) — `setupReverseExit`: gear 6 scales/fades/slides out while the Reverse section eases in.
-- **Mobile** collapses every transition to a fast upward slide (`setupMobile`); Reverse keeps a zoom-out + fade.
-- **`useShiftTransition` does NOT exist as a hook** — animation logic lives directly in `GearSection.jsx` as standalone setup functions keyed by `ANIMATION_ROLES[gear]`. If you're refactoring, that's the file to touch.
-- **Nav navigation** uses `gsap.to(window, { scrollTo: ... })` with `autoKill: false` (iOS Safari address-bar workaround — don't change this without re-testing on iOS) and focuses the destination heading or primary CTA for a11y.
-- **Calendly popup opens immediately** for every CTA (nav "Book Now", hero, packages, about, reverse). It does **not** wait for the Reverse shift to complete. On mobile, `openCalendly` mounts an inline widget into a custom overlay because the native popup mis-sizes on iOS Safari.
-
-## SEO architecture
-
-The site is a CSR React app, but the build emits a **pre-rendered** `dist/index.html` so non-JS-executing crawlers (GPTBot, ClaudeBot, PerplexityBot, plain Googlebot fetches, social-share scrapers) see the full body content. Three pieces work together:
-
-1. **`scripts/prerender.mjs`** (runs after `vite build`): spawns `vite preview`, drives Puppeteer with `window.__PRERENDER__ = true` set via `evaluateOnNewDocument`, captures the rendered HTML, splices in the FAQPage JSON-LD, and overwrites `dist/index.html`.
-2. **Runtime guards behind `window.__PRERENDER__`**: `src/main.jsx` skips GSAP plugin registration; `src/components/GearSection.jsx` short-circuits its `useGSAP` setup; `src/components/sections/Reviews.jsx` skips its rAF marquee loop; `src/components/ConsentBanner.jsx` stays hidden. This guarantees the snapshotted HTML has zero animation-injected attributes — clean static markup that hydrates without mismatch warnings.
-3. **FAQPage JSON-LD is generated from the FAQS array in `Faq.jsx`** at build time, so on-page FAQ copy and the structured data can never drift. The script *fails the build* if any answer ends with whitespace or non-terminal punctuation (caught the truncated FAQ #7 cancellation answer the first time it ran). To add an FAQ: edit the FAQS array; the next build re-emits the JSON-LD.
-
-Other SEO surfaces:
-
-- `index.html` `<head>` carries the static meta (description, canonical, OG, Twitter, robots, theme-color), the apple-touch-icon link, the manifest link, and the DrivingSchool / Offer / Person JSON-LD `@graph`. The `<!-- FAQPAGE_LD -->` marker is the splice point for the prerender script — don't remove it.
-- `public/robots.txt` allows all crawlers including the major AI bots (per business decision).
-- `public/sitemap.xml` lists the single canonical URL.
-- `public/llms.txt` is a Mintlify-style summary for LLM crawlers.
-- `public/site.webmanifest` plus `apple-touch-icon.png` cover home-screen install.
-- `public/privacy.html` is a static privacy page; `vercel.json` `cleanUrls: true` makes `/privacy` resolve to it.
-
-**No `Review` or `aggregateRating` schema** until Google Business Profile reviews exist and can be cited. Self-attested testimonial markup violates Google's 2019 guidance and can earn a manual action.
-
-## Pending assets
-
-Many brand assets (final logo, instructor photo, color overrides) are tracked as `<!-- PENDING: [name] -->` HTML comments. When you encounter a missing asset, follow the same convention. Never invent content that conflicts with the client's brand — see `docs/spec/05-pending-items.md` for the full list and rules.
-
-## Workflow
-
-- Follow the build order in `docs/spec/04-technical-spec.md` ("Build Order Recommendation") for any greenfield work, but most of that order is already complete — typical tasks now are content/copy edits, layout polish, and animation tuning.
-- After completing each numbered step in a multi-step task, pause and report progress. The developer will review before continuing.
-- Track new `<!-- PENDING: -->` comments as you add them.
-- If the spec conflicts with itself, with the code, or with what the developer is asking, flag it — don't silently pick a side. The drift list at the top of this file is not exhaustive.
+- **Design tokens** in `src/styles/tokens.css` — note `--chrome` was lifted to
+  `#E4E4E4` for WCAG AA. **Muted text on the brand red must be solid
+  `var(--cream)`**, not white-alpha or opacity-faded (alpha over the saturated
+  red fails 4.5:1 even when it looks fine).
+- **Light sections** are `.section--light` (globals.css): a `--beige`
+  (`#FBE9DF`) band that flips header type to red. A button sitting on the beige
+  itself adds `btn--on-light` (solid red, inner white ring); buttons inside red
+  cards on the band don't. Red on `--beige` clears AA at 4.99:1, so don't darken
+  the beige without re-checking.
+- **One left edge per page.** `.section__inner` centres a 1200px column and
+  publishes `--column-inset`. Any block that caps itself narrower must use
+  `margin-inline: var(--column-inset) auto`, or it re-centres inside the column
+  and lands ~150px right of the nav and footer.
+- **Interactive targets are ≥44px**, and the mobile nav bar must stay one row —
+  it overlays the page against a `--nav-height` every page reserves, so a
+  wrapped bar covers the first heading. Details in `02-architecture.md`.
+- **The header moves with no script.** The sale strip scrolls with the page,
+  and the nav is `position: sticky` with a negative margin. Keep `<body>` at
+  `overflow-x: clip`, not `hidden`, and keep the nav a direct child of
+  `<body>`, or the nav stops sticking (`02-architecture.md` §Styling).
+- **Package cards** are one per row below 768px, with the hub card's bullets
+  behind a phones-only `<details>` whose toggle is the whole card. Don't
+  reintroduce a 2-up grid there — it was tried and rejected as too busy.
+- **The hub's "Pick by where you are today" chooser is plain text** — four
+  sentences on gear-lever bullets, package as the inline link. It was cards with
+  their own Book buttons for two days in August 2026 and was rejected as too much
+  furniture next to the package cards. Don't rebuild it as cards, and don't
+  revive the retired `lessons_overview_pick_*` source tags.
+- **Respect `prefers-reduced-motion`** — the reviews marquee is matchMedia-gated,
+  and every GSAP animation goes under `gsap.matchMedia(MOTION_OK)` so reduced
+  motion gets the final static state. Never hide content in CSS for a JS
+  entrance to reveal.
+- **No em dashes in site copy, and plain words.** Use a period or a comma.
+  Short, warm, second person, saying what happens; cut quips rather than
+  polish them. Customer quotes and Sam's own words are exempt.
+  `03-content-and-pricing.md` §Copy rules 6.
+- **Pending inputs** are `{/* PENDING: ... */}` / `❓ BLOCKED` comments —
+  `grep -rn "PENDING\|BLOCKED" src/ public/` lists all outstanding client
+  inputs. Never invent content that conflicts with the brand: no invented
+  reviews, bios, policies, or inclusions.
+- **No `Review`/`aggregateRating` markup on any new page.** The homepage
+  business schema still carries the real 5.0/44 rating (October 2026) — an
+  unresolved flag (`07-status.md` #2), not a precedent.
+- **One name per package, one featured package.** Individual Manual Lesson,
+  Manual Foundations Package, Group Manual Lessons, Complete Manual
+  Confidence Package, everywhere. Complete Manual Confidence alone is
+  featured ("Recommended"), since Sam's November 5, 2026 feedback; it was
+  Foundations before that. No "Best Value", "Most Popular" or "flagship".
+  Don't name the car or claim instructor licensing, insurance or an
+  instructor brake. `03-content-and-pricing.md` §Names, labels and claims.
+- **Sam isn't named as the instructor** outside `/about`. He asked on
+  November 5, 2026: the site should read as more than a one-man show. Copy,
+  meta descriptions, alt text and schema say "we" or "your instructor".
+  `/about` names him as founder and lead instructor, and the homepage
+  founder message is his own signed note. Customer quotes stay as written.
+- After completing each numbered step in a multi-step task, **pause and report
+  progress** before continuing.
+- If a doc conflicts with the code, with itself, or with what the developer
+  asks, **flag it — don't silently pick a side.**
 
 ## Non-negotiable constraints
 
-- **Four pricing cards: three private + one group.** Private — $90 for a 1-hour Individual Manual Lesson, $240 for the 3-lesson Manual Foundations Package, $400 for the 5-lesson Complete Confidence Package. Group — $180 for a 2-hour Group Manual Lesson. Lessons are 1 hour (the August–September 75-minute format is retired). (Whether the group price is per-person or per-pair is still PENDING client confirmation — see the `PENDING` comment in `Packages.jsx`.) Prices also live in `index.html` (meta descriptions + Offer schema), `public/llms.txt`, and `public/booked.html` (conversion values). `App.jsx` wires one Calendly handler per card (`onBookSingle`, `onBookPack`, `onBookConfidence`, `onBookGroup2hr`), each tagged with its own analytics `source`.
-- **Gear-shift metaphor is core, not decoration.** Don't simplify away layout positions or animation choreography without explicit approval.
-- **iOS Safari is a first-class target.** The `autoKill: false` scroll tween and the custom mobile Calendly host both exist because of iOS-specific bugs — don't "clean them up" without testing on iOS.
-- **Reduced motion must remain a fully functional path.** Every new animation needs a matchMedia gate or equivalent fallback.
+- **Work on the `overhaul` branch; never commit directly to `main`** — `main` is
+  live. Merge only via the cutover runbook in `docs/spec/06-deployment.md`.
+- **SEO-first and multi-page** — don't collapse pages back together; each
+  package page is an Ads destination.
+- **iOS Safari is a first-class target** — the Calendly mobile-host fix exists
+  for an iOS-specific bug; it has **not** been re-tested on a real device since
+  the migration (pre-launch requirement).
+- **Reduced motion must remain fully functional.**
+
+## Developer-environment quirks
+
+Scott runs hooks that will intercept you: a **config-protection hook** blocks
+edits to `eslint.config.js` (legitimate changes go through its documented escape
+hatch), and a **GateGuard hook** requires stating "facts" before the first Bash
+call of a session and before destructive commands. Present the facts it asks for
+and retry.
+
+- **Commit only when asked; Scott pushes himself** unless he asks for a push
+  in that session. Pushing over SSH fails from this Mac (its key isn't on
+  GitHub); the GitHub CLI is logged in, and the one-off HTTPS push command is
+  in `hero-drive.md` §Handoff.
+- **The dev server is usually already running** on :3000 from Scott's own
+  session. Reuse it rather than starting another. `npm run build` is safe
+  alongside it, because dev builds into `.next/dev`.
+- **Browser checks through the Chrome extension run in a hidden tab**, so
+  `requestAnimationFrame` and ResizeObserver never fire there. The homepage
+  hero's entrance stalls halfway, with the subhead and buttons invisible. It's
+  a tab quirk, not a site bug. `hero-drive.md` §Handoff has the iframe harness that
+  works around it, and the development-only `window.__heroEngine.step()` that
+  moves the traffic by hand there. Keys sent by the extension also stop
+  arriving after the tab has sat a while; the same section says how to drive
+  by script instead.

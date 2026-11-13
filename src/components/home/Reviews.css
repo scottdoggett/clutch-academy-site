@@ -1,0 +1,82 @@
+/* Home reviews section footer. The beige band and its red header type come
+   from `.section--light` in globals.css; the marquee itself lives in
+   src/components/ReviewsMarquee.css and the cards in ReviewCard.css. */
+/* The footer's top border, as its own element so it can Draw in. */
+.reviews__rule {
+  height: 1px;
+  background-color: rgba(200, 16, 46, 0.15);
+}
+
+.reviews__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Score first (October 14): the big 5.0, and beside it the stars over the
+   review count, both lines together as tall as the number. */
+.reviews__badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reviews__badge-score {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 4vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: var(--letter-tight);
+  color: var(--red-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.reviews__badge-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.reviews__badge-stars {
+  font-size: var(--text-body-lg);
+  line-height: 1.1;
+  letter-spacing: 0.1em;
+  color: var(--star-gold);
+}
+
+.reviews__badge-count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  color: var(--red-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phones: the score above and the button the full width of the column
+   under it, so its edges line up with the rule and the cards. */
+@media (max-width: 767px) {
+  .reviews__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* One line; at full size the label wrapped to two. */
+  .reviews__footer .btn {
+    text-align: center;
+    font-size: 0.8125rem;
+    padding-inline: 1rem;
+  }
+}
+
+/* Below 360px it still wrapped, by about 6px: tighter here, one line at
+   320px too. */
+@media (max-width: 359px) {
+  .reviews__footer .btn {
+    padding-inline: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+}

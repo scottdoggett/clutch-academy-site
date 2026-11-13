@@ -1,0 +1,43 @@
+{
+  "about": "Where the hero's copy block (.hero__copy) lands, measured in Chrome on the dev server after fonts loaded. hero is [width, height]; copy is [left, top, right, bottom] relative to the hero, all CSS px. The layout tests check every road against these. Only sizes from 768px wide, where the hero has roads: phones have none since October 14. Re-record whenever the hero's copy or CSS changes: see record.md.",
+  "recorded": "2026-10-14",
+  "required": {
+    "widths": [1280, 1440, 1920],
+    "minViewportHeight": 680,
+    "note": "At these widths, from this viewport height up, no road may come within the clearance of the copy, so nothing is ever hidden. 680 is the viewport a 1280x800 laptop screen leaves once the browser's own toolbars are drawn."
+  },
+  "short": {
+    "note": "Windows too short for the whole map (all three get the medium map): a phone on its side, which is over 768px wide, and a shrunk laptop browser. The runtime rules in layout.js hide roads here, so these are kept apart from sizes, where the full map has to fit. Measured the same way.",
+    "sizes": [
+      { "viewport": [844, 390], "hero": [844, 476], "copy": [34, 98, 422, 425] },
+      { "viewport": [932, 430], "hero": [932, 430], "copy": [37, 101, 466, 374] },
+      { "viewport": [1100, 520], "hero": [1100, 456], "copy": [44, 118, 550, 380] }
+    ]
+  },
+  "sizes": [
+    { "viewport": [768, 1024], "hero": [768, 960], "copy": [31, 331, 384, 678] },
+    { "viewport": [820, 1180], "hero": [820, 1116], "copy": [33, 419, 410, 744] },
+    { "viewport": [834, 1194], "hero": [834, 1130], "copy": [33, 425, 417, 752] },
+    { "viewport": [900, 700], "hero": [900, 636], "copy": [36, 206, 450, 476] },
+    { "viewport": [1000, 700], "hero": [1000, 636], "copy": [40, 201, 500, 479] },
+    { "viewport": [1024, 768], "hero": [1024, 704], "copy": [41, 234, 512, 514] },
+    { "viewport": [1024, 1366], "hero": [1024, 1302], "copy": [41, 533, 512, 813] },
+    { "viewport": [1180, 820], "hero": [1180, 756], "copy": [47, 264, 590, 532] },
+    { "viewport": [1280, 600], "hero": [1280, 536], "copy": [51, 147, 640, 424] },
+    { "viewport": [1280, 680], "hero": [1280, 616], "copy": [51, 187, 640, 464] },
+    { "viewport": [1280, 720], "hero": [1280, 656], "copy": [51, 207, 640, 484] },
+    { "viewport": [1280, 800], "hero": [1280, 736], "copy": [51, 247, 640, 524] },
+    { "viewport": [1366, 660], "hero": [1366, 596], "copy": [83, 172, 683, 456] },
+    { "viewport": [1366, 768], "hero": [1366, 704], "copy": [83, 226, 683, 510] },
+    { "viewport": [1440, 780], "hero": [1440, 716], "copy": [120, 229, 720, 519] },
+    { "viewport": [1440, 900], "hero": [1440, 836], "copy": [120, 289, 720, 579] },
+    { "viewport": [1536, 730], "hero": [1536, 666], "copy": [168, 168, 768, 530] },
+    { "viewport": [1536, 864], "hero": [1536, 800], "copy": [168, 235, 768, 597] },
+    { "viewport": [1600, 900], "hero": [1600, 836], "copy": [200, 249, 800, 619] },
+    { "viewport": [1920, 950], "hero": [1920, 886], "copy": [360, 272, 960, 646] },
+    { "viewport": [1920, 1080], "hero": [1920, 1016], "copy": [360, 337, 960, 711] },
+    { "viewport": [1920, 1200], "hero": [1920, 1136], "copy": [360, 397, 960, 771] },
+    { "viewport": [2560, 1300], "hero": [2560, 1236], "copy": [680, 447, 1280, 821] },
+    { "viewport": [2560, 1440], "hero": [2560, 1376], "copy": [680, 517, 1280, 891] }
+  ]
+}

@@ -1,0 +1,277 @@
+/* The marquee viewport. The moving strip (ReviewsMarquee.jsx) translates a
+   belt of two list copies with a transform rather than scrolling. Nothing
+   here should reintroduce overflow scrolling on the moving strip: a real
+   scroll container would fight the transform for the same gesture. The
+   vertical padding keeps the card shadows from being clipped by the
+   viewport's overflow: hidden. */
+.reviews__marquee {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 0 1.75rem;
+  /* Fade the edges so cards enter/exit gracefully instead of hard-clipping. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 4rem,
+    #000 calc(100% - 4rem),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 4rem,
+    #000 calc(100% - 4rem),
+    transparent
+  );
+}
+
+/* On a phone the strip is barely wider than a card, and a 4rem fade washed
+   out the first words of every quote. */
+@media (max-width: 767px) {
+  .reviews__marquee {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.25rem,
+      #000 calc(100% - 1.25rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.25rem,
+      #000 calc(100% - 1.25rem),
+      transparent
+    );
+  }
+}
+
+/* touch-action: pan-y, not pan-x. It hands vertical panning to the browser,
+   so a swipe that starts on the strip still scrolls the page, and leaves
+   horizontal to the pointer handlers. pan-x would claim horizontal as the
+   ONLY gesture and swallow a vertical drag that began over the strip. */
+.reviews__marquee--moving {
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.reviews__marquee--moving:active {
+  cursor: grabbing;
+}
+
+/* The two copies, side by side; this is what the transform moves. */
+.reviews__belt {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Reduced motion gets no marquee at all, so the strip goes back to being a
+   natively scrollable list. Without this the reviews past the first two would
+   be unreachable: nothing moves, and side-scrolling is gone everywhere else. */
+.reviews__marquee--static {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* No `touch-action: pan-x` here. It reads like "this strip pans horizontally",
+     but it declares horizontal panning to be the *only* gesture the element
+     handles — so a vertical drag that began over the reviews was swallowed and
+     the page didn't scroll at all. Left at the default, the browser locks the
+     axis from the gesture's initial direction: a sideways drag scrolls the
+     strip, a vertical one scrolls the page. */
+}
+
+.reviews__marquee--static::-webkit-scrollbar {
+  display: none;
+}
+
+.reviews__track {
+  list-style: none;
+  margin: 0;
+  /* Trailing gap only. The belt puts the two copies flush against each
+     other, so symmetric padding would double the space at every seam. */
+  padding: 0 1rem 0 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.reviews__slide {
+  /* Each card is as wide as its quote needs, so a long review gets a wide
+     card rather than a tall one and every card is the same few lines high
+     (October 2026). ReviewsMarquee measures it and sets --fit; until then,
+     an estimate from the quote's length (--chars, set inline). */
+  --card-min: 20rem;
+  --card-max: min(600px, 80vw);
+  --per-char: 2.1px;
+  --per-card: 88px;
+  flex: 0 0 auto;
+  display: flex;
+  width: var(
+    --fit,
+    clamp(var(--card-min), calc(var(--chars, 200) * var(--per-char) + var(--per-card)), var(--card-max))
+  );
+  min-width: var(--card-min);
+  max-width: var(--card-max);
+}
+
+/* The cards themselves are src/components/ReviewCard.css, shared with the
+   package pages' quotes. */
+
+@media (max-width: 767px) {
+  .reviews__slide {
+    --card-min: 16.25rem;
+    --card-max: 92vw;
+    --per-char: 1.25px;
+    --per-card: 72px;
+  }
+
+  .reviews__track {
+    gap: 0.75rem;
+    /* Matches the gap, so the seam between the two copies is invisible. */
+    padding-right: 0.75rem;
+  }
+}
+
+/* The strip's card, compact: the reviewer and the stars share the top row,
+   as on Google, and the quote fills the rest, a few lines deep. Only the
+   homepage strip: the package pages' quotes share ReviewCard.css and keep
+   the full card. */
+.reviews__slide .review-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 1.125rem 1.375rem 1.25rem;
+}
+
+.reviews__slide .review-card__meta {
+  grid-row: 1;
+  grid-column: 1;
+  min-width: 0;
+  gap: 0.625rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.reviews__slide .review-card__stars {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+}
+
+.reviews__slide .review-card__quote {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  align-self: start;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.reviews__slide .review-card__avatar {
+  flex-basis: 2rem;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.875rem;
+}
+
+/* One line, so the top row is one line high. */
+.reviews__slide .review-card__name {
+  min-width: 0;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The quote-mark watermark would sit on the stars. */
+.reviews__slide .review-card::after {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .reviews__slide .review-card {
+    gap: 0.625rem 0.75rem;
+    padding: 0.875rem 1rem 1rem;
+  }
+
+  .reviews__slide .review-card__meta {
+    gap: 0.5rem;
+  }
+
+  .reviews__slide .review-card__stars {
+    font-size: 0.8125rem;
+  }
+
+  .reviews__slide .review-card__quote {
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  .reviews__slide .review-card__avatar {
+    flex-basis: 1.625rem;
+    width: 1.625rem;
+    height: 1.625rem;
+    font-size: 0.75rem;
+  }
+
+  .reviews__slide .review-card__name {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* Below 380px the longest quote needed seven lines at 14px, and eight at
+   320px: a size smaller, and a card a little wider and tighter, keep it to
+   six on most of them. */
+@media (max-width: 379px) {
+  .reviews__slide {
+    --card-max: 94vw;
+  }
+
+  .reviews__slide .review-card {
+    padding-inline: 0.875rem;
+  }
+
+  .reviews__slide .review-card__quote {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Below 360px the longest names, at 16 letters, need a little more room
+   beside the stars. */
+@media (max-width: 359px) {
+  .reviews__slide .review-card {
+    column-gap: 0.5rem;
+  }
+
+  .reviews__slide .review-card__stars {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .reviews__slide .review-card__meta {
+    gap: 0.4375rem;
+  }
+
+  .reviews__slide .review-card__avatar {
+    flex-basis: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .reviews__slide .review-card__name {
+    letter-spacing: 0.02em;
+  }
+}

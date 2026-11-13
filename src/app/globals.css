@@ -1,0 +1,449 @@
+@import '../styles/tokens.css';
+@import '../styles/buttons.css';
+@import '../styles/motion.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* The homepage's "See Packages" anchor glides instead of jumping — motion-
+   gated, and scoped to that one target rather than set on <html> outright.
+   As a blanket rule it animated every route change too: Next 16 no longer
+   forces scroll-behavior to auto during navigation the way 15 did, so a new
+   page slid up from wherever the last one was scrolled to instead of simply
+   starting at the top. It also made the skip link glide, which is the last
+   thing a keyboard user wants from a skip link. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(#packages:target) {
+    scroll-behavior: smooth;
+  }
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--white);
+  background-color: var(--red-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  /* Defensive: keep third-party fixed-position widgets (Calendly popup)
+     from forcing the page to scroll horizontally on mobile. clip, not
+     hidden: hidden makes <body> a scroll container, and the nav's
+     position: sticky (Nav.css) would then stick to <body>, which never
+     scrolls, instead of the window. It clips the same. Browsers without
+     clip (Safari before 16) keep hidden; there the nav scrolls away. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* ---------- Mobile Calendly: custom container we fully control --------
+   Calendly's native popup uses fixed pixel sizing and JS-injected styles
+   that iOS Safari mis-sizes, stretching the document. On mobile we mount
+   the iframe into our own host via Calendly's `parentElement` option. */
+.cal-host-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.cal-host-popup {
+  position: relative;
+  width: min(92vw, 600px);
+  height: min(90vh, 900px);
+  max-width: 92vw;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Calendly injects an iframe into our popup; force it to fill. */
+.cal-host-popup iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+  display: block;
+}
+
+.cal-host-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.cal-host-close:hover,
+.cal-host-close:focus {
+  background: rgba(0, 0, 0, 0.8);
+  outline: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-tight);
+  line-height: 1.1;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Skip link: hidden off-screen until focused via keyboard. Jumps past the nav
+   so keyboard + screen-reader users don't have to tab through it every visit. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--white);
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-120%);
+  transition: transform var(--transition-reduced) ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
+/* Screen-reader-only text: visually removed, still announced. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Page sections (conventional scrolling layout) -------------
+   Replaces the gear-section wrappers: plain blocks in document flow with
+   consistent padding. Only the first section clears the fixed nav. */
+.section {
+  /* Named so a full-bleed child can cancel them exactly. */
+  --section-pad-y: clamp(2.5rem, 6vw, 5rem);
+  --section-pad-x: clamp(1.25rem, 4vw, 4rem);
+  padding: var(--section-pad-y) var(--section-pad-x);
+}
+
+.section__inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Distance from the section's padding edge to the centred column's left
+     edge. Blocks that cap themselves narrower than the column set
+     `margin-inline: var(--column-inset) auto` so they start on that same edge
+     instead of re-centring — otherwise a 900px block lands ~150px right of the
+     nav, the footer, and every full-width section on the page. */
+  --column-inset: max(0px, calc((100% - 1200px) / 2));
+}
+
+.section--first {
+  padding-top: calc(var(--nav-height) + clamp(1.5rem, 4vw, 3rem));
+}
+
+/* ---------- Section headers (shared treatment, ported from the gear
+   layout so every home section keeps its established type hierarchy) --- */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  max-width: 60ch;
+}
+
+.section-header--center {
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header__eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-small);
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  color: var(--chrome);
+  margin: 0;
+  /* When a long one wraps on a phone, two even lines rather than a lone
+     last word ("…SAME / LESSONS"). */
+  text-wrap: balance;
+}
+
+/* Capped at 3rem so no section heading outsizes its page's title: the package
+   and About h1s top out at 3.5rem, the homepage's at 4.5rem (October 2026;
+   at 4rem every section heading was bigger than the title above it).
+   Balanced, so a wrap leaves no lone word or "low- / pressure" on a phone. */
+.section-header h2 {
+  text-wrap: balance;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.section-header__lead {
+  font-size: var(--text-body);
+  color: var(--cream);
+  /* Avoids a lone last word on narrow screens ("…about the first / two."). */
+  text-wrap: pretty;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .section-header h2 {
+    font-size: clamp(1.625rem, 7vw, 2.25rem);
+  }
+
+  .section-header__lead {
+    font-size: var(--text-small);
+  }
+}
+
+/* ---------- Light sections ------------------------------------------------
+   A beige band for breaking up the red. Every page opens on the red, then
+   alternates: the homepage's reviews and pricing, and on the other routes the
+   sections between their openers and footers (docs/spec/02-architecture.md
+   §Styling has the map). It flips everything the shared styles paint white
+   or cream: header type, the secondary button, and the focus ring (a white
+   one vanishes on a light ground). Contrast figures are on the --beige token. */
+.section--light {
+  background-color: var(--beige);
+  color: var(--red-primary);
+}
+
+.section--light .section-header__eyebrow {
+  color: var(--red-deep);
+}
+
+.section--light .section-header h2 {
+  color: var(--red-primary);
+}
+
+.section--light .section-header__lead {
+  color: var(--red-dark);
+}
+
+/* A button sitting on the light ground itself: solid brand red with white
+   type, the red-band buttons turned inside out, so the section's biggest
+   block of colour is the call to action. Hover sinks to --red-deep, the
+   package cards' red. A button inside a red card on this band doesn't carry
+   the modifier and keeps the default white-on-red treatment.
+
+   The inner white line is two inset shadows: a red rim in the button's own
+   fill (--btn-fill, so it follows the hover) and a thin white ring just
+   inside it. Shadows rather than a second border, so the button keeps the
+   exact size of every other .btn. */
+.section--light .btn--on-light {
+  --btn-fill: var(--red-primary);
+  background-color: var(--btn-fill);
+  border-color: var(--btn-fill);
+  color: var(--white);
+  box-shadow:
+    inset 0 0 0 2px var(--btn-fill),
+    inset 0 0 0 3.5px var(--white),
+    0 10px 24px -14px rgba(74, 5, 16, 0.6);
+}
+
+.section--light .btn--on-light:hover {
+  --btn-fill: var(--red-deep);
+  color: var(--white);
+}
+
+.section--light .btn--on-light:focus-visible {
+  outline-color: var(--red-primary);
+}
+
+/* The 404 page's hero (not-found.jsx). Clears the fixed nav via
+   --nav-height. */
+.placeholder-hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: calc(var(--nav-height) + clamp(2rem, 6vw, 4rem))
+    clamp(1.25rem, 5vw, 4rem) clamp(3rem, 8vw, 5rem);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.placeholder-hero h1 {
+  font-size: var(--text-display-xl);
+}
+
+.placeholder-hero p {
+  font-size: var(--text-body-lg);
+  max-width: 48ch;
+}
+
+/* ---------- Final CTA + cross-links block (lesson/FAQ/contact pages) --- */
+.lesson-next {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  max-width: 900px;
+  margin-inline: var(--column-inset) auto;
+}
+
+.lesson-next__links {
+  margin: 0;
+  color: var(--cream);
+  line-height: 1.6;
+}
+
+.lesson-next__links a {
+  color: var(--white);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.lesson-next__links a:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* The block closes the package pages and /faq on a beige band, and the hub
+   on the red, so its links flip with the ground. The Book button above them
+   takes `btn--on-light` there. */
+.section--light .lesson-next__links {
+  color: var(--red-dark);
+}
+
+.section--light .lesson-next__links a {
+  color: var(--red-primary);
+}
+
+.section--light .lesson-next__links a:focus-visible {
+  outline-color: var(--red-primary);
+}
+
+/* Studio photos ship with white backgrounds; multiply-blend over a red fill
+   tints them into the brand field while the subject keeps its depth. Needs
+   an `isolation: isolate` ancestor so blending stays inside its section. */
+.tinted-photo {
+  background-color: var(--red-primary);
+  mix-blend-mode: multiply;
+  filter: grayscale(0.15) contrast(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+  display: block;
+  object-fit: cover;
+}
+
+/* The 404's link list — legible on the brand red. */
+/* Each link is a 44px row; the rows supply the spacing. */
+.placeholder-hero ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.placeholder-hero ul a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--white);
+  font-size: var(--text-body-lg);
+  text-underline-offset: 3px;
+}
+
+.placeholder-hero ul a:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* Reduced motion: neutralize any incidental CSS transitions/animations so
+   the site is fully static for users who ask for it. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--transition-reduced) !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Fall sale: the old price, struck through, and the saving -----
+   WasPrice (src/components/WasPrice.jsx) beside today's price on the cards
+   and the package heroes, all on reds. The two stay together. */
+.price-deal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+/* Sized from the price it sits in. Solid grey, not white-alpha, so it keeps
+   its contrast on every red. */
+.price-was {
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--chrome);
+  text-decoration-line: line-through;
+  text-decoration-thickness: 2px;
+  white-space: nowrap;
+}
+
+/* A smaller cousin of the cards' corner badge, as on the live site. Fixed
+   size: it reads the same beside a 28px card price and a 48px hero price.
+   The homepage cards take it down a step at desktop (PackagesTeaser.css). */
+.price-save {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red-primary);
+  background-color: var(--cream);
+  padding: 0.3rem 0.4rem;
+  border-radius: 1px;
+}

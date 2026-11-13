@@ -1,0 +1,280 @@
+import Link from 'next/link'
+import BookButton from '../../components/BookButton'
+import WasPrice from '../../components/WasPrice'
+import './hub.css'
+
+export const metadata = {
+  title: 'Stick Shift & Manual Driving Lessons in Toronto | Clutch Academy',
+  description:
+    'Learn manual in Toronto: one-on-one stick shift lessons, three- and five-lesson packages, and group lessons with a friend. Compare every option and book online.',
+  alternates: { canonical: '/manual-driving-lessons' },
+}
+
+// Summary cards for the four dedicated pages. Who-it's-for and lesson-content
+// lines come from the July 2026 brief; names are the overhaul-target package
+// names. Prices are the October 2026 winter offering (one-hour lessons, a
+// two-hour group), matching the live site (f8645c4 on main).
+const PACKAGES = [
+  {
+    tag: 'Private · Single Lesson',
+    title: 'Individual Manual Lesson',
+    who: 'Best as a refresher, or a first introduction to driving stick.',
+    points: [
+      'One-on-one instruction on real Toronto roads',
+      'Starts where you are, even with zero experience',
+    ],
+    price: '$90',
+    unit: '/ hour + HST',
+    href: '/lessons/individual',
+    pkg: 'individual',
+    tier: 1,
+  },
+  {
+    tag: 'Private · 3 Lessons',
+    title: 'Manual Foundations Package',
+    who: 'For complete beginners: three lessons in a planned order, $80 each.',
+    points: [
+      'Lesson 1: clutch control, bite point, starts & stops',
+      'Lesson 2: traffic, intersections, hill starts',
+      'Lesson 3: independent driving, smoother shifting',
+    ],
+    price: '$240',
+    unit: '/ 3 lessons + HST',
+    href: '/lessons/manual-foundations',
+    pkg: 'foundations',
+    tier: 2,
+  },
+  {
+    tag: 'Private · 5 Lessons',
+    title: 'Complete Manual Confidence Package',
+    // Tagline and bullets are Sam's own wording (November 5, 2026 feedback).
+    who: 'Five hours to build your skills and refine your technique.',
+    points: [
+      'Two extra hours of coached practice beyond the basics',
+      'Smoother downshifts and when to rev-match',
+      'Better gear selection, shift timing and clutch control',
+    ],
+    price: '$400',
+    unit: '/ 5 lessons + HST',
+    href: '/lessons/manual-confidence',
+    pkg: 'confidence',
+    tier: 3,
+    featured: true,
+    badge: 'Recommended',
+  },
+  {
+    tag: 'Group · With a Friend',
+    title: 'Group Manual Lessons',
+    who: 'Learn with a friend and take turns at the wheel.',
+    points: [
+      'Share the experience and split the nerves',
+      'A low-pressure first go at the clutch',
+    ],
+    price: '$180',
+    unit: '/ 2 hours + HST',
+    href: '/lessons/group',
+    pkg: 'group',
+    tier: 4,
+  },
+]
+
+// "Help me choose" — the hub's second internal-linking pass. Each entry states
+// a situation and points at the package that answers it.
+//
+// The package name isn't stored here: it's looked up from PACKAGES by href, so
+// a rename lands in one place instead of two. `lead` is only the verb phrase
+// that carries the name inside the sentence.
+const CHOOSER = [
+  {
+    if: 'If you’ve never touched a stick shift',
+    lead: 'start with the',
+    href: '/lessons/manual-foundations',
+  },
+  {
+    if: 'If you’ve driven manual before and need a refresher',
+    lead: 'book an',
+    href: '/lessons/individual',
+  },
+  {
+    if: 'If you’re starting from zero and want more than the basics, like smoother downshifts and rev-matching',
+    lead: 'go for the',
+    href: '/lessons/manual-confidence',
+  },
+  {
+    if: 'If you’d rather learn with a friend',
+    lead: 'try',
+    href: '/lessons/group',
+  },
+]
+
+// The bullet: a gear lever standing in its gate — knob, shaft, and the slot it
+// sits in. Same 24x24 line-icon idiom as the package pages, at strokeWidth 2
+// rather than 1.75 because it renders at 20px where those render at 24 and the
+// thinner line goes wispy.
+//
+// A flat H shift-pattern was tried first, since the hub's old hero and the
+// card chips used the gate as a motif then. At bullet size it just read as
+// the letter H.
+const GEAR_BULLET = (
+  <svg
+    className="hub-choose__bullet"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="12" cy="5" r="3" fill="currentColor" stroke="none" />
+    <path d="M12 8v5.5" />
+    <path d="M6 13.5h12" />
+    <path d="M6 13.5v4.5" />
+    <path d="M18 13.5v4.5" />
+  </svg>
+)
+
+export default function LessonsOverviewPage() {
+  return (
+    <>
+      {/* ---------- The four packages ---------- */}
+      <section
+        className="section section--first hub-packages"
+        aria-labelledby="hub-packages-heading"
+      >
+        <div className="section__inner">
+          <header className="section-header">
+            {/* This is the page's h1: the intro hero that used to carry it was
+                removed in August 2026 so the page opens straight on the
+                packages. Its eyebrow, "Manual · Stick Shift · Standard — same
+                lessons", came off on November 11, 2026, at Scott's word. */}
+            <h1 id="hub-packages-heading">Four ways to learn</h1>
+            <p className="section-header__lead">
+              Each package has its own page with full details, pricing, and
+              booking.
+            </p>
+          </header>
+
+          <div className="hub-cards">
+            {PACKAGES.map((p) => (
+              <article
+                key={p.href}
+                className={`hub-card hub-card--tier-${p.tier} ${
+                  p.featured ? 'hub-card--featured' : ''
+                }`}
+              >
+                {p.badge && <span className="hub-card__badge">{p.badge}</span>}
+                <div className="hub-card__top">
+                  {/* Chip number = the card's place in the row, 1 to 4. */}
+                  <span className="hub-card__gear" aria-hidden="true">
+                    {p.tier}
+                  </span>
+                  <p className="hub-card__tag">{p.tag}</p>
+                </div>
+                <h3 className="hub-card__title">{p.title}</h3>
+                <p className="hub-card__who">{p.who}</p>
+                {/* The feature bullets are the bulk of the card's text and the
+                    reason the four-up grid read as a wall on a phone. Behind a
+                    native <details> the card leads with title and price, and
+                    the detail is one tap away. No JS, same disclosure pattern
+                    as the FAQ, and the copy stays in the HTML for crawlers. */}
+                <details className="hub-card__more">
+                  <summary className="hub-card__more-toggle">
+                    What&apos;s included
+                  </summary>
+                  <ul className="hub-card__list">
+                    {p.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </details>
+                {/* Price and CTA share a row on phones, where a full-width
+                    card is wide and short and stacking them wastes height.
+                    `display: contents` at desktop leaves the column layout
+                    untouched. */}
+                <div className="hub-card__foot">
+                  <p className="hub-card__price">
+                    {p.price}
+                    <WasPrice pkg={p.pkg} />
+                    <span className="hub-card__unit">{p.unit}</span>
+                  </p>
+                  <Link
+                    href={p.href}
+                    className={`btn ${
+                      p.featured ? 'btn--primary' : 'btn--secondary'
+                    } hub-card__cta`}
+                  >
+                    See full details
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- Help me choose ---------- */}
+      <section
+        className="section section--light hub-choose"
+        aria-labelledby="hub-choose-heading"
+      >
+        <div className="section__inner hub-choose__inner">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Not sure where to start?</p>
+            <h2 id="hub-choose-heading">Pick by where you are today</h2>
+          </header>
+          <ul className="hub-choose__list">
+            {CHOOSER.map((c) => {
+              const pkg = PACKAGES.find((p) => p.href === c.href)
+              return (
+                <li key={c.href} className="hub-choose__item">
+                  {GEAR_BULLET}
+                  <span>
+                    {c.if},{' '}
+                    <Link href={c.href}>
+                      {c.lead} {pkg.title}
+                    </Link>
+                    .
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+          <p className="hub-choose__aside">
+            Still weighing it up? The <Link href="/faq">FAQ</Link> covers
+            licensing, what to wear, cancellation, and more. Or start with{' '}
+            <Link href="/about">how we teach</Link>.
+          </p>
+        </div>
+      </section>
+
+      {/* ---------- Closing CTA ---------- */}
+      {/* The hub's only Book button. Its predecessor lived in the intro hero
+          removed in August 2026, which left this page — a significant entry
+          point — with no booking CTA at all, against 01-brief.md. Every CTA
+          opens the same Calendly, so booking from the hub is not a shortcut
+          past choosing a package. New `source` tag rather than the retired
+          `lessons_overview`: that one labelled the intro-hero placement, and
+          conflating the two would muddy the GA4 series (05-analytics.md). */}
+      <section className="section" aria-labelledby="hub-next-heading">
+        <div className="section__inner lesson-next">
+          <header className="section-header">
+            <p className="section-header__eyebrow">Ready to drive?</p>
+            <h2 id="hub-next-heading">Book your first lesson</h2>
+          </header>
+          <BookButton
+            source="lessons_overview_close"
+            className="btn btn--primary btn--xl"
+          >
+            Book a Lesson
+          </BookButton>
+          <p className="lesson-next__links">
+            Prefer to talk it through first?{' '}
+            <Link href="/contact">Get in touch</Link>, or{' '}
+            <Link href="/faq">read the FAQ</Link>.
+          </p>
+        </div>
+      </section>
+    </>
+  )
+}

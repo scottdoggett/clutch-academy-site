@@ -1,73 +1,85 @@
-# Clutch Academy — Website Build Spec
+# Clutch Academy — Website Spec
 
-This folder contains the full specification for the Clutch Academy website. It is written for AI coding agents tasked with building the site.
+Specification for the Clutch Academy website, written for the developer and for
+AI coding agents working in this repo. Everything here describes the site **as
+it actually is** on the `overhaul` branch as of **October 9, 2026**.
 
-## Quick Facts
+Superseded material lives in `archive/` and should not be worked from.
+
+## Quick facts
 
 | Field | Value |
 |---|---|
-| Business | Clutch Academy |
-| Type | Manual transmission driving school |
-| Location | Toronto, Ontario |
-| Target launch | **May 1, 2026** (hard deadline) |
-| Site type | Single-page brochure site with anchor navigation |
-| Primary conversion | Book a lesson via Calendly |
-| Design/styling | **Out of scope for this spec** — brand assets, colors, fonts, and animations will be provided separately |
+| Business | Clutch Academy — manual transmission driving school, Toronto |
+| Site | Multi-page, statically generated, 9 routes + 404 |
+| Stack | Next.js 16 (App Router) · React 19 · plain CSS |
+| Primary conversion | Book a lesson via Calendly popup |
+| Payment | Collected at booking via Stripe (never in person) |
+| Hosting | Vercel — **two projects**, one per branch (see `06-deployment.md`) |
+| Live site | `clutchacademy.ca` — built from **`main`** (the old Vite build) |
+| Rebuild | Built from **`overhaul`** (Next.js) on its own Vercel project, for review |
+| Pricing | Winter rates from October 5, 2026 — $90 / hour, $240, $400, $180 / 2 hr, all + HST, run as a "Fall sale" with the old prices struck out |
 
-## How to Use This Spec
+## The one thing to understand first
 
-Load the file(s) relevant to your current task. The files are independent but cross-reference each other where useful.
+There are **two sites deployed right now**. `main` holds the original
+single-page Vite/GSAP build and serves the real domain. `overhaul` holds the
+Next.js rebuild and serves a separate Vercel project so work can be shown to
+people before cutover. They are different codebases in the same repo, and they
+have drifted. `06-deployment.md` covers what each one is, and what a cutover
+takes.
 
-| File | Contains | Load when you need… |
-|---|---|---|
-| `01-project-brief.md` | Business context, audience, positioning, goals | Understanding who the site is for and what it must achieve |
-| `02-site-architecture.md` | Sitemap, gear-to-section mapping, navigation, section flow | Laying out page structure, nav links, React component skeleton |
-| `03-content-spec.md` | Per-section content specs (copy direction, CTAs, FAQ, pricing) | Writing markup for each section, filling in copy |
-| `04-technical-spec.md` | Stack (React + GSAP), integrations, forms, analytics, deployment | Setting up Calendly, contact form, hosting, domain/email |
-| `05-pending-items.md` | Open decisions + assets still needed from client | Knowing what NOT to hardcode and what to leave as placeholders |
-| `06-design-system.md` | Colors, typography, gear-shift animation system, responsive/a11y rules | Styling, implementing GSAP transitions, layout positions per gear |
+Unless you are specifically fixing the live site, **work on `overhaul`.**
 
-## Decision State Legend
+## The files
 
-Throughout these files, each item is tagged:
+| File | Contains |
+|---|---|
+| `01-brief.md` | Business context, audience, positioning, brand voice, scope boundaries |
+| `02-architecture.md` | Stack, routes, component map, styling system, conventions |
+| `03-content-and-pricing.md` | Per-page content, the four packages, current pricing, copy rules |
+| `04-seo.md` | SEO architecture, per-route targets, structured data, crawler policy |
+| `05-analytics.md` | Consent Mode, GA4 / Ads / Meta / TikTok, conversion tracking, CTA source tags |
+| `06-deployment.md` | The two Vercel projects, branch model, config, launch runbook |
+| `07-status.md` | What's done, what isn't, and every open question needing a human |
+| `08-motion.md` | Animation rules, the six motion types, timing values, and the homepage motion map |
+| `hero-drive.md` | The homepage hero rebuild: road maps, traffic, the drivable car and its gearbox, the page following it, the dash, tyre marks, knocks and effects, in seven phases. Its §Handoff says where the rebuild is and what's next. |
+| `../google-ads-mapping.md` | Account-side Google Ads work still to apply |
+| `../seo.md` | Long-form SEO reference and maintenance guide |
+| `archive/` | The retired single-page spec and the rebuild's own planning docs |
 
-- ✅ **DECIDED** — locked in at the client meeting
-- 🟡 **RECOMMENDED** — default to this unless client overrides
-- ❓ **OPEN** — still needs a client decision; use a placeholder / leave TODO
-- 📎 **PENDING ASSET** — waiting on client to deliver content
+## Decision-state legend
 
-## Scope Boundaries
+Used throughout these files:
 
-**In scope:**
-- Single-page React application with GSAP-powered gear-shift animations
-- H-pattern layout with seven sections mapped to gears
-- Calendly booking integration
-- Contact form
-- Responsive and reduced-motion fallbacks
+- ✅ **DECIDED** — locked in
+- 🟡 **RECOMMENDED** — the default unless someone overrides it
+- ❓ **OPEN** — needs a decision before it can ship
+- 📎 **PENDING ASSET** — waiting on the client to deliver something
 
-**Out of scope (for now):**
-- Online payment processing (payment is handled in-person)
-- Content management system / admin panel
-- Blog or driving-tips content section
-- Multi-page routing
-- Sound effects / audio
+In code, the same states appear as `{/* PENDING: ... */}` and `❓ BLOCKED`
+comments. `grep -rn "PENDING\|BLOCKED" src/ public/` lists every one.
 
-**Pending (delivered separately by client):**
-- Final brand assets (logo, exact color hex, specific fonts, photography)
-- Instructor bio and photo
-- Final testimonials, cancellation policy wording, etc. (see `05-pending-items.md`)
+## Non-negotiable constraints
 
-## Critical Constraints
+1. **Work on `overhaul`; never commit directly to `main`.** `main` is live.
+2. **SEO-first and multi-page.** Each package page is a real landing page and a
+   Google Ads destination. Don't collapse them back together.
+3. **The instructor is the product.** Trust — About, reviews, testimonials — is
+   the primary conversion lever, not feature lists.
+4. **Payment is collected at booking.** Keep secure-payment and cancellation
+   messaging explicit and consistent.
+5. **Reduced motion must remain fully functional.** Every animation needs a
+   matchMedia gate.
+6. **Never invent content.** No fabricated reviews, bios, policies, or package
+   inclusions. If it isn't supplied, flag it `PENDING`.
+7. **iOS Safari is a first-class target.** The Calendly mobile-host workaround
+   exists for a real iOS bug.
 
-1. **Launch date is non-negotiable: May 1, 2026.** Scope back features before slipping the date.
-2. **Payment is NOT collected online at booking.** Calendly confirms the appointment; money changes hands in person.
-3. **The instructor is the product.** Trust in the About section is the primary conversion lever — build that section with care.
-4. **Two pricing tiers, not three.** Do not invent a third tier.
-5. **The gear-shift metaphor is core, not decoration.** Layout positions, animations, and typography all reinforce it. Do not simplify the concept away "for usability" without checking with the client — it's a deliberate differentiator.
-6. **Reduced motion must work.** A significant portion of users enable it. The site must be fully functional without the gear animations.
+## Conventions for updating these docs
 
-## Cross-Reference Notes
-
-When an agent needs information across concerns (e.g., "what form backend should I use and what fields does it need?"), check:
-- Field specs → `03-content-spec.md` (Contact section)
-- Backend/integration → `04-technical-spec.md` (Forms)
+- If a doc disagrees with the code, **the code wins** — then fix the doc.
+- If a doc disagrees with another doc, **flag it; don't silently pick a side.**
+- Convert relative dates to absolute ones ("July 2026", not "last month").
+- When a decision moves from ❓ to ✅, update `07-status.md` in the same commit
+  as the code change.

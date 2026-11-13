@@ -59,7 +59,7 @@ function ensureCalendlyLoaded() {
  * Opens the Calendly popup widget. Returns `false` so it can be used directly
  * as an onClick handler without the browser following any default link action.
  *
- * `source` (e.g. "hero", "packages_single", "reverse") is passed to GA4 as
+ * `source` (e.g. "hero", "packages_single", "contact") is passed to GA4 as
  * the `booking_cta_click` event so we can attribute conversions to the
  * specific CTA the user clicked. gtag is queued by Consent Mode while
  * analytics_storage is denied; once granted, queued events flush.

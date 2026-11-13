@@ -1,0 +1,166 @@
+# 05 — Analytics, Consent & Conversion Tracking
+
+Four platforms, all consent-gated, plus a static conversion page that has to
+work outside the React bundle.
+
+## Accounts
+
+| Platform | ID | Loaded |
+|---|---|---|
+| Google Analytics 4 | `G-5E5GEN5N59` | Always — Consent Mode gates its storage |
+| Google Ads | `AW-18196514948` | Same gtag.js library, second `config` |
+| Meta Pixel | `2845684255788584` | Only after consent |
+| TikTok Pixel | `D87LSEBC77UENKCNER8G` | Only after consent |
+
+## Consent Mode v2
+
+**Deny-first.** An inline snippet in `src/app/layout.jsx` runs before gtag.js
+configures anything and sets `ad_storage`, `ad_user_data`, `ad_personalization`,
+and `analytics_storage` to `denied`, with `functionality_storage` and
+`security_storage` granted and a 500 ms `wait_for_update`.
+
+Flow:
+
+1. **First visit** — everything denied. `ConsentBanner` is shown. gtag queues.
+2. **Accept** — the banner writes `granted` to localStorage, sends a
+   `consent update`, and loads the Meta and TikTok pixels.
+3. **Decline** — the choice is stored; nothing loads. Ad pixels never fire.
+4. **Return visit, already accepted** — `AnalyticsLoader` reads the stored
+   choice on mount and loads the pixels so this visit's PageView fires.
+
+**The storage key is `clutch.consent.v1`, and it exists in three places** that
+cannot import each other: `src/lib/consent.js` (the app bundle), the inline
+snippet in `layout.jsx`, and `public/booked.html`. All three hardcode the same
+literal. Change one, change all three.
+
+Verified in QA: the deny-first default is inline in `<body>` before gtag config
+on all routes, and served HTML contains zero Meta/TikTok pixel URLs — they
+genuinely load only on consent.
+
+## Events
+
+### `booking_cta_click` (GA4)
+
+Fired by `openCalendly(source)` on every booking CTA, carrying a `source`
+parameter identifying the placement. This is the funnel's top and the main
+optimisation signal. Meta and TikTok receive parallel intent events.
+
+**Every Book button goes through `src/components/BookButton.jsx`.** Adding a CTA
+without a distinct `source` silently degrades attribution.
+
+Active source tags:
+
+| Tag | Placement |
+|---|---|
+| `nav` | Nav "Book Now" — site-wide |
+| `hero` | Homepage hero |
+| `about` | Homepage About teaser |
+| `about_page` | `/about` |
+| `packages_single` | `/lessons/individual` |
+| `packages_3pack` | `/lessons/manual-foundations` |
+| `packages_confidence_5pack` | `/lessons/manual-confidence` |
+| `packages_group` | `/lessons/group` hero and closing CTA |
+| `faq` | `/faq` |
+| `contact` | `/contact` |
+| `lessons_overview_close` | `/manual-driving-lessons` closing CTA |
+
+Historical notes that matter for reading GA4 reports:
+
+- **`packages_group_2hr` is retired on `overhaul`.** It belonged to the group
+  page's option card, which repeated the hero's price and Book button and was
+  removed on September 28, 2026, when the four package pages took one shape.
+  The live site still fires it, so its GA4 series ends at cutover; group
+  bookings from then on come in under `packages_group` alone. Before that it
+  labelled a 2.5-hour session under a 2-hour name, kept through the August-1
+  switch for continuity.
+- **`announcement` is retired.** It belonged to the August-1 banner's Book
+  button, removed once the switch shipped. Historical data remains valid.
+- **`reverse` is retired.** It belonged to the old single-page site's Reverse
+  section.
+- **`lessons_overview` is retired.** It belonged to the Book CTA in the
+  `/manual-driving-lessons` intro hero, removed in August 2026. The hub got a
+  booking CTA back on August 18, at the foot of the page rather than the top —
+  it carries the new tag `lessons_overview_close` rather than reviving this one,
+  so the two placements stay distinguishable in reports.
+- **The four `lessons_overview_pick_*` tags are retired.** They labelled a Book
+  button per row of the hub's "Pick by where you are today" chooser, which was
+  four cards for two days in August 2026. The chooser is plain text again and has
+  no Book buttons, so the tags fire nowhere. They were never live on the real
+  domain — the cards shipped on August 18 and came out on August 20, both on
+  `overhaul` — so there is no GA4 history to preserve. Don't revive the names for
+  a different placement.
+
+`/manual-driving-lessons` therefore books through exactly one CTA of its own,
+`lessons_overview_close`. Visitors who use the chooser navigate to a package page
+and book with that page's tag, which is the honest attribution: the chooser's job
+is routing, not closing.
+
+### Contact intent
+
+`ContactCard` fires per-channel intent events to Meta and TikTok when someone
+uses a contact method (phone, email, Instagram, Facebook).
+
+### `hero_drive` (GA4)
+
+Fired once each time a visitor presses the homepage hero's Test drive button
+(`src/components/hero/HeroStage.jsx`, `docs/spec/hero-drive.md`), through
+the same consent-gated `window.gtag` as every other event. No parameters,
+and nothing else from play mode is tracked: not how long they drove, not
+how they stopped. Only desktop-class screens see the button (768px up, with
+a fine pointer that can hover). Added September 24, 2026, as decided in the
+hero-drive review (its §Decisions 8).
+
+## Conversion tracking — `public/booked.html`
+
+Calendly redirects here after a completed booking. It is a **self-contained
+static page**: its own styles, its own consent bootstrap, its own analytics. It
+ships verbatim from `public/` and is served at `/booked` via a rewrite in
+`next.config.mjs`.
+
+On load it fires, once per booking:
+
+- GA4 `purchase`
+- Google Ads `conversion` (skipped while the label is empty, below)
+- Meta `Purchase`
+- TikTok `CompletePayment`
+
+All four share a stable `eventId` so they can be de-duplicated.
+
+**Conversion value** comes from `priceForEvent()`, which keyword-matches
+Calendly's `event_type_name` parameter:
+
+| Match | Value |
+|---|---|
+| `group`, `2h` / `2 hour`, `two hour`, `120` | $180 |
+| `confidence`, `highway`, `five`, `\b5\b` | $400 |
+| `3`, `three`, `pack` | $240 |
+| anything else / missing | $90 (`DEFAULT_VALUE`) |
+
+⚠️ **Rule order is load-bearing.** Group is tested first, so a group event
+whose name mentions a package can't fall through to the `pack` rule and
+report $240 for a $180 booking.
+
+**De-duplication:** a booking id is built from start time + event name + invitee
+name and stored, so refreshing or revisiting the confirmation URL doesn't
+re-fire. This depends on Calendly's "Pass event details to your redirected page"
+setting — without those parameters every booking collapses into one bucket.
+
+### ❓ Google Ads conversions are currently a no-op
+
+`GOOGLE_ADS_CONVERSION_LABEL` in `booked.html` is an **empty string**, so the
+Ads conversion call is skipped. GA4 `purchase` works, Meta and TikTok work —
+Ads does not.
+
+Fixing it is account-side: create the conversion action in the Google Ads UI,
+copy the label, paste it into `booked.html`. Steps are in
+`../google-ads-mapping.md` §1. Until then, **do not trust Ads conversion data**,
+and don't let anyone optimise campaigns against it.
+
+## Maintenance checklist
+
+When you change pricing, also change `priceForEvent()` and `DEFAULT_VALUE`.
+When you add a CTA, give it a new `source`. When you add a platform, gate it
+behind consent in `AnalyticsLoader` — never load it in `layout.jsx`. Add its
+hosts to the Content-Security-Policy in `next.config.mjs` too, or the browser
+blocks it with nothing to see but a console error (`06-deployment.md`
+§Security headers).

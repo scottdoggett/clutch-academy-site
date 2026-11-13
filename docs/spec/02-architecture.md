@@ -1,0 +1,372 @@
+# 02 — Architecture
+
+How the `overhaul` build is put together. For the deployed shape of things
+(branches, Vercel projects, domains) see `06-deployment.md`.
+
+## Stack
+
+- **Next.js 16.4** — App Router, every route statically generated at build time.
+  16.4.6 since November 11, 2026, up from 16.2.10. 16.2 had critical
+  advisories that were only patched in 16.4.1 and later, and 16.4.6 bundles
+  the React Server Components fix for CVE-2026-126187.
+- **React 19.3** (19.3.1, the release with that fix)
+- **Plain CSS** — one stylesheet per component or route, plus design tokens.
+  No Tailwind, no CSS-in-JS, no preprocessor.
+- **ESLint 9** with `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
+- **GSAP** (`gsap` + `@gsap/react`) for scripted motion, added September 2026.
+  How it's used is `08-motion.md`.
+- **three.js**, added September 24, 2026 for the homepage hero's traffic
+  (`hero-drive.md`). Only `src/components/hero/engine/` imports it, and
+  `HeroStage` loads that lazily once the page is idle, so it's a chunk of its
+  own, about 138KB gzipped, off the critical path.
+- **planck.js** 1.5.0, added September 24, 2026 for driving the hero's black
+  car. Only `src/components/hero/drive/` imports it, loaded when the Test
+  drive button is hovered, focused or pressed, as a chunk of its own with
+  the driving code, about 55KB gzipped (October 9 build). Phones and touch
+  screens never load it.
+- **Tests run on Node's built-in `node:test`** (`npm test`), not a framework.
+  They cover the hero's pure modules. No routing library, no state library.
+  The dependency list is deliberately short, seven packages: Next, React,
+  React DOM, the two GSAP packages, three and planck. Tailwind, `motion` and the Magic UI
+  scroll-velocity row were added for the reviews strip and removed again in
+  September 2026, when the strip was rebuilt on GSAP.
+
+```
+npm run dev      # dev server
+npm run build    # static production build
+npm run start    # serve the production build locally
+npm run lint     # eslint over the project
+npm test         # node:test suites (the hero's road maps, graph, traffic and driving)
+```
+
+`next build` prerenders all 11 entries (9 routes + 404 + global error). There is
+no separate prerender step — that was the Vite build's Puppeteer script, and it
+is gone along with `window.__PRERENDER__`.
+
+## Routes
+
+Nine routes plus a custom 404. Every one is static, carries its own metadata and
+canonical, and has exactly one `<h1>`.
+
+| Route | Page | Role |
+|---|---|---|
+| `/` | Homepage | Positioning, social proof, how it works, package teasers, About teaser |
+| `/manual-driving-lessons` | Lessons hub | Compares all four packages; the internal-linking spine |
+| `/lessons/individual` | Individual Manual Lesson | Ads + organic landing page |
+| `/lessons/manual-foundations` | Manual Foundations (3 lessons) | Ads + organic landing page |
+| `/lessons/manual-confidence` | Complete Manual Confidence (5 lessons) | Ads + organic landing page |
+| `/lessons/group` | Group Manual Lessons | Ads + organic landing page |
+| `/about` | About Sam | Trust — the origin story in Sam's own words |
+| `/faq` | FAQ | Rendered from the shared FAQ array; source of the FAQPage schema |
+| `/contact` | Contact | Channels, payment & cancellation |
+| — | 404 (`not-found.jsx`) | Noindexed, links back into the site |
+
+Two static pages ship verbatim from `public/` and are reached through rewrites,
+not the App Router: **`/booked`** (`booked.html`, the Calendly confirmation and
+conversion page) and **`/privacy`** (`privacy.html`).
+
+## Source layout
+
+```
+src/
+├── app/
+│   ├── layout.jsx              # Shared shell: fonts, metadata defaults,
+│   │                           # motion pre-paint script, consent
+│   │                           # bootstrap + gtag, skip link, the fall-sale
+│   │                           # AnnouncementBanner (while it runs), Nav,
+│   │                           # Footer, ConsentBanner, AnalyticsLoader,
+│   │                           # SiteMotion
+│   ├── globals.css             # Base elements, .section / .section__inner,
+│   │                           # .section--light (the beige band)
+│   ├── page.jsx                # Homepage + DrivingSchool/Offer/Person JSON-LD
+│   ├── not-found.jsx
+│   ├── about/                  # page.jsx + about.css
+│   ├── contact/                # page.jsx + contact.css
+│   ├── faq/                    # page.jsx + faq.css
+│   ├── manual-driving-lessons/ # page.jsx + hub.css
+│   └── lessons/{individual,manual-foundations,manual-confidence,group}/
+│
+├── components/
+│   ├── Nav.jsx                 # Fixed nav, mobile toggle, section-aware
+│   │                           # active state, Book Now CTA
+│   ├── Footer.jsx              # Brand, contact, Explore sitemap, social
+│   ├── Breadcrumbs.jsx         # Trail + BreadcrumbList JSON-LD
+│   ├── BookButton.jsx          # THE booking CTA — every one goes through it
+│   ├── ContactCard.jsx         # Channels with per-channel intent tracking
+│   ├── ConsentBanner.jsx       # Consent Mode v2 accept/decline
+│   ├── AnnouncementBanner.jsx  # Fall-sale strip above the nav; scrolls away
+│   ├── WasPrice.jsx            # The struck-out pre-sale price beside a price
+│   ├── AnalyticsLoader.jsx     # Loads pixels only after consent
+│   ├── ReviewsMarquee.jsx      # Google-review strip: GSAP drift + drag/swipe,
+│   │                           # static swipeable list under reduced motion;
+│   │                           # fitCards() sizes each card to its quote
+│   ├── home/                   # Hero, Reviews, HowItWorks, PackagesTeaser,
+│   │                           # AboutTeaser — homepage sections
+│   ├── hero/                   # The homepage hero's city (hero-drive.md):
+│   │                           # road maps in layouts/, graph.js, layout.js,
+│   │                           # the server-rendered RoadLayer, HeroStage
+│   │                           # (client), engine/ (the lazy traffic chunk:
+│   │                           # traffic.js, render.js, marks, particles,
+│   │                           # the loop), drive/ (the lazy planck chunk:
+│   │                           # the drivable car, its gearbox, keys, the
+│   │                           # page following it, tyre marks, knocks and
+│   │                           # effects, the way back to traffic), the
+│   │                           # Test drive button and the driving display,
+│   │                           # and their node:test suites
+│   ├── motion/
+│   │   └── SiteMotion.jsx      # The one motion runtime (08-motion.md)
+│   ├── ReviewCard.css          # The review card in the homepage strip
+│   ├── about/
+│   │   └── WhySigns.jsx        # /about's reasons, as a street of road signs
+│   └── lessons/
+│       └── lessons.css         # Shared package-page styles, imported by each page
+│
+├── hooks/
+│   └── useCalendly.js          # openCalendly(source) + CALENDLY_URL
+│
+├── lib/
+│   ├── faqs.js                 # Single source of FAQ truth
+│   ├── googleReviews.js        # Rating, review count, profile URL
+│   ├── reviews.js              # The quoted Google reviews (homepage strip)
+│   ├── consent.js              # Consent storage key + helpers
+│   ├── metaPixel.js
+│   ├── tiktokPixel.js
+│   ├── gsap.js                 # GSAP + plugin registration, MOTION_OK
+│   ├── motion.js               # Motion values and the six data-anim types
+│   ├── motionPrepaint.js       # Inline script: hero states before first paint
+│   ├── sale.js                 # Fall-sale switch, pre-sale prices, savings
+│   └── treadmill.js            # The reviews strip as a treadmill for the hero's car
+│
+└── styles/
+    ├── tokens.css              # Design tokens
+    ├── buttons.css             # Shared button classes
+    └── motion.css              # Photo frames, Draw origin, hero pre-paint
+```
+
+## Page composition
+
+The homepage is five components in order: `Hero → Reviews → HowItWorks →
+PackagesTeaser → AboutTeaser`.
+
+The four package pages have one shape, section for section (made uniform
+September 28, 2026): breadcrumbs → hero (eyebrow, h1, lead, pull line, price,
+Book CTA) → what's included → who it's for → real Google review quotes → FAQ
+subset → next steps. What's included is red cards: Foundations numbers its
+three lessons (`.lesson-curriculum`), since they come in order; the other
+three use the `.lesson-included` grid. Who it's for is always a bullet list.
+Section headings are the site's shared `.section-header` scale; there's no
+page-level wrapper class.
+
+`/manual-driving-lessons` opens **directly on the packages** — its heading
+"Four ways to learn" is the page's `<h1>`. The intro hero that used to carry a
+separate H1, a lead paragraph, the training-car photo, and the hub's only Book
+CTA was removed in August 2026 at the client's request. The page now closes with
+its own Book CTA (`lessons_overview_close`), added on August 18 because
+`01-brief.md` requires every page to funnel to one and this is a significant
+entry point.
+
+### Package cards
+
+Two four-card sets share a shape and a set of rules: the homepage teasers
+(`PackagesTeaser`) and the hub's cards (`hub.css`). Both are **one card per row
+below 768px** — a two-column grid was tried and reverted as too busy.
+
+The hub card carries more than the teaser (gear number, who-it's-for line,
+feature bullets), so on phones its bullets fold into a native `<details>`
+labelled "What's included":
+
+- **Phones only.** Above 768px the `<summary>` is hidden and the content is
+  forced visible — `::details-content { content-visibility: visible }`, plus a
+  child `display` override for engines predating that pseudo-element. Desktop
+  was never the crowded case. One copy of the bullets in the markup either way.
+- **The whole card is the toggle.** The summary carries an overlay covering the
+  card, so a tap anywhere flips it. The CTA is lifted above the overlay with
+  `z-index` so "See full details" still navigates.
+- Note the side effect: at desktop the `<details>` is a closed element with
+  visible content and no exposed control. Assistive tech sees plain rendered
+  content rather than a collapsed disclosure — the intended reading, since there
+  is no control left to mislabel, but an unusual construction.
+
+Both cards wrap price + CTA in a `__foot` element. On phones it's a row (a
+full-width card is wide and short, so stacking them wasted a row per card); at
+desktop it's `display: contents`, so the column layout is untouched. Every
+card's price column is the same width (8rem; the widest price block is 124px)
+and the CTA's label never wraps, so all four cards in a set make the same
+choice: CTA beside the price where both fit, CTA on a full-width row under it
+where they don't. The homepage cards ("See details & book") fit side by side
+from 390px, the hub's ("See full details") from 375px. Until October 15, 2026
+the row was `nowrap` and the CTA shrank and wrapped its label instead, which
+put some cards' labels on two lines and others on one, because the price blocks
+differ in width.
+
+The hub's "Pick by where you are today" chooser is **not** cards. It's four
+plain sentences, each hanging off a gear-lever bullet, with the package it points
+to as the inline link. It was cards for two days in August 2026 — situation,
+package plaque, Book Now and See More — and read as far too heavy for what is a
+signpost. The package name is looked up from the page's `PACKAGES` array by href
+rather than stored on the chooser entry, so the two can't drift; the entry holds
+only the verb phrase that carries the name inside the sentence.
+
+The bullet is an inline SVG in the page's own 24x24 line-icon idiom, at
+`strokeWidth` 2 because it renders at 20px where the package-page icons render at
+24. A flat H shift-pattern was drawn first, to echo the gate motif the hero and
+the card chips use — at bullet size it read as the letter H.
+
+**There is no site-wide trust strip.** A `TrustBlock` band (Google rating +
+three trust points) used to close About, the hub, the FAQ, and all four package
+pages; it was removed everywhere in August 2026. The homepage "What Students Are
+Saying" section — marquee plus a Google badge — is a different component and
+remains.
+
+The strip's cards are sized to their quotes (October 2026). They share one
+height, the fewest lines the longest quote needs at the widest a card may be
+(`--card-max`), and each card is as narrow as its own quote allows at that
+height, so a long review gets a wide card rather than a tall one. CSS
+estimates each width from the quote's length (`--chars`) for first paint;
+`fitCards()` in `ReviewsMarquee.jsx` then measures every quote and sets
+`--fit`, again on any change of the strip's width and once the fonts load.
+The reviewer and the stars share the card's top row.
+
+## Single sources of truth
+
+Duplicating any of these is a bug:
+
+| Thing | Lives in | Feeds |
+|---|---|---|
+| FAQ copy | `src/lib/faqs.js` | `/faq`, its FAQPage JSON-LD, `/contact`'s cancellation text (package pages had FAQ subsets until November 5, 2026) |
+| Google rating + review count | `src/lib/googleReviews.js` | The homepage reviews badge and the homepage `aggregateRating` |
+| Quoted Google reviews | `src/lib/reviews.js` | The homepage reviews strip |
+| Booking CTA behaviour | `src/components/BookButton.jsx` | Every Book button on the site |
+| Calendly URL | `src/hooks/useCalendly.js` | All booking entry points |
+| Consent storage key | `src/lib/consent.js` | Banner, analytics loader, `booked.html` |
+
+## Styling
+
+**Design tokens in `src/styles/tokens.css`** — colours, type scale, spacing,
+and the 150ms hover/focus transition. Use the tokens, not literal values.
+Scripted-motion timings live in `src/lib/motion.js` instead (`08-motion.md`).
+
+**Light sections.** `.section--light` paints a section `--beige` (`#FBE9DF`)
+and flips its header type to red. Every page opens on the red, then alternates
+red and beige, and no two beige bands touch. Applied to the homepage first and
+to every other route on September 28, 2026:
+
+| Route | Red | Beige |
+|---|---|---|
+| `/` | Hero, How It Works, A message from the founder | Reviews, pricing |
+| Package pages | Hero, who it's for | What's included, the closing CTA |
+| `/manual-driving-lessons` | The packages, the closing CTA | Pick by where you are today |
+| `/about` | Why Students Choose Clutch Academy (the signs, first), the story | What Lessons Are Really Like, Pick where to start |
+| `/faq` | The questions | The closing CTA |
+| `/contact` | The book CTA and contact card | Payment & cancellation |
+
+On the package pages what's included is always red cards on the beige. Until
+November 5, 2026 they also had a band of review quotes (`LessonQuotes`, on
+`ReviewCard.css`) and a "Quick answers" FAQ subset (`LessonFaq`). Sam had
+both removed, and the two components are deleted. Each page now imports
+`lessons.css` itself, since it used to arrive through them.
+
+A button placed on the beige itself adds `btn--on-light` (solid red with an
+inner white ring); every closing Book CTA on beige has it. Buttons inside the
+red cards on a beige band keep the default white-on-red treatment. Solid red
+cards keep their own white type there, and set it on the card, since an `h3`
+inside would otherwise inherit the band's red. Red text on `--beige` measures
+4.99:1, so it passes AA with little room: don't darken the beige without
+re-checking.
+
+Two contrast rules that are easy to get wrong on the brand red (`#C8102E`):
+
+- `--chrome` is `#E4E4E4`, lifted from `#D9D9D9` because the old value failed
+  WCAG AA at 4.18:1. It now passes at 4.64:1.
+- **Muted text on the brand red must be a solid colour** — `var(--cream)` or
+  `var(--chrome)`. White-alpha and opacity-faded text fail 4.5:1 on the
+  saturated red even when the blend maths suggests otherwise.
+
+**`--column-inset` is how narrow blocks stay on the page's left edge.**
+`.section__inner` centres a 1200px column and publishes `--column-inset`, the
+distance from the section's padding edge to that column's left edge. Any block
+that caps itself narrower must use `margin-inline: var(--column-inset) auto` —
+otherwise it inherits `margin: 0 auto` and re-centres inside the column, landing
+~150px right of the nav, the footer, and every full-width section on the same
+page. The cap is a reading measure, not a centring device. Fixed August 18,
+2026; every route resolves to a single left edge from 320px to 1713px.
+
+`--announcement-height` is `0px` unless a notice strip is mounted. Today that's
+the fall sale's `AnnouncementBanner` (`src/lib/sale.js` switches it). Its CSS
+sets an estimated height per breakpoint for first paint and its script the
+measured one, so every `--nav-height` clearance follows. The homepage hero is
+the exception: it starts under the strip and sizes itself as if the strip
+weren't there, so its road map and tests don't change (`Hero.css`).
+
+**The header moves with no script** (since November 11, 2026). The strip is in
+the page's flow and scrolls away like any content. The nav is `position:
+sticky; top: 0`, so it rides up behind the strip and parks at the top. A
+negative bottom margin of `--nav-height` takes both back out of the flow, so
+`<main>` starts at the top of the page underneath them, exactly as when both
+were `fixed`. Measured at 390px and 1440px on four routes: every heading sits
+where it did. Before, a scroll listener moved both through a `--header-shift`
+variable on `<html>`. On phones that lagged the finger, because iOS scrolls on
+another thread, and it restyled the whole page every frame, so the strip
+jittered on every swipe. Two things keep sticky working:
+
+- **`<body>` clips with `overflow-x: clip`, never `hidden`.** `hidden` makes
+  `<body>` a scroll container, and the nav would stick to it instead of the
+  window, then scroll away with the page.
+- **The nav stays a direct child of `<body>`.** A sticky element only sticks
+  within its parent, so wrapping it in a `<header>` would end the sticking
+  where the wrapper ends.
+
+## Conventions
+
+- **Booking always goes through `BookButton`** with a distinct `source` tag per
+  placement. Never call `openCalendly` directly from a page.
+- **`prefers-reduced-motion` must be respected.** Scripted motion runs through
+  `SiteMotion` inside `gsap.matchMedia()`, so reduced motion gets the static
+  page. The reviews strip swaps to a static swipeable list. See `08-motion.md`.
+- **Client components are the exception.** Most pages are server components;
+  `'use client'` appears only where interaction demands it (Nav, BookButton,
+  ConsentBanner, AnnouncementBanner, AnalyticsLoader, ContactCard,
+  ReviewsMarquee, SiteMotion, HeroStage).
+  Animated sections stay server components: they opt in with `data-anim`
+  attributes that `SiteMotion` reads.
+- **Nav active state is section-aware.** `/lessons/*` keeps the Lessons item
+  underlined via prefix matching, while `aria-current="page"` stays exact — on a
+  package page you are *in* the section but not *on* the hub page.
+- **Interactive targets are at least 44px.** Nav toggle and Book button, footer
+  links, FAQ rows, card CTAs and the disclosure toggle all clear it. Where width
+  is scarce or padding would drag an underline away from its text, grow the hit
+  area with an absolutely positioned overlay instead — see the nav toggle and
+  `ContactCard`. Inline links inside a sentence are exempt (WCAG 2.5.8), and
+  breadcrumbs sit at about 33px, past the 24px AA floor.
+- **The mobile nav bar must stay one row.** It is `flex-wrap: nowrap`, the open
+  menu is an absolutely positioned dropdown, and the logo shrinks to absorb the
+  squeeze. A wrapped bar grows past `--nav-height`, which every page reserves as
+  fixed, so the bar lands on top of the first heading. Below 768px the bar is
+  52px (`--nav-bar-height` in `tokens.css`; 64px from 768px up), set as its
+  height, with no vertical padding. That was Scott's call on November 11,
+  2026. Before that it was 69px against a 64px reservation. The Book button
+  looks about 32px tall but takes 44px of taps through an `::after` overlay,
+  as the toggle does.
+- **Don't set `touch-action` on horizontal scrollers.** `pan-x` reads like "this
+  pans horizontally" but declares horizontal panning to be the *only* gesture
+  the element handles, so vertical drags over it are swallowed and the page
+  won't scroll. The default already locks the axis from the gesture's initial
+  direction. Removed from the reviews marquee on August 18, 2026. (The moving
+  reviews strip isn't a scroller, since it moves a transform, and it uses
+  `touch-action: pan-y` on purpose: vertical swipes go to the page, horizontal
+  ones to its drag handler.)
+- **Pending inputs are comments, not omissions.** Use `{/* PENDING: ... */}` or
+  `❓ BLOCKED`, and never invent content to fill the gap.
+- **iOS Safari is a first-class target.** `useCalendly` mounts an inline widget
+  into a custom overlay on mobile because Calendly's native popup mis-sizes on
+  iOS Safari. Don't "clean that up" without testing on a real device.
+
+## What was removed in the rebuild
+
+Worth knowing, because half the archive talks about it: the gear-shift
+metaphor, the H-pattern shifter, the single-page GSAP/ScrollTrigger
+choreography (GSAP itself came back in September 2026 for per-section
+entrances; `08-motion.md`),
+`useShiftTransition`, `src/components/sections/`, the Puppeteer prerender
+script, `window.__PRERENDER__`, and `vercel.json`. The old section copy is
+recoverable with `git log -- 'src/components/sections/*'`.

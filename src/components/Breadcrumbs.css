@@ -1,0 +1,80 @@
+/* Sits directly under the sticky nav, above the page hero, on the brand red.
+   Per the tokens note: text on --red-primary must be a SOLID colour, never
+   white-alpha or opacity-faded — alpha fails 4.5:1 on the saturated red even
+   when it looks acceptable. --chrome is the AA-safe muted value (4.64:1). */
+/* The trail is the first thing in the page flow, so it — not the hero below —
+   is what has to clear the fixed nav. */
+.breadcrumbs {
+  background-color: var(--red-primary);
+  /* Horizontal padding mirrors `.section` so this bar's `.section__inner`
+     lines up with the hero's. Without it the trail sat flush to the viewport
+     edge while the hero below started a full gutter in. */
+  padding: calc(var(--nav-height) + 0.875rem) clamp(1.25rem, 4vw, 4rem) 0;
+}
+
+/* ...and the hero then only needs its normal rhythm. Specific enough to win
+   over `.section--first` in globals.css, which sets the nav clearance for
+   pages that have no breadcrumbs. */
+.breadcrumbs + .section.section--first {
+  padding-top: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.breadcrumbs__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.5rem;
+  font-size: var(--text-small);
+}
+
+/* Separator is a CSS pseudo-element so screen readers read the trail as a
+   plain list instead of announcing a chevron between every item. */
+.breadcrumbs__item + .breadcrumbs__item::before {
+  content: '›';
+  margin-right: 0.5rem;
+  color: var(--chrome);
+}
+
+/* Vertical padding clears the 24px AA target minimum; the trail's own text was
+   16px tall. */
+.breadcrumbs__link {
+  color: var(--chrome);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  display: inline-block;
+  padding: 0.375rem 0;
+}
+
+.breadcrumbs__link:hover,
+.breadcrumbs__link:focus-visible {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+.breadcrumbs__link:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.breadcrumbs__current {
+  color: var(--cream);
+  font-weight: 600;
+}
+
+/* Phones keep the nav clearance — the hero can't provide it, because the rule
+   above hands the hero a small padding-top whenever a trail precedes it. An
+   earlier `padding-top: 0.75rem` here dropped the clearance entirely and left
+   the trail and the hero eyebrow rendering underneath the fixed nav. Only the
+   breathing room below the nav tightens on small screens. */
+@media (max-width: 639px) {
+  .breadcrumbs {
+    padding-top: calc(var(--nav-height) + 0.625rem);
+  }
+
+  .breadcrumbs__list {
+    font-size: 0.8125rem;
+  }
+}

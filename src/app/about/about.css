@@ -1,0 +1,195 @@
+/* ---------- Story ------------------------------------------------------ */
+/* Third on the page and on the red since November 5, 2026, straight above
+   Pick where to start. Its heading was the page's h1 while it opened the
+   page; it's a section h2 now, sized like the rest of them (the caps are on
+   .section-header h2 in globals.css), so it never outsizes the h1. */
+.about-story__grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 380px) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: 1100px;
+  margin-inline: var(--column-inset) auto;
+  /* Blend-mode children (the headshot) composite against this box. */
+  isolation: isolate;
+}
+
+.about-story__photo {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  height: auto;
+}
+
+.about-story__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.about-story__headline {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1;
+  letter-spacing: var(--letter-tight);
+  margin: 0;
+}
+
+.about-story__para {
+  color: var(--cream);
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 58ch;
+}
+
+/* ---------- Why Students Choose ------------------------------------ */
+/* The section itself is a component: WhySigns in src/components/about/,
+   which replaced the shift gate (chosen September 29, 2026). What stays here
+   is its centred header. Since November 5, 2026 it opens the page, and its
+   heading is the page's h1, at the size the story's h1 had (About's title
+   tops out at 3.5rem; globals.css, .section-header h2). The shared section
+   rules are written for h2s, so the h1 sets its own margin and line height. */
+/* Two lines, "Why Students Choose" over "Clutch Academy". The shared header's
+   60ch cap is measured in the body font and lands at ~534px, which broke the
+   heading over three lines; lifting the cap entirely ran it onto one very wide
+   one. So: no cap on the header, and a cap on the heading itself.
+
+   18ch is 792px in this face (ch is a wide 44px at 64px Jakarta 800), which
+   sits between "Why Students Choose" at 666px and "Why Students Choose Clutch"
+   at 875px — the break can only fall where we want it, with or without
+   balance. Both sides scale with the font, so it holds at every size.
+   Scoped to this section. */
+.about-why .section-header {
+  max-width: none;
+}
+
+.about-why .section-header h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* ---------- What Lessons Are Really Like (fears) ----------------------- */
+/* On the beige since November 5, 2026: red cards on the band, as on the
+   package pages, so each card sets its own white and cream type. */
+.about-fears__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.about-fears__card {
+  padding: clamp(1.125rem, 2vw, 1.5rem);
+  background-color: var(--red-deep);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.about-fears__fear {
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.2;
+  margin: 0;
+  font-style: italic;
+  color: var(--white);
+}
+
+.about-fears__answer {
+  margin: 0;
+  color: var(--cream);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* ---------- Pick where to start ---------------------------------------- */
+/* The page's closing band, on the beige since November 5, 2026: outlined
+   boxes in the red, the links red and the words under them --red-dark, as
+   on the other closing blocks on beige (.lesson-next__links in
+   globals.css). Red on --beige is 4.99:1. */
+.about-next__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.about-next__item {
+  padding: clamp(1rem, 2vw, 1.375rem);
+  border: 1px solid rgba(200, 16, 46, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  position: relative;
+}
+
+.about-next__link {
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  letter-spacing: var(--letter-tight);
+  text-underline-offset: 4px;
+}
+
+/* Stretched link: the title's hit area covers the whole card, so the target is
+   the card a visitor is already aiming at rather than a 27px line of text. The
+   card holds no other interactive element, so nothing is swallowed. */
+.about-next__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.about-next__link:focus-visible {
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
+.about-next__desc {
+  margin: 0;
+  color: var(--red-dark);
+  font-size: var(--text-small);
+}
+
+.about-next__hub {
+  margin: 1.25rem 0 0;
+  color: var(--red-dark);
+}
+
+.about-next__hub a {
+  color: var(--red-primary);
+  text-underline-offset: 3px;
+}
+
+.about-next__hub a:focus-visible {
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive -------------------------------------------------- */
+@media (max-width: 767px) {
+  .about-story__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .about-story__photo {
+    width: min(75%, 280px);
+    margin: 0 auto;
+  }
+
+  /* The section h2 scale on phones (globals.css, .section-header h2). */
+  .about-story__headline {
+    font-size: clamp(1.625rem, 7vw, 2.25rem);
+  }
+
+  .about-fears__grid,
+  .about-next__list {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,319 @@
+.teasers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 1.5rem auto 0;
+}
+
+/* Compact teaser card: the same tiered-red family as the old pricing grid,
+   but info-only — details and inclusions live on the linked page. The
+   section is a beige band (`section--light`), so the red cards carry their
+   own white type and stand out against it; nothing inside a card changes. */
+.teaser-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1.125rem, 2vw, 1.5rem);
+  --card-red: var(--red-deep);
+  background: linear-gradient(
+    180deg,
+    var(--card-red) 0%,
+    color-mix(in srgb, var(--card-red) 85%, var(--black)) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition:
+    border-color var(--transition-reduced) ease,
+    box-shadow var(--transition-reduced) ease;
+}
+
+@media (hover: hover) {
+  .teaser-card:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 12px 28px -12px rgba(74, 5, 16, 0.55);
+  }
+}
+
+/* Brightest to darkest across the row so the four cards read as one family. */
+.teaser-card--tier-1 {
+  --card-red: color-mix(in srgb, var(--red-primary) 30%, var(--red-deep));
+}
+
+.teaser-card--tier-2 {
+  --card-red: var(--red-deep);
+}
+
+.teaser-card--tier-3 {
+  --card-red: color-mix(in srgb, var(--red-dark) 45%, var(--red-deep));
+}
+
+.teaser-card--tier-4 {
+  --card-red: color-mix(in srgb, var(--red-dark) 65%, var(--black));
+}
+
+/* On the beige band a white border would vanish at the card's outer edge, so
+   the featured card is ringed in the brand red instead. */
+.teaser-card--featured {
+  border-color: var(--red-primary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 2px var(--red-primary),
+    0 14px 36px -12px rgba(74, 5, 16, 0.55);
+}
+
+.teaser-card__badge {
+  position: absolute;
+  top: 0;
+  right: clamp(1rem, 2vw, 1.5rem);
+  transform: translateY(-50%);
+  /* Straddles the card's top edge, half on the beige band — so it's red with
+     white type, not the white chip it was on the old red ground. */
+  background-color: var(--red-primary);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1px;
+  box-shadow: 0 4px 12px -2px rgba(74, 5, 16, 0.4);
+  white-space: nowrap;
+}
+
+.teaser-card__tag {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
+}
+
+.teaser-card__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.375rem, 1.9vw, 1.75rem);
+  line-height: 1.05;
+  letter-spacing: var(--letter-tight);
+  color: var(--white);
+  margin: 0;
+}
+
+.teaser-card__desc {
+  margin: 0;
+  color: var(--cream);
+  opacity: 0.78;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.teaser-card__price {
+  margin: auto 0 0;
+  padding-top: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.teaser-card__unit {
+  font-size: 0.35em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream); /* was 0.6-alpha white — failed AA on the card reds */
+}
+
+/* With a struck-out old price beside it (the fall sale, WasPrice), the unit
+   takes its own line: price, old price and unit don't fit one line in every
+   card, and a unit that wraps in some cards and not others puts the prices
+   at different heights. */
+.teaser-card__price:has(.price-was) .teaser-card__unit {
+  flex-basis: 100%;
+}
+
+/* A step smaller than elsewhere, so price, old price and saving share one
+   line in a four-up card at 1024px. On phones the saving has its own line
+   and takes the standard size. */
+@media (min-width: 768px) {
+  .teaser-card__price .price-save {
+    font-size: 0.625rem;
+  }
+}
+
+/* See hub.css — transparent to the flex column at desktop, a row on phones. */
+.teaser-card__foot {
+  display: contents;
+}
+
+.teaser-card__cta {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.teasers__hub-link {
+  margin: 1.5rem 0 0;
+  text-align: center;
+}
+
+.teasers__hub-link a {
+  position: relative;
+  color: var(--red-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-caps);
+  text-transform: uppercase;
+  font-size: var(--text-small);
+  text-underline-offset: 4px;
+}
+
+/* A 44px hit area without moving the link or its underline. */
+.teasers__hub-link a::after {
+  content: '';
+  position: absolute;
+  inset: -0.875rem 0;
+}
+
+.teasers__hub-link a:focus-visible {
+  outline: 2px solid var(--red-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1023px) {
+  .teasers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* One card per row on phones — see hub.css for the reasoning. These carry less
+   than the hub cards (no bullets, so no disclosure), so they just need the
+   tighter internals and the price/CTA row. */
+@media (max-width: 767px) {
+  .teasers {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .teaser-card {
+    padding: 1rem 1.125rem;
+    gap: 0.375rem;
+  }
+
+  .teaser-card__badge {
+    right: 1rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .teaser-card__tag {
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+  }
+
+  .teaser-card__title {
+    font-size: clamp(1.25rem, 5.6vw, 1.625rem);
+    line-height: 1.05;
+  }
+
+  .teaser-card__desc {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  /* Every card makes the same choice: the price column is one width in all
+     four (below) and the CTA's label never wraps, so either all four CTAs
+     fit beside their prices (from 390px) or all four take a full-width row
+     underneath. A CTA that shrank and wrapped its own label did it in some
+     cards and not others, since the price blocks differ in width. */
+  .teaser-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.375rem;
+  }
+
+  /* Unit stacks under the number instead of sitting beside it: inline, the
+     price block was wide enough to push the CTA onto its own row, which cost
+     the row this layout exists to save. */
+  /* The widest price block, "/ 5 lessons + HST" under $400 and its old
+     price, measures 124px. */
+  .teaser-card__price {
+    padding-top: 0;
+    font-size: 1.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+    flex: 0 0 8rem;
+  }
+
+  .teaser-card__unit {
+    font-size: 0.4em;
+  }
+
+  /* With an old price, the price and it share the first line and the unit
+     drops under them, as at desktop. A grid, not a wrapping row: a wrapping
+     row is as wide as all three on one line, and this block doesn't shrink,
+     so it squeezed the CTA beside it to a narrow column. */
+  .teaser-card__price:has(.price-was) {
+    display: grid;
+    /* Flexible second column: the full-width rows below would otherwise
+       widen the first and open a gap between the price and the old one. */
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-content: start;
+    align-items: baseline;
+    gap: 0.125rem 0.375rem;
+  }
+
+  .teaser-card__price:has(.price-was) .teaser-card__unit {
+    grid-column: 1 / -1;
+  }
+
+  /* The saving takes a line of its own, after the unit so the price and
+     what it buys read together: beside the prices it makes the block about
+     170px wide and pushes the CTA to three lines. */
+  .teaser-card__price .price-deal {
+    display: contents;
+  }
+
+  .teaser-card__price .price-save {
+    grid-column: 1 / -1;
+    justify-self: start;
+    order: 1;
+    margin-top: 0.25rem;
+  }
+
+  /* Tighter tracking and side padding than elsewhere, so "See details &
+     book" fits beside the price from 390px. */
+  .teaser-card__cta {
+    margin-top: 0;
+    flex: 1 0 auto;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    padding: 0.625rem;
+  }
+}
+

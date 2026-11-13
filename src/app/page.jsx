@@ -1,0 +1,182 @@
+import Hero from '../components/home/Hero'
+import Reviews from '../components/home/Reviews'
+import HowItWorks from '../components/home/HowItWorks'
+import PackagesTeaser from '../components/home/PackagesTeaser'
+import AboutTeaser from '../components/home/AboutTeaser'
+import googleReviews from '../lib/googleReviews'
+
+export const metadata = {
+  description:
+    'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads, at your pace. Book your first lesson online.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    url: 'https://clutchacademy.ca/',
+    title: 'Manual Driving Lessons in Toronto | Clutch Academy',
+    description:
+      'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads. Book your first lesson online.',
+    images: [
+      {
+        url: '/og-image.png?v=2',
+        width: 1200,
+        height: 630,
+        alt: 'Clutch Academy, manual transmission driving lessons in Toronto',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Manual Driving Lessons in Toronto | Clutch Academy',
+    description:
+      'Manual transmission driving lessons in Toronto from $90. One-on-one, on real roads.',
+    images: ['/og-image.png?v=2'],
+  },
+}
+
+// DrivingSchool / Offer / Person structured data, first carried over from the
+// pre-overhaul index.html. The Offers carry the October 2026 winter prices for
+// three packages; Group Manual Lessons has none yet (docs/spec/07-status.md,
+// Known bugs).
+const SCHEMA_GRAPH = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'DrivingSchool',
+      '@id': 'https://clutchacademy.ca/#business',
+      name: 'Clutch Academy',
+      alternateName: 'Clutch Academy Manual Driving Lessons',
+      url: 'https://clutchacademy.ca/',
+      description:
+        'Manual transmission driving school in Toronto. One-on-one lessons on real roads, at your pace.',
+      image: 'https://clutchacademy.ca/og-image.png?v=2',
+      logo: 'https://clutchacademy.ca/logo.svg',
+      telephone: '+1-437-223-1153',
+      email: 'hello@clutchacademy.ca',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Toronto',
+        addressRegion: 'ON',
+        addressCountry: 'CA',
+      },
+      priceRange: '$$',
+      currenciesAccepted: 'CAD',
+      paymentAccepted: 'Credit Card, Debit Card',
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 43.7182412,
+        longitude: -79.3780581,
+      },
+      hasMap: 'https://maps.app.goo.gl/5Mi1EeB3jRs35Ezr5',
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+          ],
+          opens: '08:00',
+          closes: '21:00',
+        },
+      ],
+      areaServed: [
+        { '@type': 'City', name: 'Toronto', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+        { '@type': 'City', name: 'Etobicoke', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+        { '@type': 'City', name: 'North York', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+        { '@type': 'City', name: 'Scarborough', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+        { '@type': 'City', name: 'East York', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+        { '@type': 'City', name: 'Mississauga', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+        { '@type': 'City', name: 'Vaughan', containedInPlace: { '@type': 'AdministrativeArea', name: 'Ontario, Canada' } },
+      ],
+      // Wired to the shared Business Profile numbers module so the markup can
+      // never drift from the visible badges. Whether aggregateRating should
+      // exist at all is still open item 2 in docs/spec/07-status.md — this
+      // only keeps it accurate while it does.
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: googleReviews.rating.toFixed(1),
+        reviewCount: googleReviews.reviewCount,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      sameAs: [
+        'https://www.instagram.com/clutchacademy.ca/',
+        'https://www.facebook.com/profile.php?id=61569269306023',
+        'https://maps.app.goo.gl/5Mi1EeB3jRs35Ezr5',
+      ],
+      makesOffer: [
+        { '@id': 'https://clutchacademy.ca/#offer-single' },
+        { '@id': 'https://clutchacademy.ca/#offer-3pack' },
+        { '@id': 'https://clutchacademy.ca/#offer-confidence-5pack' },
+      ],
+      // Founder, not employee or instructor: Sam, November 5, 2026 (the site
+      // shouldn't read as a one-man show; /about is the one place that says
+      // lead instructor).
+      founder: { '@id': 'https://clutchacademy.ca/#founder' },
+    },
+    {
+      '@type': 'Offer',
+      '@id': 'https://clutchacademy.ca/#offer-single',
+      name: 'Individual Manual Lesson',
+      description:
+        'One hour of one-on-one manual transmission instruction.',
+      price: '90.00',
+      priceCurrency: 'CAD',
+      category: 'Driving lesson',
+      availability: 'https://schema.org/InStock',
+      offeredBy: { '@id': 'https://clutchacademy.ca/#business' },
+    },
+    {
+      '@type': 'Offer',
+      '@id': 'https://clutchacademy.ca/#offer-3pack',
+      name: 'Manual Foundations Package (3 Lessons)',
+      description:
+        'Three one-hour lessons that take you from clutch basics to driving real roads on your own.',
+      price: '240.00',
+      priceCurrency: 'CAD',
+      category: 'Driving lesson package',
+      availability: 'https://schema.org/InStock',
+      offeredBy: { '@id': 'https://clutchacademy.ca/#business' },
+    },
+    {
+      '@type': 'Offer',
+      '@id': 'https://clutchacademy.ca/#offer-confidence-5pack',
+      name: 'Complete Manual Confidence Package (5 Lessons)',
+      description:
+        'Five one-hour lessons, from your first shift to smoother downshifts, rev-matching, gear selection, shift timing and clutch control.',
+      price: '400.00',
+      priceCurrency: 'CAD',
+      category: 'Driving lesson package',
+      availability: 'https://schema.org/InStock',
+      offeredBy: { '@id': 'https://clutchacademy.ca/#business' },
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://clutchacademy.ca/#founder',
+      name: 'Samuel Anthony',
+      jobTitle: 'Founder',
+    },
+  ],
+}
+
+// Conventional scrolling homepage (Phase 4): introduce Clutch Academy, build
+// trust, showcase reviews, introduce Sam, and route visitors to the dedicated
+// package pages — the detail lives there, not inline.
+export default function HomePage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA_GRAPH) }}
+      />
+      <Hero />
+      <Reviews />
+      <HowItWorks />
+      <PackagesTeaser />
+      <AboutTeaser />
+    </>
+  )
+}

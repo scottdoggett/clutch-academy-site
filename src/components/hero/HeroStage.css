@@ -1,0 +1,96 @@
+/* The layer over the copy (docs/spec/hero-drive.md §Layers): the car canvas
+   and the driving controls, from Phase 3 on. It never takes clicks itself,
+   so the CTAs underneath stay clickable. */
+.hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* The traffic (engine/render.js). The engine places it over the layout's
+   box, the whole hero, and hides it on phones, where there's no map. */
+.hero__cars {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* ---------- The Test drive pill (DriveButton.jsx) -------------------------
+   The steering wheel on a white disc, like a key fob's button, and the label
+   in white on the hero red: easy to find, but in sentence case and without
+   a fill, so it never competes with Book a Lesson. A hairline border until
+   hover or focus, then solid white. */
+.drive {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.125rem 0 0.3125rem;
+  border: 1px solid rgb(228 228 228 / 0.55);
+  border-radius: 999px;
+  background-color: var(--red-primary);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: border-color var(--transition-reduced) ease,
+    background-color var(--transition-reduced) ease;
+}
+
+/* A 44px hit area around the 40px pill. */
+.drive::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+}
+
+.drive:hover,
+.drive:focus-visible {
+  border-color: var(--white);
+  background-color: var(--red-deep);
+}
+
+.drive:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+.drive[aria-busy='true'] {
+  cursor: progress;
+}
+
+.drive__disc {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--white);
+  color: var(--red-primary);
+}
+
+.drive__icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---------- The driving layer ---------------------------------------------
+   While someone drives (docs/spec/hero-drive.md §Driving the whole page),
+   the car canvas and the dash move here: fixed over the window, over every
+   section of the page and under the nav (z-index 100), so the car can go
+   anywhere and the dash stays along the bottom as the page scrolls. Like
+   the stage, it never takes clicks itself. */
+.drive-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
